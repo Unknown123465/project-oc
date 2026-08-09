@@ -1,0 +1,52 @@
+:root {
+    --personal: #ffc90e;
+    --personal-bright: #ffe18a;
+    --personal-dark: #c99a00;
+    --personal-white: #f0f0f0;
+    --personal-black: #0d0c22;
+    --personal-line-bright: #d3dae6;
+
+    --text-thin-1: #3d3d4e;
+    --text-thin-2: #6e6d7a;
+    --text-important: #0d0c22;
+
+    --button-text: #4a5568;
+    --button-back: #fff;
+    --button-line: #d3dae6;
+
+    --button-back-hover: #f8f9fc;
+
+    --button-text-disabled: #a8b0be;
+    --button-back-disabled: #edf0f5;
+
+    --submit-text: #0d0c22;
+    --submit-back: #ffc90e;
+
+    --submit-back-hover: var(--submit-back);
+
+    --test-line: 1px solid red;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+html,
+body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+body {
+    min-height: 100%;
+    letter-spacing: -0.03em;
+}
+
+a {
+    text-decoration: none;
+}
