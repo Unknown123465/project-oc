@@ -1,7 +1,7 @@
 .header {
     width: 100%;
     height: 90px;
-    border-bottom: 1px solid var(--personal-line-bright);
+    border-bottom: 1px solid var(--personal-line-bright-1);
     position: fixed;
     top: 0;
     left: 0;
@@ -14,8 +14,8 @@
             90deg,
             var(--personal) 0%,
             var(--personal) 40%,
-            var(--personal-bright) 40%,
-            var(--personal-bright) 62%,
+            var(--personal-bright-1) 40%,
+            var(--personal-bright-1) 62%,
             var(--personal-black) 62%,
             var(--personal-black) 70%,
             var(--personal) 70%
@@ -57,7 +57,7 @@
                 }
 
                 &:hover {
-                    color: var(--personal-dark);
+                    color: var(--personal-dark-1);
                 }
             }
 
@@ -93,7 +93,7 @@
                     color: var(--text-important);
 
                     &:hover {
-                        background-color: var(--personal-bright);
+                        background-color: var(--personal-bright-1);
                     }
                 }
             }
@@ -103,5 +103,6 @@
 
 .push {
     width: 100%;
-    margin-top: 90px;
+    height: 1px;
+    margin-top: 89px;
 }

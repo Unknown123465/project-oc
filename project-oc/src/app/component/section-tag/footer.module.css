@@ -7,7 +7,7 @@
     align-items: flex-end;
     padding-bottom: 20px;
     background-color: white;
-    border-top: 1px solid var(--personal-line-bright);
+    border-top: 1px solid var(--personal-line-bright-1);
 
     & .left {
         width: 50%;
