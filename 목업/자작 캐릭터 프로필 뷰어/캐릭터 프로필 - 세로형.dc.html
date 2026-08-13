@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  body{margin:0;background:#eef2f7;font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;color:#2f3b4a;-webkit-font-smoothing:antialiased}
+  a{color:#2b7fd4;text-decoration:none}
+  a:hover{color:#1c5fa5;text-decoration:underline}
+  ul{margin:0;padding-left:20px}
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:36px 20px 80px;display:flex;flex-direction:column;align-items:center;gap:18px">
+
+  <div style="width:100%;max-width:760px;display:flex;justify-content:flex-end;gap:10px">
+    <button onClick="{{ toggleLike }}" style="display:flex;align-items:center;gap:9px;height:46px;padding:0 20px;border:1px solid #cfd9e6;border-radius:12px;background:#fff;cursor:pointer;font:600 16px/1 'Pretendard Variable',Pretendard,sans-serif;color:#2f3b4a;box-shadow:0 1px 2px rgba(30,50,80,.05)" style-hover="border-color:#e8384f;color:#e8384f">
+      <i class="bi bi-heart-fill" style="{{ heartStyle }}"></i><span>{{ likeText }}</span>
+    </button>
+    <button onClick="{{ onShare }}" title="공유" style="width:46px;height:46px;display:grid;place-items:center;border:1px solid #cfd9e6;border-radius:12px;background:#fff;cursor:pointer;font-size:18px;color:#4a5a6e;box-shadow:0 1px 2px rgba(30,50,80,.05)" style-hover="border-color:#2b7fd4;color:#2b7fd4"><i class="bi bi-share"></i></button>
+    <button title="편집" style="width:46px;height:46px;display:grid;place-items:center;border:1px solid #cfd9e6;border-radius:12px;background:#fff;cursor:pointer;font-size:18px;color:#4a5a6e;box-shadow:0 1px 2px rgba(30,50,80,.05)" style-hover="border-color:#2b7fd4;color:#2b7fd4"><i class="bi bi-pencil-square"></i></button>
+    <button onClick="{{ onDeleteProfile }}" title="삭제" style="width:46px;height:46px;display:grid;place-items:center;border:1px solid #cfd9e6;border-radius:12px;background:#fff;cursor:pointer;font-size:18px;color:#4a5a6e;box-shadow:0 1px 2px rgba(30,50,80,.05)" style-hover="border-color:#e8384f;color:#e8384f"><i class="bi bi-trash"></i></button>
+  </div>
+
+  <div style="width:100%;max-width:760px;background:#fff;border:1px solid #dde5ef;border-radius:16px;box-shadow:0 6px 24px rgba(35,55,85,.07);overflow:hidden">
+
+    
+  <div style="padding: 44px 40px 40px; display: flex; flex-direction: column; align-items: center; gap: 0">
+      <div style="width:100%;display:grid;grid-template-columns:250px 1fr;gap:40px;align-items:start">
+        <div style="aspect-ratio: 3/4; border-radius: 14px; background: repeating-linear-gradient(135deg,#f2f5fa 0 8px,#e6ecf5 8px 16px); border: 1px solid #dde5ef; display: grid; place-items: center; text-align: center; height: 530px; width: 280px">
+          <span style="font:400 11px/1.5 ui-monospace,Menlo,monospace;color:#93a7c0">character<br>profile image</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:132px;height:132px;border-radius:50%;background:repeating-linear-gradient(135deg,#f2f5fa 0 8px,#e6ecf5 8px 16px);border:1px solid #dde5ef;display:grid;place-items:center;text-align:center">
+            <span style="font:400 10.5px/1.4 ui-monospace,Menlo,monospace;color:#93a7c0">character<br>profile</span>
+          </div>
+          <h1 style="margin:24px 0 0;font:800 28px/1.25 'Pretendard Variable',Pretendard,sans-serif;color:#22303f;text-align:center;letter-spacing:-.01em">{{ characterName }}</h1>
+          <div style="{{ ruleStyle }}"></div>
+          <p style="margin:0;max-width:75vw;text-align:center;text-wrap:pretty;font:600 16px/1.6 'Pretendard Variable',Pretendard,sans-serif;color:#5d708a">{{ slogan }}</p>
+
+          <div style="margin-top:26px;width:100%;display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ infoRows }}" as="row" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:76px 1fr;gap:16px;align-items:start">
+                <div style="text-align:right;font:700 15px/1.6 'Pretendard Variable',Pretendard,sans-serif;color:#2f3b4a">{{ row.label }}</div>
+                <div style="text-align:left;font:400 15px/1.6 'Pretendard Variable',Pretendard,sans-serif;color:#5d708a;white-space:nowrap">
+                  <sc-for list="{{ row.lines }}" as="line" hint-placeholder-count="1"><div style="height: 24px">{{ line }}</div></sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="width:100%;height:4px;background:#22303f;border-radius:2px;margin:36px 0 4px"></div>
+
+      <div style="margin-top:34px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:18px">
+        <div style="border:1px solid #f0c8d8;border-radius:14px;padding:16px 18px;min-height:110px;max-height:230px;overflow:auto;background:#fffafc">
+          <div style="font:800 15px/1 'Pretendard Variable',Pretendard,sans-serif;color:#e8384f;letter-spacing:.06em;margin-bottom:9px">LIKE</div>
+          <div style="font:400 14.5px/1.65 'Pretendard Variable',Pretendard,sans-serif;color:#4d5c70;text-wrap:pretty">{{ likes }}</div>
+        </div>
+        <div style="border:1px solid #c7dcf2;border-radius:14px;padding:16px 18px;min-height:110px;max-height:230px;overflow:auto;background:#f8fbff">
+          <div style="font:800 15px/1 'Pretendard Variable',Pretendard,sans-serif;color:#2b7fd4;letter-spacing:.06em;margin-bottom:9px">HATE</div>
+          <div style="font:400 14.5px/1.65 'Pretendard Variable',Pretendard,sans-serif;color:#4d5c70;text-wrap:pretty">{{ hates }}</div>
+        </div>
+      </div>
+
+      <div style="margin-top:34px;width:100%;display:flex;flex-direction:column;gap:10px">
+        <div style="background:#e9f0fa;border-radius:10px;padding:10px 16px;font:700 16px/1.3 'Pretendard Variable',Pretendard,sans-serif;color:#33455c">테마곡</div>
+        <div style="border:1px solid #dde5ef;border-radius:14px;padding:12px;background:#fff">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/SHkF48SgiSA?si=7XMIxw2Zj4gI6lMb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" style="width:100%;aspect-ratio:16/9;height:auto;border-radius:8px;display:block"></iframe>
+        </div>
+      </div>
+
+      <div style="margin-top:26px;width:100%;display:flex;flex-direction:column;gap:10px">
+        <div style="background:#e9f0fa;border-radius:10px;padding:10px 16px;font:700 16px/1.3 'Pretendard Variable',Pretendard,sans-serif;color:#33455c">성격</div>
+        <div style="border:1px solid #dde5ef;border-radius:14px;padding:16px 18px;min-height:80px;max-height:260px;overflow:auto;font:400 14.5px/1.75 'Pretendard Variable',Pretendard,sans-serif;color:#4d5c70;text-wrap:pretty">{{ personality }}</div>
+      </div>
+
+      <div style="margin-top:26px;width:100%;display:flex;flex-direction:column;gap:10px">
+        <div style="background:#e9f0fa;border-radius:10px;padding:10px 16px;font:700 16px/1.3 'Pretendard Variable',Pretendard,sans-serif;color:#33455c">TMI</div>
+        <div style="border:1px solid #dde5ef;border-radius:14px;padding:16px 20px;min-height:80px;max-height:260px;overflow:auto">
+          <ul style="display:flex;flex-direction:column;gap:7px;font:400 14.5px/1.7 'Pretendard Variable',Pretendard,sans-serif;color:#4d5c70">
+            <sc-for list="{{ tmi }}" as="item" hint-placeholder-count="3"><li style="text-wrap:pretty">{{ item }}</li></sc-for>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:36px;width:100%;display:flex;justify-content:center;gap:16px;flex-wrap:wrap">
+        <button onClick="{{ onShare }}" style="display:flex;align-items:center;gap:10px;height:50px;padding:0 26px;border:1px solid #cfd9e6;border-radius:12px;background:#fff;cursor:pointer;font:600 16px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c" style-hover="border-color:#2b7fd4;color:#2b7fd4;background:#f7fbff"><i class="bi bi-share" style="font-size:17px"></i>캐릭터 프로필 공유</button>
+        <a href="/card" style="display:flex;align-items:center;gap:10px;height:50px;padding:0 26px;border:1px solid #cfd9e6;border-radius:12px;background:#fff;font:600 16px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c;text-decoration:none" style-hover="border-color:#2b7fd4;color:#2b7fd4;background:#f7fbff"><i class="bi bi-card-image" style="font-size:17px"></i>프로필 카드 보기</a>
+      </div>
+    </div></div>
+
+  <div style="max-width: 760px; background: #fff; border: 1px solid #dde5ef; border-radius: 16px; box-shadow: 0 6px 24px rgba(35,55,85,.07); padding: 28px 32px 32px; display: flex; flex-direction: column; gap: 20px; width: 695px">
+    <div style="font:700 18px/1.3 'Pretendard Variable',Pretendard,sans-serif;color:#22303f">코멘트 ({{ commentCount }})</div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <sc-for list="{{ comments }}" as="c" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:9px;padding-bottom:18px;border-bottom:1px solid #eef2f7">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font:700 15px/1.3 'Pretendard Variable',Pretendard,sans-serif;color:#22303f">{{ c.author }}</span>
+            </div>
+            <div style="font:400 13px/1.3 'Pretendard Variable',Pretendard,sans-serif;color:#8b9bb0;white-space:nowrap">{{ c.dateText }}에 작성 <span style="color:#e8384f">{{ c.editedMark }}</span></div>
+          </div>
+
+          <sc-if value="{{ c.isEditing }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <textarea value="{{ editDraft }}" onChange="{{ onEditDraft }}" style="width:100%;box-sizing:border-box;height:104px;resize:none;border:1px solid #cfd9e6;border-radius:10px;padding:12px 14px;font:400 14.5px/1.7 'Pretendard Variable',Pretendard,sans-serif;color:#33455c;outline:none" style-focus="border-color:#2b7fd4"></textarea>
+              <div style="display:flex;justify-content:flex-end;gap:10px">
+                <button onClick="{{ c.onSave }}" style="height:38px;padding:0 22px;border:1px solid #FFC90E;border-radius:9px;background:#FFC90E;color:#2B3440;cursor:pointer;font:600 14px/1 'Pretendard Variable',Pretendard,sans-serif">수정</button>
+                <button onClick="{{ onCancelEdit }}" style="height:38px;padding:0 22px;border:1px solid #cfd9e6;border-radius:9px;background:#fff;color:#5d708a;cursor:pointer;font:600 14px/1 'Pretendard Variable',Pretendard,sans-serif">취소</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ c.isReading }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="border:1px solid #e4eaf3;border-radius:12px;background:#fbfcfe;padding:13px 16px;min-height:48px;max-height:260px;overflow:auto;white-space:pre-wrap;text-wrap:pretty;font:400 14.5px/1.75 'Pretendard Variable',Pretendard,sans-serif;color:#3f4e62">{{ c.text }}</div>
+              <div style="display:flex;gap:14px;justify-content:flex-end;padding-right:2px">
+                <span onClick="{{ c.onEdit }}" style="cursor:pointer;font:500 13px/1.3 'Pretendard Variable',Pretendard,sans-serif;color:#8b9bb0" style-hover="color:#2b7fd4">수정</span>
+                <span onClick="{{ c.onDelete }}" style="cursor:pointer;font:500 13px/1.3 'Pretendard Variable',Pretendard,sans-serif;color:#8b9bb0" style-hover="color:#e8384f">삭제</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:9px">
+        <span style="font:700 15px/1.3 'Pretendard Variable',Pretendard,sans-serif;color:#22303f">(유저 닉네임)</span>
+      </div>
+      <textarea value="{{ draft }}" onChange="{{ onDraft }}" placeholder="코멘트를 남겨보세요." style="width:100%;box-sizing:border-box;height:104px;resize:none;border:1px solid #cfd9e6;border-radius:12px;padding:14px 16px;font:400 14.5px/1.7 'Pretendard Variable',Pretendard,sans-serif;color:#33455c;outline:none" style-focus="border-color:#2b7fd4"></textarea>
+      <div style="display:flex;justify-content:flex-end">
+        <button onClick="{{ onSubmit }}" style="height:42px;padding:0 30px;border:1px solid #FFC90E;border-radius:10px;background:#FFC90E;color:#2B3440;cursor:pointer;font:600 15px/1 'Pretendard Variable',Pretendard,sans-serif">작성</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<sc-if value="{{ shareOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeShare }}" style="position:fixed;inset:0;background:rgba(20,32,50,.42);display:grid;place-items:center;z-index:60;padding:20px">
+    <div onClick="{{ stopPanel }}" style="width:360px;max-width:100%;background:#fff;border:1px solid #dde5ef;border-radius:16px;box-shadow:0 16px 44px rgba(20,35,60,.22);padding:22px 22px 20px;display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font:800 20px/1.2 'Pretendard Variable',Pretendard,sans-serif;color:#22303f">공유하기</div>
+          <div style="font:500 14px/1.2 'Pretendard Variable',Pretendard,sans-serif;color:#8b9bb0">{{ characterName }}</div>
+        </div>
+        <span onClick="{{ closeShare }}" style="cursor:pointer;font-size:18px;color:#8b9bb0;line-height:1" style-hover="color:#22303f"><i class="bi bi-x-lg"></i></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <a href="{{ shareX }}" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:11px;padding:16px 6px 13px;border:1px solid #e6ebf2;border-radius:14px;background:#fff;text-decoration:none;color:#3f4e62;font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif" style-hover="border-color:#cfd9e6;background:#fafcff">
+          <span style="width:50px;height:50px;border-radius:50%;background:#111;display:grid;place-items:center">
+            <svg viewBox="0 0 24 24" width="23" height="23" fill="#fff" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.657l-5.214-6.817-5.966 6.817H1.68l7.73-8.835L1.254 2.25h6.826l4.713 6.231 5.451-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z"></path></svg>
+          </span>X
+        </a>
+        <a href="{{ shareKakao }}" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:11px;padding:16px 6px 13px;border:1px solid #e6ebf2;border-radius:14px;background:#fff;text-decoration:none;color:#3f4e62;font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif" style-hover="border-color:#cfd9e6;background:#fafcff">
+          <span style="width:50px;height:50px;border-radius:50%;background:#fee500;display:grid;place-items:center">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#3c1e1e" aria-hidden="true"><path d="M12 3C6.99 3 3 6.24 3 10.23c0 2.55 1.7 4.79 4.26 6.06-.14.5-.9 3.13-.93 3.34 0 0-.02.16.08.22.1.06.23.02.23.02.3-.04 3.47-2.28 4.02-2.67.44.06.89.09 1.34.09 5.01 0 9-3.24 9-7.06C21 6.24 17.01 3 12 3Z"></path></svg>
+          </span>카카오톡
+        </a>
+        <a href="{{ shareInsta }}" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:11px;padding:16px 6px 13px;border:1px solid #e6ebf2;border-radius:14px;background:#fff;text-decoration:none;color:#3f4e62;font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif" style-hover="border-color:#cfd9e6;background:#fafcff">
+          <span style="width:50px;height:50px;border-radius:50%;background:linear-gradient(45deg,#f9ce34,#ee2a7b 45%,#6228d7);display:grid;place-items:center">
+            <i class="bi bi-instagram" style="font-size:23px;color:#fff"></i>
+          </span>인스타그램
+        </a>
+        <a href="{{ shareFb }}" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:11px;padding:16px 6px 13px;border:1px solid #e6ebf2;border-radius:14px;background:#fff;text-decoration:none;color:#3f4e62;font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif" style-hover="border-color:#cfd9e6;background:#fafcff">
+          <span style="width:50px;height:50px;border-radius:50%;background:#1877f2;display:grid;place-items:center">
+            <i class="bi bi-facebook" style="font-size:25px;color:#fff"></i>
+          </span>페이스북
+        </a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 14px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c">링크</div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;min-width:0;height:46px;display:flex;align-items:center;padding:0 14px;border:1px solid #e6ebf2;border-radius:12px;background:#f8fafd;font:400 13.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#5d708a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ shareUrl }}</div>
+          <button onClick="{{ copyLink }}" style="height: 46px; padding: 0 20px; border: none; border-radius: 12px; color: #2B3440; cursor: pointer; font: 700 14px/1 'Pretendard Variable',Pretendard,sans-serif; white-space: nowrap; background-color: #FFC90E">{{ copyLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;characterName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;티아라&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;slogan&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;\&quot;오늘도, 내일도 화이팅이야! 무대 위에서 만나요.\&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#22303f&quot;,&quot;options&quot;:[&quot;#5b7fd4&quot;,&quot;#e8628f&quot;,&quot;#4bb59a&quot;,&quot;#22303f&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    const now = Date.now();
+    this.state = {
+      liked: false,
+      likes: 1000,
+      draft: '',
+      editingId: null,
+      editDraft: '',
+      comments: [
+        { id: 1, author: '크림빵', created: new Date(now - 3 * 3600e3), edited: true, text: '캐릭터 이뻐요! 좋아요 누르고 갑니다~\n무기 디자인이 특히 취향이에요. 다음 캐릭터도 기대할게요!' },
+        { id: 2, author: '모카라떼', created: new Date(now - 5 * 86400e3), edited: false, text: '슬로건이 캐릭터랑 너무 잘 어울려요.' },
+        { id: 3, author: '별사탕', created: new Date(now - 400 * 86400e3), edited: false, text: '작년에 봤던 컨셉이 이렇게 완성됐네요. 축하드려요!' }
+      ]
+    };
+  }
+  dot(bg) { return { width: '46px', height: '46px', borderRadius: '50%', background: bg, color: '#fff', display: 'grid', placeItems: 'center', fontSize: '19px' }; }
+  p2(n) { return n < 10 ? '0' + n : '' + n; }
+  fmt(d) {
+    const now = new Date();
+    if (d.getFullYear() !== now.getFullYear()) return d.getFullYear() + '-' + this.p2(d.getMonth() + 1) + '-' + this.p2(d.getDate());
+    if (now - d < 86400e3) return this.p2(d.getHours()) + ':' + this.p2(d.getMinutes());
+    return this.p2(d.getMonth() + 1) + '-' + this.p2(d.getDate());
+  }
+  chunk(s, n) {
+    const out = [];
+    for (let i = 0; i < s.length; i += n) out.push(s.slice(i, i + n));
+    return out.length ? out : [''];
+  }
+  renderVals() {
+    const name = this.props.characterName ?? '티아라';
+    const accent = this.props.accentColor ?? '#5b7fd4';
+    const info = [
+      ['출생지', '대한민국 서울특별시 성북구'],
+      ['종족', '노바'],
+      ['나이', '당신의 마음속에 희망이 깃들어 있었던 만큼'],
+      ['생일', '1989.02.07'],
+      ['키', '162cm'],
+      ['MBTI', 'ENFP']
+    ];
+    return {
+      characterName: name,
+      slogan: this.props.slogan ?? '"오늘도, 내일도 화이팅이야! 무대 위에서 만나요."',
+      ruleStyle: { width: Math.max(120, name.length * 30 + 36) + 'px', height: '3px', background: accent, borderRadius: '2px', margin: '14px 0 16px' },
+      heartStyle: { fontSize: '17px', color: this.state.liked ? '#e8384f' : '#22303f' },
+      likeText: this.state.likes.toLocaleString('en-US'),
+      toggleLike: () => this.setState(s => ({ liked: !s.liked, likes: s.likes + (s.liked ? -1 : 1) })),
+      shareOpen: !!this.state.shareOpen,
+      shareUrl: typeof location !== 'undefined' ? location.href : '',
+      copyLabel: this.state.copied ? '복사됨' : '복사',
+      onShare: () => this.setState({ shareOpen: true, copied: false }),
+      closeShare: () => this.setState({ shareOpen: false }),
+      stopPanel: e => e.stopPropagation(),
+      copyLink: () => { try { navigator.clipboard.writeText(location.href); } catch (e) {} this.setState({ copied: true }); },
+      shareX: 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : ''),
+      shareKakao: 'https://story.kakao.com/share?url=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : ''),
+      shareInsta: 'https://www.instagram.com/',
+      shareFb: 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : ''),
+      snsItems: [
+        { key: 'x', label: 'X', icon: 'bi bi-twitter-x', dotStyle: this.dot('#22303f'), href: 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : '') },
+        { key: 'fb', label: 'Facebook', icon: 'bi bi-facebook', dotStyle: this.dot('#3b5998'), href: 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : '') },
+        { key: 'line', label: 'LINE', icon: 'bi bi-line', dotStyle: this.dot('#06c755'), href: 'https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : '') },
+        { key: 'tg', label: 'Telegram', icon: 'bi bi-telegram', dotStyle: this.dot('#29a9eb'), href: 'https://t.me/share/url?url=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : '') }
+      ],
+      onDeleteProfile: () => { if (confirm('이 캐릭터 프로필을 삭제할까요?')) alert('삭제되었습니다.'); },
+      infoRows: info.map(([label, v]) => ({ label, lines: [v] })),
+      likes: '무대 위에 서는 것, 반짝이는 리본, 늦은 밤의 연습실',
+      hates: '엔젤릭버스터가 되지 못한다는 현실, 조용한 객석',
+      personality: '반짝이는 무기와 귀여운 리본으로 장식된 소녀. 아이돌 엔젤릭버스터를 꿈꾸지만 정작 엔젤릭버스터는 되지 못했다. 하지만 긍정적인 생각으로 언젠가는 될거라고 생각하며 노래를 오늘도, 내일도 연습하고 있다.',
+      tmi: [
+        '밝은 모습 사이엔 가끔씩 현실을 직시해 우울해하는 모습도 있다.',
+        '손에 든 신호 가지는 마이크 기능도 있다. 어떻게...?',
+        '티아라에게 열등감을 조금 느끼고 있지만 그럼에도 불구하고 열렬히 응원해주고 있다.'
+      ],
+      commentCount: this.state.comments.length,
+      draft: this.state.draft,
+      editDraft: this.state.editDraft,
+      onDraft: e => this.setState({ draft: e.target.value }),
+      onEditDraft: e => this.setState({ editDraft: e.target.value }),
+      onCancelEdit: () => this.setState({ editingId: null, editDraft: '' }),
+      onSubmit: () => {
+        const t = this.state.draft.trim();
+        if (!t) return;
+        this.setState(s => ({ draft: '', comments: s.comments.concat({ id: Date.now(), author: '(유저 닉네임)', created: new Date(), edited: false, text: t }) }));
+      },
+      comments: this.state.comments.map(c => ({
+        id: c.id,
+        author: c.author,
+        text: c.text,
+        dateText: this.fmt(c.created),
+        editedMark: c.edited ? '(수정됨)' : '',
+        isEditing: this.state.editingId === c.id,
+        isReading: this.state.editingId !== c.id,
+        onEdit: () => this.setState({ editingId: c.id, editDraft: c.text }),
+        onDelete: () => { if (confirm('이 코멘트를 삭제할까요?')) this.setState(s => ({ comments: s.comments.filter(x => x.id !== c.id), editingId: null })); },
+        onSave: () => this.setState(s => ({ editingId: null, comments: s.comments.map(x => x.id === c.id ? Object.assign({}, x, { text: s.editDraft, edited: true }) : x) }))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

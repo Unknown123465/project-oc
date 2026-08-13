@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FFF9E4;font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;color:#2B3440;-webkit-font-smoothing:antialiased}
+  a{color:#2B3440;text-decoration:underline;text-underline-offset:3px}
+  a:hover{color:#000}
+  input::placeholder{color:#98A2B3}
+  input:focus{outline:none}
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:40px 24px 120px;background-color:#FFF9E4">
+  <div style="width:100%;max-width:1920px;margin:0 auto">
+
+    <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ true }}">
+      <h1 style="margin:0;font-size:32px;font-weight:700;letter-spacing:-.02em;display:inline-block;padding-bottom:8px;border-bottom:3px solid #2B3440">계정 설정</h1>
+
+      <div style="margin-top:36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:24px;align-items:stretch">
+
+        <section style="padding:26px 28px;border:1px solid #D5DCE6;border-radius:18px;background:#fff;min-height:230px;display:flex;flex-direction:column">
+          <h2 style="margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid #E8EDF4;font-size:20px;font-weight:700;letter-spacing:-.02em">이메일</h2>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:#6B7687;text-wrap:pretty">현재 이메일 주소입니다. 변경하려면 본인 확인이 필요합니다.</p>
+          <div style="margin-top:auto;padding-top:16px;display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+            <span style="flex:1;min-width:200px;height:48px;padding:0 16px;display:flex;align-items:center;border:1px solid #D5DCE6;border-radius:10px;background:#F6F7F9;font-size:15px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ email }}</span>
+            <button type="button" onClick="{{ goEmailVerify }}" style="flex:none;white-space:nowrap;height:48px;padding:0 24px;border:1px solid #E0B90C;border-radius:10px;background:#FFC90E;color:#2B3440;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer" style-hover="filter:brightness(.96)">변경</button>
+          </div>
+        </section>
+
+        <section style="padding:26px 28px;border:1px solid #D5DCE6;border-radius:18px;background:#fff;min-height:230px;display:flex;flex-direction:column">
+          <h2 style="margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid #E8EDF4;font-size:20px;font-weight:700;letter-spacing:-.02em">사용자 이름</h2>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:#6B7687;text-wrap:pretty">2~20자로 입력해 주세요. 다른 사용자에게 보여지는 이름입니다.</p>
+          <div style="margin-top:auto;padding-top:16px;display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px">
+            <span style="flex:1;min-width:200px;display:block">
+              <input type="text" value="{{ nameDraft }}" onChange="{{ onNameChange }}" maxLength="20" placeholder="사용자 이름" style="{{ nameInputStyle }}" style-focus="border-color:#FFC90E;box-shadow:0 0 0 3px rgba(255,201,14,.28)">
+              <sc-if value="{{ nameMsg }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ nameMsgStyle }}">{{ nameMsg }}</span>
+              </sc-if>
+            </span>
+            <button type="button" onClick="{{ saveName }}" style="flex:none;white-space:nowrap;height:48px;padding:0 24px;border:1px solid #E0B90C;border-radius:10px;background:#FFC90E;color:#2B3440;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer" style-hover="filter:brightness(.96)">변경</button>
+          </div>
+        </section>
+
+        <section style="padding:26px 28px;border:1px solid #D5DCE6;border-radius:18px;background:#fff;min-height:230px;display:flex;flex-direction:column">
+          <h2 style="margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid #E8EDF4;font-size:20px;font-weight:700;letter-spacing:-.02em">비밀번호</h2>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:#6B7687;text-wrap:pretty">6~20자의 영문과 숫자를 조합해 주세요. 특수문자도 사용할 수 있습니다.</p>
+          <div style="margin-top:auto;padding-top:16px;display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+            <span style="flex:1;min-width:200px;height:48px;padding:0 16px;display:flex;align-items:center;border:1px solid #D5DCE6;border-radius:10px;background:#F6F7F9;font-size:15px;letter-spacing:.2em;color:#6B7687">••••••••</span>
+            <button type="button" onClick="{{ goPwChange }}" style="flex:none;white-space:nowrap;height:48px;padding:0 24px;border:1px solid #E0B90C;border-radius:10px;background:#FFC90E;color:#2B3440;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer" style-hover="filter:brightness(.96)">변경</button>
+          </div>
+        </section>
+
+        <section style="padding:26px 28px;border:1px solid #D5DCE6;border-radius:18px;background:#fff;min-height:230px;display:flex;flex-direction:column">
+          <h2 style="margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid #E8EDF4;font-size:20px;font-weight:700;letter-spacing:-.02em">구독 플랜</h2>
+          <div style="margin-top:auto;display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+            <span style="flex:1;min-width:200px;display:flex;align-items:center;gap:10px">
+              <span style="flex:none;white-space:nowrap;height:32px;padding:0 14px;display:inline-flex;align-items:center;border-radius:16px;background:#FFF4CC;border:1px solid #FFC90E;font-size:14px;font-weight:700">베이직</span>
+              <span style="font-size:13.5px;color:#6B7687">무료 플랜을 사용 중입니다.</span>
+            </span>
+            <button type="button" style="flex:none;white-space:nowrap;height:44px;padding:0 20px;border:1px solid #D5DCE6;border-radius:10px;background:#F6F7F9;color:#98A2B3;font-size:14px;font-weight:700;font-family:inherit;cursor:not-allowed">플랜 구독</button>
+          </div>
+        </section>
+
+        <section style="padding:26px 28px;border:1px solid #D5DCE6;border-radius:18px;background:#fff;min-height:230px;display:flex;flex-direction:column">
+          <h2 style="margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid #E8EDF4;font-size:20px;font-weight:700;letter-spacing:-.02em">소셜 계정 연동</h2>
+          <div style="margin-top:auto;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="width:24px;height:24px;flex-shrink:0;border-radius:6px;background:#03C75A;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center">N</span>
+              <span style="flex:1;font-size:15px;font-weight:600">네이버</span>
+              <span style="flex:none;white-space:nowrap;height:28px;padding:0 12px;display:inline-flex;align-items:center;border-radius:14px;background:#F1F3F7;border:1px solid #D5DCE6;font-size:13px;font-weight:700;color:#6B7687">미연동</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="width:24px;height:24px;flex-shrink:0;border-radius:50%;border:1.5px solid #D5DCE6;color:#5f6368;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center">G</span>
+              <span style="flex:1;font-size:15px;font-weight:600">구글</span>
+              <span style="flex:none;white-space:nowrap;height:28px;padding:0 12px;display:inline-flex;align-items:center;border-radius:14px;background:#F1F3F7;border:1px solid #D5DCE6;font-size:13px;font-weight:700;color:#6B7687">미연동</span>
+            </div>
+          </div>
+        </section>
+
+        <section style="padding:26px 28px;border:1px solid #D5DCE6;border-radius:18px;background:#fff;min-height:230px;display:flex;flex-direction:column">
+          <h2 style="margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid #E8EDF4;font-size:20px;font-weight:700;letter-spacing:-.02em">재생 설정</h2>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:#6B7687;text-wrap:pretty">캐릭터 프로필에 등록된 테마곡을 페이지 진입 시 자동으로 재생합니다.</p>
+          <div style="margin-top:auto;display:flex;align-items:center;gap:16px">
+            <span style="flex:1;min-width:0">
+              <span style="display:block;font-size:15px;font-weight:600">프로필 테마곡 자동 재생</span>
+              <span style="display:block;margin-top:4px;font-size:13px;color:#98A2B3">{{ themeAutoplayLabel }}</span>
+            </span>
+            <button type="button" role="switch" aria-checked="{{ themeAutoplay }}" onClick="{{ toggleThemeAutoplay }}" style="{{ themeAutoplayTrack }}">
+              <span style="{{ themeAutoplayKnob }}"></span>
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <section style="margin-top:24px;padding:26px 28px;border:1px solid #D5DCE6;border-radius:18px;background:#fff">
+        <h2 style="margin:0 0 18px;padding-bottom:12px;border-bottom:1px solid #E8EDF4;font-size:20px;font-weight:700;letter-spacing:-.02em">내 활동</h2>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px">
+          <div style="padding:20px;border:1px solid #E8EDF4;border-radius:14px;background:#FFFCF2">
+            <p style="margin:0;font-size:13.5px;font-weight:600;color:#6B7687">만든 캐릭터 프로필</p>
+            <p style="margin:8px 0 0;font-size:32px;font-weight:800;letter-spacing:-.02em">{{ stats.profiles }}<span style="margin-left:6px;font-size:16px;font-weight:700;color:#6B7687">개</span></p>
+          </div>
+          <div style="padding:20px;border:1px solid #E8EDF4;border-radius:14px;background:#FFFCF2">
+            <p style="margin:0;font-size:13.5px;font-weight:600;color:#6B7687">받은 좋아요</p>
+            <p style="margin:8px 0 0;font-size:32px;font-weight:800;letter-spacing:-.02em">{{ stats.likes }}<span style="margin-left:6px;font-size:16px;font-weight:700;color:#6B7687">개</span></p>
+          </div>
+          <div style="padding:20px;border:1px solid #E8EDF4;border-radius:14px;background:#FFFCF2">
+            <p style="margin:0;font-size:13.5px;font-weight:600;color:#6B7687">받은 코멘트</p>
+            <p style="margin:8px 0 0;font-size:32px;font-weight:800;letter-spacing:-.02em">{{ stats.comments }}<span style="margin-left:6px;font-size:16px;font-weight:700;color:#6B7687">개</span></p>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px">
+          <div style="padding:20px;border:1px solid #E8EDF4;border-radius:14px">
+            <p style="margin:0 0 14px;font-size:15px;font-weight:700">좋아요 TOP 5</p>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ topLikes }}" as="row" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <span style="{{ row.rankStyle }}">{{ row.rank }}</span>
+                  <a href="{{ row.href }}" style="flex:1;min-width:0;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;color:#2B3440" style-hover="text-decoration:underline;text-underline-offset:3px;color:#000">{{ row.name }}</a>
+                  <span style="font-size:14px;font-weight:700;color:#6B7687;white-space:nowrap">{{ row.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="padding:20px;border:1px solid #E8EDF4;border-radius:14px">
+            <p style="margin:0 0 14px;font-size:15px;font-weight:700">코멘트 TOP 5</p>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ topComments }}" as="row" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <span style="{{ row.rankStyle }}">{{ row.rank }}</span>
+                  <a href="{{ row.href }}" style="flex:1;min-width:0;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;color:#2B3440" style-hover="text-decoration:underline;text-underline-offset:3px;color:#000">{{ row.name }}</a>
+                  <span style="font-size:14px;font-weight:700;color:#6B7687;white-space:nowrap">{{ row.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top:32px;padding:26px 28px;border:1.5px solid #E5484D;border-radius:18px;background:#FFF5F5">
+        <h2 style="margin:0 0 6px;display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;letter-spacing:-.02em;color:#C62A2F">
+          <span style="width:24px;height:24px;flex-shrink:0;border-radius:50%;background:#E5484D;color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center">!</span>
+          위험 구역
+        </h2>
+        <p style="margin:0 0 20px;padding-bottom:14px;border-bottom:1px solid #F5C4C6;font-size:14px;color:#9B3034">아래 작업은 되돌릴 수 없습니다. 신중하게 진행해 주세요.</p>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="padding:18px 20px;border:1px solid #F0A9AC;border-radius:14px;background:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+            <span style="flex:1;min-width:240px">
+              <span style="display:block;font-size:16px;font-weight:700;color:#C62A2F">캐릭터 프로필 일괄 삭제</span>
+              <span style="display:block;margin-top:6px;font-size:13.5px;line-height:1.6;color:#6B7687">현재 만든 캐릭터 프로필 {{ stats.profiles }}개가 모두 삭제되며, 받은 좋아요와 코멘트도 함께 사라집니다.</span>
+            </span>
+            <button type="button" onClick="{{ bulkDelete }}" style="flex:none;white-space:nowrap;height:48px;padding:0 22px;border:1.5px solid #E5484D;border-radius:10px;background:#fff;color:#C62A2F;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer" style-hover="background:#E5484D;color:#fff">프로필 일괄 삭제</button>
+          </div>
+
+          <div style="padding:18px 20px;border:1px solid #F0A9AC;border-radius:14px;background:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:14px">
+            <span style="flex:1;min-width:240px">
+              <span style="display:block;font-size:16px;font-weight:700;color:#C62A2F">계정 삭제</span>
+              <span style="display:block;margin-top:6px;font-size:13.5px;line-height:1.6;color:#6B7687">계정과 계정에 속한 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.</span>
+            </span>
+            <button type="button" onClick="{{ goDeleteVerify }}" style="flex:none;white-space:nowrap;height:48px;padding:0 22px;border:0;border-radius:10px;background:#E5484D;color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer" style-hover="background:#C62A2F">계정 삭제</button>
+          </div>
+        </div>
+      </section>
+
+      <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;left:50%;bottom:32px;transform:translateX(-50%);padding:14px 24px;border-radius:12px;background:#2B3440;color:#fff;font-size:14.5px;font-weight:600;box-shadow:0 10px 26px rgba(0,0,0,.22);z-index:60">{{ toast }}</div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ isForm }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:520px;margin:0 auto;padding-top:24px">
+        <h1 style="margin:0;font-size:28px;font-weight:800;letter-spacing:-.025em;text-wrap:pretty">{{ formTitle }}</h1>
+        <p style="margin:14px 0 0;font-size:15px;line-height:1.65;color:#6B7687;text-wrap:pretty">{{ formDesc }}</p>
+
+        <form onSubmit="{{ onFormSubmit }}" style="margin-top:28px;padding:28px;border:1px solid #D5DCE6;border-radius:18px;background:#fff;display:flex;flex-direction:column;gap:20px">
+          <sc-for list="{{ fields }}" as="f" hint-placeholder-count="2">
+            <label style="display:flex;flex-direction:column;gap:9px">
+              <span style="font-size:14px;font-weight:700">{{ f.label }}</span>
+              <span style="position:relative;display:block">
+                <input type="{{ f.type }}" value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.placeholder }}" style="{{ f.inputStyle }}" style-focus="border-color:#FFC90E;box-shadow:0 0 0 3px rgba(255,201,14,.28)">
+                <sc-if value="{{ f.toggleEye }}" hint-placeholder-val="{{ false }}">
+                  <button type="button" onClick="{{ f.toggleEye }}" aria-label="비밀번호 표시 전환" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:transparent;color:#6B7687;cursor:pointer" style-hover="background:#EDF0F5;color:#2B3440">{{ f.eyeIcon }}</button>
+                </sc-if>
+              </span>
+              <sc-if value="{{ f.hint }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ f.hintStyle }}">{{ f.hint }}</span>
+              </sc-if>
+            </label>
+          </sc-for>
+
+          <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0;padding:12px 14px;border:1px solid #F0A9AC;border-radius:10px;background:#FFF5F5;font-size:13.5px;font-weight:600;color:#C62A2F">{{ formError }}</p>
+          </sc-if>
+
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:4px">
+            <button type="submit" style="{{ submitStyle }}">{{ submitLabel }}</button>
+            <button type="button" onClick="{{ goSettings }}" style="flex:1;min-width:120px;white-space:nowrap;height:52px;border:1px solid #D5DCE6;border-radius:12px;background:#fff;color:#2B3440;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer" style-hover="background:#F6F7F9">취소</button>
+          </div>
+
+          <sc-if value="{{ warnText }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:4px 0 0;padding-top:16px;border-top:1px solid #F5C4C6;font-size:13.5px;line-height:1.65;font-weight:600;color:#C62A2F;text-wrap:pretty">{{ warnText }}</p>
+          </sc-if>
+        </form>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isGone }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:520px;margin:0 auto;padding-top:80px;text-align:center">
+        <span style="width:22px;height:22px;display:inline-block;border-radius:7px;background:#FFC90E"></span>
+        <h1 style="margin:20px 0 0;font-size:34px;font-weight:800;letter-spacing:-.03em">프로젝트 OC</h1>
+        <p style="margin:16px 0 0;font-size:15.5px;line-height:1.7;color:#6B7687;text-wrap:pretty">계정이 삭제되었습니다.<br>그동안 프로젝트 OC를 이용해 주셔서 감사합니다.</p>
+        <a href="/" style="margin-top:28px;height:52px;padding:0 32px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #E0B90C;border-radius:12px;background:#FFC90E;color:#2B3440;font-size:16px;font-weight:700;text-decoration:none">메인 페이지로</a>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const eye = (shown) => React.createElement('svg', { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' },
+  React.createElement('path', { key: 'p', d: 'M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12Z' }),
+  React.createElement('circle', { key: 'c', cx: 12, cy: 12, r: 3.2 }),
+  shown ? null : React.createElement('line', { key: 'l', x1: 4, y1: 20, x2: 20, y2: 4 })
+);
+const INPUT = 'width:100%;height:52px;padding:0 16px;border:1px solid #D5DCE6;border-radius:12px;background:#F6F7F9;font-size:15px;font-family:inherit;color:#2B3440;transition:border-color .15s,box-shadow .15s;';
+const INPUT_ERR = INPUT + 'border-color:#E5484D;background:#FFF7F7;';
+const RANK = (i) => 'width:26px;height:26px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;font-weight:800;' + (i === 0 ? 'background:#FFC90E;color:#2B3440' : 'background:#F1F3F7;color:#6B7687');
+
+const CHARS = [
+  { name: '루미에르 아르장떼유 벨몽드', likes: 132, comments: 21 },
+  { name: '레이븐 클로디어스', likes: 87, comments: 12 },
+  { name: '별하', likes: 62, comments: 8 },
+  { name: '이즈미 하루카', likes: 48, comments: 9 },
+  { name: '유이', likes: 41, comments: 5 },
+  { name: '카이', likes: 24, comments: 4 },
+  { name: '리안', likes: 19, comments: 3 },
+  { name: '노아', likes: 15, comments: 2 },
+  { name: '세라핀', likes: 10, comments: 10 },
+  { name: '하늘', likes: 7, comments: 0 }
+];
+
+class Component extends DCLogic {
+  state = {
+    view: 'settings', email: 'unknown123465@gmail.com', chars: CHARS, toast: '',
+    themeAutoplay: true,
+    pw: '', newEmail: '', curPw: '', newPw: '', confirmPw: '', error: '', touched: {}
+  };
+
+  go(view) {
+    this.setState({ view, pw: '', newEmail: '', curPw: '', newPw: '', confirmPw: '', error: '', touched: {} });
+  }
+
+  emailError() {
+    const s = this.state;
+    if (!s.touched.newEmail) return '';
+    const v = s.newEmail.trim();
+    if (!v) return '이메일 주소를 입력해 주세요.';
+    if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v)) return '올바른 이메일 주소 형식이 아닙니다.';
+    if (v === s.email) return '현재 이메일 주소와 동일합니다.';
+    return '';
+  }
+
+  pwErrors() {
+    const s = this.state;
+    const t = s.touched;
+    const pwOk = /^(?=.*[a-z])(?=.*\d)\S{6,20}$/i.test(s.newPw);
+    return {
+      curPw: !t.curPw ? '' : !s.curPw ? '기존 비밀번호를 입력해 주세요.' : '',
+      newPw: !t.newPw ? '' : !s.newPw ? '새 비밀번호를 입력해 주세요.' : !pwOk ? '비밀번호는 6~20자의 영문과 숫자를 조합해 주세요.' : '',
+      confirmPw: !t.confirmPw ? '' : !s.confirmPw ? '비밀번호 확인을 입력해 주세요.' : s.newPw !== s.confirmPw ? '비밀번호가 일치하지 않습니다.' : ''
+    };
+  }
+
+  flash(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  field(key, label, type, placeholder, opts) {
+    const o = opts || {};
+    const err = o.err || '';
+    const shown = !!this.state['show_' + key];
+    return {
+      label, placeholder,
+      type: o.eye ? (shown ? 'text' : 'password') : type,
+      eyeIcon: o.eye ? eye(shown) : null,
+      toggleEye: o.eye ? (() => this.setState(p => ({ ['show_' + key]: !p['show_' + key] }))) : null,
+      value: this.state[key],
+      hint: err || o.hint || '',
+      hintStyle: 'font-size:12.5px;line-height:1.5;font-weight:600;color:' + (err ? '#C62A2F' : '#6B7687'),
+      inputStyle: (err ? INPUT_ERR : INPUT) + (o.eye ? 'padding-right:54px;' : ''),
+      onChange: (ev) => this.setState(p => ({
+        [key]: ev.target.value, error: '',
+        touched: Object.assign({}, p.touched, { [key]: true })
+      }))
+    };
+  }
+
+  submitEmailVerify() {
+    if (!this.state.pw.trim()) return this.setState({ error: '비밀번호를 입력해 주세요.' });
+    this.go('email-change');
+  }
+
+  submitEmailChange() {
+    this.setState(p => ({ touched: Object.assign({}, p.touched, { newEmail: true }) }));
+    const v = this.state.newEmail.trim();
+    if (!v || !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v) || v === this.state.email) return;
+    this.setState({ email: v });
+    this.go('settings');
+    this.flash('이메일 주소가 변경되었습니다.');
+  }
+
+  submitPwChange() {
+    this.setState({ touched: { curPw: true, newPw: true, confirmPw: true } });
+    const s = this.state;
+    const pwOk = /^(?=.*[a-z])(?=.*\d)\S{6,20}$/i.test(s.newPw);
+    if (!s.curPw.trim() || !pwOk || s.newPw !== s.confirmPw) return;
+    this.go('settings');
+    this.flash('비밀번호가 변경되었습니다.');
+  }
+
+  submitDelete() {
+    if (!this.state.pw.trim()) return this.setState({ error: '비밀번호를 입력해 주세요.' });
+    if (window.confirm('정말 계정을 삭제하시겠습니까?\n계정과 지금까지 만든 캐릭터 프로필이 모두 삭제되며 이 작업은 되돌릴 수 없습니다.')) {
+      this.setState({ view: 'gone', chars: [] });
+    }
+  }
+
+  renderVals() {
+    const s = this.state;
+    const chars = s.chars;
+    const top = (key) => chars.slice().sort((a, b) => b[key] - a[key]).slice(0, 5).map((c, i) => ({
+      rank: i + 1, rankStyle: RANK(i), name: c.name, value: c[key] + '개',
+      href: '/character/' + encodeURIComponent(c.name)
+    }));
+    const pwErr = this.pwErrors();
+    const nameVal = (s.nameDraft ?? s.userName ?? 'unknown123465').trim();
+    const curName = s.userName ?? 'unknown123465';
+    const nameErr = !s.nameTouched ? ''
+      : (nameVal.length < 2 || nameVal.length > 20) ? '사용자 이름은 2~20자로 입력해 주세요.'
+      : nameVal === curName ? '현재 사용자 이름과 동일합니다. 다른 이름을 입력해 주세요.'
+      : nameVal.toLowerCase().replace(/\s+/g, '') === curName.toLowerCase().replace(/\s+/g, '') ? '현재 사용자 이름과 너무 비슷합니다. 다른 이름을 입력해 주세요.'
+      : '';
+
+    const forms = {
+      'email-verify': {
+        title: '비밀번호 확인',
+        desc: '계정 보호를 위해 이메일 주소를 변경하기 전에 현재 비밀번호를 입력해 주세요.',
+        submitLabel: '확인',
+        fields: [this.field('pw', '현재 비밀번호', 'password', '비밀번호를 입력하세요')],
+        onSubmit: () => this.submitEmailVerify()
+      },
+      'email-change': {
+        title: '이메일 주소 변경',
+        desc: '현재 이메일: ' + s.email,
+        submitLabel: '변경',
+        fields: [this.field('newEmail', '새 이메일 주소', 'email', 'example@email.com', { err: this.emailError() })],
+        onSubmit: () => this.submitEmailChange()
+      },
+      'pw-change': {
+        title: '비밀번호 변경',
+        desc: '새 비밀번호는 6~20자의 영문과 숫자 조합이어야 합니다. 특수문자도 함께 사용할 수 있습니다.',
+        submitLabel: '비밀번호 변경',
+        fields: [
+          this.field('curPw', '기존 비밀번호', 'password', '기존 비밀번호를 입력하세요', { err: pwErr.curPw, eye: true }),
+          this.field('newPw', '새 비밀번호', 'password', '새 비밀번호를 입력하세요', { err: pwErr.newPw, eye: true, hint: '6~20자, 영문+숫자 조합' }),
+          this.field('confirmPw', '새 비밀번호 확인', 'password', '새 비밀번호를 다시 입력하세요', { err: pwErr.confirmPw, eye: true })
+        ],
+        onSubmit: () => this.submitPwChange()
+      },
+      'delete-verify': {
+        title: '계정 삭제',
+        desc: '계정을 삭제하려면 본인 확인을 위해 현재 비밀번호를 입력해 주세요.',
+        submitLabel: '계정 삭제',
+        danger: true,
+        warn: '계정을 삭제하면 지금까지 만든 캐릭터 프로필 ' + chars.length + '개와 받은 좋아요·코멘트가 모두 함께 삭제되며, 이 작업은 되돌릴 수 없습니다.',
+        fields: [this.field('pw', '현재 비밀번호', 'password', '비밀번호를 입력하세요')],
+        onSubmit: () => this.submitDelete()
+      }
+    };
+    const f = forms[s.view];
+
+    const on = s.themeAutoplay;
+    return {
+      themeAutoplay: on,
+      themeAutoplayLabel: on ? '켜짐 · 자동으로 재생됩니다' : '꺼짐 · 직접 재생 버튼을 눌러야 합니다',
+      themeAutoplayTrack: 'flex:none;width:56px;height:32px;padding:3px;border:none;border-radius:16px;cursor:pointer;display:flex;justify-content:' + (on ? 'flex-end' : 'flex-start') + ';align-items:center;background:' + (on ? '#FFC90E' : '#D5DCE6') + ';transition:background .18s ease',
+      themeAutoplayKnob: 'width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);display:block',
+      toggleThemeAutoplay: () => this.setState(p => ({ themeAutoplay: !p.themeAutoplay, toast: !p.themeAutoplay ? '프로필 테마곡 자동 재생을 켰습니다.' : '프로필 테마곡 자동 재생을 껐습니다.' })),
+      isSettings: s.view === 'settings',
+      isForm: !!f,
+      isGone: s.view === 'gone',
+      email: s.email,
+      toast: s.toast,
+      nameDraft: s.nameDraft ?? s.userName ?? 'unknown123465',
+      nameMsg: nameErr,
+      nameMsgStyle: 'display:block;margin-top:8px;font-size:12.5px;line-height:1.5;font-weight:600;color:' + (nameErr ? '#C62A2F' : '#6B7687'),
+      nameInputStyle: (nameErr ? INPUT_ERR : INPUT) + 'height:48px;',
+      onNameChange: (ev) => this.setState({ nameDraft: ev.target.value, nameTouched: true }),
+      saveName: () => {
+        const v = (s.nameDraft ?? s.userName ?? 'unknown123465').trim();
+        const cur = s.userName ?? 'unknown123465';
+        const norm = (x) => x.toLowerCase().replace(/\s+/g, '');
+        this.setState({ nameTouched: true });
+        if (v.length < 2 || v.length > 20 || norm(v) === norm(cur)) return;
+        this.setState({ userName: v, nameDraft: v, nameTouched: false });
+        this.flash('사용자 이름이 변경되었습니다.');
+      },
+      stats: {
+        profiles: chars.length,
+        likes: chars.reduce((a, c) => a + c.likes, 0),
+        comments: chars.reduce((a, c) => a + c.comments, 0)
+      },
+      topLikes: top('likes'),
+      topComments: top('comments'),
+      goSettings: () => this.go('settings'),
+      goEmailVerify: () => this.go('email-verify'),
+      goPwChange: () => this.go('pw-change'),
+      goDeleteVerify: () => this.go('delete-verify'),
+      bulkDelete: () => {
+        if (window.confirm('캐릭터 프로필을 정말 모두 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
+          this.setState({ chars: [] });
+          this.flash('캐릭터 프로필이 모두 삭제되었습니다.');
+        }
+      },
+      formTitle: f ? f.title : '',
+      formDesc: f ? f.desc : '',
+      formError: f ? s.error : '',
+      warnText: f && f.warn ? f.warn : '',
+      fields: f ? f.fields : [],
+      submitLabel: f ? f.submitLabel : '',
+      submitStyle: 'flex:1;min-width:160px;white-space:nowrap;height:52px;border:' + (f && f.danger ? '0' : '1px solid #E0B90C') + ';border-radius:12px;background:' + (f && f.danger ? '#E5484D' : '#FFC90E') + ';color:' + (f && f.danger ? '#fff' : '#2B3440') + ';font-size:16px;font-weight:700;font-family:inherit;cursor:pointer',
+      onFormSubmit: (ev) => { ev.preventDefault(); if (f) f.onSubmit(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

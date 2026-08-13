@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;color:#1a1a1a;-webkit-font-smoothing:antialiased}
+  a{color:#8a8a8a;text-decoration:none}
+  a:hover{color:#1a1a1a}
+  input::placeholder{color:#b8b8b8}
+  input:focus{outline:none}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  @media (max-width:1279px){.oc-deco{display:none!important}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column">
+
+  <div class="oc-deco" style="position:absolute;left:calc(50% - 660px);top:140px;width:320px;height:320px;border-radius:50%;background:#FFC90E;opacity:.13;filter:blur(10px);animation:floaty 10s ease-in-out infinite"></div>
+
+
+  <div class="oc-deco" style="position:absolute;left:calc(50% - 450px);bottom:120px;width:150px;height:120px;border-radius:18px;border:3px solid #1a1a1a;background:#FFC90E;transform:rotate(7deg);display:flex;align-items:center;justify-content:center">
+    <span style="width:74px;height:52px;border-radius:10px;border:3px solid #1a1a1a;background:#fff"></span>
+  </div>
+
+  <div class="oc-deco" style="position:absolute;left:calc(50% - 570px);bottom:290px;width:54px;height:54px;border-radius:50%;border:3px solid #FFC90E"></div>
+
+  <div class="oc-deco" style="position:absolute;right:calc(50% - 640px);bottom:80px;width:300px;height:300px;border-radius:50%;background:#FFC90E;opacity:.15;filter:blur(10px);animation:floaty 12s ease-in-out infinite"></div>
+
+
+  <div class="oc-deco" style="position:absolute;right:calc(50% - 460px);bottom:180px;width:110px;height:110px;border-radius:32px;background:#FFC90E;transform:rotate(-14deg)"></div>
+  <div class="oc-deco" style="position:absolute;right:calc(50% - 580px);top:400px;width:70px;height:70px;border-radius:20px;border:3px solid #FFC90E;transform:rotate(12deg)"></div>
+
+  <header style="position:relative;z-index:2;display:flex;align-items:center;gap:10px;padding:22px 40px">
+    <span style="width:18px;height:18px;border-radius:6px;background:#FFC90E;display:block"></span>
+    <span style="font-size:17px;font-weight:800;letter-spacing:-.02em">프로젝트 OC</span>
+  </header>
+
+  <main style="position:relative;z-index:2;flex:1;display:flex;justify-content:center;padding:24px 24px 80px">
+    <div style="width:100%;max-width:440px;display:flex;flex-direction:column">
+
+      <h1 style="margin:32px 0 0;font-size:44px;line-height:1.18;font-weight:800;letter-spacing:-.035em;text-wrap:pretty">프로젝트OC<br>회원가입</h1>
+      <p style="margin:18px 0 0;font-size:17px;line-height:1.6;color:#767676;text-wrap:pretty">프로젝트OC에 오신것을 환영 합니다!</p>
+
+      <hr style="width:100%;height:2px;border:0;background:#1a1a1a;margin:36px 0 32px">
+
+      <form onSubmit="{{ onSubmit }}" style="display:flex;flex-direction:column;gap:22px">
+        <label style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:14px;font-weight:600;color:#3d3d3d">이메일 주소</span>
+          <input type="email" value="{{ email }}" onChange="{{ onEmail }}" onBlur="{{ blurEmail }}" placeholder="이메일 주소를 입력하세요" style="{{ emailStyle }}" style-focus="border-color:#FFC90E;box-shadow:0 0 0 4px rgba(255,201,14,.22)">
+          <span style="{{ emailErrStyle }}">{{ emailErr }}</span>
+        </label>
+
+        <label style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:14px;font-weight:600;color:#3d3d3d">사용자 이름(2~20자)</span>
+          <input type="text" value="{{ name }}" onChange="{{ onName }}" onBlur="{{ blurName }}" placeholder="사용자 이름을 입력하세요" style="{{ nameStyle }}" style-focus="border-color:#FFC90E;box-shadow:0 0 0 4px rgba(255,201,14,.22)">
+          <span style="{{ nameErrStyle }}">{{ nameErr }}</span>
+        </label>
+
+        <label style="display:flex;flex-direction:column;gap:9px;margin-top:18px">
+          <span style="font-size:14px;font-weight:600;color:#3d3d3d">사용자 비밀번호(6~20자, 영문+숫자 조합)</span>
+          <span style="position:relative;display:block">
+            <input type="{{ pwType }}" value="{{ pw }}" onChange="{{ onPw }}" onBlur="{{ blurPw }}" placeholder="비밀번호를 입력하세요" style="{{ pwStyle }}" style-focus="border-color:#FFC90E;box-shadow:0 0 0 4px rgba(255,201,14,.22)">
+            <button type="button" onClick="{{ togglePw }}" aria-label="비밀번호 표시 전환" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:transparent;color:#8a8a8a;cursor:pointer" style-hover="background:#f5f5f5;color:#1a1a1a">{{ eyeIcon }}</button>
+          </span>
+          <span style="{{ pwErrStyle }}">{{ pwErr }}</span>
+        </label>
+
+        <label style="display:flex;flex-direction:column;gap:9px">
+          <span style="font-size:14px;font-weight:600;color:#3d3d3d">사용자 비밀번호 확인</span>
+          <span style="position:relative;display:block">
+            <input type="{{ pw2Type }}" value="{{ pw2 }}" onChange="{{ onPw2 }}" onBlur="{{ blurPw2 }}" placeholder="비밀번호를 다시 입력하세요" style="{{ pw2Style }}" style-focus="border-color:#FFC90E;box-shadow:0 0 0 4px rgba(255,201,14,.22)">
+            <button type="button" onClick="{{ togglePw2 }}" aria-label="비밀번호 확인 표시 전환" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:transparent;color:#8a8a8a;cursor:pointer" style-hover="background:#f5f5f5;color:#1a1a1a">{{ eye2Icon }}</button>
+          </span>
+          <span style="{{ pw2ErrStyle }}">{{ pw2Err }}</span>
+        </label>
+
+        <button type="submit" style="margin-top:14px;height:54px;border:0;border-radius:14px;background:#FFC90E;color:#1a1a1a;font-size:16px;font-weight:800;font-family:inherit;letter-spacing:-.01em;cursor:pointer;box-shadow:0 6px 16px rgba(255,201,14,.35);transition:transform .12s,box-shadow .15s" style-hover="transform:translateY(-1px);box-shadow:0 10px 22px rgba(255,201,14,.45)" style-active="transform:translateY(0)">회원가입</button>
+      </form>
+
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+function eye(show) {
+  const e = React.createElement;
+  return e('svg', { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' },
+    e('path', { key: 'p', d: 'M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12Z' }),
+    e('circle', { key: 'c', cx: 12, cy: 12, r: 3.2 }),
+    show ? null : e('line', { key: 'l', x1: 4, y1: 20, x2: 20, y2: 4 })
+  );
+}
+const FIELD = 'width:100%;height:54px;padding:0 18px;border-radius:14px;font-size:15px;font-family:inherit;color:#1a1a1a;background:#fff;transition:border-color .15s,box-shadow .15s;border:1.5px solid ';
+const FIELD_PW = 'width:100%;height:54px;padding:0 54px 0 18px;border-radius:14px;font-size:15px;font-family:inherit;color:#1a1a1a;background:#fff;transition:border-color .15s,box-shadow .15s;border:1.5px solid ';
+const ERR = 'font-size:13px;line-height:1.5;color:#D93025;';
+const errStyle = (msg) => msg ? ERR : 'display:none';
+const fieldStyle = (base, msg) => base + (msg ? '#D93025' : '#e4e4e4');
+
+class Component extends DCLogic {
+  state = { show: false, show2: false, email: '', name: '', pw: '', pw2: '', touched: {} };
+
+  errors() {
+    const s = this.state;
+    const t = s.touched;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(s.email.trim());
+    const pwOk = /^(?=.*[a-z])(?=.*\d)\S{6,20}$/i.test(s.pw);
+    return {
+      email: !t.email ? '' : !s.email.trim() ? '이메일 주소를 입력해 주세요.' : !emailOk ? '올바른 이메일 주소 형식이 아닙니다.' : '',
+      name: !t.name ? '' : !s.name.trim() ? '사용자 이름을 입력해 주세요.' : (s.name.trim().length < 2 || s.name.trim().length > 20) ? '사용자 이름은 2~20자로 입력해 주세요.' : '',
+      pw: !t.pw ? '' : !s.pw ? '비밀번호를 입력해 주세요.' : !pwOk ? '비밀번호는 6~20자의 영문과 숫자를 조합해 주세요.' : '',
+      pw2: !t.pw2 ? '' : !s.pw2 ? '비밀번호 확인을 입력해 주세요.' : s.pw !== s.pw2 ? '비밀번호가 일치하지 않습니다.' : ''
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const err = this.errors();
+    const set = (k) => (ev) => this.setState({ [k]: ev.target.value });
+    const blur = (k) => () => this.setState(p => ({ touched: Object.assign({}, p.touched, { [k]: true }) }));
+    return {
+      email: s.email, name: s.name, pw: s.pw, pw2: s.pw2,
+      onEmail: set('email'), onName: set('name'),
+      onPw: (ev) => this.setState({ pw: ev.target.value }),
+      onPw2: (ev) => this.setState({ pw2: ev.target.value }),
+      blurEmail: blur('email'), blurName: blur('name'), blurPw: blur('pw'), blurPw2: blur('pw2'),
+      emailErr: err.email, nameErr: err.name, pwErr: err.pw, pw2Err: err.pw2,
+      emailErrStyle: errStyle(err.email), nameErrStyle: errStyle(err.name),
+      pwErrStyle: errStyle(err.pw), pw2ErrStyle: errStyle(err.pw2),
+      emailStyle: fieldStyle(FIELD, err.email), nameStyle: fieldStyle(FIELD, err.name),
+      pwStyle: fieldStyle(FIELD_PW, err.pw), pw2Style: fieldStyle(FIELD_PW, err.pw2),
+      pwType: s.show ? 'text' : 'password',
+      pw2Type: s.show2 ? 'text' : 'password',
+      eyeIcon: eye(s.show),
+      eye2Icon: eye(s.show2),
+      togglePw: () => this.setState(p => ({ show: !p.show })),
+      togglePw2: () => this.setState(p => ({ show2: !p.show2 })),
+      onSubmit: (ev) => {
+        ev.preventDefault();
+        this.setState({ touched: { email: true, name: true, pw: true, pw2: true } });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

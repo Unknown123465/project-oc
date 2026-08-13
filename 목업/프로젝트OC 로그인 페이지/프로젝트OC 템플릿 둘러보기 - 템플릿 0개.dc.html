@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FFF9E4;font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;color:#2B3440;-webkit-font-smoothing:antialiased}
+  a{color:#2B3440;text-decoration:none}
+  a:hover{color:#000}
+  input::placeholder{color:#98A2B3}
+  input:focus{outline:none}
+</style>
+</helmet>
+
+<div onClick="{{ closeAll }}" style="min-height:100vh;padding:40px 24px 120px;background-color:#FFF9E4">
+  <div style="max-width:1440px;margin:0 auto">
+
+    <h1 style="margin:0;font-size:32px;font-weight:700;letter-spacing:-.02em;display:inline-block;padding-bottom:8px;border-bottom:3px solid #2B3440">템플릿 둘러보기</h1>
+
+    <div style="margin-top:28px;padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:22px;border:1px solid #D5DCE6;border-radius:28px;background:#fff">
+      <p style="margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em">프로필을 만들어 보세요!</p>
+      <a href="/create" style="height:52px;min-width:220px;padding:0 32px;display:inline-flex;align-items:center;justify-content:center;border:1px solid #D5DCE6;border-radius:26px;background:#FFC90E;font-size:17px;font-weight:700;letter-spacing:-.01em;color:#2B3440">＋ 프로필 만들기</a>
+    </div>
+
+    <div style="margin-top:44px;display:flex;align-items:center;gap:12px">
+      <span style="position:relative;flex:1;display:flex;align-items:center">
+        <span style="position:absolute;left:20px;display:flex;color:#6B7687">{{ searchIcon }}</span>
+        <input type="text" placeholder="캐릭터 이름 또는 슬로건을 입력해주세요." style="width:100%;height:56px;padding:0 20px 0 52px;border:1px solid #D5DCE6;border-radius:28px;background:#fff;font-size:15px;font-family:inherit;color:#2B3440;transition:border-color .15s,box-shadow .15s" style-focus="border-color:#FFC90E;box-shadow:0 0 0 3px rgba(255,201,14,.28)">
+      </span>
+      <button type="button" style="flex-shrink:0;white-space:nowrap;height:56px;padding:0 28px;border:0;border-radius:28px;background:#2B3440;color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer">검색</button>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px">
+      <div onClick="{{ stop }}" style="position:relative">
+        <button type="button" onClick="{{ toggleSort }}" style="height:44px;min-width:150px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #D5DCE6;border-radius:12px;background:#fff;font-size:14px;font-weight:600;font-family:inherit;color:#2B3440;cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:#FFF4CC;border-color:#FFC90E">
+          <span style="display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0">{{ sortIcon }}{{ sort }}</span>
+          {{ caretSort }}
+        </button>
+        <div style="{{ sortMenuStyle }}">
+          <sc-for list="{{ sortOptions }}" as="opt" hint-placeholder-count="4">
+            <button type="button" onClick="{{ opt.onClick }}" style="{{ opt.style }}" style-hover="background:#FFF4CC">{{ opt.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div onClick="{{ stop }}" style="position:relative">
+        <button type="button" onClick="{{ toggleCat }}" style="height:44px;min-width:150px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #D5DCE6;border-radius:12px;background:#fff;font-size:14px;font-weight:600;font-family:inherit;color:#2B3440;cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:#FFF4CC;border-color:#FFC90E">
+          <span style="display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0">{{ filterIcon }}{{ cat }}</span>
+          {{ caretCat }}
+        </button>
+        <div style="{{ catMenuStyle }}">
+          <sc-for list="{{ catOptions }}" as="opt" hint-placeholder-count="8">
+            <button type="button" onClick="{{ opt.onClick }}" style="{{ opt.style }}" style-hover="background:#FFF4CC">{{ opt.label }}</button>
+          </sc-for>
+          <div style="padding:10px 12px;border-top:1px solid #E8EDF4;display:flex;flex-direction:column;gap:8px">
+            
+            <input type="text" value="{{ customRace }}" onChange="{{ onCustomRace }}" onKeyDown="{{ onCustomKey }}" placeholder="종족 직접 입력" style="width:100%;height:38px;padding:0 12px;border:1px solid #D5DCE6;border-radius:9px;background:#fff;font-size:13px;font-family:inherit;color:#2B3440;text-align:right" style-focus="border-color:#FFC90E;box-shadow:0 0 0 3px rgba(255,201,14,.24)">
+            <button type="button" onClick="{{ applyCustomRace }}" style="height:36px;border:0;border-radius:9px;background:#FFC90E;font-size:13px;font-weight:700;font-family:inherit;color:#2B3440;cursor:pointer">적용</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;column-width:260px;column-gap:24px">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="12">
+        <div style="break-inside:avoid;margin:0 0 24px;position:relative;border-radius:10px;background:#fff;border:1px solid #DCE3ED;box-shadow:none" style-hover="box-shadow:0 0 0 2px #FFC90E,0 6px 18px rgba(255,201,14,.55)">
+          <div style="{{ c.thumbStyle }}"></div>
+
+          <div onClick="{{ stop }}" style="position:absolute;right:10px;top:10px">
+            <button type="button" onClick="{{ c.toggleMenu }}" aria-label="카드 메뉴" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:rgba(255,255,255,.92);color:#2B3440;font-size:16px;font-weight:800;font-family:inherit;line-height:1;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.24)" style-hover="background:#fff">···</button>
+            <div style="{{ c.menuStyle }}">
+              <button type="button" style="width:100%;padding:11px 16px;text-align:right;border:0;border-bottom:1px solid #E8EDF4;background:transparent;font-size:14px;font-family:inherit;color:#2B3440;cursor:pointer" style-hover="background:#FFF4CC" onClick="{{ c.share }}">공유</button>
+              <button type="button" style="width:100%;padding:11px 16px;text-align:right;border:0;border-bottom:1px solid #E8EDF4;background:transparent;font-size:14px;font-family:inherit;color:#2B3440;cursor:pointer" style-hover="background:#FFF4CC" onClick="{{ c.report }}">신고</button>
+              <button type="button" onClick="{{ c.pick }}" style="width:100%;padding:11px 16px;text-align:right;border:0;background:transparent;font-size:14px;font-family:inherit;color:#2B3440;cursor:pointer" style-hover="background:#FFF4CC">링크 복사</button>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px">
+            <span style="flex:1;min-width:0;font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+            <span style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-size:12px;color:#6B7687;white-space:nowrap">
+              <span style="display:flex;align-items:center;gap:4px">{{ heartIcon }}{{ c.likes }}</span>
+              <span style="display:flex;align-items:center;gap:4px">{{ commentIcon }}{{ c.comments }}</span>
+            </span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+  </div>
+</div>
+
+
+<sc-if value="{{ reportOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeReport }}" style="position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(43,52,64,.45)">
+    <div onClick="{{ stop }}" style="width:100%;max-width:520px;max-height:calc(100vh - 48px);overflow:auto;padding:28px;border:1px solid #DCE3ED;border-radius:18px;background:#fff;box-shadow:0 20px 48px rgba(0,0,0,.24)">
+      <h2 style="margin:0;font-size:21px;font-weight:800;letter-spacing:-.02em;color:#2B3440">프로필 신고</h2>
+      <p style="margin:10px 0 0;font-size:14px;line-height:1.6;color:#6B7687;text-wrap:pretty">‘{{ reportName }}’ 프로필을 신고합니다. 접수된 내용은 운영팀이 검토합니다.</p>
+
+      <div style="margin-top:22px;display:flex;flex-direction:column;gap:9px">
+        <span style="font-size:14px;font-weight:700;color:#2B3440">신고 사유</span>
+        <div onClick="{{ stop }}" style="position:relative">
+          <button type="button" onClick="{{ toggleReason }}" style="{{ reasonBtnStyle }}" style-hover="border-color:#C3CBD8">
+            <span style="{{ reasonLabelStyle }}">{{ reasonLabel }}</span>
+            {{ caretReason }}
+          </button>
+          <div style="{{ reasonMenuStyle }}">
+            <sc-for list="{{ reasonOptions }}" as="o" hint-placeholder-count="4">
+              <button type="button" onClick="{{ o.onClick }}" style="{{ o.style }}" style-hover="background:#FFF4CC">{{ o.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;display:flex;flex-direction:column;gap:9px">
+        <span style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+          <span style="font-size:14px;font-weight:700;color:#2B3440">구체적인 신고 사유</span>
+          <span style="font-size:12.5px;font-weight:600;color:#98A2B3">{{ detailCount }}</span>
+        </span>
+        <textarea value="{{ detail }}" onChange="{{ onDetail }}" maxLength="500" rows="5" placeholder="어떤 점이 문제인지 구체적으로 작성해 주세요." style="width:100%;min-height:132px;padding:14px 16px;border:1px solid #D5DCE6;border-radius:12px;background:#F6F7F9;font-size:14.5px;line-height:1.6;font-family:inherit;color:#2B3440;resize:none;outline:none" style-focus="border-color:#FFC90E;box-shadow:0 0 0 3px rgba(255,201,14,.28)"></textarea>
+      </div>
+
+      <div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:12px">
+        <button type="button" onClick="{{ submitReport }}" disabled="{{ submitDisabled }}" style="{{ submitStyle }}">신고 제출</button>
+        <button type="button" onClick="{{ closeReport }}" style="flex:1;min-width:120px;white-space:nowrap;height:50px;border:1px solid #D5DCE6;border-radius:12px;background:#fff;color:#2B3440;font-size:15.5px;font-weight:700;font-family:inherit;cursor:pointer" style-hover="background:#F6F7F9">취소</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ reportToast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:90;padding:14px 24px;border-radius:12px;background:#2B3440;color:#fff;font-size:14.5px;font-weight:600;box-shadow:0 10px 26px rgba(0,0,0,.22)">{{ reportToast }}</div>
+</sc-if>
+
+<div onClick="{{ closeShare }}" style="{{ shareOverlayStyle }}">
+  <div onClick="{{ stop }}" style="width:100%;max-width:420px;border-radius:16px;background:#fff;border:1px solid #DCE3ED;box-shadow:0 16px 48px rgba(16,24,40,.24);overflow:hidden">
+    <div style="padding:22px 24px 6px;display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:18px;font-weight:700;letter-spacing:-.01em">공유하기</span>
+      <span style="font-size:13px;color:#6B7687">{{ shareName }}</span>
+    </div>
+    <div style="padding:18px 24px 4px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <sc-for list="{{ snsList }}" as="s" hint-placeholder-count="4">
+        <button type="button" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 4px;border:1px solid #E8EDF4;border-radius:12px;background:#fff;font-family:inherit;font-size:12px;color:#2B3440;cursor:pointer" style-hover="background:#EAF1FA;border-color:#B9C5D6">
+          <span style="{{ s.dotStyle }}">{{ s.mark }}</span>
+          <span>{{ s.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="padding:16px 24px 22px;display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:13px;font-weight:700;color:#6B7687">링크</span>
+      <div style="display:flex;gap:8px">
+        <input type="text" readonly value="{{ shareUrl }}" style="flex:1;min-width:0;height:44px;padding:0 14px;border:1px solid #D5DCE6;border-radius:10px;background:#F7F9FC;font-size:13px;font-family:inherit;color:#2B3440">
+        <button type="button" onClick="{{ copyLink }}" style="flex:none;white-space:nowrap;height:44px;padding:0 18px;border:0;border-radius:10px;background:#FFC90E;font-size:14px;font-weight:700;font-family:inherit;color:#2B3440;cursor:pointer">{{ copyLabel }}</button>
+      </div>
+    </div>
+  </div>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script>
+const e = React.createElement;
+const svg = (props, ...kids) => e('svg', Object.assign({ width: 16, height: 16, viewBox: '0 0 16 16', fill: 'currentColor' }, props), ...kids);
+const ICONS = {
+  search: svg({ width: 18, height: 18 }, e('path', { key: 1, d: 'M11.74 10.34h-.79l-.28-.27a6.47 6.47 0 1 0-.7.7l.27.28v.79l5 4.99L16.5 15.3l-4.76-4.96Zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z' })),
+  filter: svg({}, e('path', { key: 1, d: 'M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5Zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Z' })),
+  sort: svg({}, e('path', { key: 1, d: 'M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5Zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5Zm0 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5Zm0 3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5Z' })),
+  heart: svg({ width: 13, height: 13 }, e('path', { key: 1, d: 'M8 14.25s-6-3.72-6-7.63A3.63 3.63 0 0 1 8 4.1a3.63 3.63 0 0 1 6 2.52c0 3.91-6 7.63-6 7.63Z' })),
+  comment: svg({ width: 13, height: 13, fill: 'none', stroke: 'currentColor', strokeWidth: 1.5 }, e('path', { key: 1, d: 'M14 9.5A2.5 2.5 0 0 1 11.5 12H6l-3.5 2.4V4.5A2.5 2.5 0 0 1 5 2h6.5A2.5 2.5 0 0 1 14 4.5v5Z' })),
+  caret: (open) => svg({ width: 12, height: 12, style: { transition: 'transform .18s', transform: open ? 'rotate(180deg)' : 'none', color: '#6B7687' } }, e('path', { key: 1, d: 'M3 5.5 8 10.5l5-5H3Z' }))
+};
+const MENU = 'position:absolute;top:calc(100% + 8px);right:0;min-width:180px;background:#fff;border:1px solid #DCE3ED;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.14),0 12px 28px rgba(0,0,0,.12);overflow:hidden;z-index:30;transform-origin:top right;transition:opacity .15s,transform .15s;';
+const menuStyle = (open) => MENU + (open ? 'opacity:1;transform:scale(1);pointer-events:auto;visibility:visible' : 'opacity:0;transform:scale(.96);pointer-events:none;visibility:hidden');
+const OPT = 'white-space:nowrap;width:100%;padding:12px 16px;text-align:right;border:0;background:transparent;font-size:14px;font-family:inherit;color:#2B3440;cursor:pointer;';
+
+const brandIcon = (d, color) => e('svg', { width: 19, height: 19, viewBox: '0 0 24 24', fill: color || 'currentColor' }, e('path', { key: 1, d: d }));
+const SNS = [
+  ['X', brandIcon('M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.11l11.97 15.64Z'), '#000000'],
+  ['카카오톡', brandIcon('M12 3C6.98 3 2.9 6.2 2.9 10.15c0 2.54 1.7 4.77 4.25 6.03l-1.03 3.8c-.09.33.27.6.56.41l4.5-2.98c.27.02.54.04.82.04 5.02 0 9.1-3.2 9.1-7.3S17.02 3 12 3Z', '#3A1D1D'), '#FAE100'],
+  ['인스타그램', brandIcon('M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9a3.8 3.8 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07Zm0 6.68a3.16 3.16 0 1 0 0 6.32 3.16 3.16 0 0 0 0-6.32Zm0-1.98a5.14 5.14 0 1 1 0 10.28 5.14 5.14 0 0 1 0-10.28Zm5.36-.36a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0Z'), '#E1306C'],
+  ['페이스북', brandIcon('M13.5 21.9v-8.2h2.76l.41-3.2H13.5V8.45c0-.93.26-1.56 1.59-1.56h1.7V4.03c-.3-.04-1.31-.13-2.5-.13-2.47 0-4.16 1.51-4.16 4.28V10.5H7.36v3.2h2.77v8.2h3.37Z'), '#1877F2']
+];
+
+const NAMES = ['루미에르 아르장떼유 벨몽드', '카이', '세라핀', '노아', '이즈미 하루카', '빈센트', '별하', '레이븐 클로디어스', '유이', '아스텔', '하늘', '리안'];
+const TONES = ['#FFE9A3', '#E8E1FF', '#D8F0E2', '#FFDDD2', '#DCE9FF', '#F3E4D7', '#E6EFD9', '#FFE1EF', '#E2ECFB', '#F0E6F7', '#FFF0C2', '#DDF1F5'];
+const HEIGHTS = [300, 210, 380, 250, 330, 190, 420, 270, 240, 360, 200, 310];
+const LIKES = [10, 24, 6, 132, 48, 3, 87, 15, 41, 7, 62, 19];
+const COMMENTS = [10, 4, 0, 21, 9, 1, 12, 2, 5, 0, 8, 3];
+
+class Component extends DCLogic {
+  state = { sort: '인기순', cat: '전체', customRace: '', openSort: false, openCat: false, openCard: -1,
+    shareOpen: false, shareIdx: -1, copied: false,
+    reportName: '', reportOpen: false, reason: '', detail: '', openReason: false, reportToast: '' };
+
+  shareVals() {
+    const s = this.state;
+    const idx = s.shareIdx == null ? -1 : s.shareIdx;
+    return {
+      shareName: idx >= 0 ? NAMES[idx] : '',
+      shareUrl: idx >= 0 ? 'https://projectoc.app/c/' + (1000 + idx) : '',
+      shareOverlayStyle: 'position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(24,32,44,.5);transition:opacity .18s;' + (s.shareOpen ? 'opacity:1;pointer-events:auto;visibility:visible' : 'opacity:0;pointer-events:none;visibility:hidden'),
+      closeShare: () => this.setState({ shareOpen: false, copied: false }),
+      copyLabel: s.copied ? '복사됨' : '복사',
+      copyLink: () => this.setState({ copied: true }),
+      snsList: SNS.map(([label, mark, bg]) => ({
+        label, mark,
+        dotStyle: 'width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:' + bg + ';color:#fff'
+      }))
+    };
+  }
+
+  openReport(name) {
+    this.setState({ reportOpen: true, reportName: name, reason: '', detail: '', openReason: false, openCard: -1 });
+  }
+
+  closeReport() {
+    this.setState({ reportOpen: false, openReason: false });
+  }
+
+  flashReport(msg) {
+    this.setState({ reportToast: msg });
+    clearTimeout(this._rt);
+    this._rt = setTimeout(() => this.setState({ reportToast: '' }), 2600);
+  }
+
+  componentWillUnmount() { clearTimeout(this._rt); }
+
+  reportVals() {
+    const s = this.state;
+    const reasons = ['성적인 요소', '잔인한 요소', '권리 침해', '기타'];
+    const ready = !!s.reason && s.detail.trim().length > 0;
+    return {
+      reportOpen: s.reportOpen,
+      reportName: s.reportName,
+      reportToast: s.reportToast,
+      closeReport: () => this.closeReport(),
+      toggleReason: () => this.setState(p => ({ openReason: !p.openReason })),
+      reasonLabel: s.reason || '신고 사유를 선택하세요',
+      reasonLabelStyle: 'flex:1;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:' + (s.reason ? '700' : '500') + ';color:' + (s.reason ? '#2B3440' : '#98A2B3'),
+      reasonBtnStyle: 'width:100%;height:50px;padding:0 16px;display:flex;align-items:center;gap:10px;border:1px solid ' + (s.openReason ? '#FFC90E' : '#D5DCE6') + ';border-radius:12px;background:' + (s.openReason ? '#fff' : '#F6F7F9') + ';font-size:14.5px;font-family:inherit;cursor:pointer;' + (s.openReason ? 'box-shadow:0 0 0 3px rgba(255,201,14,.28);' : ''),
+      caretReason: ICONS.caret(s.openReason),
+      reasonMenuStyle: 'position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fff;border:1px solid #DCE3ED;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.14),0 12px 28px rgba(0,0,0,.12);overflow:hidden;z-index:20;transform-origin:top;transition:opacity .15s,transform .15s;' + (s.openReason ? 'opacity:1;transform:scale(1);pointer-events:auto;visibility:visible' : 'opacity:0;transform:scale(.98);pointer-events:none;visibility:hidden'),
+      reasonOptions: reasons.map((label, i) => ({
+        label,
+        style: 'white-space:nowrap;width:100%;padding:13px 16px;text-align:left;border:0;' + (i < reasons.length - 1 ? 'border-bottom:1px solid #E8EDF4;' : '') + 'background:' + (s.reason === label ? '#FFF4CC' : 'transparent') + ';font-size:14.5px;font-weight:' + (s.reason === label ? '700' : '500') + ';font-family:inherit;color:#2B3440;cursor:pointer',
+        onClick: () => this.setState({ reason: label, openReason: false })
+      })),
+      detail: s.detail,
+      detailCount: s.detail.length + ' / 500',
+      onDetail: (ev) => this.setState({ detail: ev.target.value.slice(0, 500) }),
+      submitDisabled: !ready,
+      submitStyle: 'flex:1;min-width:150px;white-space:nowrap;height:50px;border:1px solid ' + (ready ? '#E0B90C' : '#E4E8EE') + ';border-radius:12px;background:' + (ready ? '#FFC90E' : '#EFF1F5') + ';color:' + (ready ? '#2B3440' : '#A8B0BD') + ';font-size:15.5px;font-weight:700;font-family:inherit;cursor:' + (ready ? 'pointer' : 'not-allowed'),
+      submitReport: () => {
+        if (!ready) return;
+        this.setState({ reportOpen: false, openReason: false });
+        this.flashReport('신고가 접수되었습니다.');
+      }
+    };
+  }
+
+  applyCustom() {
+    const v = (this.state.customRace || '').trim();
+    if (!v) return;
+    this.setState({ cat: v, openCat: false });
+  }
+
+  mkOptions(list, key) {
+    return list.map((label, i) => ({
+      label,
+      style: OPT + (i < list.length - 1 ? 'border-bottom:1px solid #E8EDF4;' : '') + (this.state[key] === label ? 'background:#FFF4CC;font-weight:700;' : ''),
+      onClick: () => this.setState({ [key]: label, openSort: false, openCat: false })
+    }));
+  }
+
+  renderVals() {
+    const s = this.state;
+    return Object.assign(this.reportVals(), this.shareVals(), {
+      searchIcon: ICONS.search, filterIcon: ICONS.filter, sortIcon: ICONS.sort,
+      heartIcon: ICONS.heart, commentIcon: ICONS.comment,
+      caretSort: ICONS.caret(s.openSort), caretCat: ICONS.caret(s.openCat),
+      sort: s.sort, cat: s.cat,
+      sortOptions: this.mkOptions(['인기순', '최신순', '좋아요 수', '댓글 수'], 'sort'),
+      catOptions: this.mkOptions(['전체', '인간', '엘프', '천사', '악마', '수인', '오크', '드워프'], 'cat'),
+      customRace: s.customRace,
+      onCustomRace: (ev) => this.setState({ customRace: ev.target.value }),
+      onCustomKey: (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); this.applyCustom(); } },
+      applyCustomRace: () => this.applyCustom(),
+      sortMenuStyle: menuStyle(s.openSort),
+      catMenuStyle: menuStyle(s.openCat),
+      toggleSort: () => this.setState(p => ({ openSort: !p.openSort, openCat: false, openCard: -1 })),
+      toggleCat: () => this.setState(p => ({ openCat: !p.openCat, openSort: false, openCard: -1 })),
+      closeAll: () => this.setState({ openSort: false, openCat: false, openCard: -1 }),
+      stop: (ev) => ev.stopPropagation(),
+      cards: NAMES.map((name, i) => ({
+        name,
+        likes: LIKES[i],
+        comments: COMMENTS[i],
+        thumbStyle: 'height:' + HEIGHTS[i] + 'px;border-radius:9px 9px 0 0;background:linear-gradient(140deg,' + TONES[i] + ' 0%,#FFFFFF 100%)',
+        menuStyle: menuStyle(s.openCard === i),
+        toggleMenu: () => this.setState(p => ({ openCard: p.openCard === i ? -1 : i, openSort: false, openCat: false })),
+        pick: () => this.setState({ openCard: -1 }),
+        report: () => this.openReport(name),
+        share: () => this.setState({ openCard: -1, shareOpen: true, shareIdx: i, copied: false })
+      }))
+    });
+  }
+}
+</script>
+</body>
+</html>

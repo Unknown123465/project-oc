@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
+<style>
+  body { margin:0; font-family:'Gothic A1', sans-serif; color:#2B3440; background:#FFF9E4; }
+  a { color:#2B3440; }
+  a:hover { color:#8A6D00; }
+  @keyframes oc404-draw {
+    0% { stroke-dashoffset:1; }
+    14% { stroke-dashoffset:0; }
+    86% { stroke-dashoffset:0; }
+    90%, 100% { stroke-dashoffset:1; }
+  }
+  @keyframes oc404-dot {
+    0%, 6% { fill:#fff; }
+    16%, 86% { fill:#FFC90E; }
+    90%, 100% { fill:#fff; }
+  }
+  @keyframes oc404-fade {
+    0%, 14% { opacity:1; }
+    30%, 86% { opacity:0; }
+    90%, 100% { opacity:1; }
+  }
+  @keyframes oc404-num {
+    0%, 42% { opacity:0; transform:translateY(6px); }
+    56%, 86% { opacity:1; transform:translateY(0); }
+    92%, 100% { opacity:0; transform:translateY(6px); }
+  }
+</style>
+</helmet>
+
+<div style="min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px;box-sizing:border-box;background:#FFF9E4">
+
+  <div style="position:absolute;top:-90px;left:-70px;width:280px;height:280px;border-radius:50%;background:#FFC90E;opacity:.28"></div>
+  <div style="position:absolute;bottom:-100px;right:-60px;width:320px;height:320px;border-radius:50%;background:#FFC90E;opacity:.28"></div>
+
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:28px;text-align:center;max-width:640px">
+
+    <div style="display:flex;align-items:center;gap:26px;padding:30px 34px;background:#fff;border:1px solid #D5DCE6;border-radius:18px">
+      <svg viewBox="0 0 128 128" width="112" height="112" fill="none">
+        <path pathLength="1" d="M14 14 L14 64 L114 64 M114 14 L114 114" stroke="#2B3440" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" style="animation:oc404-draw 4.2s ease-in-out infinite"></path>
+        <g stroke="#2B3440" stroke-width="4">
+          <circle cx="14" cy="14" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out infinite"></circle>
+          <circle cx="64" cy="14" r="9" fill="#fff" style="animation:oc404-fade 4.2s ease-in-out infinite"></circle>
+          <circle cx="114" cy="14" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out infinite"></circle>
+          <circle cx="14" cy="64" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out infinite"></circle>
+          <circle cx="64" cy="64" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out infinite"></circle>
+          <circle cx="114" cy="64" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out infinite"></circle>
+          <circle cx="14" cy="114" r="9" fill="#fff" style="animation:oc404-fade 4.2s ease-in-out infinite"></circle>
+          <circle cx="64" cy="114" r="9" fill="#fff" style="animation:oc404-fade 4.2s ease-in-out infinite"></circle>
+          <circle cx="114" cy="114" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out infinite"></circle>
+        </g>
+      </svg>
+
+      <svg viewBox="0 0 128 128" width="112" height="112" fill="none">
+        <path pathLength="1" d="M14 14 L114 14 L114 114 L14 114 Z" stroke="#2B3440" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" style="animation:oc404-draw 4.2s ease-in-out .45s infinite"></path>
+        <g stroke="#2B3440" stroke-width="4">
+          <circle cx="14" cy="14" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .45s infinite"></circle>
+          <circle cx="64" cy="14" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .45s infinite"></circle>
+          <circle cx="114" cy="14" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .45s infinite"></circle>
+          <circle cx="14" cy="64" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .45s infinite"></circle>
+          <circle cx="64" cy="64" r="9" fill="#fff" style="animation:oc404-fade 4.2s ease-in-out .45s infinite"></circle>
+          <circle cx="114" cy="64" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .45s infinite"></circle>
+          <circle cx="14" cy="114" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .45s infinite"></circle>
+          <circle cx="64" cy="114" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .45s infinite"></circle>
+          <circle cx="114" cy="114" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .45s infinite"></circle>
+        </g>
+      </svg>
+
+      <svg viewBox="0 0 128 128" width="112" height="112" fill="none">
+        <path pathLength="1" d="M14 14 L14 64 L114 64 M114 14 L114 114" stroke="#2B3440" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" style="animation:oc404-draw 4.2s ease-in-out .9s infinite"></path>
+        <g stroke="#2B3440" stroke-width="4">
+          <circle cx="14" cy="14" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .9s infinite"></circle>
+          <circle cx="64" cy="14" r="9" fill="#fff" style="animation:oc404-fade 4.2s ease-in-out .9s infinite"></circle>
+          <circle cx="114" cy="14" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .9s infinite"></circle>
+          <circle cx="14" cy="64" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .9s infinite"></circle>
+          <circle cx="64" cy="64" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .9s infinite"></circle>
+          <circle cx="114" cy="64" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .9s infinite"></circle>
+          <circle cx="14" cy="114" r="9" fill="#fff" style="animation:oc404-fade 4.2s ease-in-out .9s infinite"></circle>
+          <circle cx="64" cy="114" r="9" fill="#fff" style="animation:oc404-fade 4.2s ease-in-out .9s infinite"></circle>
+          <circle cx="114" cy="114" r="9" fill="#fff" style="animation:oc404-dot 4.2s ease-in-out .9s infinite"></circle>
+        </g>
+      </svg>
+    </div>
+
+    <div style="font-size: 64px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; animation: oc404-num 4.2s ease-in-out infinite">이런!</div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em;color:#2B3440">페이지를 찾을 수 없습니다</h1>
+      <p style="margin:0;font-size:15px;line-height:1.6;color:#6B7687;text-wrap:pretty">주소가 바뀌었거나 삭제된 페이지예요.<br>아래 버튼으로 다시 돌아가 주세요.</p>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:4px">
+      <a href="프로젝트OC 로그인.dc.html" style="display:flex;align-items:center;height:48px;padding:0 24px;border-radius:12px;background:#FFC90E;border:1px solid #FFC90E;color:#2B3440;font-size:15px;font-weight:700;text-decoration:none;transition:filter .15s" style-hover="filter:brightness(.95);color:#2B3440">메인 페이지로 이동</a>
+      <a href="프로젝트OC 템플릿 둘러보기 - 템플릿 제작.dc.html" style="display:flex;align-items:center;height:48px;padding:0 24px;border-radius:12px;background:#fff;border:1px solid #D5DCE6;color:#2B3440;font-size:15px;font-weight:700;text-decoration:none;transition:background .15s,border-color .15s" style-hover="background:#F7F9FC;border-color:#B9C3D4;color:#2B3440">캐릭터 템플릿 둘러보기</a>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

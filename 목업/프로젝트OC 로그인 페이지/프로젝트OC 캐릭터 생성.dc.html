@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#EEF1F6;font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;color:#2D3440;-webkit-font-smoothing:antialiased}
+  a{color:#4A5568}
+  a:hover{color:#2D3440}
+  input::placeholder,textarea::placeholder{color:#A8B0BE}
+  textarea{resize:none}
+  input:focus,textarea:focus{outline:none;border-color:#FFC90E!important;box-shadow:0 0 0 3px rgba(255,201,14,.25)}
+  input[type=color]{padding:3px;cursor:pointer}
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:32px 20px 100px">
+  <div style="max-width:900px;margin:0 auto;background:#fff;border:1px solid #E3E7EF;border-radius:18px;box-shadow:0 1px 2px rgba(45,52,64,.05),0 12px 28px rgba(45,52,64,.06);overflow:hidden">
+
+    <div style="padding:26px 28px 0">
+      <h1 style="margin:0;font-size:22px;font-weight:800;letter-spacing:-.02em">새 캐릭터 등록</h1>
+    </div>
+
+    <div style="padding:20px 28px 0">
+      <div style="{{ headerWrapStyle }}">
+        <div onClick="{{ openCover }}" style="{{ coverBannerStyle }}" style-hover="background:#EEF2F8;border-color:#B9C3D4">
+          <span ref="{{ coverOutRef }}" style="{{ coverFillStyle }}"></span>
+          <span style="{{ coverHintStyle }}">{{ imgIcon }}배경 이미지를 등록해 주세요</span>
+        </div>
+        <div style="{{ avatarSlotStyle }}">
+          <span onClick="{{ openAvatar }}" style="{{ avatarBoxStyle }}" style-hover="transform:scale(1.02)">
+            <span ref="{{ avatarOutRef }}" style="{{ avatarFillStyle }}"></span>
+            <span style="{{ avatarHintStyle }}">{{ personIcon }}</span>
+          </span>
+          <span onClick="{{ openCover }}" title="배경 이미지 등록" style="{{ coverIconBtnStyle }}"><span style="display:flex;transform:scale(.8)">{{ imgIconSmall }}</span></span>
+        </div>
+      </div>
+    </div>
+
+    <hr style="{{ headerRuleStyle }}">
+
+    <div style="padding:0 28px 32px;display:flex;flex-direction:column;gap:22px">
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label style="font-size:15px;font-weight:700">이름 <span style="font-size:12px;font-weight:500;color:#8C97A8">(최대 20자)</span></label>
+        <input type="text" value="{{ name }}" onChange="{{ onName }}" onBlur="{{ touchName }}" placeholder="이름을 입력해 주세요." style="width:100%;height:48px;padding:0 16px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:15px;font-family:inherit;color:#2D3440;transition:border-color .15s,box-shadow .15s">
+        <sc-if value="{{ nameError }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:12.5px;font-weight:600;color:#E5484D">{{ nameError }}</span>
+        </sc-if>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label style="font-size:15px;font-weight:700">슬로건 <span style="font-size:12px;font-weight:500;color:#8C97A8">(최대 30자)</span></label>
+        <textarea rows="2" value="{{ slogan }}" onChange="{{ onSlogan }}" onBlur="{{ touchSlogan }}" placeholder="슬로건을 입력해 주세요. 간단한 한마디여도 괜찮아요!" style="width:100%;padding:13px 16px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:15px;font-family:inherit;line-height:1.5;color:#2D3440;resize:none;transition:border-color .15s,box-shadow .15s"></textarea>
+        <sc-if value="{{ sloganError }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:12.5px;font-weight:600;color:#E5484D">{{ sloganError }}</span>
+        </sc-if>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label style="font-size:15px;font-weight:700">TMI <span style="font-size:12px;font-weight:500;color:#8C97A8">(최대 5개 · 개행 최대 4회, 개행 1회당 TMI 1개)</span></label>
+        <textarea rows="5" value="{{ tmi }}" onChange="{{ onTmi }}" onKeyDown="{{ onTmiKey }}" onBlur="{{ touchTmi }}" placeholder="TMI를 입력해 주세요. 개행으로 구분 됩니다." style="width:100%;padding:13px 16px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:15px;font-family:inherit;line-height:1.6;color:#2D3440;resize:none;transition:border-color .15s,box-shadow .15s"></textarea>
+        <sc-if value="{{ tmiError }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:12.5px;font-weight:600;color:#E5484D">{{ tmiError }}</span>
+        </sc-if>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">
+        <sc-for list="{{ extras }}" as="f" hint-placeholder-count="0">
+          <div style="{{ f.wrapStyle }}">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+              <label style="font-size:15px;font-weight:700">{{ f.label }} <span style="font-size:12px;font-weight:500;color:#8C97A8">{{ f.hint }}</span></label>
+              <button type="button" onClick="{{ f.remove }}" aria-label="요소 삭제" style="width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:#93A0B4;cursor:pointer;transition:background .15s,color .15s" style-hover="background:#FDECEC;color:#E5484D">{{ trashIcon }}</button>
+            </div>
+
+            <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ false }}">
+              <input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" onBlur="{{ f.touch }}" placeholder="{{ f.placeholder }}" style="width:100%;height:46px;padding:0 15px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:14.5px;font-family:inherit;color:#2D3440;transition:border-color .15s,box-shadow .15s">
+            </sc-if>
+
+            <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}">
+              <textarea rows="3" value="{{ f.value }}" onChange="{{ f.onChange }}" onBlur="{{ f.touch }}" placeholder="{{ f.placeholder }}" style="width:100%;padding:12px 15px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:14.5px;font-family:inherit;line-height:1.55;color:#2D3440;resize:none;transition:border-color .15s,box-shadow .15s"></textarea>
+            </sc-if>
+
+            <sc-if value="{{ f.isColor }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:12px">
+                <input type="color" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:88px;height:46px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC">
+                <span style="font-size:14px;font-weight:600;color:#6B7688;letter-spacing:.04em">{{ f.value }}</span>
+                <span onClick="{{ stop }}" style="position:relative;flex:1;min-width:150px;max-width:220px">
+                  <button type="button" onClick="{{ f.togglePreset }}" style="width:100%;height:46px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:14.5px;font-family:inherit;color:#2D3440;cursor:pointer" style-hover="background:#FFF8E6;border-color:#FFC90E">
+                    <span style="display:flex;align-items:center;gap:9px;min-width:0">
+                      <span style="{{ f.presetSwatch }}"></span>
+                      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.presetLabel }}</span>
+                    </span>
+                    {{ f.presetCaret }}
+                  </button>
+                  <span style="{{ f.presetMenuStyle }}">
+                    <sc-for list="{{ f.presetOptions }}" as="opt" hint-placeholder-count="6">
+                      <button type="button" onClick="{{ opt.onClick }}" style="{{ opt.style }}" style-hover="background:#FFF8E6">
+                        <span style="{{ opt.swatch }}"></span>
+                        <span>{{ opt.label }}</span>
+                      </button>
+                    </sc-for>
+                  </span>
+                </span>
+              </span>
+            </sc-if>
+
+            <sc-if value="{{ f.isBirth }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;gap:8px">
+                <input type="text" value="{{ f.year }}" onChange="{{ f.onYear }}" onBlur="{{ f.touch }}" placeholder="년(선택)" style="flex:1.4;min-width:0;height:46px;padding:0 14px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:14.5px;font-family:inherit;color:#2D3440">
+                <input type="text" value="{{ f.month }}" onChange="{{ f.onMonth }}" onBlur="{{ f.touch }}" placeholder="월" style="flex:1;min-width:0;height:46px;padding:0 14px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:14.5px;font-family:inherit;color:#2D3440">
+                <input type="text" value="{{ f.day }}" onChange="{{ f.onDay }}" onBlur="{{ f.touch }}" placeholder="일" style="flex:1;min-width:0;height:46px;padding:0 14px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:14.5px;font-family:inherit;color:#2D3440">
+              </span>
+            </sc-if>
+
+            <sc-if value="{{ f.isRace }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;gap:10px;align-items:flex-start">
+                <span onClick="{{ stop }}" style="position:relative;flex:1;min-width:0">
+                  <button type="button" onClick="{{ f.toggleRace }}" style="width:100%;height:46px;padding:0 15px;display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:14.5px;font-family:inherit;color:#2D3440;cursor:pointer;text-align:left" style-hover="background:#F1F4F9">
+                    <span style="{{ f.raceLabelStyle }}">{{ f.raceLabel }}</span>
+                    {{ f.raceCaret }}
+                  </button>
+                  <span style="{{ f.raceMenuStyle }}">
+                    <sc-for list="{{ f.raceOptions }}" as="o" hint-placeholder-count="8">
+                      <button type="button" onClick="{{ o.onClick }}" style="{{ o.style }}" style-hover="background:#F1F4F9">{{ o.label }}</button>
+                    </sc-for>
+                  </span>
+                </span>
+                <sc-if value="{{ f.raceCustom }}" hint-placeholder-val="{{ false }}">
+                  <input type="text" value="{{ f.customValue }}" onChange="{{ f.onCustom }}" placeholder="종족을 입력해 주세요." style="flex:1;min-width:0;height:46px;padding:0 15px;border:1px solid #E3E7EF;border-radius:10px;background:#F8F9FC;font-size:14.5px;font-family:inherit;color:#2D3440">
+                </sc-if>
+              </span>
+            </sc-if>
+
+            <sc-if value="{{ f.error }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:12.5px;font-weight:600;color:#E5484D">{{ f.error }}</span>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;justify-content:center;padding-top:2px">
+        <button type="button" onClick="{{ openPicker }}" style="height:46px;padding:0 30px;border:1px solid #D3DAE6;border-radius:23px;background:#fff;font-size:14.5px;font-weight:700;font-family:inherit;color:#2D3440;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s,box-shadow .15s" style-hover="background:#F8F9FC;border-color:#B9C3D4;box-shadow:0 4px 12px rgba(45,52,64,.08)">＋ 요소 추가</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px;padding-top:8px">
+        <span style="font-size:15px;font-weight:700">공개 여부</span>
+        <sc-for list="{{ visibility }}" as="v" hint-placeholder-count="3">
+          <label style="{{ v.rowStyle }}">
+            <input type="radio" name="visibility" checked="{{ v.checked }}" onChange="{{ v.onSelect }}" style="width:20px;height:20px;margin:2px 0 0;accent-color:#FFC90E;cursor:pointer;flex-shrink:0">
+            <span style="display:flex;flex-direction:column;gap:3px">
+              <span style="font-size:14.5px;font-weight:700">{{ v.title }}</span>
+              <span style="font-size:13px;line-height:1.55;color:#6B7688;text-wrap:pretty">{{ v.desc }}</span>
+            </span>
+          </label>
+        </sc-for>
+        <span style="font-size:12.5px;color:#8C97A8">공개 여부는 언제든지 변경 할 수 있으니, 편하게 설정 하세요!</span>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding-top:6px">
+        <button type="button" style="flex:1;min-width:200px;height:52px;border:0;border-radius:12px;background:#FFC90E;color:#2D3440;font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;box-shadow:0 4px 12px rgba(255,201,14,.35);transition:transform .12s,box-shadow .15s;white-space:nowrap" style-hover="transform:translateY(-1px);box-shadow:0 8px 18px rgba(255,201,14,.45)">프로필 게시!</button>
+        <button type="button" style="flex-shrink:0;height:52px;padding:0 24px;border:1px solid #D3DAE6;border-radius:12px;background:#fff;font-size:14px;font-weight:700;font-family:inherit;color:#4A5568;cursor:pointer;white-space:nowrap;transition:background .15s" style-hover="background:#F8F9FC">임시 저장</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<input type="file" accept="image/png,image/jpeg,image/webp" ref="{{ avatarInputRef }}" onChange="{{ onAvatarFile }}" style="display:none">
+<input type="file" accept="image/png,image/jpeg,image/webp" ref="{{ coverInputRef }}" onChange="{{ onCoverFile }}" style="display:none">
+
+<div onClick="{{ closeModals }}" style="{{ pickerOverlayStyle }}">
+  <div onClick="{{ stop }}" style="width:min(720px,100%);background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(45,52,64,.28);overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 24px 0">
+      <span style="font-size:18px;font-weight:800;white-space:nowrap">요소 추가</span>
+      <button type="button" onClick="{{ closeModals }}" aria-label="닫기" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:transparent;color:#6B7688;font-size:18px;font-family:inherit;cursor:pointer" style-hover="background:#F1F4F9">✕</button>
+    </div>
+    <div style="padding:18px 24px 26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+      <sc-for list="{{ pickerItems }}" as="p" hint-placeholder-count="11">
+        <button type="button" onClick="{{ p.onClick }}" disabled="{{ p.disabled }}" style="{{ p.style }}">{{ p.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<div onClick="{{ closeModals }}" style="{{ avatarOverlayStyle }}">
+  <div onClick="{{ stop }}" style="width:min(860px,100%);background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(45,52,64,.28);overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 24px 0">
+      <span style="font-size:18px;font-weight:800;white-space:nowrap">프로필 사진 등록</span>
+      <button type="button" onClick="{{ closeModals }}" aria-label="닫기" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:transparent;color:#6B7688;font-size:18px;font-family:inherit;cursor:pointer" style-hover="background:#F1F4F9">✕</button>
+    </div>
+    <div style="padding:18px 24px 26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px">
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div ref="{{ avatarBoxRef }}" style="{{ avatarEditorStyle }}">
+          <span ref="{{ avatarImgRef }}" style="{{ avatarImgStyle }}"></span>
+          <span style="{{ avatarPlaceholderStyle }}">
+            {{ uploadIcon }}
+            <span>사진 첨부 또는 드래그 앤 드롭</span>
+          </span>
+          <span onPointerDown="{{ avatarMove }}" style="{{ avatarCropStyle }}">
+            <span onPointerDown="{{ avatarNW }}" style="position:absolute;left:-8px;top:-8px;width:16px;height:16px;border-radius:4px;background:#fff;border:2px solid #FFC90E;cursor:nwse-resize"></span>
+            <span onPointerDown="{{ avatarNE }}" style="position:absolute;right:-8px;top:-8px;width:16px;height:16px;border-radius:4px;background:#fff;border:2px solid #FFC90E;cursor:nesw-resize"></span>
+            <span onPointerDown="{{ avatarSW }}" style="position:absolute;left:-8px;bottom:-8px;width:16px;height:16px;border-radius:4px;background:#fff;border:2px solid #FFC90E;cursor:nesw-resize"></span>
+            <span onPointerDown="{{ avatarSE }}" style="position:absolute;right:-8px;bottom:-8px;width:16px;height:16px;border-radius:4px;background:#fff;border:2px solid #FFC90E;cursor:nwse-resize"></span>
+          </span>
+        </div>
+        <span style="font-size:12px;color:#8C97A8;text-align:center">{{ avatarEditorHint }}</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:14px;font-weight:700">프로필 사진 프레임을 선택해 주세요.</span>
+          <span style="display:flex;flex-wrap:wrap;align-items:center;gap:16px">
+            <sc-for list="{{ frameOptions }}" as="o" hint-placeholder-count="2">
+              <label style="display:flex;align-items:center;gap:7px;font-size:14px;cursor:pointer;white-space:nowrap;flex-shrink:0">
+                <input type="radio" name="pf-frame" checked="{{ o.checked }}" onChange="{{ o.onSelect }}" style="width:18px;height:18px;accent-color:#FFC90E;cursor:pointer">{{ o.label }}
+              </label>
+            </sc-for>
+          </span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:13.5px;line-height:1.5;color:#4A5568">프로필 사진에 사용될 이미지를 첨부해 주세요.<br>최대 500×500px 및 5mb</span>
+          <span style="align-self:flex-start;font-size:12.5px;color:#8C97A8">지원 형식: PNG, JPG, WEBP</span>
+          <button type="button" onClick="{{ pickAvatar }}" disabled="{{ attachAvatarDisabled }}" style="{{ attachBtnStyle }}">{{ attachAvatarLabel }}</button>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:2px">
+          <button type="button" onClick="{{ closeModals }}" style="height:44px;padding:0 20px;border:1px solid #D3DAE6;border-radius:10px;background:#fff;font-size:14px;font-weight:600;font-family:inherit;color:#4A5568;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FC">취소</button>
+          <button type="button" onClick="{{ finishAvatar }}" disabled="{{ avatarDoneDisabled }}" style="{{ avatarDoneStyle }}">완료!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div onClick="{{ closeModals }}" style="{{ coverOverlayStyle }}">
+  <div onClick="{{ stop }}" style="width:min(860px,100%);background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(45,52,64,.28);overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 24px 0">
+      <span style="font-size:18px;font-weight:800;white-space:nowrap">배경 이미지 등록</span>
+      <button type="button" onClick="{{ closeModals }}" aria-label="닫기" style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:transparent;color:#6B7688;font-size:18px;font-family:inherit;cursor:pointer" style-hover="background:#F1F4F9">✕</button>
+    </div>
+    <div style="padding:18px 24px 26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px">
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div ref="{{ coverBoxRef }}" style="{{ coverEditorStyle }}">
+          <span ref="{{ coverImgRef }}" style="{{ coverImgStyle }}"></span>
+          <span style="{{ coverPlaceholderStyle }}">
+            {{ uploadIcon2 }}
+            <span>사진 첨부 또는 드래그 앤 드롭</span>
+          </span>
+          <span onPointerDown="{{ coverMove }}" style="{{ coverCropStyle }}">
+            <span onPointerDown="{{ coverNW }}" style="position:absolute;left:-8px;top:-8px;width:16px;height:16px;border-radius:4px;background:#fff;border:2px solid #FFC90E;cursor:nwse-resize"></span>
+            <span onPointerDown="{{ coverNE }}" style="position:absolute;right:-8px;top:-8px;width:16px;height:16px;border-radius:4px;background:#fff;border:2px solid #FFC90E;cursor:nesw-resize"></span>
+            <span onPointerDown="{{ coverSW }}" style="position:absolute;left:-8px;bottom:-8px;width:16px;height:16px;border-radius:4px;background:#fff;border:2px solid #FFC90E;cursor:nesw-resize"></span>
+            <span onPointerDown="{{ coverSE }}" style="position:absolute;right:-8px;bottom:-8px;width:16px;height:16px;border-radius:4px;background:#fff;border:2px solid #FFC90E;cursor:nwse-resize"></span>
+          </span>
+        </div>
+        <span style="font-size:12px;color:#8C97A8;text-align:center">{{ coverEditorHint }}</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:14px;font-weight:700">배경 사진 유형을 선택해 주세요.</span>
+          <span style="display:flex;flex-wrap:wrap;gap:16px">
+            <sc-for list="{{ shapeOptions }}" as="o" hint-placeholder-count="3">
+              <label style="display:flex;align-items:center;gap:7px;font-size:14px;cursor:pointer;white-space:nowrap;flex-shrink:0">
+                <input type="radio" name="pf-shape" checked="{{ o.checked }}" onChange="{{ o.onSelect }}" style="width:18px;height:18px;accent-color:#FFC90E;cursor:pointer">{{ o.label }}
+              </label>
+            </sc-for>
+          </span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:13.5px;line-height:1.5;color:#4A5568">배경에 사용될 이미지를 첨부해 주세요.<br>최대 2000×2000px 및 5mb</span>
+          <span style="align-self:flex-start;font-size:12.5px;color:#8C97A8">지원 형식: PNG, JPG, WEBP</span>
+          <button type="button" onClick="{{ pickCover }}" disabled="{{ attachCoverDisabled }}" style="{{ attachCoverStyle }}">{{ attachCoverLabel }}</button>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:2px">
+          <button type="button" onClick="{{ closeModals }}" style="height:44px;padding:0 20px;border:1px solid #D3DAE6;border-radius:10px;background:#fff;font-size:14px;font-weight:600;font-family:inherit;color:#4A5568;cursor:pointer;white-space:nowrap" style-hover="background:#F8F9FC">취소</button>
+          <button type="button" onClick="{{ finishCover }}" disabled="{{ coverDoneDisabled }}" style="{{ coverDoneStyle }}">완료!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const e = React.createElement;
+const sv = (p, d) => e('svg', Object.assign({ width: 16, height: 16, viewBox: '0 0 16 16', fill: 'currentColor' }, p), e('path', { key: 1, d }));
+const ICON = {
+  trash: sv({}, 'M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 5.884 16h4.232a2 2 0 0 0 1.993-1.84l.853-10.66h.538a.5.5 0 0 0 0-1H11ZM6.05 5a.5.5 0 0 1 .53.47l.5 8.5a.5.5 0 1 1-1 .06l-.5-8.5A.5.5 0 0 1 6.05 5Zm3.9 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-1-.06l.5-8.5a.5.5 0 0 1 .53-.47Z'),
+  img: sv({ width: 26, height: 26 }, 'M14.002 2h-12A2 2 0 0 0 0 4v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-1.998-2ZM3.5 4a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM15 12a1 1 0 0 1-1 1H2.5l4.5-5 2.5 2.5L11.5 8 15 11.5V12Z'),
+  person: sv({ width: 40, height: 40 }, 'M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2 1H6a4 4 0 0 0-4 4 1 1 0 0 0 1 1h10a1 1 0 0 0 1-1 4 4 0 0 0-4-4Z'),
+  upload: sv({ width: 34, height: 34 }, 'M7.25 1.75a.75.75 0 0 1 1.5 0v6.19l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72V1.75ZM2 11.5a.75.75 0 0 1 .75.75v1.25h10.5V12.25a.75.75 0 0 1 1.5 0V14a.75.75 0 0 1-.75.75H2A.75.75 0 0 1 1.25 14v-1.75A.75.75 0 0 1 2 11.5Z'),
+  caret: (o) => sv({ width: 12, height: 12, style: { flexShrink: 0, transition: 'transform .18s', transform: o ? 'rotate(180deg)' : 'none', color: '#8C97A8' } }, 'M3 5.5 8 10.5l5-5H3Z')
+};
+
+const FIELDS = {
+  mbti:   { label: 'MBTI', hint: '', kind: 'text', ph: 'MBTI를 입력해 주세요.', validate: v => /^(?:[EI][NS][FT][JP])$/i.test(v.trim()) ? '' : '올바른 MBTI가 아닙니다.' },
+  birth:  { label: '출생지', hint: '(최대 20자)', kind: 'text', ph: '출생지를 입력해 주세요.', max: 20 },
+  age:    { label: '나이', hint: '(최대 20자)', kind: 'text', ph: '나이를 입력해 주세요.', max: 20 },
+  bday:   { label: '생일', hint: '', kind: 'birth' },
+  like:   { label: '좋아하는 것', hint: '(최대 200자)', kind: 'text', ph: '좋아하는 것을 입력해 주세요.', max: 200, full: true },
+  hate:   { label: '싫어하는 것', hint: '(최대 200자)', kind: 'text', ph: '싫어하는 것을 입력해 주세요.', max: 200, full: true },
+  height: { label: '키', hint: '(최대 10자)', kind: 'text', ph: '키를 입력해 주세요.(단위 포함)', max: 10 },
+  color:  { label: '퍼스널 컬러', hint: '', kind: 'color' },
+  persona:{ label: '성격', hint: '(최대 100자)', kind: 'area', ph: '성격을 입력해 주세요.', max: 100, full: true },
+  race:   { label: '종족', hint: '', kind: 'race' },
+  theme:  { label: '테마곡', hint: '', kind: 'text', ph: 'youtube, soundcloud, spotify 링크를 입력해 주세요.', full: true, validate: v => /^https?:\/\/\S+\.\S+/.test(v.trim()) ? '' : '유효한 링크가 아닙니다.' }
+};
+const ORDER = ['mbti', 'birth', 'age', 'bday', 'like', 'hate', 'height', 'color', 'persona', 'race', 'theme'];
+const RACES = ['인간', '엘프', '천사', '악마', '수인', '오크', '드워프', '사용자 지정'];
+const CSS1_COLORS = [
+  ['#000000', '검정'], ['#ffffff', '흰색'],
+  ['#ff0000', '빨강'], ['#ffa500', '주황'], ['#ffff00', '노랑'], ['#00ff00', '연두'],
+  ['#00ffff', '하늘'], ['#0000ff', '파랑'], ['#8a2be2', '보라'], ['#ff00ff', '분홍'],
+  ['#ffb6c1', '연분홍'], ['#ffdab9', '연주황'], ['#fffacd', '연노랑'], ['#98fb98', '연초록'],
+  ['#add8e6', '연하늘'], ['#b0c4de', '연파랑'], ['#dda0dd', '연보라'],
+  ['#800000', '적갈색'], ['#808000', '갈색'], ['#008000', '초록'], ['#008080', '청록'],
+  ['#000080', '남색'], ['#800080', '자주'],
+  ['#808080', '회색'], ['#c0c0c0', '은색'], ['#ffd700', '금색']
+];
+
+const overlay = (open) => 'position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(30,36,46,.5);backdrop-filter:blur(3px);transition:opacity .18s;' + (open ? 'opacity:1;pointer-events:auto;visibility:visible' : 'opacity:0;pointer-events:none;visibility:hidden');
+const menu = (open) => 'position:absolute;top:calc(100% + 6px);left:0;right:0;display:flex;flex-direction:column;background:#fff;border:1px solid #E3E7EF;border-radius:12px;box-shadow:0 10px 26px rgba(45,52,64,.16);overflow:hidden;z-index:20;transition:opacity .15s,transform .15s;transform-origin:top;' + (open ? 'opacity:1;transform:scaleY(1);pointer-events:auto;visibility:visible' : 'opacity:0;transform:scaleY(.94);pointer-events:none;visibility:hidden');
+const BTN = 'height:44px;padding:0 22px;border-radius:10px;font-size:14px;font-weight:700;font-family:inherit;white-space:nowrap;';
+const attachStyle = (on) => BTN + 'align-self:flex-start;border:1px solid ' + (on ? 'transparent' : '#E3E7EF') + ';cursor:' + (on ? 'pointer' : 'not-allowed') + ';background:' + (on ? '#FFC90E' : '#EDF0F5') + ';color:' + (on ? '#2D3440' : '#A8B0BE');
+const doneStyle = (on) => BTN + 'border:0;cursor:' + (on ? 'pointer' : 'not-allowed') + ';background:' + (on ? '#2D3440' : '#EDF0F5') + ';color:' + (on ? '#fff' : '#A8B0BE');
+const editorStyle = (active) => 'position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:1/1;border-radius:12px;border:2px dashed ' + (active ? '#FFC90E' : '#D3DAE6') + ';background:' + (active ? '#1E242E' : '#F8F9FC') + ';transition:border-color .15s,background .15s;touch-action:none';
+
+class Component extends DCLogic {
+  state = {
+    name: '', slogan: '', tmi: '', touched: {},
+    extras: [], values: {}, raceOpen: null,
+    picker: false, avatarModal: false, coverModal: false,
+    shape: '', frame: '',
+    avatarSrc: '', coverSrc: '',
+    avatarRect: { x1: .15, y1: .15, x2: .85, y2: .85 },
+    coverRect: { x1: .1, y1: .25, x2: .9, y2: .75 },
+    avatarOut: '', coverOut: '', vis: '공개'
+  };
+
+  constructor(props) {
+    super(props);
+    this.avatarInputRef = React.createRef();
+    this.coverInputRef = React.createRef();
+    this.avatarBoxRef = React.createRef();
+    this.coverBoxRef = React.createRef();
+    this.avatarImgRef = React.createRef();
+    this.coverImgRef = React.createRef();
+    this.avatarOutRef = React.createRef();
+    this.coverOutRef = React.createRef();
+  }
+
+  paintPreviews() {
+    [['avatar', this.avatarImgRef], ['cover', this.coverImgRef]].forEach(([k, ref]) => {
+      const el = ref.current;
+      if (!el) return;
+      const src = this.state[k + 'Src'];
+      el.style.backgroundImage = src ? 'url("' + src + '")' : '';
+    });
+    [['avatar', this.avatarOutRef], ['cover', this.coverOutRef]].forEach(([k, ref]) => {
+      const el = ref.current;
+      if (!el) return;
+      const out = this.state[k + 'Out'];
+      el.style.backgroundImage = out ? 'url("' + out + '")' : '';
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center center';
+      el.style.backgroundRepeat = 'no-repeat';
+    });
+  }
+
+  componentDidUpdate() { this.paintPreviews(); }
+
+  componentDidMount() {
+    this.paintPreviews();
+    this._close = () => this.setState({ raceOpen: null });
+    document.addEventListener('click', this._close);
+  }
+  componentWillUnmount() { document.removeEventListener('click', this._close); }
+
+  set(k, v) { this.setState({ [k]: v }); }
+  touch(k) { this.setState(p => ({ touched: Object.assign({}, p.touched, { [k]: true }) })); }
+  val(id, sub) { return (this.state.values[id] || {})[sub || 'v'] || ''; }
+  setVal(id, sub, v) {
+    this.setState(p => {
+      const cur = Object.assign({}, p.values[id] || {}, { [sub]: v });
+      return { values: Object.assign({}, p.values, { [id]: cur }) };
+    });
+  }
+
+  readFile(which, ev) {
+    const file = ev.target.files && ev.target.files[0];
+    if (!file) return;
+    if (['image/png', 'image/jpeg', 'image/webp'].indexOf(file.type) === -1) {
+      ev.target.value = '';
+      alert('PNG, JPG, WEBP 형식의 이미지 파일로 첨부해 주세요.');
+      return;
+    }
+    const r = new FileReader();
+    r.onload = () => this.setState({
+      [which + 'Src']: r.result,
+      [which + 'Rect']: which === 'avatar' ? { x1: .15, y1: .15, x2: .85, y2: .85 } : { x1: .1, y1: .25, x2: .9, y2: .75 }
+    });
+    r.readAsDataURL(file);
+    ev.target.value = '';
+  }
+
+  moveRect(which) {
+    return (ev) => {
+      if (ev.target !== ev.currentTarget) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      const box = this[which + 'BoxRef'].current;
+      if (!box) return;
+      const b = box.getBoundingClientRect();
+      const start = this.state[which + 'Rect'];
+      const sx = (ev.clientX - b.left) / b.width;
+      const sy = (ev.clientY - b.top) / b.height;
+      const w = start.x2 - start.x1, h = start.y2 - start.y1;
+      const move = (m) => {
+        const dx = (m.clientX - b.left) / b.width - sx;
+        const dy = (m.clientY - b.top) / b.height - sy;
+        const x1 = Math.min(1 - w, Math.max(0, start.x1 + dx));
+        const y1 = Math.min(1 - h, Math.max(0, start.y1 + dy));
+        this.setState({ [which + 'Rect']: { x1, y1, x2: x1 + w, y2: y1 + h } });
+      };
+      const up = () => {
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+      };
+      document.addEventListener('pointermove', move);
+      document.addEventListener('pointerup', up);
+    };
+  }
+
+  drag(which, corner) {
+    return (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const box = this[which + 'BoxRef'].current;
+      if (!box) return;
+      const b = box.getBoundingClientRect();
+      const MIN = .08;
+      const move = (m) => {
+        let px = Math.min(1, Math.max(0, (m.clientX - b.left) / b.width));
+        let py = Math.min(1, Math.max(0, (m.clientY - b.top) / b.height));
+        this.setState(p => {
+          const r = Object.assign({}, p[which + 'Rect']);
+          const west = corner === 'nw' || corner === 'sw';
+          const north = corner === 'nw' || corner === 'ne';
+          if (which === 'avatar') {
+            // 정사각형 유지: 반대편 꼭짓점을 기준으로 한 변 길이를 맞춘다
+            const ax = west ? r.x2 : r.x1, ay = north ? r.y2 : r.y1;
+            const w = west ? ax - px : px - ax;
+            const h = north ? ay - py : py - ay;
+            const limit = Math.min(west ? ax : 1 - ax, north ? ay : 1 - ay);
+            const size = Math.max(MIN, Math.min(Math.min(w, h), limit));
+            if (west) { r.x1 = ax - size; r.x2 = ax; } else { r.x1 = ax; r.x2 = ax + size; }
+            if (north) { r.y1 = ay - size; r.y2 = ay; } else { r.y1 = ay; r.y2 = ay + size; }
+          } else {
+            if (west) r.x1 = Math.min(px, r.x2 - MIN);
+            else r.x2 = Math.max(px, r.x1 + MIN);
+            if (north) r.y1 = Math.min(py, r.y2 - MIN);
+            else r.y2 = Math.max(py, r.y1 + MIN);
+          }
+          return { [which + 'Rect']: r };
+        });
+      };
+      const up = () => {
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+      };
+      document.addEventListener('pointermove', move);
+      document.addEventListener('pointerup', up);
+    };
+  }
+
+  crop(which, done) {
+    const src = this.state[which + 'Src'];
+    const box = this[which + 'BoxRef'].current;
+    if (!src || !box) return;
+    const r = this.state[which + 'Rect'];
+    const b = box.getBoundingClientRect();
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(b.width / img.naturalWidth, b.height / img.naturalHeight);
+      const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
+      const dx = (b.width - dw) / 2, dy = (b.height - dh) / 2;
+      const clamp = (v, max) => Math.min(max, Math.max(0, v));
+      const sx = clamp((r.x1 * b.width - dx) / scale, img.naturalWidth);
+      const sy = clamp((r.y1 * b.height - dy) / scale, img.naturalHeight);
+      const sw = Math.max(1, clamp((r.x2 * b.width - dx) / scale, img.naturalWidth) - sx);
+      const sh = Math.max(1, clamp((r.y2 * b.height - dy) / scale, img.naturalHeight) - sy);
+      const c = document.createElement('canvas');
+      c.width = Math.round(sw); c.height = Math.round(sh);
+      c.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, c.width, c.height);
+      done(c.toDataURL('image/png'));
+    };
+    img.src = src;
+  }
+
+  buildExtra(id) {
+    const f = FIELDS[id], t = this.state.touched[id], v = this.val(id);
+    let error = '';
+    if (f.kind === 'birth') {
+      if (t && (!this.val(id, 'm') || !this.val(id, 'd'))) error = '월/일을 입력해 주세요.';
+    } else if (f.kind === 'race') {
+      if (this.val(id, 'sel') === '사용자 지정' && this.val(id, 'custom').length > 10) error = '종족은 10자를 초과 할 수 없습니다.';
+    } else if (f.kind !== 'color') {
+      if (f.max && v.length > f.max) error = f.label + '은(는) ' + f.max + '자를 초과 할 수 없습니다.';
+      else if (t && !v.trim()) error = f.label + '을(를) 입력해 주세요.';
+      else if (t && f.validate) error = f.validate(v);
+    }
+    const sel = this.val(id, 'sel');
+    const open = this.state.raceOpen === id;
+    const pOpen = this.state.raceOpen === id + '::preset';
+    const presetHex = this.val(id, 'preset');
+    const presetEntry = presetHex && v === presetHex ? CSS1_COLORS.find(c => c[0] === presetHex) : null;
+    const presetName = presetEntry ? presetEntry[1] : '';
+    return {
+      label: f.label, hint: f.hint, placeholder: f.ph || '', error,
+      wrapStyle: 'display:flex;flex-direction:column;gap:8px;' + (f.full ? 'grid-column:1/-1;' : ''),
+      isText: f.kind === 'text', isArea: f.kind === 'area', isColor: f.kind === 'color',
+      isBirth: f.kind === 'birth', isRace: f.kind === 'race',
+      value: f.kind === 'color' ? (v || '#FFC90E') : v,
+      year: this.val(id, 'y'), month: this.val(id, 'm'), day: this.val(id, 'd'),
+      onChange: ev => {
+        if (f.kind === 'color') this.setVal(id, 'preset', '');
+        this.setVal(id, 'v', ev.target.value);
+      },
+      presetLabel: presetName || '프리셋...',
+      presetSwatch: presetName ? 'flex-shrink:0;width:16px;height:16px;border-radius:3px;border:1px solid rgba(0,0,0,.18);background:' + presetHex : 'display:none',
+      presetCaret: ICON.caret(pOpen),
+      presetMenuStyle: menu(pOpen) + 'display:block;max-height:200px;overflow-y:auto;overflow-x:hidden;',
+      togglePreset: () => this.setState(p => ({ raceOpen: p.raceOpen === id + '::preset' ? null : id + '::preset' })),
+      presetOptions: CSS1_COLORS.map(([hex, ko], i) => ({
+        label: ko,
+        swatch: 'flex-shrink:0;width:16px;height:16px;border-radius:3px;border:1px solid rgba(0,0,0,.18);background:' + hex,
+        style: 'white-space:nowrap;width:100%;height:40px;flex:none;padding:0 15px;display:flex;align-items:center;gap:10px;text-align:left;border:0;' + (i < CSS1_COLORS.length - 1 ? 'border-bottom:1px solid #EEF1F6;' : '') + 'background:' + (v === hex ? '#FFF8E1' : 'transparent') + ';font-size:14px;font-family:inherit;color:#2D3440;cursor:pointer;',
+        onClick: () => { this.setVal(id, 'preset', hex); this.setVal(id, 'v', hex); this.setState({ raceOpen: null }); }
+      })),
+      onYear: ev => this.setVal(id, 'y', ev.target.value),
+      onMonth: ev => this.setVal(id, 'm', ev.target.value),
+      onDay: ev => this.setVal(id, 'd', ev.target.value),
+      touch: () => this.touch(id),
+      remove: () => this.setState(p => ({ extras: p.extras.filter(x => x !== id), raceOpen: null })),
+      raceLabel: sel || '종족을 선택해 주세요.',
+      raceLabelStyle: 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;' + (sel ? '' : 'color:#A8B0BE;'),
+      raceCaret: ICON.caret(open),
+      raceMenuStyle: menu(open),
+      raceCustom: sel === '사용자 지정',
+      customValue: this.val(id, 'custom'),
+      onCustom: ev => this.setVal(id, 'custom', ev.target.value),
+      toggleRace: () => this.setState(p => ({ raceOpen: p.raceOpen === id ? null : id })),
+      raceOptions: RACES.map((label, i) => ({
+        label,
+        style: 'white-space:nowrap;width:100%;padding:11px 15px;text-align:left;border:0;' + (i < RACES.length - 1 ? 'border-bottom:1px solid #EEF1F6;' : '') + 'background:' + (sel === label ? '#FFF8E1' : 'transparent') + ';font-size:14px;font-family:inherit;color:#2D3440;cursor:pointer;' + (sel === label ? 'font-weight:700;' : ''),
+        onClick: () => { this.setVal(id, 'sel', label); this.setState({ raceOpen: null }); }
+      }))
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const nameErr = s.name.length > 20 ? '이름은 20자를 초과 할 수 없습니다' : (s.touched.name && !s.name.trim() ? '이름을 입력해 주세요' : '');
+    const slErr = s.slogan.length > 30 ? '슬로건은 30자를 초과 할 수 없습니다' : (s.touched.slogan && !s.slogan.trim() ? '슬로건을 입력해 주세요' : '');
+    const breaks = (s.tmi.match(/\n/g) || []).length;
+    const items = s.tmi.split('\n').filter(l => l.trim()).length;
+    const tmiErr = breaks > 4 ? '개행은 4번까지만 할 수 있습니다 (TMI 최대 5개)'
+      : (items && items < breaks + 1 ? '연속 개행은 사용할 수 없습니다. 개행 1회당 TMI 1개를 입력해 주세요'
+      : (s.touched.tmi && !items ? 'TMI를 입력해 주세요' : ''));
+
+    const rectStyle = (which, show, round) => {
+      if (!show) return 'display:none';
+      const r = s[which + 'Rect'];
+      return 'position:absolute;left:' + (r.x1 * 100) + '%;top:' + (r.y1 * 100) + '%;width:' + ((r.x2 - r.x1) * 100) + '%;height:' + ((r.y2 - r.y1) * 100) + '%;border:2px solid #FFC90E;border-radius:' + (round ? '50%' : '6px') + ';box-shadow:0 0 0 9999px rgba(20,24,32,.55);touch-action:none;cursor:move';
+    };
+    const imgStyle = (src) => src
+      ? 'position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center;pointer-events:none'
+      : 'display:none';
+    const phStyle = (src) => src ? 'display:none' : 'display:flex;flex-direction:column;align-items:center;gap:10px;color:#93A0B4;font-size:13px;text-align:center;padding:16px';
+
+    return {
+      imgIcon: ICON.img, personIcon: ICON.person, trashIcon: ICON.trash,
+      uploadIcon: ICON.upload, uploadIcon2: ICON.upload,
+      stop: ev => ev.stopPropagation(),
+
+      name: s.name, slogan: s.slogan, tmi: s.tmi,
+      onName: ev => this.set('name', ev.target.value),
+      onSlogan: ev => this.set('slogan', ev.target.value),
+      onTmi: ev => {
+        let v = ev.target.value.replace(/\n{2,}/g, '\n');
+        const parts = v.split('\n');
+        if (parts.length > 5) v = parts.slice(0, 5).join('\n');
+        this.set('tmi', v);
+      },
+      onTmiKey: ev => {
+        if (ev.key !== 'Enter') return;
+        const v = ev.target.value;
+        const breaks2 = (v.match(/\n/g) || []).length;
+        const at = ev.target.selectionStart;
+        if (breaks2 >= 4 || v[at - 1] === '\n' || at === 0) ev.preventDefault();
+      },
+      touchName: () => this.touch('name'),
+      touchSlogan: () => this.touch('slogan'),
+      touchTmi: () => this.touch('tmi'),
+      nameError: nameErr, sloganError: slErr, tmiError: tmiErr,
+
+      extras: s.extras.map(id => this.buildExtra(id)),
+
+      coverOutRef: this.coverOutRef,
+      avatarOutRef: this.avatarOutRef,
+      imgIconSmall: ICON.img,
+      headerWrapStyle: s.shape === '없음' ? 'position:relative;display:flex;justify-content:center'
+        : s.shape === '세로' ? 'display:flex;gap:28px;align-items:flex-start'
+        : 'position:relative',
+      coverBannerStyle: s.shape === '없음' ? 'display:none'
+        : 'position:relative;' + (s.shape === '세로'
+            ? 'width:38%;max-width:300px;flex:none;aspect-ratio:14/26.5;'
+            : 'width:100%;aspect-ratio:16/5;min-height:230px;padding-bottom:70px;')
+          + 'border-radius:14px;background:#F4F6FA;border:1px dashed #D3DAE6;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s',
+      avatarSlotStyle: s.shape === '없음' ? 'position:relative;display:flex;justify-content:center;padding:26px 0 8px'
+        : s.shape === '세로' ? 'flex:1;display:flex;justify-content:center;padding-top:40px'
+        : 'position:absolute;left:50%;transform:translateX(-50%);bottom:-99px',
+      avatarBoxStyle: 'position:relative;width:' + (s.shape === '없음' ? '150px' : '198px') + ';height:' + (s.shape === '없음' ? '150px' : '198px')
+        + ';border-radius:' + (s.frame === '사각형' ? '14px' : '50%')
+        + ';background:#F4F6FA;border:4px solid #fff;box-shadow:0 2px 8px rgba(45,52,64,.14);display:flex;align-items:center;justify-content:center;color:#8C97A8;cursor:pointer;overflow:hidden;transition:transform .12s,border-radius .18s',
+      coverIconBtnStyle: s.shape === '없음'
+        ? 'position:absolute;top:20px;left:calc(50% + 74px);width:41px;height:41px;border-radius:50%;background:#fff;border:1px solid #D3DAE6;box-shadow:0 2px 6px rgba(45,52,64,.12);display:flex;align-items:center;justify-content:center;color:#6B7687;cursor:pointer;transform:scale(1.08)'
+        : 'display:none',
+      headerRuleStyle: 'height:2px;border:0;background:#2D3440;margin:' + (s.shape === '없음' ? '26px' : s.shape === '세로' ? '30px' : '128px') + ' 28px 26px',
+      coverFillStyle: s.coverOut ? 'position:absolute;inset:0;border-radius:13px;overflow:hidden' : 'display:none',
+      coverHintStyle: s.coverOut ? 'display:none' : 'position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;color:#8C97A8;font-size:13px',
+      avatarRadius: s.frame === '사각형' ? '14px' : '50%',
+      avatarFillStyle: s.avatarOut ? 'position:absolute;inset:0;border-radius:' + (s.frame === '사각형' ? '10px' : '50%') + ';overflow:hidden' : 'display:none',
+      avatarHintStyle: s.avatarOut ? 'display:none' : 'position:relative;display:flex',
+
+      openCover: () => this.setState({ coverModal: true }),
+      openAvatar: ev => { ev.stopPropagation(); this.setState({ avatarModal: true }); },
+      openPicker: () => this.setState({ picker: true }),
+      closeModals: () => this.setState({ picker: false, avatarModal: false, coverModal: false }),
+
+      pickerOverlayStyle: overlay(s.picker),
+      pickerItems: ORDER.map(id => {
+        const added = s.extras.indexOf(id) >= 0;
+        return {
+          label: FIELDS[id].label,
+          disabled: added,
+          style: 'white-space:nowrap;height:48px;padding:0 16px;border-radius:24px;border:1px solid ' + (added ? '#EDF0F5' : '#D3DAE6') + ';background:' + (added ? '#F4F6FA' : '#fff') + ';color:' + (added ? '#B6BFCC' : '#2D3440') + ';font-size:14.5px;font-weight:600;font-family:inherit;cursor:' + (added ? 'not-allowed' : 'pointer') + ';transition:background .15s,border-color .15s',
+          onClick: added ? (() => {}) : (() => this.setState(p => ({ extras: p.extras.concat([id]), picker: false })))
+        };
+      }),
+
+      avatarInputRef: this.avatarInputRef,
+      coverInputRef: this.coverInputRef,
+      avatarBoxRef: this.avatarBoxRef,
+      coverBoxRef: this.coverBoxRef,
+      avatarImgRef: this.avatarImgRef,
+      coverImgRef: this.coverImgRef,
+      onAvatarFile: ev => this.readFile('avatar', ev),
+      onCoverFile: ev => this.readFile('cover', ev),
+      pickAvatar: () => { if (s.frame) this.avatarInputRef.current && this.avatarInputRef.current.click(); },
+      pickCover: () => { if (s.shape && s.shape !== '없음') this.coverInputRef.current && this.coverInputRef.current.click(); },
+
+      avatarOverlayStyle: overlay(s.avatarModal),
+      coverOverlayStyle: overlay(s.coverModal),
+
+      frameOptions: ['원', '사각형'].map(label => ({
+        label, checked: s.frame === label,
+        onSelect: () => this.setState({ frame: label })
+      })),
+      shapeOptions: ['가로', '세로', '없음'].map(label => ({
+        label, checked: s.shape === label,
+        onSelect: () => this.setState({ shape: label })
+      })),
+
+      attachAvatarDisabled: !s.frame,
+      attachBtnStyle: attachStyle(!!s.frame),
+      attachAvatarLabel: s.avatarSrc ? '이미지 변경' : '사진 첨부',
+      avatarEditorStyle: editorStyle(!!s.avatarSrc),
+      avatarSrc: s.avatarSrc,
+      avatarImgStyle: imgStyle(s.avatarSrc),
+      avatarPlaceholderStyle: phStyle(s.avatarSrc),
+      avatarCropStyle: rectStyle('avatar', !!s.avatarSrc, s.frame === '원'),
+      avatarEditorHint: s.avatarSrc ? '꼭짓점을 드래그해 영역을 조절하세요' : (s.frame ? '사진을 첨부하면 영역 선택 에디터가 열려요' : '프로필 사진 프레임을 선택하면 사진을 첨부할 수 있어요'),
+      avatarMove: this.moveRect('avatar'),
+      coverMove: this.moveRect('cover'),
+      avatarNW: this.drag('avatar', 'nw'), avatarNE: this.drag('avatar', 'ne'),
+      avatarSW: this.drag('avatar', 'sw'), avatarSE: this.drag('avatar', 'se'),
+      avatarDoneDisabled: !s.avatarSrc,
+      avatarDoneStyle: doneStyle(!!s.avatarSrc),
+      finishAvatar: () => this.crop('avatar', (out) => this.setState({ avatarOut: out, avatarModal: false })),
+
+      attachCoverDisabled: !s.shape || s.shape === '없음',
+      attachCoverStyle: attachStyle(!!s.shape && s.shape !== '없음'),
+      attachCoverLabel: s.coverSrc ? '이미지 변경' : '사진 첨부',
+      coverEditorStyle: editorStyle(!!s.coverSrc),
+      coverSrc: s.coverSrc,
+      coverImgStyle: imgStyle(s.coverSrc),
+      coverPlaceholderStyle: phStyle(s.coverSrc),
+      coverCropStyle: rectStyle('cover', !!s.coverSrc && s.shape !== '없음', false),
+      coverEditorHint: s.shape === '없음' ? '배경 사진 없이 완료할 수 있어요' : s.coverSrc ? '꼭짓점을 드래그해 영역을 조절하세요' : (s.shape ? '사진을 첨부하면 영역 선택 에디터가 열려요' : '배경 사진 유형을 선택하면 첨부할 수 있어요'),
+      coverNW: this.drag('cover', 'nw'), coverNE: this.drag('cover', 'ne'),
+      coverSW: this.drag('cover', 'sw'), coverSE: this.drag('cover', 'se'),
+      coverDoneDisabled: !(s.coverSrc || s.shape === '없음'),
+      coverDoneStyle: doneStyle(!!(s.coverSrc || s.shape === '없음')),
+      finishCover: () => {
+        if (s.shape === '없음') { this.setState({ coverOut: '', coverSrc: '', coverModal: false }); return; }
+        this.crop('cover', (out) => this.setState({ coverOut: out, coverModal: false }));
+      },
+
+      visibility: [
+        ['공개', '나만의 캐릭터를 독자 및 창작가에게 공유하세요! 모든 사람이 검색 및 링크를 통해 캐릭터 프로필을 볼 수 있습니다.'],
+        ['일부 공개', '본인과 링크를 가진 사람만 캐릭터 프로필을 볼 수 있습니다.'],
+        ['비공개', '개인 용도로 캐릭터 프로필을 업로드 하세요. 본인만 캐릭터 프로필을 볼 수 있습니다.']
+      ].map(([title, desc]) => ({
+        title, desc, checked: s.vis === title,
+        rowStyle: 'display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:12px;cursor:pointer;border:1px solid ' + (s.vis === title ? '#FFC90E' : '#E3E7EF') + ';background:' + (s.vis === title ? '#FFFBEB' : '#fff') + ';transition:border-color .15s,background .15s',
+        onSelect: () => this.setState({ vis: title })
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

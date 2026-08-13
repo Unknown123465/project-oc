@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+  body{margin:0;background:#eef2f7;font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;color:#2f3b4a;-webkit-font-smoothing:antialiased}
+  a{color:#2b7fd4;text-decoration:none}
+  a:hover{color:#1c5fa5;text-decoration:underline}
+  ul{margin:0;padding-left:14px}
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:7px">
+
+  <div style="width:640px;max-width:100%;display:flex;align-items:center;gap:8px">
+    <a href="/" style="display:flex;align-items:center;gap:5px;height:27px;padding:0 11px;flex:none;white-space:nowrap;border:1px solid #cfd9e6;border-radius:7px;background:#fff;font:600 10px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c;text-decoration:none" style-hover="border-color:#2b7fd4;color:#2b7fd4"><i class="bi bi-arrow-left" style="font-size:11px"></i>뒤로</a>
+    <button onClick="{{ onShare }}" title="공유" style="width:27px;height:27px;display:grid;place-items:center;border:1px solid #cfd9e6;border-radius:7px;background:#fff;cursor:pointer;font-size:11px;color:#4a5a6e" style-hover="border-color:#2b7fd4;color:#2b7fd4"><i class="bi bi-share"></i></button>
+    <button onClick="{{ toggleLike }}" style="display:flex;align-items:center;gap:5px;height:27px;padding:0 11px;flex:none;white-space:nowrap;border:1px solid #cfd9e6;border-radius:7px;background:#fff;cursor:pointer;font:600 10px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c" style-hover="border-color:#e8384f;color:#e8384f"><i class="bi bi-heart-fill" style="{{ heartStyle }}"></i>{{ likeText }}</button>
+    <div style="flex:1"></div>
+    <button onClick="{{ onSave }}" style="display:flex;align-items:center;gap:5px;height:27px;padding:0 11px;flex:none;white-space:nowrap;border:1px solid #cfd9e6;border-radius:7px;background:#fff;cursor:pointer;font:600 10px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c" style-hover="border-color:#2b7fd4;color:#2b7fd4"><i class="bi bi-download" style="font-size:11px"></i>저장</button>
+    <a href="/" style="display:flex;align-items:center;gap:5px;height:27px;padding:0 11px;flex:none;white-space:nowrap;border:1px solid #cfd9e6;border-radius:7px;background:#fff;font:600 10px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c;text-decoration:none" style-hover="border-color:#2b7fd4;color:#2b7fd4"><i class="bi bi-person" style="font-size:11px"></i>전체 프로필 보기</a>
+  </div>
+
+  <div style="width: 640px; height: 360px; box-sizing: border-box; padding: 10px; background: #5b7fd4; box-shadow: 0 8px 26px rgba(35,55,85,.16); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px">
+    
+  <div style="width: 100%; height: 100%; box-sizing: border-box; background: #fff; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; padding-left: 12px; padding-right: 12px; padding-top: 10px; padding-bottom: 10px">
+
+      <div style="font:600 8.5px/1.2 'Pretendard Variable',Pretendard,sans-serif;color:#93a7c0">Made by (작가 이름)</div>
+
+      <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr .76fr 1.14fr;gap:9px">
+
+        <div style="display:flex;flex-direction:column;gap:7px;min-height:0">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:108px;height:108px;flex:none;border-radius:50%;background:repeating-linear-gradient(135deg,#f2f5fa 0 6px,#e6ecf5 6px 12px);border:1px solid #dde5ef;display:grid;place-items:center;text-align:center">
+              <span style="font:400 7px/1.3 ui-monospace,Menlo,monospace;color:#93a7c0">profile<br>image</span>
+            </div>
+            <div style="min-width: 0; height: 108px; display: flex; flex-direction: column; justify-content: center; gap: 5px; flex: 1; max-width: 80px">
+              <div style="font: 800 15px/1.25 'Pretendard Variable',Pretendard,sans-serif; color: #22303f; word-break: keep-all; overflow-wrap: anywhere; overflow: hidden; width: 80px">{{ characterName }}</div>
+              <div style="{{ ruleStyle }}"></div>
+            </div>
+          </div>
+
+          
+
+          <div style="height: 28px; flex: none; padding-left: 15px; font: 600 9.5px/1.4 'Pretendard Variable',Pretendard,sans-serif; color: #5d708a; text-wrap: pretty; overflow: hidden; width: 160px; font-size: 10.5px">{{ slogan }}</div><div style="flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;gap:2px">
+            <sc-for list="{{ infoRows }}" as="row" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:40px 1fr;gap:8px;align-items:start">
+                <div style="text-align:right;font:700 10px/1.45 'Pretendard Variable',Pretendard,sans-serif;color:#2f3b4a">{{ row.label }}</div>
+                <div style="text-align:left;font:400 10px/1.45 'Pretendard Variable',Pretendard,sans-serif;color:#5d708a;word-break:break-all">
+                  <sc-for list="{{ row.lines }}" as="line" hint-placeholder-count="1"><div style="width: 140px">{{ line }}</div></sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;min-height:0">
+          <div style="border:1px solid #f0c8d8;border-radius:8px;background:#fffafc;padding:8px 10px;flex:1;min-height:44px;overflow:auto">
+            <div style="font:800 9px/1 'Pretendard Variable',Pretendard,sans-serif;color:#e8384f;margin-bottom:4px">좋아하는 것</div>
+            <div style="font:400 9px/1.55 'Pretendard Variable',Pretendard,sans-serif;color:#4d5c70;text-wrap:pretty">{{ likes }}</div>
+          </div>
+          <div style="border:1px solid #c7dcf2;border-radius:8px;background:#f8fbff;padding:8px 10px;flex:1;min-height:44px;overflow:auto">
+            <div style="font:800 9px/1 'Pretendard Variable',Pretendard,sans-serif;color:#2b7fd4;margin-bottom:4px">싫어하는 것</div>
+            <div style="font:400 9px/1.55 'Pretendard Variable',Pretendard,sans-serif;color:#4d5c70;text-wrap:pretty">{{ hates }}</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;min-height:0">
+          <div style="border:1px solid #dde5ef;border-radius:8px;padding:7px 9px;flex:none;height:88px;box-sizing:border-box;overflow:hidden">
+            <div style="font:800 10px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c;margin-bottom:5px">성격</div>
+            <div style="font:400 7.5px/1.5 'Pretendard Variable',Pretendard,sans-serif;color:#4d5c70;text-wrap:pretty">{{ personality }}</div>
+          </div>
+          <div style="border:1px solid #dde5ef;border-radius:8px;padding:8px 10px;flex:1;min-height:0;box-sizing:border-box;overflow:auto">
+            <div style="font:800 10px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c;margin-bottom:5px">TMI</div>
+            <ul style="display:flex;flex-direction:column;gap:2px;font:400 7.5px/1.35 'Pretendard Variable',Pretendard,sans-serif;color:#4d5c70">
+              <sc-for list="{{ tmi }}" as="item" hint-placeholder-count="3"><li style="text-wrap:pretty">{{ item }}</li></sc-for>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div></div>
+</div>
+
+<sc-if value="{{ shareOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeShare }}" style="position:fixed;inset:0;background:rgba(20,32,50,.42);display:grid;place-items:center;z-index:60;padding:20px">
+    <div onClick="{{ stopPanel }}" style="width:360px;max-width:100%;background:#fff;border:1px solid #dde5ef;border-radius:16px;box-shadow:0 16px 44px rgba(20,35,60,.22);padding:22px 22px 20px;display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font:800 20px/1.2 'Pretendard Variable',Pretendard,sans-serif;color:#22303f">공유하기</div>
+          <div style="font:500 14px/1.2 'Pretendard Variable',Pretendard,sans-serif;color:#8b9bb0">{{ characterName }}</div>
+        </div>
+        <span onClick="{{ closeShare }}" style="cursor:pointer;font-size:18px;color:#8b9bb0;line-height:1" style-hover="color:#22303f"><i class="bi bi-x-lg"></i></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <a href="{{ shareX }}" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:11px;padding:16px 6px 13px;border:1px solid #e6ebf2;border-radius:14px;background:#fff;text-decoration:none;color:#3f4e62;font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif" style-hover="border-color:#cfd9e6;background:#fafcff">
+          <span style="width:50px;height:50px;border-radius:50%;background:#111;display:grid;place-items:center">
+            <svg viewBox="0 0 24 24" width="23" height="23" fill="#fff" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.657l-5.214-6.817-5.966 6.817H1.68l7.73-8.835L1.254 2.25h6.826l4.713 6.231 5.451-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z"></path></svg>
+          </span>X
+        </a>
+        <a href="{{ shareKakao }}" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:11px;padding:16px 6px 13px;border:1px solid #e6ebf2;border-radius:14px;background:#fff;text-decoration:none;color:#3f4e62;font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif" style-hover="border-color:#cfd9e6;background:#fafcff">
+          <span style="width:50px;height:50px;border-radius:50%;background:#fee500;display:grid;place-items:center">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="#3c1e1e" aria-hidden="true"><path d="M12 3C6.99 3 3 6.24 3 10.23c0 2.55 1.7 4.79 4.26 6.06-.14.5-.9 3.13-.93 3.34 0 0-.02.16.08.22.1.06.23.02.23.02.3-.04 3.47-2.28 4.02-2.67.44.06.89.09 1.34.09 5.01 0 9-3.24 9-7.06C21 6.24 17.01 3 12 3Z"></path></svg>
+          </span>카카오톡
+        </a>
+        <a href="{{ shareInsta }}" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:11px;padding:16px 6px 13px;border:1px solid #e6ebf2;border-radius:14px;background:#fff;text-decoration:none;color:#3f4e62;font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif" style-hover="border-color:#cfd9e6;background:#fafcff">
+          <span style="width:50px;height:50px;border-radius:50%;background:linear-gradient(45deg,#f9ce34,#ee2a7b 45%,#6228d7);display:grid;place-items:center">
+            <i class="bi bi-instagram" style="font-size:23px;color:#fff"></i>
+          </span>인스타그램
+        </a>
+        <a href="{{ shareFb }}" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:11px;padding:16px 6px 13px;border:1px solid #e6ebf2;border-radius:14px;background:#fff;text-decoration:none;color:#3f4e62;font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif" style-hover="border-color:#cfd9e6;background:#fafcff">
+          <span style="width:50px;height:50px;border-radius:50%;background:#1877f2;display:grid;place-items:center">
+            <i class="bi bi-facebook" style="font-size:25px;color:#fff"></i>
+          </span>페이스북
+        </a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font:700 14px/1 'Pretendard Variable',Pretendard,sans-serif;color:#33455c">링크</div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;min-width:0;height:46px;display:flex;align-items:center;padding:0 14px;border:1px solid #e6ebf2;border-radius:12px;background:#f8fafd;font:400 13.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#5d708a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ shareUrl }}</div>
+          <button onClick="{{ copyLink }}" style="height: 46px; padding: 0 20px; border: none; border-radius: 12px; color: #2B3440; cursor: pointer; font: 700 14px/1 'Pretendard Variable',Pretendard,sans-serif; white-space: nowrap; background-color: #FFC90E">{{ copyLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:720,&quot;height&quot;:480},&quot;characterName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;티아라&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;slogan&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;\&quot;오늘도, 내일도 화이팅이야! 무대 위에서 만나요.\&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#5b7fd4&quot;,&quot;options&quot;:[&quot;#5b7fd4&quot;,&quot;#e8628f&quot;,&quot;#4bb59a&quot;,&quot;#22303f&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { liked: false, likes: 1000 };
+  chunk(s, n) {
+    const out = [];
+    for (let i = 0; i < s.length; i += n) out.push(s.slice(i, i + n));
+    return out.length ? out : [''];
+  }
+  renderVals() {
+    const name = this.props.characterName ?? '티아라';
+    const accent = this.props.accentColor ?? '#5b7fd4';
+    const info = [
+      ['출생지', '대한민국 서울특별시 성북구'],
+      ['종족', '노바'],
+      ['나이', '당신의 마음속에 희망이 깃들어 있었던 만큼'],
+      ['생일', '1989.02.07'],
+      ['키', '162cm'],
+      ['MBTI', 'ENFP']
+    ];
+    return {
+      characterName: name,
+      slogan: this.props.slogan ?? '"오늘도, 내일도 화이팅이야! 무대 위에서 만나요."',
+      ruleStyle: { width: Math.min(150, Math.max(60, name.length * 14 + 14)) + 'px', flex: 'none', height: '2px', background: accent, borderRadius: '1px' },
+      heartStyle: { fontSize: '10px', color: this.state.liked ? '#e8384f' : '#22303f' },
+      likeText: this.state.likes.toLocaleString('en-US'),
+      toggleLike: () => this.setState(s => ({ liked: !s.liked, likes: s.likes + (s.liked ? -1 : 1) })),
+      shareOpen: !!this.state.shareOpen,
+      shareUrl: typeof location !== 'undefined' ? location.href : '',
+      copyLabel: this.state.copied ? '복사됨' : '복사',
+      onShare: () => this.setState({ shareOpen: true, copied: false }),
+      closeShare: () => this.setState({ shareOpen: false }),
+      stopPanel: e => e.stopPropagation(),
+      copyLink: () => { try { navigator.clipboard.writeText(location.href); } catch (e) {} this.setState({ copied: true }); },
+      shareX: 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : ''),
+      shareKakao: 'https://story.kakao.com/share?url=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : ''),
+      shareInsta: 'https://www.instagram.com/',
+      shareFb: 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(typeof location !== 'undefined' ? location.href : ''),
+      onSave: () => alert('프로필 카드 이미지를 저장합니다.'),
+      infoRows: info.map(([label, v]) => ({ label, lines: [v] })),
+      likes: '무대 위에 서는 것, 반짝이는 리본, 늦은 밤의 연습실',
+      hates: '엔젤릭버스터가 되지 못한다는 현실, 조용한 객석',
+      personality: '반짝이는 무기와 귀여운 리본으로 장식된 소녀. 긍정적인 생각으로 오늘도, 내일도 노래를 연습하고 있다.',
+      tmi: [
+        '밝은 모습 사이엔 가끔 우울해하는 모습도 있다.',
+        '손에 든 신호 가지는 마이크 기능도 있다.',
+        '티아라에게 열등감을 느끼지만 열렬히 응원해준다.',
+        '연습실 단골 시간대는 새벽 2시.',
+        '무대 의상은 전부 직접 수선한다.',
+        '리본은 하루에 세 번 다시 묶는다.',
+        '노래방 애창곡은 데뷔곡 데모 버전.',
+        '단 음식을 좋아하지만 목 관리 때문에 참는다.',
+        '팬레터는 전부 손글씨로 답장한다.',
+        '긴장하면 마이크를 두 번 톡톡 친다.'
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

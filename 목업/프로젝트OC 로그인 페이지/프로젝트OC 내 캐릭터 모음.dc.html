@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#F4F6FA;font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;color:#2B3440;-webkit-font-smoothing:antialiased}
+  a{color:#2B3440;text-decoration:none}
+  a:hover{color:#000}
+  input::placeholder{color:#98A2B3}
+  input:focus{outline:none}
+</style>
+</helmet>
+
+<div onClick="{{ closeAll }}" style="min-height: 100vh; padding: 40px 24px 120px; background-color: #FFF9E4">
+  <div style="max-width:1440px;margin:0 auto">
+
+    <h1 style="margin:0;font-size:32px;font-weight:700;letter-spacing:-.02em;display:inline-block;padding-bottom:8px;border-bottom:3px solid #2B3440">내 캐릭터 프로필</h1>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:24px">
+      <a href="/create" onClick="{{ onCreate }}" style="flex-shrink: 0; height: 56px; padding: 0 26px; display: inline-flex; align-items: center; gap: 8px; border-radius: 28px; color: #2B3440; font-size: 15px; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.22),0 4px 8px rgba(0,0,0,.10); transition: box-shadow .18s,transform .12s; white-space: nowrap; background-color: #FFC90E" style-hover="box-shadow:0 2px 6px rgba(0,0,0,.26),0 8px 16px rgba(0,0,0,.14);transform:translateY(-1px)">
+        <span style="font-size:20px;line-height:1;font-weight:400">＋</span>만들기
+      </a>
+      <div style="flex:1;min-width:260px;display:flex;align-items:center;gap:12px">
+        <span style="position:relative;flex:1;display:flex;align-items:center">
+          <span style="position:absolute;left:20px;display:flex;color:#6B7687">{{ searchIcon }}</span>
+          <input type="text" placeholder="캐릭터 이름 또는 슬로건을 입력해주세요." style="width:100%;height:56px;padding:0 20px 0 52px;border:1px solid #D5DCE6;border-radius:28px;background:#fff;font-size:15px;font-family:inherit;color:#2B3440;transition:border-color .15s,box-shadow .15s" style-focus="border-color:#FFC90E;box-shadow:0 0 0 3px rgba(255,201,14,.28)">
+        </span>
+        <button type="button" style="flex-shrink:0;white-space:nowrap;height:56px;padding:0 28px;border:0;border-radius:28px;background:#2B3440;color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.22);transition:box-shadow .18s,transform .12s" style-hover="box-shadow:0 6px 14px rgba(0,0,0,.24);transform:translateY(-1px)">검색</button>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px">
+      <div onClick="{{ stop }}" style="position:relative">
+        <button type="button" onClick="{{ toggleSort }}" style="height:44px;min-width:150px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #D5DCE6;border-radius:12px;background:#fff;font-size:14px;font-weight:600;font-family:inherit;color:#2B3440;cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:#EAF1FA;border-color:#B9C5D6">
+          <span style="display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0">{{ sortIcon }}{{ sort }}</span>
+          {{ caretSort }}
+        </button>
+        <div style="{{ sortMenuStyle }}">
+          <sc-for list="{{ sortOptions }}" as="opt" hint-placeholder-count="4">
+            <button type="button" onClick="{{ opt.onClick }}" style="{{ opt.style }}" style-hover="background:#EAF1FA">{{ opt.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div onClick="{{ stop }}" style="position:relative">
+        <button type="button" onClick="{{ toggleVis }}" style="height:44px;min-width:150px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid #D5DCE6;border-radius:12px;background:#fff;font-size:14px;font-weight:600;font-family:inherit;color:#2B3440;cursor:pointer;transition:background .15s,border-color .15s" style-hover="background:#EAF1FA;border-color:#B9C5D6">
+          <span style="display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0">{{ filterIcon }}{{ vis }}</span>
+          {{ caretVis }}
+        </button>
+        <div style="{{ visMenuStyle }}">
+          <sc-for list="{{ visOptions }}" as="opt" hint-placeholder-count="4">
+            <button type="button" onClick="{{ opt.onClick }}" style="{{ opt.style }}" style-hover="background:#EAF1FA">{{ opt.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="8">
+        <div style="position:relative;border-radius:10px;background:#fff;border:1px solid #DCE3ED;box-shadow:none;overflow:visible" style-hover="box-shadow:0 0 0 2px #FFC90E,0 6px 18px rgba(255,201,14,.55)">
+          <div style="position: relative; aspect-ratio: 1/1; border-radius: 9px 9px 0 0; overflow: hidden; background: #EEF3F9">
+            <span></span>
+            <sc-if value="{{ c.draft }}" hint-placeholder-val="{{ true }}">
+              <span style="white-space:nowrap;position:absolute;left:12px;top:12px;height:28px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border-radius:8px;background:rgba(28,27,31,.78);color:#FFC90E;font-size:12px;font-weight:700;backdrop-filter:blur(4px)">{{ draftIcon }}임시저장</span>
+            </sc-if>
+          </div>
+
+          <div onClick="{{ stop }}" style="position:absolute;right:10px;top:10px">
+            <button type="button" onClick="{{ c.toggleMenu }}" aria-label="카드 메뉴" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:rgba(255,255,255,.92);color:#2B3440;font-size:16px;font-weight:800;font-family:inherit;line-height:1;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.24)" style-hover="background:#fff">···</button>
+            <div style="{{ c.menuStyle }}">
+              <button type="button" onClick="{{ c.onShare }}" style="width:100%;padding:11px 16px;text-align:right;border:0;border-bottom:1px solid #E8EDF4;background:transparent;font-size:14px;font-family:inherit;color:#2B3440;cursor:pointer" style-hover="background:#EAF1FA">공유</button>
+              <button type="button" onClick="{{ c.onEdit }}" style="width:100%;padding:11px 16px;text-align:right;border:0;border-bottom:1px solid #E8EDF4;background:transparent;font-size:14px;font-family:inherit;color:#2B3440;cursor:pointer" style-hover="background:#EAF1FA">편집</button>
+              <button type="button" onClick="{{ c.onVis }}" style="width:100%;padding:11px 16px;text-align:right;border:0;border-bottom:1px solid #E8EDF4;background:transparent;font-size:14px;font-family:inherit;color:#2B3440;cursor:pointer" style-hover="background:#EAF1FA">공개 여부 변경</button>
+              <button type="button" onClick="{{ c.onDelete }}" style="width:100%;padding:11px 16px;text-align:right;border:0;background:transparent;font-size:14px;font-family:inherit;color:#D93025;font-weight:600;cursor:pointer" style-hover="background:#FDECEA">삭제</button>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px">
+            <span style="flex:1;min-width:0;font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
+            <span style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-size:12px;color:#6B7687;white-space:nowrap">
+              <span style="display:flex;align-items:center;gap:4px">{{ heartIcon }}{{ c.likes }}</span>
+              <span style="display:flex;align-items:center;gap:4px">{{ commentIcon }}{{ c.comments }}</span>
+            </span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+  </div>
+
+  <div onClick="{{ closeModal }}" style="{{ shareOverlayStyle }}">
+    <div onClick="{{ stop }}" style="width:100%;max-width:420px;border-radius:16px;background:#fff;border:1px solid #DCE3ED;box-shadow:0 16px 48px rgba(16,24,40,.24);overflow:hidden">
+      <div style="padding:22px 24px 6px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-.01em">공유하기</span>
+        <span style="font-size:13px;color:#6B7687">{{ modalName }}</span>
+      </div>
+      <div style="padding:18px 24px 4px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+        <sc-for list="{{ snsList }}" as="s" hint-placeholder-count="4">
+          <button type="button" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 4px;border:1px solid #E8EDF4;border-radius:12px;background:#fff;font-family:inherit;font-size:12px;color:#2B3440;cursor:pointer" style-hover="background:#EAF1FA;border-color:#B9C5D6">
+            <span style="{{ s.dotStyle }}">{{ s.mark }}</span>
+            <span>{{ s.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="padding:16px 24px 22px;display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:13px;font-weight:700;color:#6B7687">링크</span>
+        <div style="display:flex;gap:8px">
+          <input type="text" readonly value="{{ shareUrl }}" style="flex:1;min-width:0;height:44px;padding:0 14px;border:1px solid #D5DCE6;border-radius:10px;background:#F7F9FC;font-size:13px;font-family:inherit;color:#2B3440">
+          <button type="button" onClick="{{ copyLink }}" style="flex-shrink:0;height:44px;padding:0 18px;border:0;border-radius:10px;background:#FFC90E;font-size:14px;font-weight:700;font-family:inherit;color:#2B3440;cursor:pointer">{{ copyLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div onClick="{{ closeModal }}" style="{{ visOverlayStyle }}">
+    <div onClick="{{ stop }}" style="width:100%;max-width:480px;border-radius:16px;background:#fff;border:1px solid #DCE3ED;box-shadow:0 16px 48px rgba(16,24,40,.24);overflow:hidden">
+      <div style="padding:22px 24px 8px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-.01em">공개 여부</span>
+        <span style="font-size:13px;color:#6B7687">{{ modalName }}</span>
+      </div>
+      <div style="padding:12px 24px 4px;display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ visibility }}" as="v" hint-placeholder-count="3">
+          <label style="{{ v.rowStyle }}">
+            <input type="radio" name="collection-vis" checked="{{ v.checked }}" onChange="{{ v.onPick }}" style="flex:none;flex-shrink:0;margin:3px 0 0;width:18px;height:18px;min-width:18px;accent-color:#FFC90E;cursor:pointer">
+            <span style="display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:15px;font-weight:700">{{ v.title }}</span>
+              <span style="font-size:12.5px;line-height:1.55;color:#8C97A8">{{ v.desc }}</span>
+            </span>
+          </label>
+        </sc-for>
+        <span style="font-size:12.5px;color:#8C97A8">공개 여부는 언제든지 변경 할 수 있으니, 편하게 설정 하세요!</span>
+      </div>
+      <div style="padding:18px 24px 22px;display:flex;justify-content:flex-end;gap:10px">
+        <button type="button" onClick="{{ closeModal }}" style="white-space:nowrap;flex-shrink:0;height:46px;padding:0 22px;border:1px solid #D5DCE6;border-radius:10px;background:#fff;font-size:14px;font-weight:600;font-family:inherit;color:#2B3440;cursor:pointer" style-hover="background:#EEF3F9">취소</button>
+        <button type="button" onClick="{{ applyVis }}" style="white-space:nowrap;flex-shrink:0;height:46px;padding:0 26px;border:0;border-radius:10px;background:#FFC90E;font-size:14px;font-weight:700;font-family:inherit;color:#2B3440;cursor:pointer">설정 변경</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const e = React.createElement;
+const svg = (props, ...kids) => e('svg', Object.assign({ width: 16, height: 16, viewBox: '0 0 16 16', fill: 'currentColor' }, props), ...kids);
+const ICONS = {
+  search: svg({ width: 18, height: 18 }, e('path', { key: 1, d: 'M11.74 10.34h-.79l-.28-.27a6.47 6.47 0 1 0-.7.7l.27.28v.79l5 4.99L16.5 15.3l-4.76-4.96Zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z' })),
+  filter: svg({}, e('path', { key: 1, d: 'M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5Zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Z' })),
+  sort: svg({}, e('path', { key: 1, d: 'M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5Zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5Zm0 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5Zm0 3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5Zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5Z' })),
+  heart: svg({ width: 13, height: 13 }, e('path', { key: 1, d: 'M8 14.25s-6-3.72-6-7.63A3.63 3.63 0 0 1 8 4.1a3.63 3.63 0 0 1 6 2.52c0 3.91-6 7.63-6 7.63Z' })),
+  comment: svg({ width: 13, height: 13, fill: 'none', stroke: 'currentColor', strokeWidth: 1.5 }, e('path', { key: 1, d: 'M14 9.5A2.5 2.5 0 0 1 11.5 12H6l-3.5 2.4V4.5A2.5 2.5 0 0 1 5 2h6.5A2.5 2.5 0 0 1 14 4.5v5Z' })),
+  draft: svg({ width: 12, height: 12 }, e('path', { key: 1, d: 'M12.5 1.5 14.5 3.5 6 12H4v-2l8.5-8.5ZM2 14h12v1.5H2V14Z' })),
+  caret: (open) => svg({ width: 12, height: 12, style: { transition: 'transform .18s', transform: open ? 'rotate(180deg)' : 'none', color: '#6B7687' } }, e('path', { key: 1, d: 'M3 5.5 8 10.5l5-5H3Z' }))
+};
+const MENU = 'position:absolute;top:calc(100% + 8px);right:0;min-width:180px;background:#fff;border:1px solid #DCE3ED;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.14),0 12px 28px rgba(0,0,0,.12);overflow:hidden;z-index:30;transform-origin:top right;transition:opacity .15s,transform .15s;';
+const menuStyle = (open) => MENU + (open ? 'opacity:1;transform:scale(1);pointer-events:auto;visibility:visible' : 'opacity:0;transform:scale(.96);pointer-events:none;visibility:hidden');
+const OPT = 'white-space:nowrap;width:100%;padding:12px 16px;text-align:right;border:0;background:transparent;font-size:14px;font-family:inherit;color:#2B3440;cursor:pointer;';
+const OVERLAY = 'position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(24,32,44,.5);transition:opacity .18s;';
+const brandIcon = (d, color, extra) => e('svg', { width: 19, height: 19, viewBox: '0 0 24 24', fill: color || 'currentColor' }, e('path', { key: 1, d: d }), extra || null);
+const SNS = [
+  ['X', brandIcon('M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.66l7.73-8.83L1.25 2.25h6.83l4.71 6.23 5.45-6.23Zm-1.16 17.52h1.83L7.08 4.13H5.11l11.97 15.64Z'), '#000000'],
+  ['카카오톡', brandIcon('M12 3C6.98 3 2.9 6.2 2.9 10.15c0 2.54 1.7 4.77 4.25 6.03l-1.03 3.8c-.09.33.27.6.56.41l4.5-2.98c.27.02.54.04.82.04 5.02 0 9.1-3.2 9.1-7.3S17.02 3 12 3Z', '#3A1D1D'), '#FAE100'],
+  ['인스타그램', brandIcon('M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9a3.8 3.8 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07Zm0 6.68a3.16 3.16 0 1 0 0 6.32 3.16 3.16 0 0 0 0-6.32Zm0-1.98a5.14 5.14 0 1 1 0 10.28 5.14 5.14 0 0 1 0-10.28Zm5.36-.36a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0Z'), '#E1306C'],
+  ['페이스북', brandIcon('M13.5 21.9v-8.2h2.76l.41-3.2H13.5V8.45c0-.93.26-1.56 1.59-1.56h1.7V4.03c-.3-.04-1.31-.13-2.5-.13-2.47 0-4.16 1.51-4.16 4.28V10.5H7.36v3.2h2.77v8.2h3.37Z'), '#1877F2']
+];
+const VIS = [
+  ['공개', '나만의 캐릭터를 독자 및 창작가에게 공유하세요! 모든 사람이 검색 및 링크를 통해 캐릭터 프로필을 볼 수 있습니다.'],
+  ['일부 공개', '본인과 링크를 가진 사람만 캐릭터 프로필을 볼 수 있습니다.'],
+  ['비공개', '개인 용도로 캐릭터 프로필을 업로드 하세요. 본인만 캐릭터 프로필을 볼 수 있습니다.']
+];
+
+const NAMES = ['루미에르 아르장떼유 벨몽드', '카이', '세라핀', '노아', '이즈미 하루카', '빈센트', '별하', '레이븐 클로디어스', '유이', '아스텔'];
+const MAX_PROFILES = 10;
+const TONES = ['#FFE9A3', '#E8E1FF', '#D8F0E2', '#FFDDD2', '#DCE9FF', '#F3E4D7', '#E6EFD9', '#FFE1EF', '#E2ECFB', '#F0E6F7'];
+
+class Component extends DCLogic {
+  state = { sort: '생성일', vis: '전체', openSort: false, openVis: false, openCard: -1, modal: null, modalIdx: -1, visPick: '공개', copied: false };
+
+  mkOptions(list, key) {
+    return list.map((label, i) => ({
+      label,
+      style: OPT + (i < list.length - 1 ? 'border-bottom:1px solid #E8EDF4;' : '') + (this.state[key] === label ? 'background:#EAF1FA;font-weight:700;' : ''),
+      onClick: () => this.setState({ [key]: label, openSort: false, openVis: false })
+    }));
+  }
+
+  renderVals() {
+    const s = this.state;
+    return {
+      searchIcon: ICONS.search, filterIcon: ICONS.filter, sortIcon: ICONS.sort,
+      heartIcon: ICONS.heart, commentIcon: ICONS.comment, draftIcon: ICONS.draft,
+      caretSort: ICONS.caret(s.openSort), caretVis: ICONS.caret(s.openVis),
+      sort: s.sort, vis: s.vis,
+      sortOptions: this.mkOptions(['생성일', '이름', '좋아요 수', '댓글 수'], 'sort'),
+      visOptions: this.mkOptions(['전체', '공개', '일부 공개', '비공개'], 'vis'),
+      sortMenuStyle: menuStyle(s.openSort),
+      visMenuStyle: menuStyle(s.openVis),
+      toggleSort: () => this.setState(p => ({ openSort: !p.openSort, openVis: false, openCard: -1 })),
+      toggleVis: () => this.setState(p => ({ openVis: !p.openVis, openSort: false, openCard: -1 })),
+      closeAll: () => this.setState({ openSort: false, openVis: false, openCard: -1 }),
+      stop: (ev) => ev.stopPropagation(),
+      modalName: s.modalIdx >= 0 ? NAMES[s.modalIdx] : '',
+      shareUrl: s.modalIdx >= 0 ? 'https://projectoc.app/c/' + (1000 + s.modalIdx) : '',
+      shareOverlayStyle: OVERLAY + (s.modal === 'share' ? 'opacity:1;pointer-events:auto;visibility:visible' : 'opacity:0;pointer-events:none;visibility:hidden'),
+      visOverlayStyle: OVERLAY + (s.modal === 'vis' ? 'opacity:1;pointer-events:auto;visibility:visible' : 'opacity:0;pointer-events:none;visibility:hidden'),
+      closeModal: () => this.setState({ modal: null, copied: false }),
+      copyLabel: s.copied ? '복사됨' : '복사',
+      copyLink: () => this.setState({ copied: true }),
+      snsList: SNS.map(([label, mark, bg]) => ({
+        label, mark,
+        dotStyle: 'width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:' + bg + ';color:#fff'
+      })),
+      visibility: VIS.map(([title, desc]) => ({
+        title, desc,
+        checked: s.visPick === title,
+        onPick: () => this.setState({ visPick: title }),
+        rowStyle: 'display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid ' + (s.visPick === title ? '#FFC90E' : '#E8EDF4') + ';border-radius:12px;background:' + (s.visPick === title ? '#FFFAE8' : '#fff') + ';cursor:pointer'
+      })),
+      applyVis: () => this.setState({ modal: null }),
+      onCreate: (ev) => { if (NAMES.length >= MAX_PROFILES) { ev.preventDefault(); ev.stopPropagation(); if (window.confirm('프로필을 더 추가하시려면 구독이 필요해요. 구독 하시겠습니까?')) window.location.href = '/subscribe'; } },
+      cards: NAMES.map((name, i) => ({
+        name,
+        likes: [10, 24, 6, 132, 48, 3, 87, 15, 41, 7][i],
+        comments: [10, 4, 0, 21, 9, 1, 12, 2, 5, 0][i],
+        draft: i === 0 || i === 4,
+        thumbStyle: 'position:absolute;inset:0;background:linear-gradient(140deg,' + TONES[i] + ' 0%,#FFFFFF 100%)',
+        menuStyle: menuStyle(s.openCard === i),
+        toggleMenu: () => this.setState(p => ({ openCard: p.openCard === i ? -1 : i, openSort: false, openVis: false })),
+        pick: () => this.setState({ openCard: -1 }),
+        onShare: () => this.setState({ openCard: -1, modal: 'share', modalIdx: i, copied: false }),
+        onEdit: () => { this.setState({ openCard: -1 }); window.location.href = '/edit'; },
+        onVis: () => this.setState({ openCard: -1, modal: 'vis', modalIdx: i, visPick: '공개' }),
+        onDelete: () => {
+          this.setState({ openCard: -1 });
+          window.confirm('정말로 프로필을 삭제하시겠어요? 삭제 하면 공유된 url로 볼 수도 없고 이 작업은 되돌릴 수 없어요.');
+        }
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
