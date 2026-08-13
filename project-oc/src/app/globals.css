@@ -1,62 +1,66 @@
 :root {
-    --personal: #ffc90e;
-    --personal-rgb: 255, 203, 15;
-    --personal-bright-1: #ffe18a;
-    --personal-bright-1-rgb: 255, 225, 138;
-    --personal-bright-2: #fff2c4;
-    --personal-bright-2-rgb: 255, 242, 196;
-    --personal-dark-1: #c99a00;
-    --personal-: trans;
-    --personal-white: #f0f0f0;
-    --personal-black: #0d0c22;
-    --personal-line-bright-1: #d3dae6;
-    --personal-line-bright-2: #eceae6;
+	--personal: #ffc90e;
+	--personal-rgb: 255, 203, 15;
+	--personal-bright-1: #ffe18a;
+	--personal-bright-1-rgb: 255, 225, 138;
+	--personal-bright-2: #fff2c4;
+	--personal-bright-2-rgb: 255, 242, 196;
+	--personal-bright-3: #fff9e3;
+	--personal-bright-3-rgb: 255, 249, 227;
+	--personal-dark-1: #c99a00;
+	--personal-white: #f0f0f0;
+	--personal-black: #0d0c22;
+	--personal-line-bright-1: #d3dae6;
+	--personal-line-bright-2: #eceae6;
 
-    --text-thin-1: #3d3d4e;
-    --text-thin-2: #6e6d7a;
-    --text-important: #0d0c22;
+	--text-thin-1: #3d3d4e;
+	--text-thin-2: #6e6d7a;
+	--text-important: #0d0c22;
 
-    --button-text: #4a5568;
-    --button-back: #fff;
-    --button-line: #d3dae6;
+	--button-text: #4a5568;
+	--button-back: #fff;
+	--button-line: #d3dae6;
 
-    --button-back-hover: #f8f9fc;
+	--button-back-hover: #f8f9fc;
 
-    --button-text-disabled: #a8b0be;
-    --button-back-disabled: #edf0f5;
+	--button-text-disabled: #a8b0be;
+	--button-back-disabled: #edf0f5;
 
-    --submit-text: #0d0c22;
-    --submit-back: #ffc90e;
+	--button-black-text: #fff;
+	--button-black-back: #0d0c22;
 
-    --submit-back-hover: var(--submit-back);
+	--submit-text: #0d0c22;
+	--submit-back: #ffc90e;
 
-    --bg-bright-1: #eceae6;
-    --bg-bright-2: #f3f2ef;
-    --bg-dark-1: #0d0c22;
+	--submit-back-hover: var(--submit-back);
 
-    --test-line: 1px solid red;
+	--bg-bright-1: #eceae6;
+	--bg-bright-2: #f3f2ef;
+	--bg-dark-1: #0d0c22;
+
+	--test-line: 1px solid red;
 }
 
 * {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html {
-    height: 100%;
+	height: 100%;
 }
 
 html,
 body {
-    max-width: 100vw;
-    overflow-x: hidden;
-    margin: 0;
+	max-width: 100vw;
+	overflow-x: hidden;
+	margin: 0;
 }
 
 body {
-    min-height: 100%;
-    letter-spacing: -0.03em;
+	min-height: 100%;
+	letter-spacing: -0.03em;
 }
 
 a {
-    text-decoration: none;
+	text-decoration: none;
 }
