@@ -67,7 +67,7 @@
       <sc-for list="{{ cards }}" as="c" hint-placeholder-count="8">
         <div style="position:relative;border-radius:10px;background:#fff;border:1px solid #DCE3ED;box-shadow:none;overflow:visible" style-hover="box-shadow:0 0 0 2px #FFC90E,0 6px 18px rgba(255,201,14,.55)">
           <div style="position: relative; aspect-ratio: 1/1; border-radius: 9px 9px 0 0; overflow: hidden; background: #EEF3F9">
-            <span></span>
+            <span style="{{ c.thumbStyle }}"></span>
             <sc-if value="{{ c.draft }}" hint-placeholder-val="{{ true }}">
               <span style="white-space:nowrap;position:absolute;left:12px;top:12px;height:28px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border-radius:8px;background:rgba(28,27,31,.78);color:#FFC90E;font-size:12px;font-weight:700;backdrop-filter:blur(4px)">{{ draftIcon }}임시저장</span>
             </sc-if>

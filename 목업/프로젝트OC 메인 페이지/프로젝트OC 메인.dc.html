@@ -15,6 +15,19 @@
 body{margin:0;background:#fff;font-family:'Pretendard','Noto Sans KR',system-ui,sans-serif;color:#0d0c22;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
 a{color:#0d0c22;text-decoration:none}
 a:hover{color:#c99a00}
+@media (prefers-reduced-motion: no-preference){
+  @supports (animation-timeline: view()){
+    .oc-hero-float{animation:oc-float-l 1ms linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+    .oc-hero-float-r{animation-name:oc-float-r}
+    .oc-reveal-l,.oc-reveal-r,.oc-reveal-scale{opacity:0;animation:oc-reveal-in 1ms cubic-bezier(.16,1,.3,1) both;animation-timeline:view();animation-range:entry 0% cover 38%}
+    .oc-reveal-l{transform:translateX(-40px)}
+    .oc-reveal-r{transform:translateX(40px)}
+    .oc-reveal-scale{transform:scale(.94)}
+  }
+}
+@keyframes oc-float-l{from{transform:rotate(-8deg) translateY(-16px)}to{transform:rotate(-8deg) translateY(44px)}}
+@keyframes oc-float-r{from{transform:rotate(9deg) translateY(-28px)}to{transform:rotate(9deg) translateY(28px)}}
+@keyframes oc-reveal-in{to{opacity:1;transform:none}}
 </style>
 </helmet>
 <div style="width:100%;max-width:1920px;margin:0 auto;background:#fff;overflow-x:hidden">
@@ -42,7 +55,7 @@ a:hover{color:#c99a00}
     <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(58% 42% at 50% 6%,rgba(255,201,14,.20) 0%,rgba(255,201,14,0) 70%)"></div>
     <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(13,12,34,.09) 1.6px,transparent 1.6px);background-size:26px 26px;-webkit-mask-image:radial-gradient(70% 60% at 50% 20%,#000 0%,transparent 75%);mask-image:radial-gradient(70% 60% at 50% 20%,#000 0%,transparent 75%)"></div>
 
-    <div aria-hidden="true" style="position:absolute;left:clamp(-40px,4vw,90px);top:clamp(40px,9vw,120px);width:clamp(96px,10vw,150px);pointer-events:none;transform:rotate(-8deg);border-radius:16px;background:#fff;border:1px solid #eceae6;box-shadow:0 14px 34px rgba(13,12,34,.08);padding:12px;display:flex;flex-direction:column;gap:9px">
+    <div aria-hidden="true" class="oc-hero-float" style="position:absolute;left:clamp(-40px,4vw,90px);top:clamp(40px,9vw,120px);width:clamp(96px,10vw,150px);pointer-events:none;transform:rotate(-8deg);border-radius:16px;background:#fff;border:1px solid #eceae6;box-shadow:0 14px 34px rgba(13,12,34,.08);padding:12px;display:flex;flex-direction:column;gap:9px">
       <div style="height:clamp(64px,7vw,96px);border-radius:11px;background:#FFF2C4;display:flex;align-items:flex-end;justify-content:center;overflow:hidden">
         <div style="width:52%;height:58%;border-radius:999px 999px 0 0;background:#FFC90E"></div>
       </div>
@@ -50,7 +63,7 @@ a:hover{color:#c99a00}
       <div style="height:8px;width:46%;border-radius:99px;background:#f3f2ef"></div>
     </div>
 
-    <div aria-hidden="true" style="position:absolute;right:clamp(-40px,4vw,90px);top:clamp(70px,12vw,180px);width:clamp(96px,10vw,150px);pointer-events:none;transform:rotate(9deg);border-radius:16px;background:#fff;border:1px solid #eceae6;box-shadow:0 14px 34px rgba(13,12,34,.08);padding:12px;display:flex;flex-direction:column;gap:9px">
+    <div aria-hidden="true" class="oc-hero-float oc-hero-float-r" style="position:absolute;right:clamp(-40px,4vw,90px);top:clamp(70px,12vw,180px);width:clamp(96px,10vw,150px);pointer-events:none;transform:rotate(9deg);border-radius:16px;background:#fff;border:1px solid #eceae6;box-shadow:0 14px 34px rgba(13,12,34,.08);padding:12px;display:flex;flex-direction:column;gap:9px">
       <div style="height:clamp(64px,7vw,96px);border-radius:11px;background:#0d0c22;display:flex;align-items:flex-end;justify-content:center;overflow:hidden">
         <div style="width:52%;height:58%;border-radius:999px 999px 0 0;background:#FFC90E"></div>
       </div>
@@ -71,10 +84,30 @@ a:hover{color:#c99a00}
   <section style="padding:0 clamp(20px,10vw,200px) 40px;display:flex;flex-direction:column;gap:clamp(64px,9vw,120px)">
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:clamp(32px,5vw,100px);align-items:center">
-      <div style="aspect-ratio:4/3;border-radius:20px;background:repeating-linear-gradient(135deg,#faf9f7 0 12px,#f2f1ee 12px 24px);border:1px solid #eceae6;display:flex;align-items:center;justify-content:center">
-        <span style="font:500 14px/1 ui-monospace,Menlo,monospace;color:#a3a1a0;letter-spacing:.04em">기능 이미지 1 — 템플릿 편집 화면</span>
+      <div class="oc-reveal-l" style="aspect-ratio:4/3;border-radius:20px;background:#faf9f7;border:1px solid #eceae6;display:flex;align-items:center;justify-content:center;padding:clamp(18px,3vw,32px)">
+        <div style="width:100%;max-width:320px;border-radius:16px;background:#fff;border:1px solid #eceae6;box-shadow:0 20px 44px rgba(13,12,34,.10);overflow:hidden">
+          <div style="height:32px;padding:0 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #f1f0ee;background:#faf9f7">
+            <span style="width:7px;height:7px;border-radius:999px;background:#eceae6"></span>
+            <span style="width:7px;height:7px;border-radius:999px;background:#eceae6"></span>
+            <span style="width:7px;height:7px;border-radius:999px;background:#eceae6"></span>
+          </div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="height:8px;width:34%;border-radius:99px;background:#0d0c22"></span>
+              <span style="height:30px;border-radius:8px;background:#f6f5f4;border:1px solid #eceae6"></span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="height:8px;width:48%;border-radius:99px;background:#0d0c22"></span>
+              <span style="height:30px;border-radius:8px;background:#FFFAE8;border:1.5px solid #FFC90E;box-shadow:0 0 0 3px rgba(255,201,14,.18)"></span>
+            </div>
+            <div style="display:flex;gap:8px;padding-top:2px">
+              <span style="flex:1.3;height:28px;border-radius:8px;background:#FFC90E"></span>
+              <span style="flex:1;height:28px;border-radius:8px;background:#f6f5f4;border:1px solid #eceae6"></span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
+      <div class="oc-reveal-r">
         <span style="display:inline-block;padding:7px 14px;border-radius:999px;background:#FFF6D6;color:#8a6c00;font-size:13px;font-weight:700;letter-spacing:.02em">TEMPLATE</span>
         <h2 style="margin:20px 0 0;font-size:clamp(26px,3.2vw,42px);line-height:1.32;font-weight:800;letter-spacing:-.03em;text-wrap:pretty">간단한 템플릿으로 캐릭터 프로필을 만들어 보세요.</h2>
         <p style="margin:22px 0 0;font-size:clamp(15px,1.4vw,18px);line-height:1.85;color:#6e6d7a;text-wrap:pretty">캐릭터 프로필을 만들 때 어떤 요소를 넣어야 할지, 어떻게 꾸며야 할지 많은 고민을 해보셨을겁니다. 프로젝트OC를 사용하면 프로필에 자주 사용한 요소와 깔끔한 디자인으로 독자들이 한 눈에 바로 이해 할 수 있는 캐릭터 프로필이 뚝딱! 만들어집니다.</p>
@@ -82,21 +115,78 @@ a:hover{color:#c99a00}
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:clamp(32px,5vw,100px);align-items:center">
-      <div>
+      <div class="oc-reveal-l">
         <span style="display:inline-block;padding:7px 14px;border-radius:999px;background:#FFF6D6;color:#8a6c00;font-size:13px;font-weight:700;letter-spacing:.02em">SHARE</span>
         <h2 style="margin:20px 0 0;font-size:clamp(26px,3.2vw,42px);line-height:1.32;font-weight:800;letter-spacing:-.03em;text-wrap:pretty">캐릭터 프로필을 자유롭게 공유해 보세요.</h2>
         <p style="margin:22px 0 0;font-size:clamp(15px,1.4vw,18px);line-height:1.85;color:#6e6d7a;text-wrap:pretty">멋진 캐릭터 프로필을 창작자 또는 독자에게 공유해보세요. 물론, 링크를 통해 부분공개 하거나 본인만 볼 수 있게 비공개로 설정 할 수 있습니다.</p>
       </div>
-      <div style="aspect-ratio:4/3;border-radius:20px;background:repeating-linear-gradient(135deg,#faf9f7 0 12px,#f2f1ee 12px 24px);border:1px solid #eceae6;display:flex;align-items:center;justify-content:center">
-        <span style="font:500 14px/1 ui-monospace,Menlo,monospace;color:#a3a1a0;letter-spacing:.04em">기능 이미지 2 — 공개 범위 설정</span>
+      <div class="oc-reveal-r" style="aspect-ratio:4/3;border-radius:20px;background:#faf9f7;border:1px solid #eceae6;display:flex;align-items:center;justify-content:center;padding:clamp(18px,3vw,32px)">
+        <div style="width:100%;max-width:320px;border-radius:16px;background:#fff;border:1px solid #eceae6;box-shadow:0 20px 44px rgba(13,12,34,.10);overflow:hidden">
+          <div style="height:32px;padding:0 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #f1f0ee;background:#faf9f7">
+            <span style="width:7px;height:7px;border-radius:999px;background:#eceae6"></span>
+            <span style="width:7px;height:7px;border-radius:999px;background:#eceae6"></span>
+            <span style="width:7px;height:7px;border-radius:999px;background:#eceae6"></span>
+          </div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1.5px solid #FFC90E;background:#FFFBEB">
+              <span style="width:15px;height:15px;border-radius:999px;border:5px solid #FFC90E;flex:none"></span>
+              <span style="display:flex;flex-direction:column;gap:4px;flex:1">
+                <span style="height:7px;width:34%;border-radius:99px;background:#0d0c22"></span>
+                <span style="height:5px;width:70%;border-radius:99px;background:#e4e2de"></span>
+              </span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid #eceae6">
+              <span style="width:15px;height:15px;border-radius:999px;border:2px solid #cfcdc8;flex:none"></span>
+              <span style="display:flex;flex-direction:column;gap:4px;flex:1">
+                <span style="height:7px;width:42%;border-radius:99px;background:#a3a1a0"></span>
+                <span style="height:5px;width:58%;border-radius:99px;background:#eceae6"></span>
+              </span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid #eceae6">
+              <span style="width:15px;height:15px;border-radius:999px;border:2px solid #cfcdc8;flex:none"></span>
+              <span style="display:flex;flex-direction:column;gap:4px;flex:1">
+                <span style="height:7px;width:28%;border-radius:99px;background:#a3a1a0"></span>
+                <span style="height:5px;width:52%;border-radius:99px;background:#eceae6"></span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:clamp(32px,5vw,100px);align-items:center">
-      <div style="aspect-ratio:4/3;border-radius:20px;background:repeating-linear-gradient(135deg,#faf9f7 0 12px,#f2f1ee 12px 24px);border:1px solid #eceae6;display:flex;align-items:center;justify-content:center">
-        <span style="font:500 14px/1 ui-monospace,Menlo,monospace;color:#a3a1a0;letter-spacing:.04em">기능 이미지 3 — 좋아요와 코멘트</span>
+      <div class="oc-reveal-l" style="aspect-ratio:4/3;border-radius:20px;background:#faf9f7;border:1px solid #eceae6;display:flex;align-items:center;justify-content:center;padding:clamp(18px,3vw,32px)">
+        <div style="width:100%;max-width:320px;border-radius:16px;background:#fff;border:1px solid #eceae6;box-shadow:0 20px 44px rgba(13,12,34,.10);overflow:hidden">
+          <div style="height:32px;padding:0 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #f1f0ee;background:#faf9f7">
+            <span style="width:7px;height:7px;border-radius:999px;background:#eceae6"></span>
+            <span style="width:7px;height:7px;border-radius:999px;background:#eceae6"></span>
+            <span style="width:7px;height:7px;border-radius:999px;background:#eceae6"></span>
+          </div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="width:26px;height:26px;border-radius:999px;background:#FFF0F1;display:flex;align-items:center;justify-content:center;flex:none">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="#e8384f"><path d="M8 14.25s-6-3.72-6-7.63A3.63 3.63 0 0 1 8 4.1a3.63 3.63 0 0 1 6 2.52c0 3.91-6 7.63-6 7.63Z"></path></svg>
+              </span>
+              <span style="height:8px;width:64px;border-radius:99px;background:#0d0c22"></span>
+            </div>
+            <div style="display:flex;gap:10px">
+              <span style="width:26px;height:26px;border-radius:999px;background:#f6f5f4;border:1px solid #eceae6;flex:none"></span>
+              <span style="flex:1;display:flex;flex-direction:column;gap:5px;padding-top:3px">
+                <span style="height:7px;width:38%;border-radius:99px;background:#0d0c22"></span>
+                <span style="height:6px;width:85%;border-radius:99px;background:#eceae6"></span>
+              </span>
+            </div>
+            <div style="display:flex;gap:10px">
+              <span style="width:26px;height:26px;border-radius:999px;background:#FFF6D6;border:1px solid #FFE18A;flex:none"></span>
+              <span style="flex:1;display:flex;flex-direction:column;gap:5px;padding-top:3px">
+                <span style="height:7px;width:30%;border-radius:99px;background:#0d0c22"></span>
+                <span style="height:6px;width:66%;border-radius:99px;background:#eceae6"></span>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
+      <div class="oc-reveal-r">
         <span style="display:inline-block;padding:7px 14px;border-radius:999px;background:#FFF6D6;color:#8a6c00;font-size:13px;font-weight:700;letter-spacing:.02em">FEEDBACK</span>
         <h2 style="margin:20px 0 0;font-size:clamp(26px,3.2vw,42px);line-height:1.32;font-weight:800;letter-spacing:-.03em;text-wrap:pretty">캐릭터 프로필에 감상평을 남겨 보세요.</h2>
         <p style="margin:22px 0 0;font-size:clamp(15px,1.4vw,18px);line-height:1.85;color:#6e6d7a;text-wrap:pretty">캐릭터 프로필이 마음에 들면 좋아요를 남겨보세요. 회원 가입이 필요하지 않습니다. 또한 감상평을 코멘트로 보낼 수 있습니다.</p>
@@ -106,7 +196,7 @@ a:hover{color:#c99a00}
   </section>
 
   <section style="padding:clamp(64px,9vw,120px) clamp(20px,10vw,200px) clamp(72px,10vw,140px)">
-    <div style="position:relative;overflow:hidden;border-radius:28px;background:#FFF9E3;border:1px solid #F7E9B2;padding:clamp(48px,7vw,96px) clamp(24px,5vw,64px);display:flex;flex-direction:column;align-items:center;text-align:center">
+    <div class="oc-reveal-scale" style="position:relative;overflow:hidden;border-radius:28px;background:#FFF9E3;border:1px solid #F7E9B2;padding:clamp(48px,7vw,96px) clamp(24px,5vw,64px);display:flex;flex-direction:column;align-items:center;text-align:center">
       <div aria-hidden="true" style="position:absolute;left:-70px;bottom:-70px;width:220px;height:220px;border-radius:999px;background:rgba(255,201,14,.35);pointer-events:none"></div>
       <div aria-hidden="true" style="position:absolute;right:-50px;top:-50px;width:160px;height:160px;border-radius:44px;background:rgba(255,201,14,.28);transform:rotate(22deg);pointer-events:none"></div>
       <div aria-hidden="true" style="position:relative;margin-bottom:26px;display:flex;gap:10px">
