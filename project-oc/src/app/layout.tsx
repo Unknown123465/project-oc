@@ -1,6 +1,6 @@
 import type {Metadata} from "next";
 import "./globals.css";
-
+import "bootstrap-icons/font/bootstrap-icons.css";
 import localFont from "next/font/local";
 import Header from "./component/section-tag/header";
 import Footer from "./component/section-tag/footer";
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: LayoutProps<"/">) {
 	return (
-		<html lang='ko' className={pretendard.className}>
+		<html lang="ko" className={pretendard.className}>
 			<body>
 				<Header />
 				{children}

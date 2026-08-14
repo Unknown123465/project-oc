@@ -15,7 +15,12 @@
 
 	--text-thin-1: #3d3d4e;
 	--text-thin-2: #6e6d7a;
+	--text-bold-1: #1a1a1a;
 	--text-important: #0d0c22;
+
+	--input-text: #1a1a1a;
+	--input-back: white;
+	--input-line:#e4e4e4;
 
 	--button-text: #4a5568;
 	--button-back: #fff;
@@ -31,6 +36,7 @@
 
 	--submit-text: #0d0c22;
 	--submit-back: #ffc90e;
+	--submit-back-rgb: 255, 201, 14;
 
 	--submit-back-hover: var(--submit-back);
 

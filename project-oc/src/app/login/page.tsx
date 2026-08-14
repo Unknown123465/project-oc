@@ -1,3 +1,4 @@
+import { LoginForm } from "./client";
 import styles from "./page.module.css";
 
 function BgCircle({size, boundary, fill, pos}: {size: "big" | "small"; boundary: "soft" | "hard"; fill: "bg" | "stroke"; pos: "left" | "middle" | "right"}) {
@@ -59,6 +60,10 @@ function Header() {
 	);
 }
 
+
+
+
+
 export default function Login() {
 	return (
 		<main className={styles.main}>
@@ -68,6 +73,10 @@ export default function Login() {
 
 			<article>
 				<Header />
+
+				<hr />
+
+				<LoginForm />
 			</article>
 
 			<section></section>
