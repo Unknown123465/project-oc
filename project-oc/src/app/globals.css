@@ -40,6 +40,10 @@
 
 	--submit-back-hover: var(--submit-back);
 
+	--submit-disabled-text:#a8b0be;
+	--submit-disabled-back:#edf0f5;
+	--submit-disabled-line: #e3e7ef;
+
 	--bg-bright-1: #eceae6;
 	--bg-bright-2: #f3f2ef;
 	--bg-dark-1: #0d0c22;

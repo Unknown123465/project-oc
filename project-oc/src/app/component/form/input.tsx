@@ -17,7 +17,11 @@ interface InputProps {
 	onChange: (e: ChangeEvent<HTMLInputElement, HTMLInputElement>) => void;
 }
 
-export function TextInput({width, height, padding, borderRadius, style, focusAnimation = true, name, readOnly, disabled, value, onChange}: InputProps) {
+interface TextInputProps extends InputProps {
+	placeholder?: string;
+}
+
+export function TextInput({width, height, padding, borderRadius, style, focusAnimation = true, name, readOnly, disabled, value, onChange, placeholder}: TextInputProps) {
 	return (
 		<div className={styles.box} style={{width, height, ...style}}>
 			<input
@@ -31,12 +35,13 @@ export function TextInput({width, height, padding, borderRadius, style, focusAni
 				style={{padding, borderRadius}}
 				value={value}
 				onChange={onChange}
+				placeholder={placeholder}
 			/>
 		</div>
 	);
 }
 
-export function PasswordInput({width, height, padding, borderRadius, style, focusAnimation = true, name, readOnly, disabled, value, onChange}: InputProps) {
+export function PasswordInput({width, height, padding, borderRadius, style, focusAnimation = true, name, readOnly, disabled, value, onChange, placeholder}: TextInputProps) {
 	const [show, setShow] = useState<boolean>(false);
 
 	const showChange = useCallback((e: ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
@@ -58,10 +63,11 @@ export function PasswordInput({width, height, padding, borderRadius, style, focu
 				style={{padding, borderRadius}}
 				value={value}
 				onChange={onChange}
+				placeholder={placeholder}
 			/>
 
 			<label className={styles.eye} role="checkbox" aria-checked={show}>
-				<i className={`bi ${show ? "bi-eye" : "bi-eye-slash"}`}></i>
+				<i className={`bi ${show ? "bi-eye" : "bi-eye-slash"}`} ></i>
 				<input type="checkbox" name="eye" checked={show} hidden onChange={showChange} />
 			</label>
 		</div>

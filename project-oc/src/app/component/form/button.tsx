@@ -3,6 +3,7 @@
 import type {CSSProperties, ReactNode} from "react";
 import styles from "./styles.module.css";
 import Link from "next/link";
+import {useFormStatus} from "react-dom";
 
 interface ButtonProps {
 	children: ReactNode;
@@ -29,17 +30,21 @@ export function NormalButton({children, className, width, height, style, hoverAn
 
 interface SubmitButtonProps extends ButtonProps {
 	styleType?: "simple" | "attention";
+	pendingChildren?: ReactNode | undefined;
+	disabledIfPending?: boolean;
 }
 
-export function SubmitButton({children, className, width, height, style, hoverAnimation = true, disabled, styleType = "attention"}: SubmitButtonProps) {
+export function SubmitButton({children, pendingChildren, className, width, height, style, hoverAnimation = true, disabled, disabledIfPending = false, styleType = "attention"}: SubmitButtonProps) {
+	const formStatus = useFormStatus();
+
 	return (
 		<button
 			type="submit"
 			className={`${styles.button} ${styles.submit} ${styleType === "attention" ? styles.attention : ""} ${hoverAnimation ? styles.normal_button : ""} ${className}`}
-			disabled={disabled}
-			aria-disabled={disabled}
+			disabled={disabled || (disabledIfPending && formStatus.pending)}
+			aria-disabled={disabled || (disabledIfPending && formStatus.pending)}
 			style={{width, height, ...style}}>
-			{children}
+			{formStatus.pending && pendingChildren !== undefined ? pendingChildren : children}
 		</button>
 	);
 }

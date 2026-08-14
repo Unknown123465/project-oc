@@ -34,13 +34,23 @@
 	width: 100%;
 
 	& p {
-		margin: 20px 0 8px;
-		color: var(--text-thin-1);
 		font-size: 14px;
-		font-weight: 500;
 
-		&:first-of-type {
-			margin-top: 0;
+		&.title {
+			margin: 20px 0 8px;
+			color: var(--text-thin-1);
+			font-weight: 500;
+
+			&:first-of-type {
+				margin-top: 0;
+			}
+		}
+
+		&.error {
+			margin: 10px 0 0;
+			color: red;
+			font-weight: 600;
+			word-break: break-all;
 		}
 	}
 

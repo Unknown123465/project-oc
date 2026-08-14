@@ -14,7 +14,7 @@
 		&[type="password"] {
 			width: 100%;
 			height: 100%;
-			padding: 0 18px;
+			padding: 0 15px;
 			background-color: var(--input-back);
 			border: 1.5px solid var(--input-line);
 			transition:
@@ -100,6 +100,9 @@
 		}
 
 		&:disabled {
+			color: var(--submit-disabled-text);
+			background-color: var(--submit-disabled-back);
+			border-color: var(--submit-disabled-line);
 			cursor: no-drop;
 		}
 	}

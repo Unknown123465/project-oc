@@ -1,0 +1,1 @@
+ npx prisma@6.0.0 db push --schema=./src/app/prisma/schema.prisma
