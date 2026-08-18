@@ -41,3 +41,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 기타 파일
+/개발 참고자료/*
+!/개발 참고자료/참고자료.txt

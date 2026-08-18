@@ -1,0 +1,2 @@
+
+마크다운 미리보기 단축키는 vscode기준으로 ctrl + shift + v
