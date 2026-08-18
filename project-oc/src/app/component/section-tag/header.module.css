@@ -25,18 +25,18 @@
     & .bottom {
         width: 100%;
         height: calc(100% - 5px);
-        padding: 0 50px;
+        padding: 0 25px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         background-color: white;
 
         & .left {
-            width: 30%;
+            width: 75%;
             height: 100%;
             display: flex;
             align-items: center;
-            gap: 10px 10%;
+            gap: 10px min(6.5%, 40px);
 
             & .logo {
                 --size: 20px;
@@ -61,19 +61,62 @@
                 }
             }
 
-            & .text {
+            & .text,
+            & .button {
                 font-size: 15px;
-                font-weight: thin;
+                font-weight: 400;
+            }
+
+            & .text {
                 color: var(--text-thin-1);
+            }
+
+            & .button {
+                width: 7.5em;
+                height: 1.9em;
+                padding-top: 0.2em;
+                padding-right: 0.4em;
+                color: var(--submit-text);
+                background-color: var(--submit-back);
+                border-radius: calc(1.9em / 2);
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                line-height: 1;
+
+                &:hover {
+                    background-color: var(--personal-bright-1);
+                }
             }
         }
 
         & .right {
-            width: 30%;
+            width: 35%;
             display: flex;
+            flex-wrap: wrap;
             justify-content: flex-end;
             align-items: center;
-            gap: 10px 10%;
+            gap: 5px min(5%, 20px);
+
+            &.logined {
+                gap: 5px 3%;
+            }
+
+            & .username {
+                height: 35px;
+                display: inline-flex;
+                align-items: center;
+                font-size: 13.5px;
+                font-weight: 500;
+
+                & span:first-of-type {
+                    max-width: 10em;
+                    display: inline-block;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: pre;
+                }
+            }
 
             & a {
                 height: 35px;
@@ -82,7 +125,20 @@
                 font-size: 13.5px;
                 font-weight: 500;
 
-                &:first-of-type {
+                &.icon {
+                    width: 35px;
+                    justify-content: center;
+                    font-size: 150%;
+                    border-radius: 50%;
+                    line-height: 1;
+
+                    &:hover {
+                        color: var(--text-important);
+                        background-color: var(--personal-hover);
+                    }
+                }
+
+                &:nth-last-of-type(n + 2) {
                     color: var(--text-thin-1);
                 }
 
