@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>프로필 둘러보기 | 프로젝트 OC</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 이동</a>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">OC</span><span>프로젝트 OC</span></a>
+      <button class="nav-menu-toggle" type="button" data-nav-toggle aria-expanded="false">메뉴</button>
+      <nav class="main-nav" data-main-nav aria-label="주요 메뉴">
+        <a class="nav-link" href="browse.html" aria-current="page">프로필 둘러보기</a>
+        <a class="nav-link" href="create.html">프로필 만들기</a>
+        <a class="nav-link" href="my-characters.html">내 캐릭터</a>
+        <a class="nav-link" href="settings.html">계정 설정</a>
+        <button class="theme-toggle" type="button" data-theme-toggle>어둡게 보기</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell page-main" id="main">
+    <header class="page-heading">
+      <div>
+        <h1 class="page-title">프로필 둘러보기</h1>
+        <p class="subtitle">다른 창작자의 캐릭터를 만나고 마음에 드는 프로필에 감상을 남겨 보세요.</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href="create.html">프로필 만들기</a>
+      </div>
+    </header>
+
+    <section aria-label="프로필 검색 및 필터">
+      <div class="toolbar">
+        <label class="search-box">
+          <span class="is-hidden">캐릭터 검색</span>
+          <input class="input" type="search" placeholder="이름이나 소개로 검색" data-search>
+        </label>
+        <select class="select" aria-label="정렬" data-filter>
+          <option value="전체">인기순</option>
+          <option value="최신">최신순</option>
+        </select>
+        <select class="select" aria-label="종족 필터" data-filter>
+          <option>전체</option>
+          <option>인간</option>
+          <option>엘프</option>
+          <option>천사</option>
+          <option>노바</option>
+        </select>
+      </div>
+
+      <div class="gallery-grid">
+        <article class="profile-tile" data-card data-search-text="티아라 오늘도 내일도 화이팅 노바" data-categories="노바,최신">
+          <a href="profile-square.html" aria-label="티아라 프로필 보기">
+            <div class="tile-media" style="--tile-tint:#ffe8ef">
+              <img src="assets/character-tiara.png" alt="티아라 캐릭터">
+            </div>
+            <div class="tile-body">
+              <h3>티아라</h3>
+              <div class="tile-meta"><span>노바</span><span class="tile-stats"><span>♥ 132</span><span>코멘트 21</span></span></div>
+            </div>
+          </a>
+          <details class="tile-menu">
+            <summary aria-label="티아라 메뉴">•••</summary>
+            <div class="tile-menu-popover">
+              <button type="button" data-open-modal="share-modal" data-modal-name="티아라">공유</button>
+              <button type="button" data-open-modal="report-modal" data-modal-name="티아라">신고</button>
+              <button type="button" data-copy="https://projectoc.example/profile/tiara">링크 복사</button>
+            </div>
+          </details>
+        </article>
+
+        <article class="profile-tile" data-card data-search-text="카이 고요한 밤의 기록 인간" data-categories="인간">
+          <a href="profile-vertical.html">
+            <div class="tile-media" style="--tile-tint:#e5edff;--tile-filter:hue-rotate(115deg) saturate(.72)"><img src="assets/character-tiara.png" alt="카이 캐릭터 샘플"></div>
+            <div class="tile-body"><h3>카이</h3><div class="tile-meta"><span>인간</span><span class="tile-stats"><span>♥ 87</span><span>코멘트 12</span></span></div></div>
+          </a>
+          <details class="tile-menu"><summary aria-label="카이 메뉴">•••</summary><div class="tile-menu-popover"><button type="button" data-open-modal="share-modal" data-modal-name="카이">공유</button><button type="button" data-open-modal="report-modal" data-modal-name="카이">신고</button></div></details>
+        </article>
+
+        <article class="profile-tile" data-card data-search-text="세라핀 숲의 약속 엘프" data-categories="엘프,최신">
+          <a href="profile-horizontal.html">
+            <div class="tile-media" style="--tile-tint:#e2f3e7;--tile-filter:hue-rotate(55deg) saturate(.76)"><img src="assets/character-tiara.png" alt="세라핀 캐릭터 샘플"></div>
+            <div class="tile-body"><h3>세라핀</h3><div class="tile-meta"><span>엘프</span><span class="tile-stats"><span>♥ 62</span><span>코멘트 8</span></span></div></div>
+          </a>
+          <details class="tile-menu"><summary aria-label="세라핀 메뉴">•••</summary><div class="tile-menu-popover"><button type="button" data-open-modal="share-modal" data-modal-name="세라핀">공유</button><button type="button" data-open-modal="report-modal" data-modal-name="세라핀">신고</button></div></details>
+        </article>
+
+        <article class="profile-tile" data-card data-search-text="노아 잊힌 별을 찾는 여행 천사" data-categories="천사">
+          <a href="profile-card.html">
+            <div class="tile-media" style="--tile-tint:#fff0ca;--tile-filter:hue-rotate(310deg) saturate(.7)"><img src="assets/character-tiara.png" alt="노아 캐릭터 샘플"></div>
+            <div class="tile-body"><h3>노아</h3><div class="tile-meta"><span>천사</span><span class="tile-stats"><span>♥ 48</span><span>코멘트 9</span></span></div></div>
+          </a>
+          <details class="tile-menu"><summary aria-label="노아 메뉴">•••</summary><div class="tile-menu-popover"><button type="button" data-open-modal="share-modal" data-modal-name="노아">공유</button><button type="button" data-open-modal="report-modal" data-modal-name="노아">신고</button></div></details>
+        </article>
+
+        <article class="profile-tile" data-card data-search-text="이즈미 하루카 유리 정원의 오후 인간" data-categories="인간">
+          <a href="profile-square.html"><div class="tile-media"><div class="tile-placeholder">캐릭터 이미지 준비 중</div></div><div class="tile-body"><h3>이즈미 하루카</h3><div class="tile-meta"><span>인간</span><span class="tile-stats"><span>♥ 41</span><span>코멘트 5</span></span></div></div></a>
+          <details class="tile-menu"><summary aria-label="이즈미 하루카 메뉴">•••</summary><div class="tile-menu-popover"><button type="button" data-open-modal="share-modal" data-modal-name="이즈미 하루카">공유</button><button type="button" data-open-modal="report-modal" data-modal-name="이즈미 하루카">신고</button></div></details>
+        </article>
+
+        <article class="profile-tile" data-card data-search-text="빈센트 비가 오는 날의 편지 인간" data-categories="인간,최신">
+          <a href="profile-horizontal.html"><div class="tile-media" style="--tile-tint:#e6eff4"><div class="tile-placeholder">캐릭터 이미지 준비 중</div></div><div class="tile-body"><h3>빈센트</h3><div class="tile-meta"><span>인간</span><span class="tile-stats"><span>♥ 24</span><span>코멘트 4</span></span></div></div></a>
+          <details class="tile-menu"><summary aria-label="빈센트 메뉴">•••</summary><div class="tile-menu-popover"><button type="button" data-open-modal="share-modal" data-modal-name="빈센트">공유</button><button type="button" data-open-modal="report-modal" data-modal-name="빈센트">신고</button></div></details>
+        </article>
+
+        <article class="profile-tile" data-card data-search-text="별하 바람을 모으는 아이 천사" data-categories="천사">
+          <a href="profile-vertical.html"><div class="tile-media" style="--tile-tint:#eee5ff"><div class="tile-placeholder">캐릭터 이미지 준비 중</div></div><div class="tile-body"><h3>별하</h3><div class="tile-meta"><span>천사</span><span class="tile-stats"><span>♥ 19</span><span>코멘트 3</span></span></div></div></a>
+          <details class="tile-menu"><summary aria-label="별하 메뉴">•••</summary><div class="tile-menu-popover"><button type="button" data-open-modal="share-modal" data-modal-name="별하">공유</button><button type="button" data-open-modal="report-modal" data-modal-name="별하">신고</button></div></details>
+        </article>
+
+        <article class="profile-tile" data-card data-search-text="레이븐 클로디어스 새벽의 관찰자 엘프" data-categories="엘프">
+          <a href="profile-card.html"><div class="tile-media" style="--tile-tint:#e5e3ed"><div class="tile-placeholder">캐릭터 이미지 준비 중</div></div><div class="tile-body"><h3>레이븐 클로디어스</h3><div class="tile-meta"><span>엘프</span><span class="tile-stats"><span>♥ 15</span><span>코멘트 2</span></span></div></div></a>
+          <details class="tile-menu"><summary aria-label="레이븐 메뉴">•••</summary><div class="tile-menu-popover"><button type="button" data-open-modal="share-modal" data-modal-name="레이븐 클로디어스">공유</button><button type="button" data-open-modal="report-modal" data-modal-name="레이븐 클로디어스">신고</button></div></details>
+        </article>
+      </div>
+
+      <div class="empty-state is-hidden" data-filter-empty>
+        <div><h2>찾는 프로필이 없습니다.</h2><p>검색어나 필터를 바꿔 다시 찾아보세요.</p><div class="actions" style="justify-content:center"><button class="btn" type="button" data-reset-filters>필터 초기화</button></div></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="dialog-backdrop" id="share-modal" aria-hidden="true">
+    <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="share-title">
+      <div class="dialog-head"><div><h2 id="share-title">공유하기</h2><p><strong data-modal-character>캐릭터</strong> 프로필을 공유합니다.</p></div><button class="dialog-close" type="button" data-close-modal aria-label="닫기">×</button></div>
+      <div class="share-grid"><button class="share-option" type="button" data-toast="X 공유 창을 준비했습니다.">X</button><button class="share-option" type="button" data-toast="카카오톡 공유 창을 준비했습니다.">카카오톡</button><button class="share-option" type="button" data-toast="인스타그램 공유 창을 준비했습니다.">인스타그램</button><button class="share-option" type="button" data-toast="페이스북 공유 창을 준비했습니다.">페이스북</button></div>
+      <label class="field-label" for="share-link">링크</label><div class="copy-row" style="margin-top:8px"><input class="input" id="share-link" value="https://projectoc.example/profile/tiara" readonly><button class="btn btn-primary" type="button" data-copy="https://projectoc.example/profile/tiara">복사</button></div>
+    </section>
+  </div>
+
+  <div class="dialog-backdrop" id="report-modal" aria-hidden="true">
+    <form class="dialog" role="dialog" aria-modal="true" aria-labelledby="report-title" data-validate data-success="신고가 접수되었습니다.">
+      <div class="dialog-head"><div><h2 id="report-title">프로필 신고</h2><p><strong data-modal-character>캐릭터</strong> 프로필을 운영팀에 알립니다.</p></div><button class="dialog-close" type="button" data-close-modal aria-label="닫기">×</button></div>
+      <div class="field"><label for="report-reason">신고 사유</label><select class="select" id="report-reason" required><option value="">사유를 선택하세요</option><option>성적인 요소</option><option>잔인한 요소</option><option>권리 침해</option><option>기타</option></select><p class="field-error">신고 사유를 선택해 주세요.</p></div>
+      <div class="field"><label for="report-detail">구체적인 내용</label><textarea class="textarea" id="report-detail" maxlength="500" required></textarea><p class="field-error">신고 내용을 입력해 주세요.</p></div>
+      <div class="actions" style="justify-content:flex-end"><button class="btn" type="button" data-close-modal>취소</button><button class="btn btn-primary" type="submit">신고 제출</button></div>
+    </form>
+  </div>
+</body>
+</html>

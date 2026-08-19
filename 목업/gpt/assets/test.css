@@ -1,0 +1,47 @@
+:root {
+	--personal: #ffc90e;
+	--personal-text: #292824;
+	--personal-text-light: #9a9b92;
+	--personal-back: #f8f8f5;
+
+	--button-text: #25231d;
+
+	--input-text: #262621;
+
+	--input-back: white;
+	--input-select-text: #29251a;
+	--input-select-back: #fff4c2;
+	--input-select-line: #e8b300;
+
+	--input-disabled: #6f7068;
+
+	--card-back: white;
+
+	--card-dark-1: #fffef9;
+	--card-dark-2: #f0f0ea;
+	--card-dark-3: #e8e8e1;
+	--card-dark-line: #dcdcd3;
+
+	--sub-text: #73716a;
+
+	--line-color: #deddd7;
+	--line-color-dark: #b7b8ae;
+
+	--danger: #bd3d3d;
+	--success: #26724e;
+
+	--error-text: #bd3d3d;
+
+	--shadow-1: 0 8px 24px rgba(72, 67, 43, 0.08);
+	--shadow-2: 0 18px 48px rgba(72, 67, 43, 0.11);
+
+	--radius-1: 8px;
+	--radius-2: 14px;
+	--radius-3: 22px;
+
+	--page-width: 1180px;
+
+	--header-width: 68px;
+
+	--test-line: 1px solid red;
+}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>계정 설정 | 프로젝트 OC</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 이동</a>
+  <header class="site-header">
+    <div class="nav-shell"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">OC</span><span>프로젝트 OC</span></a><button class="nav-menu-toggle" type="button" data-nav-toggle aria-expanded="false">메뉴</button><nav class="main-nav" data-main-nav><a class="nav-link" href="browse.html">프로필 둘러보기</a><a class="nav-link" href="create.html">프로필 만들기</a><a class="nav-link" href="my-characters.html">내 캐릭터</a><a class="nav-link" href="settings.html" aria-current="page">계정 설정</a><button class="theme-toggle" type="button" data-theme-toggle>어둡게 보기</button></nav></div>
+  </header>
+
+  <main class="page-shell page-main" id="main">
+    <header class="page-heading"><div><h1 class="page-title">계정 설정</h1><p class="subtitle">프로필 정보, 재생 설정과 계정 데이터를 관리합니다.</p></div></header>
+    <div class="settings-layout">
+      <nav class="settings-nav" aria-label="설정 항목"><a href="#account">계정</a><a href="#plan">구독</a><a href="#playback">재생</a><a href="#activity">내 활동</a><a href="#danger">위험 구역</a></nav>
+      <div>
+        <section class="settings-section" id="account">
+          <h2>계정</h2>
+          <div class="setting-row"><strong>이메일</strong><span class="setting-value">unknown123465@gmail.com</span><button class="btn btn-sm" type="button" data-open-modal="email-modal">변경</button></div>
+          <div class="setting-row"><strong>사용자 이름</strong><div><input class="input" value="unknown123465" aria-label="사용자 이름"></div><button class="btn btn-sm" type="button" data-toast="사용자 이름을 변경했습니다.">저장</button></div>
+          <div class="setting-row"><strong>비밀번호</strong><span class="setting-value">최근 변경 기록이 없습니다.</span><button class="btn btn-sm" type="button" data-open-modal="password-modal">변경</button></div>
+          <div class="setting-row"><strong>소셜 계정</strong><span class="setting-value">네이버 미연동, 구글 미연동</span><button class="btn btn-sm" type="button" data-toast="소셜 계정 연동을 준비하고 있습니다.">연동</button></div>
+        </section>
+
+        <section class="settings-section" id="plan">
+          <h2>구독 플랜</h2>
+          <div class="setting-row"><strong>베이직</strong><span class="setting-value">무료 플랜을 사용 중입니다. 캐릭터 프로필을 10개까지 만들 수 있습니다.</span><button class="btn btn-primary btn-sm" type="button" data-toast="구독 플랜을 준비하고 있습니다.">플랜 보기</button></div>
+        </section>
+
+        <section class="settings-section" id="playback">
+          <h2>재생 설정</h2>
+          <div class="setting-row"><strong>프로필 테마곡 자동 재생</strong><span class="setting-value">프로필에 등록한 테마곡을 페이지 진입 시 재생합니다.</span><button class="btn btn-primary btn-sm" type="button" data-setting-toggle aria-pressed="true">켜짐</button></div>
+        </section>
+
+        <section class="settings-section" id="activity">
+          <h2>내 활동</h2>
+          <div class="stats-grid"><div class="stat"><strong>10</strong><span>만든 프로필</span></div><div class="stat"><strong>446</strong><span>받은 좋아요</span></div><div class="stat"><strong>74</strong><span>받은 코멘트</span></div></div>
+          <div class="ranking-grid">
+            <section class="ranking"><h3>좋아요 TOP 5</h3><ol><li><span>1</span><span>티아라</span><span>132개</span></li><li><span>2</span><span>레이븐 클로디어스</span><span>87개</span></li><li><span>3</span><span>별하</span><span>62개</span></li><li><span>4</span><span>이즈미 하루카</span><span>48개</span></li><li><span>5</span><span>유이</span><span>41개</span></li></ol></section>
+            <section class="ranking"><h3>코멘트 TOP 5</h3><ol><li><span>1</span><span>티아라</span><span>21개</span></li><li><span>2</span><span>레이븐 클로디어스</span><span>12개</span></li><li><span>3</span><span>세라핀</span><span>10개</span></li><li><span>4</span><span>이즈미 하루카</span><span>9개</span></li><li><span>5</span><span>별하</span><span>8개</span></li></ol></section>
+          </div>
+        </section>
+
+        <section class="settings-section" id="danger">
+          <h2>위험 구역</h2>
+          <div class="danger-zone">
+            <div class="danger-row"><div><strong>캐릭터 프로필 일괄 삭제</strong><p>만든 프로필과 받은 좋아요, 코멘트가 함께 삭제됩니다.</p></div><button class="btn btn-danger btn-sm" type="button" data-confirm-message="모든 캐릭터 프로필을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다." data-confirmed-toast="모든 프로필을 삭제했습니다.">일괄 삭제</button></div>
+            <div class="danger-row"><div><strong>계정 삭제</strong><p>계정과 모든 데이터가 영구적으로 삭제됩니다.</p></div><button class="btn btn-danger btn-sm" type="button" data-open-modal="delete-modal">계정 삭제</button></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div class="dialog-backdrop" id="email-modal" aria-hidden="true"><form class="dialog" role="dialog" data-validate data-success="이메일 변경 요청을 확인했습니다."><div class="dialog-head"><div><h2>이메일 변경</h2><p>본인 확인을 위해 현재 비밀번호와 새 이메일을 입력하세요.</p></div><button class="dialog-close" type="button" data-close-modal>×</button></div><div class="field"><label for="email-password">현재 비밀번호</label><input class="input" id="email-password" type="password" required><p class="field-error">현재 비밀번호를 입력해 주세요.</p></div><div class="field"><label for="new-email">새 이메일 주소</label><input class="input" id="new-email" type="email" required><p class="field-error">새 이메일 주소를 입력해 주세요.</p></div><div class="actions" style="justify-content:flex-end"><button class="btn" type="button" data-close-modal>취소</button><button class="btn btn-primary" type="submit">변경</button></div></form></div>
+  <div class="dialog-backdrop" id="password-modal" aria-hidden="true"><form class="dialog" role="dialog" data-validate data-success="비밀번호 변경 요청을 확인했습니다."><div class="dialog-head"><div><h2>비밀번호 변경</h2><p>6~20자의 영문과 숫자를 조합해 주세요.</p></div><button class="dialog-close" type="button" data-close-modal>×</button></div><div class="field"><label for="old-password">기존 비밀번호</label><input class="input" id="old-password" type="password" required><p class="field-error">기존 비밀번호를 입력해 주세요.</p></div><div class="field"><label for="new-password">새 비밀번호</label><input class="input" id="new-password" type="password" required><p class="field-error">새 비밀번호를 입력해 주세요.</p></div><div class="field"><label for="confirm-password">새 비밀번호 확인</label><input class="input" id="confirm-password" type="password" data-confirm-password="new-password" required><p class="field-error">새 비밀번호 확인을 입력해 주세요.</p></div><div class="actions" style="justify-content:flex-end"><button class="btn" type="button" data-close-modal>취소</button><button class="btn btn-primary" type="submit">비밀번호 변경</button></div></form></div>
+  <div class="dialog-backdrop" id="delete-modal" aria-hidden="true"><section class="dialog" role="dialog"><div class="dialog-head"><div><h2>계정 삭제</h2><p>계정과 프로필 10개를 삭제하며 복구할 수 없습니다.</p></div><button class="dialog-close" type="button" data-close-modal>×</button></div><div class="field"><label for="delete-password">현재 비밀번호</label><input class="input" id="delete-password" type="password"></div><div class="actions" style="justify-content:flex-end"><button class="btn" type="button" data-close-modal>취소</button><button class="btn btn-danger" type="button" data-confirm-message="정말 계정을 삭제하시겠습니까?" data-confirmed-toast="계정 삭제 요청을 완료했습니다.">계정 삭제</button></div></section></div>
+</body>
+</html>

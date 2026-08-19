@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>새 캐릭터 등록 | 프로젝트 OC</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 이동</a>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">OC</span><span>프로젝트 OC</span></a>
+      <button class="nav-menu-toggle" type="button" data-nav-toggle aria-expanded="false">메뉴</button>
+      <nav class="main-nav" data-main-nav aria-label="주요 메뉴">
+        <a class="nav-link" href="browse.html">프로필 둘러보기</a>
+        <a class="nav-link" href="create.html" aria-current="page">프로필 만들기</a>
+        <a class="nav-link" href="my-characters.html">내 캐릭터</a>
+        <a class="nav-link" href="settings.html">계정 설정</a>
+        <button class="theme-toggle" type="button" data-theme-toggle>어둡게 보기</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell page-main" id="main">
+    <header class="page-heading">
+      <div><h1 class="page-title">새 캐릭터 등록</h1><p class="subtitle">핵심 정보부터 작성하세요. 오른쪽 프로필은 입력하는 즉시 완성됩니다.</p></div>
+    </header>
+
+    <div class="mobile-preview-tabs" role="tablist" aria-label="작성 화면 전환">
+      <button class="is-active" type="button" data-creator-tab="form" role="tab" aria-selected="true">작성</button>
+      <button type="button" data-creator-tab="preview" role="tab" aria-selected="false">미리보기</button>
+    </div>
+
+    <div class="creator-grid">
+      <form class="creator-form" data-creator-form>
+        <input type="hidden" name="imageType" value="landscape" data-image-type-value>
+        <input type="hidden" name="imageFrame" value="rectangle" data-image-frame-value>
+        <input type="hidden" name="imageCrop" value="" data-image-crop-value>
+        <section class="form-section" aria-labelledby="image-heading">
+          <h2 id="image-heading">캐릭터 이미지</h2>
+          <button class="upload-zone has-image" type="button" data-open-modal="image-editor-modal">
+            <img src="assets/character-tiara.png" alt="적용된 캐릭터 이미지" data-upload-preview>
+            <span class="upload-prompt"><strong>캐릭터 이미지 추가</strong><span>유형과 영역을 선택해 적용합니다.</span></span>
+            <span class="upload-edit-label">이미지 편집</span>
+          </button>
+          <div class="image-upload-meta" aria-live="polite">
+            <span data-applied-image-type>가로형</span>
+            <span data-applied-frame>사각형 프레임</span>
+            <button class="text-link" type="button" data-open-modal="image-editor-modal">다시 편집</button>
+          </div>
+        </section>
+
+        <section class="form-section" aria-labelledby="core-heading">
+          <h2 id="core-heading">핵심 정보</h2>
+          <div class="field">
+            <label for="character-name">이름 <span class="required">*</span></label>
+            <input class="input" id="character-name" name="characterName" maxlength="20" placeholder="캐릭터 이름을 입력하세요" required>
+            <p class="field-help">최대 20자</p>
+          </div>
+          <div class="field">
+            <label for="character-slogan">한 줄 소개</label>
+            <input class="input" id="character-slogan" name="slogan" maxlength="30" placeholder="이 캐릭터를 한 문장으로 소개해 주세요">
+            <p class="field-help">최대 30자</p>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="character-like">좋아하는 것</label><textarea class="textarea textarea-compact" id="character-like" name="likes" rows="3" data-nonspace-max="100" aria-describedby="character-like-count" placeholder="무대 위에 서는 것"></textarea><p class="field-help character-count" id="character-like-count"><span data-nonspace-count>0</span>/100자 (공백 제외)</p></div>
+            <div class="field"><label for="character-hate">싫어하는 것</label><textarea class="textarea textarea-compact" id="character-hate" name="hates" rows="3" data-nonspace-max="100" aria-describedby="character-hate-count" placeholder="포기하는 것"></textarea><p class="field-help character-count" id="character-hate-count"><span data-nonspace-count>0</span>/100자 (공백 제외)</p></div>
+          </div>
+          <div class="field">
+            <label for="character-personality">성격</label>
+            <textarea class="textarea" id="character-personality" name="personality" rows="4" data-nonspace-max="100" aria-describedby="character-personality-count" placeholder="밝고 긍정적이며 꾸준히 노력하는 성격입니다."></textarea>
+            <p class="field-help character-count" id="character-personality-count"><span data-nonspace-count>0</span>/100자 (공백 제외)</p>
+          </div>
+          <div class="field">
+            <label for="character-tmi">TMI</label>
+            <textarea class="textarea" id="character-tmi" name="tmi" maxlength="300" placeholder="한 줄에 하나씩, 최대 5개까지 입력하세요"></textarea>
+            <p class="field-help">줄바꿈으로 구분합니다.</p>
+          </div>
+        </section>
+
+        <section class="form-section" aria-labelledby="color-heading">
+          <h2 id="color-heading">프로필 색상</h2>
+          <div class="field">
+            <label for="personal-color">퍼스널 컬러</label>
+            <input class="input" id="personal-color" name="personalColor" type="color" value="#ffc90e" style="padding:7px">
+            <p class="field-help">캐릭터의 강조선과 배경에 적용됩니다.</p>
+          </div>
+
+          <details class="optional-fields">
+            <summary>선택 정보 추가</summary>
+            <div class="optional-fields-body">
+              <div class="field-row">
+                <div class="field"><label for="race">종족</label><select class="select" id="race" name="race"><option value="">선택하지 않음</option><option>인간</option><option>엘프</option><option>천사</option><option>악마</option><option>수인</option><option>노바</option></select></div>
+                <div class="field"><label for="age">나이</label><input class="input" id="age" name="age" maxlength="20" placeholder="예: 19세"></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label for="birthday">생일</label><input class="input" id="birthday" name="birthday" placeholder="예: 2월 7일"></div>
+                <div class="field"><label for="height">키</label><input class="input" id="height" name="height" maxlength="10" placeholder="예: 162cm"></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label for="mbti">MBTI</label><input class="input" id="mbti" name="mbti" maxlength="4" placeholder="예: ENFP"></div>
+                <div class="field"><label for="theme-song">테마곡 링크</label><input class="input" id="theme-song" name="themeSong" type="url" placeholder="YouTube 또는 음악 링크"></div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="form-section" aria-labelledby="ai-usage-heading">
+          <h2 id="ai-usage-heading">프로필 이미지에 ai를 사용했나요?</h2>
+          <p class="ai-disclosure-warning">ai를 사용했지만 사용하지 않았다고 응답한 경우 프로필이 삭제될 수 있습니다.</p>
+          <div class="visibility-list ai-usage-list">
+            <label class="choice-card"><input type="radio" name="imageAiUsage" value="사용함" required><span><strong>네, 프로필 이미지에 ai를 사용했습니다</strong></span></label>
+            <label class="choice-card"><input type="radio" name="imageAiUsage" value="사용하지 않음"><span><strong>아니오, ai를 사용하지 않았습니다</strong></span></label>
+          </div>
+        </section>
+
+        <section class="form-section" aria-labelledby="visibility-heading">
+          <h2 id="visibility-heading">공개 여부</h2>
+          <div class="visibility-list">
+            <label class="choice-card"><input type="radio" name="visibility" value="공개" checked><span><strong>공개</strong><small>검색과 링크를 통해 누구나 프로필을 볼 수 있습니다.</small></span></label>
+            <label class="choice-card"><input type="radio" name="visibility" value="일부 공개"><span><strong>일부 공개</strong><small>링크를 가진 사람만 프로필을 볼 수 있습니다.</small></span></label>
+            <label class="choice-card"><input type="radio" name="visibility" value="비공개"><span><strong>비공개</strong><small>본인만 프로필을 볼 수 있습니다.</small></span></label>
+          </div>
+        </section>
+
+        <div class="actions">
+          <button class="btn btn-primary" type="submit">프로필 완성</button>
+          <button class="btn" type="button" data-toast="임시 저장했습니다.">임시 저장</button>
+        </div>
+      </form>
+
+      <aside class="creator-preview-wrap" aria-label="캐릭터 프로필 미리보기">
+        <div class="preview-label"><span>실시간 미리보기</span><span data-preview-layout-label>가로형 프로필</span></div>
+        <article class="profile-sheet creator-profile-sheet profile-layout-horizontal" data-profile-sheet data-preview-layout="landscape">
+          <div class="creator-profile-hero-grid">
+            <div class="profile-cover">
+              <img src="assets/character-tiara.png" alt="캐릭터 프로필 이미지" data-preview-image data-image-type="landscape">
+            </div>
+            <div class="profile-sheet-inner">
+              <div class="profile-identity">
+                <h2 data-preview="characterName">캐릭터 이름</h2>
+                <p data-preview="slogan">이 캐릭터를 한 문장으로 소개해 주세요.</p>
+              </div>
+              <dl class="profile-facts">
+                <div class="fact"><dt>종족</dt><dd data-preview="race">미입력</dd></div>
+                <div class="fact"><dt>나이</dt><dd data-preview="age">미입력</dd></div>
+                <div class="fact"><dt>생일</dt><dd data-preview="birthday">미입력</dd></div>
+                <div class="fact"><dt>키</dt><dd data-preview="height">미입력</dd></div>
+                <div class="fact"><dt>MBTI</dt><dd data-preview="mbti">미입력</dd></div>
+              </dl>
+              <div class="profile-blocks">
+                <section class="profile-block"><h3>좋아하는 것</h3><p data-preview="likes">좋아하는 것을 입력해 주세요.</p></section>
+                <section class="profile-block"><h3>싫어하는 것</h3><p data-preview="hates">싫어하는 것을 입력해 주세요.</p></section>
+                <section class="profile-block profile-block-wide"><h3>성격</h3><p data-preview="personality">성격을 간단히 소개해 주세요.</p></section>
+                <section class="profile-block profile-block-wide"><h3>TMI</h3><ul data-preview="tmi"><li>작은 습관이나 숨은 설정을 적어 주세요.</li></ul></section>
+              </div>
+            </div>
+          </div>
+        </article>
+      </aside>
+    </div>
+  </main>
+
+  <div class="dialog-backdrop" id="image-editor-modal" aria-hidden="true">
+    <section class="dialog image-editor-dialog" role="dialog" aria-modal="true" aria-labelledby="image-editor-title">
+      <header class="dialog-head image-editor-head">
+        <div>
+          <h2 id="image-editor-title">캐릭터 이미지 편집</h2>
+          <p>프로필에 사용할 이미지 유형과 보이는 영역을 정해 주세요.</p>
+        </div>
+        <button class="dialog-close" type="button" data-close-modal aria-label="이미지 편집 닫기">×</button>
+      </header>
+
+      <div class="image-upload-setup" data-image-upload-setup>
+        <fieldset class="image-choice-fieldset">
+          <legend>이미지 유형</legend>
+          <p class="field-help">유형을 먼저 선택하면 해당 비율로 영역이 고정됩니다.</p>
+          <div class="image-type-grid">
+            <label class="image-type-option">
+              <input type="radio" name="editorImageType" value="landscape">
+              <span class="type-ratio type-ratio-landscape" aria-hidden="true"></span>
+              <span><strong>가로형</strong><small>넓은 장면과 상반신</small></span>
+            </label>
+            <label class="image-type-option">
+              <input type="radio" name="editorImageType" value="portrait">
+              <span class="type-ratio type-ratio-portrait" aria-hidden="true"></span>
+              <span><strong>세로형</strong><small>전신 캐릭터</small></span>
+            </label>
+            <label class="image-type-option">
+              <input type="radio" name="editorImageType" value="square">
+              <span class="type-ratio type-ratio-square" aria-hidden="true"></span>
+              <span><strong>정사각형</strong><small>얼굴과 대표 이미지</small></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="image-file-picker">
+          <input class="is-hidden" type="file" name="characterImage" accept="image/png,image/jpeg,image/webp" data-image-file>
+          <button class="btn btn-primary" type="button" data-pick-image>이미지 선택</button>
+          <p>PNG, JPG, WEBP, 최대 5MB</p>
+          <p class="image-editor-error" role="alert" data-image-editor-error></p>
+        </div>
+      </div>
+
+      <div class="image-editor-workspace is-hidden" data-image-editor-workspace>
+        <div class="image-editor-grid">
+          <section class="image-editor-panel" aria-labelledby="crop-heading">
+            <div class="editor-section-head"><div><h3 id="crop-heading">보이는 영역</h3><p>모서리를 끌어 크기를 조절하고, 영역 안쪽을 끌어 위치를 옮기세요.</p></div><span data-editor-type-label>가로형</span></div>
+            <div class="image-editor-stage" data-editor-stage>
+              <div class="image-editor-canvas-wrap" data-editor-canvas-wrap>
+                <canvas data-editor-canvas aria-label="업로드한 이미지 영역 편집기"></canvas>
+                <div class="crop-shade crop-shade-top" data-crop-shade="top"></div>
+                <div class="crop-shade crop-shade-right" data-crop-shade="right"></div>
+                <div class="crop-shade crop-shade-bottom" data-crop-shade="bottom"></div>
+                <div class="crop-shade crop-shade-left" data-crop-shade="left"></div>
+                <div class="crop-selection" data-crop-selection tabindex="0" aria-label="선택 영역. 드래그하여 이동할 수 있습니다.">
+                  <button class="crop-handle crop-handle-nw" type="button" data-crop-handle="nw" aria-label="왼쪽 위 모서리 조절"></button>
+                  <button class="crop-handle crop-handle-ne" type="button" data-crop-handle="ne" aria-label="오른쪽 위 모서리 조절"></button>
+                  <button class="crop-handle crop-handle-sw" type="button" data-crop-handle="sw" aria-label="왼쪽 아래 모서리 조절"></button>
+                  <button class="crop-handle crop-handle-se" type="button" data-crop-handle="se" aria-label="오른쪽 아래 모서리 조절"></button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="image-editor-controls" aria-labelledby="frame-heading">
+            <div>
+              <h3 id="frame-heading">프레임</h3>
+              <p>프로필에서 이미지가 보일 형태입니다.</p>
+            </div>
+            <div class="frame-choice-list">
+              <label class="frame-choice">
+                <input type="radio" name="editorFrame" value="rectangle" checked>
+                <span class="frame-sample frame-sample-rectangle" aria-hidden="true"></span>
+                <span><strong>사각형</strong><small>기본 프레임</small></span>
+              </label>
+              <label class="frame-choice">
+                <input type="radio" name="editorFrame" value="ellipse">
+                <span class="frame-sample frame-sample-ellipse" aria-hidden="true"></span>
+                <span><strong>타원</strong><small>부드러운 인물 프레임</small></span>
+              </label>
+            </div>
+            <dl class="image-editor-summary">
+              <div><dt>파일</dt><dd data-editor-file-name>선택된 파일 없음</dd></div>
+              <div><dt>출력</dt><dd data-editor-output-size>1200 × 750px</dd></div>
+            </dl>
+          </aside>
+        </div>
+
+        <footer class="image-editor-actions">
+          <button class="btn" type="button" data-replace-image>다른 이미지 선택</button>
+          <div class="actions">
+            <button class="btn" type="button" data-close-modal>취소</button>
+            <button class="btn btn-primary" type="button" data-apply-image>완료</button>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
