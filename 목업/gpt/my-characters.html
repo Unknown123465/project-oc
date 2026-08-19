@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>내 캐릭터 | 프로젝트 OC</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 이동</a>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">OC</span><span>프로젝트 OC</span></a>
+      <button class="nav-menu-toggle" type="button" data-nav-toggle aria-expanded="false">메뉴</button>
+      <nav class="main-nav" data-main-nav><a class="nav-link" href="browse.html">프로필 둘러보기</a><a class="nav-link" href="create.html">프로필 만들기</a><a class="nav-link" href="my-characters.html" aria-current="page">내 캐릭터</a><a class="nav-link" href="settings.html">계정 설정</a><button class="theme-toggle" type="button" data-theme-toggle>어둡게 보기</button></nav>
+    </div>
+  </header>
+
+  <main class="page-shell page-main" id="main">
+    <header class="page-heading">
+      <div><h1 class="page-title">내 캐릭터</h1><p class="subtitle">만든 프로필을 편집하고 공개 범위와 공유 링크를 관리합니다.</p></div>
+      <div class="actions"><a class="btn btn-primary" href="create.html">새 프로필 만들기</a></div>
+    </header>
+
+    <div class="toolbar">
+      <label class="search-box"><span class="is-hidden">내 캐릭터 검색</span><input class="input" type="search" placeholder="캐릭터 이름이나 슬로건 검색" data-search></label>
+      <select class="select" aria-label="정렬" data-filter><option value="전체">생성일</option><option value="이름">이름</option></select>
+      <select class="select" aria-label="공개 여부" data-filter><option>전체</option><option>공개</option><option>일부 공개</option><option>비공개</option></select>
+    </div>
+
+    <section class="owned-grid" aria-label="내 캐릭터 목록">
+      <article class="profile-tile" data-card data-search-text="티아라 오늘도 내일도 화이팅" data-categories="공개">
+        <a href="profile-square.html"><div class="tile-media" style="--tile-tint:#ffe8ef"><img src="assets/character-tiara.png" alt="티아라 캐릭터"></div><div class="tile-body"><h3>티아라</h3><div class="tile-meta"><span class="tag tag-accent">공개</span><span class="tile-stats"><span>♥ 132</span><span>코멘트 21</span></span></div></div></a>
+        <details class="tile-menu"><summary aria-label="티아라 관리 메뉴">•••</summary><div class="tile-menu-popover"><a href="create.html">편집</a><button type="button" data-open-modal="my-share" data-modal-name="티아라">공유</button><button type="button" data-open-modal="visibility-modal" data-modal-name="티아라">공개 여부 변경</button><button type="button" data-confirm-message="티아라 프로필을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다." data-confirmed-toast="프로필을 삭제했습니다.">삭제</button></div></details>
+      </article>
+      <article class="profile-tile" data-card data-search-text="카이 고요한 밤의 기록" data-categories="일부 공개">
+        <a href="profile-vertical.html"><div class="tile-media" style="--tile-tint:#e5edff;--tile-filter:hue-rotate(115deg) saturate(.72)"><img src="assets/character-tiara.png" alt="카이 캐릭터 샘플"></div><div class="tile-body"><h3>카이</h3><div class="tile-meta"><span class="tag">일부 공개</span><span class="tile-stats"><span>♥ 87</span><span>코멘트 12</span></span></div></div></a>
+        <details class="tile-menu"><summary aria-label="카이 관리 메뉴">•••</summary><div class="tile-menu-popover"><a href="create.html">편집</a><button type="button" data-open-modal="my-share" data-modal-name="카이">공유</button><button type="button" data-open-modal="visibility-modal" data-modal-name="카이">공개 여부 변경</button><button type="button" data-confirm-message="카이 프로필을 삭제하시겠습니까?" data-confirmed-toast="프로필을 삭제했습니다.">삭제</button></div></details>
+      </article>
+      <article class="profile-tile" data-card data-search-text="세라핀 숲의 약속" data-categories="비공개">
+        <a href="profile-horizontal.html"><div class="tile-media" style="--tile-tint:#e2f3e7;--tile-filter:hue-rotate(55deg) saturate(.76)"><img src="assets/character-tiara.png" alt="세라핀 캐릭터 샘플"></div><div class="tile-body"><h3>세라핀</h3><div class="tile-meta"><span class="tag">비공개</span><span class="tile-stats"><span>임시 저장</span></span></div></div></a>
+        <details class="tile-menu"><summary aria-label="세라핀 관리 메뉴">•••</summary><div class="tile-menu-popover"><a href="create.html">편집</a><button type="button" data-open-modal="visibility-modal" data-modal-name="세라핀">공개 여부 변경</button><button type="button" data-confirm-message="세라핀 프로필을 삭제하시겠습니까?" data-confirmed-toast="프로필을 삭제했습니다.">삭제</button></div></details>
+      </article>
+      <article class="profile-tile" data-card data-search-text="노아 잊힌 별을 찾는 여행" data-categories="공개">
+        <a href="profile-card.html"><div class="tile-media" style="--tile-tint:#fff0ca"><div class="tile-placeholder">캐릭터 이미지 준비 중</div></div><div class="tile-body"><h3>노아</h3><div class="tile-meta"><span class="tag tag-accent">공개</span><span class="tile-stats"><span>♥ 48</span><span>코멘트 9</span></span></div></div></a>
+        <details class="tile-menu"><summary aria-label="노아 관리 메뉴">•••</summary><div class="tile-menu-popover"><a href="create.html">편집</a><button type="button" data-open-modal="my-share" data-modal-name="노아">공유</button><button type="button" data-open-modal="visibility-modal" data-modal-name="노아">공개 여부 변경</button><button type="button" data-confirm-message="노아 프로필을 삭제하시겠습니까?" data-confirmed-toast="프로필을 삭제했습니다.">삭제</button></div></details>
+      </article>
+    </section>
+    <div class="empty-state is-hidden" data-filter-empty><div><h2>조건에 맞는 캐릭터가 없습니다.</h2><p>검색어나 공개 여부를 바꿔 보세요.</p><div class="actions" style="justify-content:center"><button class="btn" type="button" data-reset-filters>필터 초기화</button></div></div></div>
+  </main>
+
+  <div class="dialog-backdrop" id="my-share" aria-hidden="true">
+    <section class="dialog" role="dialog" aria-modal="true"><div class="dialog-head"><div><h2>공유하기</h2><p><strong data-modal-character>캐릭터</strong> 프로필 링크입니다.</p></div><button class="dialog-close" type="button" data-close-modal>×</button></div><div class="share-grid"><button class="share-option" data-toast="X 공유 창을 준비했습니다." type="button">X</button><button class="share-option" data-toast="카카오톡 공유 창을 준비했습니다." type="button">카카오톡</button><button class="share-option" data-toast="인스타그램 공유 창을 준비했습니다." type="button">인스타그램</button><button class="share-option" data-toast="페이스북 공유 창을 준비했습니다." type="button">페이스북</button></div><div class="copy-row"><input class="input" value="https://projectoc.example/profile/tiara" readonly><button class="btn btn-primary" type="button" data-copy="https://projectoc.example/profile/tiara">복사</button></div></section>
+  </div>
+
+  <div class="dialog-backdrop" id="visibility-modal" aria-hidden="true">
+    <section class="dialog" role="dialog" aria-modal="true"><div class="dialog-head"><div><h2>공개 여부</h2><p><strong data-modal-character>캐릭터</strong> 프로필을 볼 수 있는 사람을 선택하세요.</p></div><button class="dialog-close" type="button" data-close-modal>×</button></div><div class="visibility-list"><label class="choice-card"><input type="radio" name="modal-vis" checked><span><strong>공개</strong><small>누구나 검색과 링크로 볼 수 있습니다.</small></span></label><label class="choice-card"><input type="radio" name="modal-vis"><span><strong>일부 공개</strong><small>링크를 가진 사람만 볼 수 있습니다.</small></span></label><label class="choice-card"><input type="radio" name="modal-vis"><span><strong>비공개</strong><small>본인만 볼 수 있습니다.</small></span></label></div><div class="actions" style="justify-content:flex-end"><button class="btn" type="button" data-close-modal>취소</button><button class="btn btn-primary" type="button" data-toast="공개 여부를 변경했습니다." data-close-modal>변경</button></div></section>
+  </div>
+</body>
+</html>
