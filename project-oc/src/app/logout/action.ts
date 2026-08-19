@@ -1,11 +1,11 @@
 "use server";
 
-import { signOut } from "../api/auth/auth";
+import {signOut} from "../../auth/auth";
 
 export default async function logoutAction() {
-    await signOut({
-        redirectTo: "/",
-    });
+	await signOut({
+		redirectTo: "/",
+	});
 
-    return undefined;
+	return undefined;
 }
