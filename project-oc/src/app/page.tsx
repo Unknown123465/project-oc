@@ -28,25 +28,27 @@ export default function Page() {
 					<div className={styles.bg}></div>
 
 					<div className={styles.profile_card}>
-						<div className={styles.profile}>
-							<Image src="" alt="캐릭터 이미지" />
+						<div className={styles.head}>
+							<div className={styles.profile}>
+								<Image src="" alt="캐릭터 이미지" />
+							</div>
+
+							<div className={styles.intro}>
+								<p className={styles.name}>티아라</p>
+								<p className={styles.message}>오늘도, 내일도 화이팅이야!</p>
+							</div>
 						</div>
 
-						<div className={styles.intro}>
-							<p className={styles.name}>티아라</p>
-							<p className={styles.message}>오늘도, 내일도 화이팅이야!</p>
-						</div>
-					</div>
+						<div className={styles.like_personality}>
+							<div className={styles.like}>
+								<p>좋아하는 것</p>
+								<p>무대 위에 서는 것</p>
+							</div>
 
-					<div className={styles.like_hate}>
-						<div className={styles.like}>
-							<p>좋아하는 것</p>
-							<p>무대 위에 서는 것</p>
-						</div>
-
-						<div className={styles.personality}>
-							<p>성격</p>
-							<p>밝고 긍정적인 노력가</p>
+							<div className={styles.personality}>
+								<p>성격</p>
+								<p>밝고 긍정적인 노력가</p>
+							</div>
 						</div>
 					</div>
 				</section>
