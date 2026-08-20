@@ -1,6 +1,5 @@
 import Link from "next/link";
 import styles from "./header.module.css";
-import {useSession} from "next-auth/react";
 import {auth} from "@/auth/auth";
 
 interface MenuProps {
@@ -79,10 +78,26 @@ export default async function Header() {
 					</div>
 
 					<div className={`${styles.right} ${authInfo !== null ? styles.logined : ""}`}>
+						<label>
+							자동
+							<input type="radio" name="color-theme" defaultChecked value="auto" />
+						</label>
+
+						<label>
+							밝게
+							<input type="radio" name="color-theme" value="light" />
+						</label>
+
+						<label>
+							어둡게
+							<input type="radio" name="color-theme" value="dark" />
+						</label>
+
 						<RightMenu isLogin={authInfo !== null} userName={authInfo?.user?.name} />
 					</div>
 				</div>
 			</header>
+
 			<div aria-hidden className={styles.push}></div>
 		</>
 	);
