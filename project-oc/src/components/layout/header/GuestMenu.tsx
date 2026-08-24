@@ -11,11 +11,11 @@ export default function GuestMenu() {
 			</Link>
 
 			<div className={styles.buttons}>
-				<Link href="/login" className={styles.yellow}>
+				<Link href="/login" className={styles.white}>
 					로그인
 				</Link>
 
-				<Link href="/join" className={styles.black}>
+				<Link href="/join" className={styles.yellow}>
 					회원가입
 				</Link>
 			</div>
