@@ -30,7 +30,7 @@ export default function Page() {
 					<div className={styles.profile_card}>
 						<div className={styles.head}>
 							<div className={styles.profile}>
-								<Image src="" alt="캐릭터 이미지" />
+								<Image src="/test char.png" alt="캐릭터 이미지" width={130} height={130} />
 							</div>
 
 							<div className={styles.intro}>

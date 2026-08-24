@@ -111,6 +111,10 @@
 					overflow: hidden;
 					border: 1px solid var(--card-dark-line);
 					border-radius: var(--radius-2);
+
+					& img {
+						object-fit: cover;
+					}
 				}
 
 				& .intro {
