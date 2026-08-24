@@ -1,8 +1,8 @@
 "use client";
 
 import styles from "./page.module.css";
-import {PasswordInput, TextInput} from "../component/form/input";
-import {SubmitButton} from "../component/form/button";
+import {PasswordInput, TextInput} from "../component/ui/input";
+import {SubmitButton} from "../component/ui/button";
 import {useCallback} from "react";
 
 import {normalLoginAction} from "./action";
