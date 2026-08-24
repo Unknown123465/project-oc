@@ -2,7 +2,7 @@ import Form from "next/form";
 import {LoginForm} from "./client";
 import styles from "./page.module.css";
 import {googleLoginAction, kakaoLoginAction, naverLoginAction, twitterLoginAction} from "./action";
-import {SubmitButton} from "../component/form/button";
+import {SubmitButton} from "../component/ui/button";
 import {auth} from "../../auth/auth";
 import {redirect} from "next/navigation";
 
