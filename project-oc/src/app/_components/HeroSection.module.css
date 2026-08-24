@@ -1,0 +1,257 @@
+.hero {
+	margin: auto;
+	display: flex;
+
+	& .left {
+		& .small_title {
+			margin: 0;
+			color: var(--muted);
+			font-weight: 700;
+		}
+
+		& h1 {
+			margin: 0;
+			color: var(--title-text);
+			font-size: clamp(42px, 6.1vw, 76px);
+			font-weight: 900;
+			line-height: 1.15;
+			letter-spacing: -0.07em;
+		}
+
+		& .detail_title {
+			margin-bottom: 0;
+			color: var(--sub-text);
+			font-weight: 400;
+			word-break: keep-all;
+			line-height: 1.75;
+		}
+
+		& .buttons {
+			display: flex;
+			gap: 12px;
+
+			& a {
+				height: 3em;
+				padding: 0 1.25em;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 15px;
+				font-weight: 700;
+				text-align: center;
+				word-break: keep-all;
+				border: 1px solid;
+				border-radius: var(--radius-2);
+
+				&:first-of-type {
+					color: var(--button-submit-text);
+					background-color: var(--button-submit-back);
+					border-color: var(--button-submit-line);
+				}
+
+				&:last-of-type {
+					color: var(--button-normal-text);
+					background-color: var(--button-normal-back);
+					border-color: var(--button-normal-line);
+				}
+			}
+		}
+	}
+
+	& .right {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+
+		& .bg {
+			width: 520px;
+			max-width: 65vw;
+			aspect-ratio: 1;
+			background-color: var(--personal-bright);
+			border-radius: 42% 58% 66% 34% / 52% 42% 58% 48%;
+			position: absolute;
+			z-index: 0;
+		}
+
+		& .profile_card {
+			width: 100%;
+			max-width: 500px;
+			padding: 22px;
+			background-color: var(--card-dark-1);
+			border: 1px solid var(--card-dark-line);
+			border-radius: var(--radius-4);
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			gap: 20px;
+			z-index: 1;
+			box-shadow: var(--shadow-2);
+			rotate: 2deg;
+
+			& .head {
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+
+				& .profile {
+					width: 130px;
+					height: 130px;
+					background: linear-gradient(135deg, color-mix(in srgb, var(--personal-bright) 72%, transparent), var(--card-dark-2)), var(--card-dark-2);
+					overflow: hidden;
+					border: 1px solid var(--card-dark-line);
+					border-radius: var(--radius-2);
+
+					& img {
+						object-fit: cover;
+					}
+				}
+
+				& .intro {
+					width: calc(100% - 150px - 10px);
+
+					& .name {
+						margin: 0;
+						color: var(--personal-text);
+						font-size: 30px;
+						font-weight: 600;
+						letter-spacing: -0.08em;
+					}
+
+					& .message {
+						color: var(--muted);
+						font-size: 16px;
+						font-weight: 400;
+					}
+				}
+			}
+
+			& .like_personality {
+				display: flex;
+				justify-content: space-between;
+
+				& .like,
+				& .personality {
+					width: calc(100% / 2 - 7px);
+					padding: 16px;
+					background-color: var(--card-dark-2);
+					border: 1px solid var(--card-dark-line);
+					border-radius: var(--radius-2);
+
+					& p {
+						margin: 0;
+
+						&:first-of-type {
+							margin-bottom: 15px;
+							color: var(--title-text);
+							font-size: 15px;
+							font-weight: 600;
+						}
+
+						&:last-of-type {
+							color: var(--sub-text);
+							font-size: 14px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (width >= 876px) {
+	.hero {
+		width: calc(100% - 40px);
+		max-width: 1200px;
+		height: 575px;
+		margin-top: 70px;
+		justify-content: space-between;
+		align-items: center;
+
+		& .left {
+			width: 45%;
+			height: 75%;
+
+			& .small_title {
+				font-size: 13px;
+			}
+
+			& h1 {
+				margin-top: 17px;
+			}
+
+			& .detail_title {
+				margin-top: 0.5em;
+				font-size: clamp(16px, 2vw, 19px);
+			}
+
+			& .buttons {
+				margin-top: 20px;
+			}
+		}
+
+		& .right {
+			width: 52.5%;
+			height: 100%;
+		}
+	}
+}
+
+@media (768px <= width < 876px) {
+	.hero {
+		width: calc(100% - 40px);
+		margin-top: 55px;
+		flex-direction: column;
+		gap: 50px 0;
+
+		& .left {
+			& .small_title {
+				font-size: 13px;
+			}
+
+			& h1 {
+				margin-top: 20px;
+			}
+
+			& .detail_title {
+				margin-top: 17px;
+			}
+
+			& .buttons {
+				margin-top: 25px;
+			}
+		}
+
+		& .right {
+			min-height: 500px;
+		}
+	}
+}
+
+@media (width < 768px) {
+	.hero {
+		width: calc(100% - 28px);
+		margin-top: 55px;
+		flex-direction: column;
+		gap: 45px 0;
+
+		& .left {
+			& .small_title {
+				font-size: 13px;
+			}
+
+			& h1 {
+				margin-top: 18px;
+			}
+
+			& .buttons {
+				margin-top: 25px;
+			}
+		}
+
+		& .right {
+			min-height: 500px;
+		}
+	}
+}
