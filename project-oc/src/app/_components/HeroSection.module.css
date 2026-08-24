@@ -65,7 +65,6 @@
 		position: relative;
 
 		& .bg {
-			width: 520px;
 			max-width: 65vw;
 			aspect-ratio: 1;
 			background-color: var(--personal-bright);
@@ -76,7 +75,6 @@
 
 		& .profile_card {
 			width: 100%;
-			max-width: 500px;
 			padding: 22px;
 			background-color: var(--card-dark-1);
 			border: 1px solid var(--card-dark-line);
@@ -194,6 +192,14 @@
 		& .right {
 			width: 52.5%;
 			height: 100%;
+
+			& .bg {
+				width: 470px;
+			}
+
+			& .profile_card {
+				max-width: 460px;
+			}
 		}
 	}
 }
@@ -225,6 +231,14 @@
 
 		& .right {
 			min-height: 500px;
+
+			& .bg {
+				width: 520px;
+			}
+
+			& .profile_card {
+				max-width: 500px;
+			}
 		}
 	}
 }
@@ -252,6 +266,14 @@
 
 		& .right {
 			min-height: 500px;
+
+			& .bg {
+				width: 520px;
+			}
+
+			& .profile_card {
+				max-width: 500px;
+			}
 		}
 	}
 }
