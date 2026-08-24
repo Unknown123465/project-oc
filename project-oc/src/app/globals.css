@@ -51,14 +51,25 @@
 
 	--test-line: 1px solid red;*/
 	--personal: #ffc90e;
+	--personal-bright: light-dark(#fff4c2, #453c16);
+	--personal-dark: #e8b300;
 	--personal-text: #292824;
 	--personal-text-light: #9a9b92;
 	--personal-back: light-dark(#f7f7f3, #191916);
 
-	--button-normal-text: light-dark(#262621, #f1f0e8);
+	--title-text: light-dark(#262621, #f1f0e8);
 
-	--button-submit-text: "";
-	--button-submit-back: #e8b300;
+	--button-normal-text: light-dark(#262621, #f1f0e8);
+	--button-normal-back: light-dark(#fffef9, #23231f);
+	--button-normal-line: light-dark(#b7b8ae, #68685f);
+
+	--button-submut-text: #29251a;
+	--button-submit-back: #ffc90e;
+	--button-submit-line: #e8b300;
+
+	--button-submit-text-2: light-dark(#f7f7f3, #191916);
+	--button-submit-back-2: light-dark(#262621, #f1f0e8);
+	--button-submit-line-2: light-dark(#262621, #f1f0e8);
 
 	--input-text: light-dark(#262621, #f1f0e8);
 	--input-back: light-dark(#fffef9, #23231f);
@@ -85,18 +96,19 @@
 	--danger: light-dark(#bd3d3d, #ff8c88);
 	--success: light-dark(#26724e, #73d4a5);
 
-	--error-text: #bd3d3d;
+	--error-text: light-dark(#bd3d3d, #ff8c88);
 
 	--shadow-1: 0 8px 24px light-dark(rgba(72, 67, 43, 0.08), rgba(0, 0, 0, 0.28));
 	--shadow-2: 0 18px 48px light-dark(rgba(72, 67, 43, 0.11), rgba(0, 0, 0, 0.2));
 
 	--radius-1: 8px;
-	--radius-2: 14px;
-	--radius-3: 22px;
+	--radius-2: 12px;
+	--radius-3: 14px;
+	--radius-4: 22px;
 
 	--page-width: 1180px;
 
-	--header-width: 68px;
+	--header-height: 68px;
 
 	--test-line: 1px solid red;
 
