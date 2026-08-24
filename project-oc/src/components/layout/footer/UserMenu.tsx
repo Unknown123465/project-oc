@@ -10,7 +10,7 @@ export default function UserMenu() {
 
 			<Link href="/create">프로필 만들기</Link>
 
-			<Link href="/setting">걔정 설정</Link>
+			<Link href="/setting">계정 설정</Link>
 
 			<a href="/lincese" target="_blank" rel="noreferrer noopener">
 				오픈소스 라이선스
