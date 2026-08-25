@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function UserMenu() {
 	return (
-		<nav className={styles.menu}>
+		<div className={styles.menu} aria-label="주요 메뉴">
 			<Link href="/" className={styles.text}>
 				프로필 둘러보기
 			</Link>
@@ -21,6 +21,6 @@ export default function UserMenu() {
 			<Link href="/setting" className={styles.text}>
 				계정 설정
 			</Link>
-		</nav>
+		</div>
 	);
 }
