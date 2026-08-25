@@ -2,8 +2,8 @@ import type {Metadata} from "next";
 import "./globals.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import localFont from "next/font/local";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/header/Header";
+import Footer from "@/components/layout/footer/Footer";
 import {SessionProvider} from "next-auth/react";
 
 const pretendard = localFont({

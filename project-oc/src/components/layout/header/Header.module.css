@@ -1,0 +1,61 @@
+.header {
+	width: 100%;
+	height: var(--header-height);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: sticky;
+	top: 0;
+	z-index: 40;
+	background: color-mix(in srgb, var(--personal-back) 88%, transparent);
+	backdrop-filter: blur(15px);
+	border-bottom: 1px solid color-mix(in srgb, var(--card-dark-line) 77%, transparent);
+
+	& .logo_box {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		user-select: none;
+
+		& .logo {
+			width: 32px;
+			height: 32px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: var(--personal);
+			color: var(--personal-text);
+			font-size: 12px;
+			font-weight: 800;
+			line-height: 0;
+			border: 1px solid var(--personal-dark);
+			border-radius: 10px;
+		}
+
+		& .brand {
+			color: var(--personal-text);
+			font-size: 17px;
+			font-weight: 900;
+			line-height: 0;
+			letter-spacing: -0.05em;
+		}
+	}
+}
+
+@media (width >= 876px) {
+	.header {
+		padding: 0 20px;
+	}
+}
+
+@media (768px <= width < 876px) {
+	.header {
+		padding: 0 14px;
+	}
+}
+
+@media (width < 768px) {
+	.header {
+		padding: 0 14px;
+	}
+}
