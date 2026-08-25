@@ -44,7 +44,7 @@
 
 @media (width >= 876px) {
 	.header {
-		padding: 0 20px;
+		padding: 0 max(20px, calc((100vw - 1200px) / 2));
 	}
 }
 
