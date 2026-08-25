@@ -40,11 +40,36 @@
 			letter-spacing: -0.05em;
 		}
 	}
+
+	& nav {
+		position: relative;
+
+		& .toggle_button {
+			width: 3.7em;
+			height: 3em;
+			border: 1px solid var(--card-dark-line);
+			border-radius: var(--radius-2);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			color: var(--muted);
+			font-size: 14px;
+			font-weight: 700;
+			line-height: 1;
+			letter-spacing: -0.07em;
+			background-color: transparent;
+			cursor: pointer;
+		}
+	}
 }
 
 @media (width >= 876px) {
 	.header {
-		padding: 0 20px;
+		padding: 0 max(20px, calc((100vw - 1200px) / 2));
+
+		& nav .toggle_button {
+			display: none;
+		}
 	}
 }
 

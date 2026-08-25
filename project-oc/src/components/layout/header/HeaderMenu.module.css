@@ -1,8 +1,5 @@
 .menu {
-	height: 100%;
 	display: flex;
-	align-items: center;
-	gap: 5px;
 
 	& .text {
 		height: 3.15em;
@@ -24,7 +21,6 @@
 
 	& .buttons {
 		display: flex;
-		gap: 7px;
 
 		& a {
 			height: 3em;
@@ -55,25 +51,54 @@
 
 @media (width >= 876px) {
 	.menu {
-		& .text {
+		height: 100%;
+		align-items: center;
+		gap: 5px;
+
+		& .buttons {
+			gap: 7px;
 		}
 	}
 }
 
 @media (768px <= width < 876px) {
 	.menu {
-		& .text {
-			/*TODO: 추후에 태블릿, 모바일에 맞게 토글 메뉴로 전환 할 예정으로 출력 안되게 적용 */
-			display: none;
+		width: calc(100vw - 14px * 2);
+		padding: 8px;
+		background-color: var(--card-dark-1);
+		flex-direction: column;
+		gap: 2px;
+		position: absolute;
+		top: 54px;
+		right: 0;
+		border: 1px solid var(--card-dark-line);
+		border-radius: var(--radius-2);
+
+		& .buttons {
+			width: 100%;
+			flex-direction: column;
+			gap: 2px;
 		}
 	}
 }
 
 @media (width < 768px) {
 	.menu {
-		& .text {
-			/*TODO: 추후에 태블릿, 모바일에 맞게 토글 메뉴로 전환 할 예정으로 출력 안되게 적용 */
-			display: none;
+		width: calc(100vw - 14px * 2);
+		padding: 8px;
+		background-color: var(--card-dark-1);
+		flex-direction: column;
+		gap: 2px;
+		position: absolute;
+		top: 54px;
+		right: 0;
+		border: 1px solid var(--card-dark-line);
+		border-radius: var(--radius-2);
+
+		& .buttons {
+			width: 100%;
+			flex-direction: column;
+			gap: 2px;
 		}
 	}
 }

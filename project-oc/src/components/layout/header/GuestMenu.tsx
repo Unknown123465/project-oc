@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function GuestMenu() {
 	return (
-		<div className={styles.menu}>
+		<div className={styles.menu} aria-label="주요 메뉴">
 			<Link href="/" className={styles.text}>
 				프로필 둘러보기
 			</Link>
