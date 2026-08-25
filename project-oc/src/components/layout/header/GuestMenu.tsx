@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function GuestMenu() {
 	return (
-		<div className={styles.menu}>
+		<nav className={styles.menu}>
 			<Link href="/" className={styles.text}>
 				프로필 둘러보기
 			</Link>
@@ -19,6 +19,6 @@ export default function GuestMenu() {
 					회원가입
 				</Link>
 			</div>
-		</div>
+		</nav>
 	);
 }

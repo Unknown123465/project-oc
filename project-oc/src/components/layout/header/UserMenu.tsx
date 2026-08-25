@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import styles from "./HeaderMenu.module.css";
 import Link from "next/link";
 
 export default function UserMenu() {
 	return (
-		<div className={styles.menu}>
+		<nav className={styles.menu}>
 			<Link href="/" className={styles.text}>
 				프로필 둘러보기
 			</Link>
@@ -21,6 +21,6 @@ export default function UserMenu() {
 			<Link href="/setting" className={styles.text}>
 				계정 설정
 			</Link>
-		</div>
+		</nav>
 	);
 }
