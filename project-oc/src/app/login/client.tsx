@@ -1,8 +1,8 @@
 "use client";
 
 import styles from "./page.module.css";
-import {PasswordInput, TextInput} from "../component/ui/input";
-import {SubmitButton} from "../component/ui/button";
+import {PasswordInput, TextInput} from "@/components/ui/input";
+import {NormalButton, SubmitButton} from "@/components/ui/button";
 import {useCallback} from "react";
 
 import {normalLoginAction} from "./action";
@@ -57,6 +57,8 @@ export function LoginForm() {
 				<SubmitButton width="100%" className={styles.submit_button} disabled={isSubmitting}>
 					{isSubmitting ? "확인중" : "로그인"}
 				</SubmitButton>
+
+				<NormalButton width="100%">테스트</NormalButton>
 			</form>
 		</>
 	);

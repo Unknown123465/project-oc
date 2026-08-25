@@ -1,0 +1,11 @@
+.menu {
+	display: flex;
+	gap: 15px;
+
+	& a {
+		color: var(--muted);
+		font-size: 13px;
+		font-weight: 400;
+		word-break: keep-all;
+	}
+}

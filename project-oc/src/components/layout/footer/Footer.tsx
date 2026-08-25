@@ -9,14 +9,14 @@ export default function Footer() {
 	return (
 		<footer className={styles.footer}>
 			<div className={styles.info}>
-				<span className={styles.copyright}>ⓒ {year} Unknown123465 / 프로젝트 OC</span>
+				<span className={styles.copyright}>ⓒ {year} 프로젝트 OC</span>
 
 				<a href="https://github.com/Unknown123465" target="_blank" rel="noreferrer noopener" className={styles.logo}>
 					<Image src="/github icon.png" alt="github 프로필" role="link" width={25} height={25} priority />
 				</a>
 			</div>
 
-			{true ? <UserMenu /> : <GuestMenu />}
+			{false ? <UserMenu /> : <GuestMenu />}
 		</footer>
 	);
 }

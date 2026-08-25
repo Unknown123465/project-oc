@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import styles from "./HeaderMenu.module.css";
 import Link from "next/link";

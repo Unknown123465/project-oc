@@ -1,0 +1,79 @@
+.menu {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+
+	& .text {
+		height: 3.15em;
+		padding: 0 1.05em;
+		display: flex;
+		align-items: center;
+		color: var(--muted);
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1;
+		word-break: keep-all;
+		border-radius: var(--radius-2);
+
+		&:hover {
+			background-color: var(--card-dark-2);
+			color: var(--title-text);
+		}
+	}
+
+	& .buttons {
+		display: flex;
+		gap: 7px;
+
+		& a {
+			height: 3em;
+			padding: 0 1em;
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 13px;
+			font-weight: 700;
+			line-height: 1;
+			word-break: keep-all;
+			border-radius: var(--radius-2);
+
+			&.white {
+				color: var(--button-normal-text);
+				background-color: var(--button-normal-back);
+				border: 1px solid var(--button-normal-line);
+			}
+
+			&.yellow {
+				color: var(--button-submit-text);
+				background-color: var(--button-submit-back);
+				border: 1px solid var(--button-submit-line);
+			}
+		}
+	}
+}
+
+@media (width >= 876px) {
+	.menu {
+		& .text {
+		}
+	}
+}
+
+@media (768px <= width < 876px) {
+	.menu {
+		& .text {
+			/*TODO: 추후에 태블릿, 모바일에 맞게 토글 메뉴로 전환 할 예정으로 출력 안되게 적용 */
+			display: none;
+		}
+	}
+}
+
+@media (width < 768px) {
+	.menu {
+		& .text {
+			/*TODO: 추후에 태블릿, 모바일에 맞게 토글 메뉴로 전환 할 예정으로 출력 안되게 적용 */
+			display: none;
+		}
+	}
+}
