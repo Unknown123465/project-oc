@@ -1,6 +1,6 @@
 "use client";
 
-import {useCallback, useMemo, useState} from "react";
+import {useState} from "react";
 import GuestMenu from "./GuestMenu";
 import styles from "./Header.module.css";
 import UserMenu from "./UserMenu";
@@ -9,18 +9,7 @@ import Link from "next/link";
 export default function Header() {
 	const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
-	const menuOpenChange = useCallback(() => {
-		setMenuOpen((prev) => !prev);
-	}, []);
-
-	const printMenu = useMemo(() => {
-		if (menuOpen) {
-			//TODO: 임시로 true/false 번갈아가며 ui 상태 확인. 추후 auth.js의 세션을 통해 적용 할 예정
-			return false ? <UserMenu /> : <GuestMenu />;
-		} else {
-			return null;
-		}
-	}, [menuOpen]);
+	const menuOpenChange = () => setMenuOpen((prev) => !prev);
 
 	return (
 		<>
@@ -36,7 +25,9 @@ export default function Header() {
 						{menuOpen ? "닫기" : "메뉴"}
 					</button>
 
-					{printMenu}
+					<div className={styles.menu} hidden={!menuOpen}>
+						{false ? <UserMenu /> : <GuestMenu />}
+					</div>
 				</nav>
 			</header>
 		</>
