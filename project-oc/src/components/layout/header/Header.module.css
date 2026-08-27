@@ -67,8 +67,14 @@
 	.header {
 		padding: 0 max(20px, calc((100vw - 1200px) / 2));
 
-		& nav .toggle_button {
-			display: none;
+		& nav {
+			& .toggle_button {
+				display: none;
+			}
+
+			& .menu {
+				display: block;
+			}
 		}
 	}
 }
