@@ -61,7 +61,11 @@
 	}
 }
 
-@media (768px <= width < 876px) {
+@media (width < 876px) {
+	body {
+		overflow: hidden;
+	}
+
 	.menu {
 		width: calc(100vw - 14px * 2);
 		padding: 8px;
@@ -82,23 +86,5 @@
 	}
 }
 
-@media (width < 768px) {
-	.menu {
-		width: calc(100vw - 14px * 2);
-		padding: 8px;
-		background-color: var(--card-dark-1);
-		flex-direction: column;
-		gap: 2px;
-		position: absolute;
-		top: 54px;
-		right: 0;
-		border: 1px solid var(--card-dark-line);
-		border-radius: var(--radius-2);
-
-		& .buttons {
-			width: 100%;
-			flex-direction: column;
-			gap: 2px;
-		}
-	}
+@media (768px <= width < 876px) {
 }

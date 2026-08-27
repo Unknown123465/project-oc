@@ -2,6 +2,7 @@
 
 import styles from "./HeaderMenu.module.css";
 import Link from "next/link";
+import ThemeSelect from "./ThemeSelect";
 
 export default function UserMenu() {
 	return (
@@ -21,6 +22,8 @@ export default function UserMenu() {
 			<Link href="/setting" className={styles.text}>
 				계정 설정
 			</Link>
+
+			<ThemeSelect />
 		</div>
 	);
 }

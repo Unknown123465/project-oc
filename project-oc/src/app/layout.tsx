@@ -20,6 +20,21 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: LayoutProps<"/">) {
 	return (
 		<html lang="ko" className={pretendard.className}>
+			<head>
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `(function(){
+					try {
+						const value = localStorage.getItem("color-theme");
+						if(value === "dark" || value === "light") {
+							document.documentElement.dataset.theme = value;
+						}
+					} catch (e) {}
+					})()`,
+					}}
+				/>
+			</head>
+
 			<body>
 				<SessionProvider>
 					<Header />

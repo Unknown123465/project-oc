@@ -119,16 +119,13 @@
 	--color-theme: light dark;
 
 	color-scheme: var(--color-theme);
-
-	&:has(input[name="color-theme"][value="auto"]:checked) {
-		--color-theme: light dark;
-	}
-
-	&:has(input[name="color-theme"][value="light"]:checked) {
+	&:has(input[name="color-theme"][value="light"]:checked),
+	&[data-theme="light"] {
 		--color-theme: light;
 	}
 
-	&:has(input[name="color-theme"][value="dark"]:checked) {
+	&:has(input[name="color-theme"][value="dark"]:checked),
+	&[data-theme="dark"] {
 		--color-theme: dark;
 	}
 }
@@ -139,12 +136,13 @@
 
 html,
 body {
-	max-width: 100vw;
+	max-width: 100%;
 	margin: 0;
 	background-color: var(--personal-back);
 }
 
-body {
+body,
+button {
 	letter-spacing: -0.03em;
 }
 
@@ -168,4 +166,12 @@ button {
 		border-color 0.18s ease,
 		transform 0.18s ease,
 		color 0.18s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0.01ms !important;
+	}
 }

@@ -1,0 +1,146 @@
+:root {
+	--auto-theme-value: "\F2BE";
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--auto-theme-value: "\F2B0";
+	}
+}
+
+.theme {
+	font-size: 13px;
+	position: relative;
+
+	& > button {
+		height: 3em;
+		font-size: 13px;
+		line-height: 1;
+		letter-spacing: -0.05em;
+		background-color: transparent;
+		cursor: pointer;
+	}
+
+	& ul {
+		padding: 5px;
+		margin: 0;
+		text-align: right;
+		color: var(--button-normal-text);
+		background-color: var(--button-normal-back);
+		border: 1px solid;
+		position: absolute;
+		list-style-type: none;
+
+		& li label {
+			width: 100%;
+			border-radius: var(--radius-1);
+			line-height: 1;
+			display: block;
+			cursor: pointer;
+
+			& input[type="radio"] {
+				width: 1px;
+				height: 1px;
+				white-space: nowrap;
+				position: absolute;
+				overflow: hidden;
+				clip-path: inset(50%);
+			}
+
+			&:hover,
+			&:has(input:checked) {
+				background-color: var(--card-dark-2);
+				color: var(--title-text);
+			}
+
+			&:has(input:checked) {
+				font-weight: 600;
+			}
+		}
+	}
+}
+
+@media (width >= 876px) {
+	.theme {
+		& > button {
+			padding: 0;
+			text-align: center;
+			aspect-ratio: 1;
+			color: var(--button-normal-text);
+			border: 1px solid var(--button-normal-line);
+			border-radius: var(--radius-2);
+
+			&.open,
+			&:hover {
+				color: var(--button-normal-text-hover);
+				background-color: var(--button-normal-back-hover);
+				border-color: var(--button-normal-line-hover);
+			}
+
+			& .pc.auto::before {
+				content: var(--auto-theme-value);
+			}
+
+			& .mobile {
+				display: none;
+			}
+		}
+
+		& ul {
+			width: 8.5em;
+			border-color: var(--button-normal-line);
+			border-radius: var(--radius-2);
+			top: calc(3em + 5px);
+			right: 0;
+
+			& li label {
+				height: 100%;
+				padding: 9px 9px 8px;
+			}
+		}
+	}
+}
+
+@media (width < 876px) {
+	.theme {
+		& > button {
+			width: 100%;
+			padding-left: 1.05em;
+			font-weight: 600;
+			color: var(--muted);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border: 0;
+			border-radius: var(--radius-2);
+
+			& .pc {
+				display: none;
+			}
+
+			& .mobile {
+				transition: transform 0.12s ease;
+
+				&.rotate {
+					transform: rotate(180deg) translateY(15%);
+				}
+			}
+		}
+
+		& ul {
+			width: calc(100% + 15px + 2px);
+			top: 3em;
+			right: -8.5px;
+			border-top: 0;
+			border-color: var(--card-dark-line);
+			border-radius: 0 0 var(--radius-2) var(--radius-2);
+
+			& li label {
+				height: 3em;
+				padding: 0 calc(14px + 4px);
+				display: flex;
+				align-items: center;
+			}
+		}
+	}
+}
