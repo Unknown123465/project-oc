@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useId, useRef, useState} from "react";
+import {useEffect, useId, useRef, useState, useSyncExternalStore} from "react";
 import styles from "./ThemeSelect.module.css";
 
 type ThemeType = "auto" | "light" | "dark";
@@ -17,23 +17,23 @@ const THEME_ICON = {
 	dark: "bi-moon",
 } as const;
 
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export default function ThemeSelect() {
+	const isHydrated = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
 	const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
-	const [currentTheme, setCurrentTheme] = useState<ThemeType>(
-		(() => {
-			if (typeof document === "undefined") {
-				return "auto";
-			} else {
-				return (document.documentElement.dataset.theme as ThemeType) || "auto";
-			}
-		})(),
-	);
+	const [currentTheme, setCurrentTheme] = useState<ThemeType>("auto");
 
 	const themeRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
 	const menuId = useId();
+
+	const displayTheme = isHydrated ? currentTheme : "auto";
 
 	useEffect(() => {
 		if (menuOpen) {
@@ -65,6 +65,15 @@ export default function ThemeSelect() {
 		}
 	}, [menuOpen]);
 
+	useEffect(() => {
+		const savedTheme = localStorage.getItem("color-theme");
+
+		if (savedTheme === "light" || savedTheme === "dark") {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
+			setCurrentTheme(savedTheme);
+		}
+	}, []);
+
 	const themeChange = (value: "auto" | "light" | "dark") => {
 		setCurrentTheme(value);
 		localStorage.setItem("color-theme", value);
@@ -89,9 +98,9 @@ export default function ThemeSelect() {
 				aria-label="테마 선택"
 				ref={buttonRef}
 				onClick={() => setMenuOpen((prev) => !prev)}>
-				<i className={`${styles.pc} bi ${THEME_ICON[currentTheme]}`}></i>
+				<i className={`${styles.pc} bi ${THEME_ICON[displayTheme]}`}></i>
 
-				<span className={styles.mobile}>{THEME_NAME[currentTheme]} 테마</span>
+				<span className={styles.mobile}>{THEME_NAME[displayTheme]} 테마</span>
 
 				<i className={`${styles.mobile} bi bi-caret-down-fill ${menuOpen ? styles.rotate : ""}`} aria-hidden="true"></i>
 			</button>
