@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: LayoutProps<"/">) {
 	return (
-		<html lang="ko" className={pretendard.className}>
+		<html lang="ko" className={pretendard.className} suppressHydrationWarning>
 			<head>
 				<script
 					dangerouslySetInnerHTML={{
