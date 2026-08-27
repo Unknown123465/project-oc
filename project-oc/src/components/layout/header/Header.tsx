@@ -26,7 +26,7 @@ export default function Header() {
 					</button>
 
 					<div className={styles.menu} hidden={!menuOpen}>
-						{false ? <UserMenu /> : <GuestMenu />}
+						{true ? <UserMenu /> : <GuestMenu />}
 					</div>
 				</nav>
 			</header>

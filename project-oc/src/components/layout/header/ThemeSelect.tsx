@@ -1,86 +1,123 @@
 "use client";
 
-import {useEffect, useId, useState} from "react";
+import {useEffect, useId, useRef, useState} from "react";
 import styles from "./ThemeSelect.module.css";
 
 type ThemeType = "auto" | "light" | "dark";
 
+const THEME_NAME = {
+	auto: "자동",
+	light: "밝은",
+	dark: "어두운",
+} as const;
+
+const THEME_ICON = {
+	auto: styles.auto,
+	light: "bi-sun",
+	dark: "bi-moon",
+} as const;
+
 export default function ThemeSelect() {
 	const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
-	const [currentTheme, setCurrentTheme] = useState<ThemeType>("auto");
+	const [currentTheme, setCurrentTheme] = useState<ThemeType>(
+		(() => {
+			if (typeof document === "undefined") {
+				return "auto";
+			} else {
+				return (document.documentElement.dataset.theme as ThemeType) || "auto";
+			}
+		})(),
+	);
 
-	const [isMounted, setIsMounted] = useState(false);
+	const themeRef = useRef<HTMLDivElement>(null);
+	const buttonRef = useRef<HTMLButtonElement>(null);
 
 	const menuId = useId();
 
-	const displayTheme = !isMounted ? "auto" : currentTheme;
-
-	const THEME_NAME = {
-		auto: "자동",
-		light: "밝게",
-		dark: "어둡게",
-	} as const;
-
-	const THEME_ICON = {
-		auto: "bi-cloud-sun",
-		light: "bi-sun",
-		dark: "bi-moon",
-	} as const;
-
 	useEffect(() => {
-		// eslint-disable-next-line react-hooks/set-state-in-effect
-		setIsMounted(true);
+		if (menuOpen) {
+			const abort: AbortController = new AbortController();
 
-		const savedTheme = localStorage.getItem("color-theme") as ThemeType;
-		if (savedTheme) {
-			setCurrentTheme(savedTheme);
+			document.addEventListener(
+				"keydown",
+				(e) => {
+					if (e.key === "Escape") {
+						setMenuOpen(false);
+					}
+				},
+				{signal: abort.signal},
+			);
+
+			document.addEventListener(
+				"pointerdown",
+				(e) => {
+					if (!themeRef.current?.contains(e.target as Node)) {
+						setMenuOpen(false);
+					}
+				},
+				{signal: abort.signal},
+			);
+
+			return () => {
+				abort.abort();
+			};
 		}
-	}, []);
+	}, [menuOpen]);
 
 	const themeChange = (value: "auto" | "light" | "dark") => {
 		setCurrentTheme(value);
 		localStorage.setItem("color-theme", value);
 
 		setMenuOpen(false);
+
+		if (value === "auto") {
+			document.documentElement.removeAttribute("data-theme");
+		} else {
+			document.documentElement.setAttribute("data-theme", value);
+		}
 	};
 
-	const themeList = (
-		<ul id={menuId} role="menu" aria-orientation="vertical">
-			<li role="none">
-				<label role="menuitem">
-					<input type="radio" name="color-theme" checked={currentTheme === "auto"} hidden value="auto" onChange={() => themeChange("auto")} />
-					자동
-				</label>
-			</li>
-
-			<li role="none">
-				<label role="menuitem">
-					<input type="radio" name="color-theme" checked={currentTheme === "light"} hidden value="light" onChange={() => themeChange("light")} />
-					밝게
-				</label>
-			</li>
-
-			<li role="none">
-				<label role="menuitem">
-					<input type="radio" name="color-theme" checked={currentTheme === "dark"} hidden value="dark" onChange={() => themeChange("dark")} />
-					어둡게
-				</label>
-			</li>
-		</ul>
-	);
-
 	return (
-		<div className={styles.theme}>
-			<button type="button" aria-haspopup="menu" aris-expended={String(menuOpen)} aria-controls={menuId} aria-label="테마 선택" onClick={() => setMenuOpen((prev) => !prev)}>
-				<span className={styles.pc}>{THEME_NAME[displayTheme]}</span>
+		<div className={styles.theme} ref={themeRef}>
+			<button
+				type="button"
+				className={menuOpen ? styles.open : undefined}
+				aria-haspopup="menu"
+				aria-expanded={menuOpen}
+				aria-controls={menuId}
+				aria-label="테마 선택"
+				ref={buttonRef}
+				onClick={() => setMenuOpen((prev) => !prev)}>
+				<i className={`${styles.pc} bi ${THEME_ICON[currentTheme]}`}></i>
 
-				<i className={`${styles.mobile} bi ${THEME_ICON[displayTheme]}`}></i>
+				<span className={styles.mobile}>{THEME_NAME[currentTheme]} 테마</span>
 
-				<span>▼</span>
+				<i className={`${styles.mobile} bi bi-caret-down-fill ${menuOpen ? styles.rotate : ""}`} aria-hidden="true"></i>
 			</button>
 
-			{menuOpen ? themeList : null}
+			<ul id={menuId} hidden={!menuOpen} role="radiogroup" aria-orientation="vertical">
+				<li>
+					<label>
+						<input type="radio" name="color-theme" checked={currentTheme === "auto"} value="auto" onChange={() => themeChange("auto")} />
+						자동
+					</label>
+				</li>
+
+				<li role="none">
+					<label role="menuitem">
+						<input type="radio" name="color-theme" checked={currentTheme === "light"} value="light" onChange={() => themeChange("light")} />
+						밝게
+					</label>
+				</li>
+
+				<li role="none">
+					<label role="menuitem">
+						<input type="radio" name="color-theme" checked={currentTheme === "dark"} value="dark" onChange={() => themeChange("dark")} />
+						어둡게
+					</label>
+				</li>
+			</ul>
 		</div>
 	);
 }
