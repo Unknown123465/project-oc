@@ -2,6 +2,7 @@
 
 import styles from "./HeaderMenu.module.css";
 import Link from "next/link";
+import ThemeSelect from "./ThemeSelect";
 
 export default function GuestMenu() {
 	return (
@@ -9,6 +10,8 @@ export default function GuestMenu() {
 			<Link href="/" className={styles.text}>
 				프로필 둘러보기
 			</Link>
+
+			<ThemeSelect />
 
 			<div className={styles.buttons}>
 				<Link href="/login" className={styles.white}>
