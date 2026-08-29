@@ -5,6 +5,7 @@ import GuestMenu from "./GuestMenu";
 import styles from "./Header.module.css";
 import UserMenu from "./UserMenu";
 import Link from "next/link";
+import {useScrollLock} from "@/hooks/useScrollLock";
 
 export default function Header() {
 	const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -12,6 +13,8 @@ export default function Header() {
 	const navRef = useRef<HTMLElement>(null);
 
 	const menuOpenChange = () => setMenuOpen((prev) => !prev);
+
+	useScrollLock(menuOpen);
 
 	useEffect(() => {
 		if (menuOpen) {
