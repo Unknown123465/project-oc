@@ -1,15 +1,62 @@
 "use client";
 
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import GuestMenu from "./GuestMenu";
 import styles from "./Header.module.css";
 import UserMenu from "./UserMenu";
 import Link from "next/link";
+import {useScrollLock} from "@/hooks/useScrollLock";
 
 export default function Header() {
 	const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
+	const navRef = useRef<HTMLElement>(null);
+
 	const menuOpenChange = () => setMenuOpen((prev) => !prev);
+
+	useScrollLock(menuOpen);
+
+	useEffect(() => {
+		if (menuOpen) {
+			const abort = new AbortController();
+
+			document.addEventListener(
+				"pointerdown",
+				(e) => {
+					if (!navRef.current?.contains(e.target as Node)) {
+						setMenuOpen(false);
+					}
+				},
+				{signal: abort.signal},
+			);
+
+			document.addEventListener(
+				"keydown",
+				(e) => {
+					if (e.key === "Escape") {
+						setMenuOpen(false);
+					}
+				},
+				{signal: abort.signal},
+			);
+
+			const mediaQuery: MediaQueryList = window.matchMedia("(width >= 876px)");
+
+			mediaQuery.addEventListener(
+				"change",
+				(e) => {
+					if (e.matches) {
+						setMenuOpen(false);
+					}
+				},
+				{signal: abort.signal},
+			);
+
+			return () => {
+				abort.abort();
+			};
+		}
+	}, [menuOpen]);
 
 	return (
 		<>
@@ -20,7 +67,7 @@ export default function Header() {
 					<span className={styles.brand}>프로젝트 OC</span>
 				</Link>
 
-				<nav>
+				<nav ref={navRef}>
 					<button type="button" className={styles.toggle_button} aria-expanded={menuOpen} onClick={menuOpenChange}>
 						{menuOpen ? "닫기" : "메뉴"}
 					</button>

@@ -62,10 +62,6 @@
 }
 
 @media (width < 876px) {
-	body {
-		overflow: hidden;
-	}
-
 	.menu {
 		width: calc(100vw - 14px * 2);
 		padding: 8px;
