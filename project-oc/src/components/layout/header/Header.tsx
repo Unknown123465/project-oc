@@ -40,6 +40,18 @@ export default function Header() {
 				{signal: abort.signal},
 			);
 
+			const mediaQuery: MediaQueryList = window.matchMedia("(width >= 876px)");
+
+			mediaQuery.addEventListener(
+				"change",
+				(e) => {
+					if (e.matches) {
+						setMenuOpen(false);
+					}
+				},
+				{signal: abort.signal},
+			);
+
 			return () => {
 				abort.abort();
 			};
