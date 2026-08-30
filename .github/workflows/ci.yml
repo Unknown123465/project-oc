@@ -1,0 +1,56 @@
+name: CI
+
+on:
+    pull_request:
+        branches: [dev, main]
+    push:
+        branches: [dev]
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+defaults:
+    run:
+        working-directory: project-oc
+
+jobs:
+    verify:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+                  cache-dependency-path: project-oc/package-lock.json
+
+            - name: 의존성 설치
+              run: npm ci
+
+            - name: 타입 검사
+              run: npx tsc --noEmit
+
+            - name: 린트
+              run: npx eslint .
+
+            - name: 빌드
+              env:
+                  DATABASE_HOST: localhost
+                  DATABASE_USER: ci
+                  DATABASE_NAME: ci
+                  DATABASE_PASSWORD: ci
+                  DATABASE_URL: mysql://ci:ci@localhost:3306/ci
+                  AUTH_SECRET: ci-placeholder-value-not-a-real-secret
+                  BETTER_AUTH_SECRET: ci-placeholder-value-not-a-real-secret
+                  GOOGLE_CLIENT_ID: ci-placeholder
+                  GOOGLE_CLIENT_SECRET: ci-placeholder
+                  NAVER_CLIENT_ID: ci-placeholder
+                  NAVER_CLIENT_SECRET: ci-placeholder
+                  KAKAO_CLIENT_ID: ci-placeholder
+                  KAKAO_CLIENT_SECRET: ci-placeholder
+                  TWITTER_CLIENT_ID: ci-placeholder
+                  TWITTER_CLIENT_SECRET: ci-placeholder
+              run: npm run build
