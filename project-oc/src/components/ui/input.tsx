@@ -100,8 +100,6 @@ export function PasswordInput<K extends FieldValues>({
 
 	const inputId = id ?? defaultId;
 
-	const showChange = useCallback(() => setShow((prev) => !prev), []);
-
 	return (
 		<div className={styles.field} style={{width, ...style}}>
 			{!ariaLabelOnly ? <label htmlFor={inputId}>{label}</label> : null}
@@ -124,7 +122,7 @@ export function PasswordInput<K extends FieldValues>({
 					placeholder={placeholder}
 				/>
 
-				<button type="button" className={styles.eye} aria-pressed={show} aria-label={show ? "비밀번호 숨기기" : "비밀번호 보기"} onClick={showChange}>
+				<button type="button" className={styles.eye} aria-pressed={show} aria-label={show ? "비밀번호 숨기기" : "비밀번호 보기"} onClick={() => setShow((prev) => !prev)}>
 					<i className={`bi ${show ? "bi-eye" : "bi-eye-slash"}`} aria-hidden="true"></i>
 				</button>
 			</div>
