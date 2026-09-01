@@ -10,6 +10,7 @@ export default async function Signup() {
 
 	/* 이미 로그인한 사용자에게 가입 폼을 보여 줄 이유가 없다. 로그인 페이지와 같은 처리. */
 	if (authInfo !== null) {
+		//TODO: 내 캐릭터 페이지 완성 시 해당 페이지로 리다이렉트 되게 구현 할 예정
 		return redirect("/", "replace");
 	}
 
