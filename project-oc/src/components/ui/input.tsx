@@ -18,6 +18,11 @@ interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
 	readOnly?: boolean;
 	describedBy?: string;
 	autoComplete?: string;
+	/** 입력 아래에 항상 보이는 안내 문구. */
+	help?: string;
+	/** 입력 아래에 이 필드의 검증 오류를 직접 출력한다.
+	 *  로그인처럼 오류를 폼 한곳에 모으는 화면은 끈 채로 둔다. */
+	showFieldError?: boolean;
 }
 
 interface TextInputProps<K extends FieldValues> extends InputProps<K> {
@@ -39,12 +44,16 @@ export function TextInput<K extends FieldValues>({
 	disabled,
 	describedBy,
 	autoComplete,
+	help,
+	showFieldError = false,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
 	const {field, fieldState} = useController(fieldProps);
 
 	const defaultId = useId();
+	const helpId = useId();
+	const fieldErrorId = useId();
 
 	const inputId = id ?? defaultId;
 
@@ -70,6 +79,18 @@ export function TextInput<K extends FieldValues>({
 					placeholder={placeholder}
 				/>
 			</div>
+
+			{help ? (
+				<p id={helpId} className={styles.help}>
+					{help}
+				</p>
+			) : null}
+
+			{showFieldError && fieldState.error?.message ? (
+				<p id={fieldErrorId} className={styles.error}>
+					{fieldState.error.message}
+				</p>
+			) : null}
 		</div>
 	);
 }
@@ -89,12 +110,16 @@ export function PasswordInput<K extends FieldValues>({
 	disabled,
 	describedBy,
 	autoComplete,
+	help,
+	showFieldError = false,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
 	const {field, fieldState} = useController(fieldProps);
 
 	const defaultId = useId();
+	const helpId = useId();
+	const fieldErrorId = useId();
 
 	const [show, setShow] = useState<boolean>(false);
 
@@ -126,6 +151,18 @@ export function PasswordInput<K extends FieldValues>({
 					<i className={`bi ${show ? "bi-eye" : "bi-eye-slash"}`} aria-hidden="true"></i>
 				</button>
 			</div>
+
+			{help ? (
+				<p id={helpId} className={styles.help}>
+					{help}
+				</p>
+			) : null}
+
+			{showFieldError && fieldState.error?.message ? (
+				<p id={fieldErrorId} className={styles.error}>
+					{fieldState.error.message}
+				</p>
+			) : null}
 		</div>
 	);
 }
