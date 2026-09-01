@@ -1,8 +1,7 @@
-import Form from "next/form";
 import {LoginForm} from "./client";
 import styles from "./page.module.css";
-import {googleLoginAction, naverLoginAction, twitterLoginAction} from "./action";
-import {SubmitButton} from "@/components/ui/button";
+import AuthAside from "../_components/login/AuthAside";
+import SocialLoginList from "../_components/login/SocialLoginList";
 import {auth} from "@/auth/auth";
 import {redirect} from "next/navigation";
 
@@ -15,15 +14,7 @@ export default async function Login() {
 
 	return (
 		<main className={styles.main}>
-			<section className={styles.aside}>
-				<h1>
-					다시 만난
-					<br />
-					당신의 캐릭터.
-				</h1>
-
-				<p>작성하던 프로필을 이어서 완성하고, 독자에게 도착한 좋아요와 코멘트를 확인하세요.</p>
-			</section>
+			<AuthAside />
 
 			<section className={styles.form_area}>
 				<article className={styles.form_box}>
@@ -37,19 +28,7 @@ export default async function Login() {
 						<span>또는</span>
 					</div>
 
-					<div className={styles.social}>
-						<Form action={googleLoginAction}>
-							<SubmitButton styleType="simple">구글로 로그인</SubmitButton>
-						</Form>
-
-						<Form action={naverLoginAction}>
-							<SubmitButton styleType="simple">네이버로 로그인</SubmitButton>
-						</Form>
-
-						<Form action={twitterLoginAction}>
-							<SubmitButton styleType="simple">X(트위터)로 로그인</SubmitButton>
-						</Form>
-					</div>
+					<SocialLoginList />
 
 					<div className={styles.sub_links}>
 						<button type="button" disabled>
