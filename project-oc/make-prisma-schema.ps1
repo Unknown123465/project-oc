@@ -1,1 +1,0 @@
- npx prisma generate --schema=./src/app/prisma/schema.prisma

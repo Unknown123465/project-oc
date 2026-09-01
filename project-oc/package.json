@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",
@@ -14,8 +16,8 @@
     "@prisma/adapter-mariadb": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "@prisma/config": "^7.9.1",
-    "@prisma/extension-accelerate": "^3.0.1",
     "bootstrap-icons": "^1.13.1",
+    "dotenv": "^17.4.2",
     "next": "16.3.0",
     "next-auth": "^5.0.0-beta.32",
     "react": "19.2.8",
