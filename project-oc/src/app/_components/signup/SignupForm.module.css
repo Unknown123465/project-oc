@@ -33,10 +33,6 @@
 	}
 }
 
-.submit_button {
-	margin-top: 6px;
-}
-
 @media (width >= 876px) {
 	.field_group {
 		gap: 8px;

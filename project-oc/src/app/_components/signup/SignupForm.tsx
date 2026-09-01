@@ -52,6 +52,7 @@ export default function SignupForm() {
 			const result = await signupAction(data);
 
 			if (result.success) {
+				//TODO: 내 캐릭터 페이지 완성 시 해당 페이지로 리다이렉트 되게 구현 할 예정
 				router.replace("/");
 			} else {
 				/* 서버에서만 알 수 있는 실패(중복 가입 등)는 필드를 특정할 수 없어
@@ -132,7 +133,7 @@ export default function SignupForm() {
 				</p>
 			</div>
 
-			<SubmitButton className={styles.submit_button} disabled={isSubmitting}>
+			<SubmitButton style={{marginTop: 6}} disabled={isSubmitting}>
 				{isSubmitting ? "가입중" : "회원가입"}
 			</SubmitButton>
 		</form>
