@@ -5,12 +5,13 @@ import styles from "./styles.module.css";
 import {FieldValues, useController, type UseControllerProps} from "react-hook-form";
 
 interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
-	label: string;
+	label?: string;
 	width?: number | string;
 	height?: number | string;
 	padding?: number | string;
 	borderRadius?: number | string;
 	style?: CSSProperties;
+	id?: string;
 	focusAnimation?: boolean;
 	invalidStyle?: boolean;
 	readOnly?: boolean;
@@ -29,6 +30,7 @@ export function TextInput<K extends FieldValues>({
 	padding,
 	borderRadius,
 	style,
+	id,
 	focusAnimation = true,
 	invalidStyle = true,
 	readOnly,
@@ -40,18 +42,18 @@ export function TextInput<K extends FieldValues>({
 }: TextInputProps<K>) {
 	const {field, fieldState} = useController(fieldProps);
 
-	const id = useId();
+	const defaultId = useId();
+
+	const inputId = id ?? defaultId;
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
-			<label htmlFor={id} className={styles.label}>
-				{label}
-			</label>
+			<label htmlFor={inputId}>{label}</label>
 
 			<div className={styles.box} style={{height}}>
 				<input
 					{...field}
-					id={id}
+					id={inputId}
 					type="text"
 					className={`${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
 					readOnly={readOnly}
@@ -76,6 +78,7 @@ export function PasswordInput<K extends FieldValues>({
 	padding,
 	borderRadius,
 	style,
+	id,
 	focusAnimation = true,
 	invalidStyle = true,
 	readOnly,
@@ -87,22 +90,22 @@ export function PasswordInput<K extends FieldValues>({
 }: TextInputProps<K>) {
 	const {field, fieldState} = useController(fieldProps);
 
-	const id = useId();
+	const defaultId = useId();
 
 	const [show, setShow] = useState<boolean>(false);
+
+	const inputId = id ?? defaultId;
 
 	const showChange = useCallback(() => setShow((prev) => !prev), []);
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
-			<label htmlFor={id} className={styles.label}>
-				{label}
-			</label>
+			<label htmlFor={inputId}>{label}</label>
 
 			<div className={styles.box} style={{height}}>
 				<input
 					{...field}
-					id={id}
+					id={inputId}
 					type={show ? "text" : "password"}
 					className={`${styles.has_action} ${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
 					readOnly={readOnly}

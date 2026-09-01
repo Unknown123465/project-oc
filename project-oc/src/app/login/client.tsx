@@ -14,6 +14,9 @@ import {useRouter} from "next/navigation";
 export function LoginForm() {
 	const router = useRouter();
 
+	const formId = useId();
+	const userNameId = useId();
+	const passwordId = useId();
 	const errorId = useId();
 
 	const {
@@ -43,11 +46,12 @@ export function LoginForm() {
 		[router, setError],
 	);
 
-	const message = errors.userName?.message ?? errors.password?.message ?? errors.root?.message;
+	const message: string | undefined = errors.userName?.message ?? errors.password?.message ?? errors.root?.message;
 
 	return (
-		<form className={styles.login_form} onSubmit={handleSubmit(onSubmit)} noValidate>
+		<form className={styles.login_form} id={formId} onSubmit={handleSubmit(onSubmit)} noValidate>
 			<TextInput
+				id={userNameId}
 				name="userName"
 				control={control}
 				label="사용자 이름"
@@ -57,6 +61,7 @@ export function LoginForm() {
 			/>
 
 			<PasswordInput
+				id={passwordId}
 				name="password"
 				control={control}
 				label="비밀번호"
