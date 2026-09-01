@@ -76,6 +76,14 @@ export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
 	providers,
 	debug: true,
 	secret: process.env.BETTER_AUTH_SECRET,
+	/* adapter가 있으면 기본값이 database이지만 Credentials는 그 전략을 쓸 수 없다.
+	   Auth.js는 credentials 로그인을 처리할 때 전략과 무관하게 세션 쿠키에 JWT를 굽는데,
+	   database 전략의 세션 조회는 그 쿠키 값을 Session.sessionToken으로 찾으므로
+	   로그인은 성공해도 곧바로 비로그인 상태가 된다.
+	   Session 테이블만 쓰이지 않게 되고 User / Account 적재는 adapter가 그대로 맡는다. */
+	session: {
+		strategy: "jwt",
+	},
 	callbacks: {
 		signIn({account, profile}) {
 			if (account?.provider === "google") {
@@ -85,6 +93,19 @@ export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
 			} else {
 				return true;
 			}
+		},
+		/* 토큰에 무엇이 실려 있든 세션에는 이 네 개만 옮긴다.
+		   password 같은 값이 나중에 토큰에 섞여도 클라이언트로 새지 않는다. */
+		session({session, token}) {
+			return {
+				...session,
+				user: {
+					id: token.sub,
+					name: token.name,
+					email: token.email,
+					image: token.picture,
+				},
+			};
 		},
 	},
 	pages: {
