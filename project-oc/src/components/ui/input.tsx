@@ -5,7 +5,8 @@ import styles from "./styles.module.css";
 import {FieldValues, useController, type UseControllerProps} from "react-hook-form";
 
 interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
-	label?: string;
+	label: string;
+	ariaLabelOnly?: boolean;
 	width?: number | string;
 	height?: number | string;
 	padding?: number | string;
@@ -25,6 +26,7 @@ interface TextInputProps<K extends FieldValues> extends InputProps<K> {
 
 export function TextInput<K extends FieldValues>({
 	label,
+	ariaLabelOnly = false,
 	width,
 	height,
 	padding,
@@ -48,7 +50,7 @@ export function TextInput<K extends FieldValues>({
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
-			<label htmlFor={inputId}>{label}</label>
+			{!ariaLabelOnly ? <label htmlFor={inputId}>{label}</label> : null}
 
 			<div className={styles.box} style={{height}}>
 				<input
@@ -57,6 +59,7 @@ export function TextInput<K extends FieldValues>({
 					type="text"
 					className={`${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
 					readOnly={readOnly}
+					aria-label={ariaLabelOnly ? label : undefined}
 					aria-readonly={readOnly}
 					disabled={disabled}
 					aria-disabled={disabled}
@@ -73,6 +76,7 @@ export function TextInput<K extends FieldValues>({
 
 export function PasswordInput<K extends FieldValues>({
 	label,
+	ariaLabelOnly = false,
 	width,
 	height,
 	padding,
@@ -100,7 +104,7 @@ export function PasswordInput<K extends FieldValues>({
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
-			<label htmlFor={inputId}>{label}</label>
+			{!ariaLabelOnly ? <label htmlFor={inputId}>{label}</label> : null}
 
 			<div className={styles.box} style={{height}}>
 				<input
@@ -109,6 +113,7 @@ export function PasswordInput<K extends FieldValues>({
 					type={show ? "text" : "password"}
 					className={`${styles.has_action} ${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
 					readOnly={readOnly}
+					aria-label={ariaLabelOnly ? label : undefined}
 					aria-readonly={readOnly}
 					disabled={disabled}
 					aria-disabled={disabled}
