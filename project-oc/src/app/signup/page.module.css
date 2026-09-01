@@ -3,45 +3,6 @@
 	display: grid;
 }
 
-.aside {
-	position: relative;
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
-	background-color: var(--personal);
-	color: var(--button-submit-text);
-
-	&::before,
-	&::after {
-		content: "";
-		position: absolute;
-		aspect-ratio: 1;
-		border: 2px solid color-mix(in srgb, var(--button-submit-text) 26%, transparent);
-		border-radius: 50%;
-	}
-
-	& h1 {
-		position: relative;
-		max-width: 560px;
-		margin: 0;
-		font-size: clamp(38px, 5.4vw, 68px);
-		font-weight: 900;
-		line-height: 1.1;
-		letter-spacing: -0.07em;
-	}
-
-	& p {
-		position: relative;
-		max-width: 44ch;
-		margin: 20px 0 0;
-		font-size: clamp(15px, 1.5vw, 17px);
-		font-weight: 600;
-		line-height: 1.7;
-		word-break: keep-all;
-	}
-}
-
 .form_area {
 	display: grid;
 	place-items: center;
@@ -63,92 +24,6 @@
 		color: var(--muted);
 		font-size: 15px;
 	}
-}
-
-.signup_form {
-	display: flex;
-	flex-direction: column;
-	gap: 18px;
-}
-
-.field {
-	display: grid;
-	gap: 8px;
-
-	& > label {
-		color: var(--title-text);
-		font-size: 13.5px;
-		font-weight: 700;
-	}
-}
-
-.box {
-	width: 100%;
-	height: 46px;
-	position: relative;
-
-	& input {
-		width: 100%;
-		height: 100%;
-		padding: 0 46px 0 15px;
-		color: var(--input-text);
-		font-size: 15px;
-		background-color: var(--input-back);
-		border: 1px solid var(--input-line);
-		border-radius: 10px;
-
-		&::placeholder {
-			color: var(--muted);
-		}
-
-		&:focus {
-			outline: 0;
-			border-color: var(--input-select-line);
-			box-shadow: 0 0 0 3px color-mix(in srgb, var(--personal) 45%, transparent);
-		}
-	}
-
-	& .eye {
-		height: 34px;
-		padding: 0 8px;
-		position: absolute;
-		right: 6px;
-		top: 50%;
-		transform: translateY(-50%);
-		color: var(--muted);
-		font-size: 13px;
-		background-color: transparent;
-		border: 0;
-		border-radius: 8px;
-		cursor: pointer;
-	}
-}
-
-/* 오류 문구는 필드마다 따로 나오므로 자리를 미리 잡지 않는다.
-   대신 폼의 gap이 일정해 메시지가 나와도 아래 필드만 밀린다. */
-.field_error {
-	margin: 0;
-	color: var(--error-text);
-	font-size: 13px;
-	font-weight: 650;
-	line-height: 1.45;
-	word-break: keep-all;
-
-	&:empty {
-		display: none;
-	}
-}
-
-.field_help {
-	margin: 0;
-	color: var(--muted);
-	font-size: 12.5px;
-	line-height: 1.5;
-	word-break: keep-all;
-}
-
-.submit_button {
-	margin-top: 6px;
 }
 
 .terms {
@@ -183,22 +58,6 @@
 		grid-template-columns: minmax(0, 0.9fr) minmax(440px, 1.1fr);
 	}
 
-	.aside {
-		padding: clamp(44px, 5vw, 92px);
-
-		&::before {
-			width: 280px;
-			right: -80px;
-			top: 70px;
-		}
-
-		&::after {
-			width: 88px;
-			right: 180px;
-			top: 205px;
-		}
-	}
-
 	.form_area {
 		padding: 60px 40px;
 	}
@@ -213,23 +72,6 @@
 		grid-template-columns: 1fr;
 	}
 
-	.aside {
-		min-height: 340px;
-		padding: 48px 32px;
-
-		&::before {
-			width: 240px;
-			right: -70px;
-			top: 50px;
-		}
-
-		&::after {
-			width: 74px;
-			right: 150px;
-			top: 160px;
-		}
-	}
-
 	.form_area {
 		padding: 54px 32px 80px;
 	}
@@ -242,23 +84,6 @@
 @media (width < 768px) {
 	.main {
 		grid-template-columns: 1fr;
-	}
-
-	.aside {
-		min-height: 270px;
-		padding: 40px 22px;
-
-		&::before {
-			width: 200px;
-			right: -70px;
-			top: 40px;
-		}
-
-		&::after {
-			width: 62px;
-			right: 118px;
-			top: 132px;
-		}
 	}
 
 	.form_area {
