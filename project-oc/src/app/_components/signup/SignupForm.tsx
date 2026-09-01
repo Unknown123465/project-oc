@@ -65,21 +65,11 @@ export default function SignupForm() {
 	return (
 		<form className={styles.signup_form} onSubmit={handleSubmit(onSubmit)} noValidate>
 			<div className={styles.field_group}>
-				<TextInput
-					name="email"
-					control={control}
-					label="이메일 주소"
-					placeholder="example@email.com"
-					autoComplete="email"
-					required
-					describedBy={errors.email ? errorId.email : undefined}
-				/>
+				<TextInput name="email" control={control} label="이메일 주소" placeholder="example@email.com" autoComplete="email" required describedBy={errors.email ? errorId.email : undefined} />
 
-				{errors.email?.message ? (
-					<p id={errorId.email} className={styles.field_error}>
-						{errors.email.message}
-					</p>
-				) : null}
+				<p id={errorId.email} className={styles.field_error}>
+					{errors.email?.message}
+				</p>
 			</div>
 
 			<div className={styles.field_group}>
@@ -93,11 +83,9 @@ export default function SignupForm() {
 					describedBy={errors.userName ? errorId.userName : undefined}
 				/>
 
-				{errors.userName?.message ? (
-					<p id={errorId.userName} className={styles.field_error}>
-						{errors.userName.message}
-					</p>
-				) : null}
+				<p id={errorId.userName} className={styles.field_error}>
+					{errors.userName?.message}
+				</p>
 			</div>
 
 			<div className={styles.field_group}>
@@ -111,15 +99,15 @@ export default function SignupForm() {
 					describedBy={describedBy(passwordHelpId, errors.password && errorId.password)}
 				/>
 
-				<p id={passwordHelpId} className={styles.field_help}>
-					6~20자의 영문과 숫자 조합
-				</p>
-
-				{errors.password?.message ? (
-					<p id={errorId.password} className={styles.field_error}>
-						{errors.password.message}
+				<div>
+					<p id={passwordHelpId} className={styles.field_help}>
+						6~20자의 영문과 숫자 조합
 					</p>
-				) : null}
+
+					<p id={errorId.password} className={styles.field_error}>
+						{errors.password?.message}
+					</p>
+				</div>
 			</div>
 
 			<div className={styles.field_group}>
@@ -133,15 +121,13 @@ export default function SignupForm() {
 					describedBy={describedBy(errors.passwordRepeat && errorId.passwordRepeat, errors.root && errorId.root)}
 				/>
 
-				{errors.passwordRepeat?.message ? (
-					<p id={errorId.passwordRepeat} className={styles.field_error}>
-						{errors.passwordRepeat.message}
-					</p>
-				) : null}
+				<p id={errorId.passwordRepeat} className={styles.field_error}>
+					{errors.passwordRepeat?.message}
+				</p>
 
 				{/* 서버가 되돌려준 실패는 초점이 옮겨 가지 않아 스스로 읽히지 않는다.
 				    폼에서 유일하게 live 영역이 필요한 자리다. */}
-				<p id={errorId.root} className={styles.field_error} role="alert" aria-live="polite">
+				<p id={errorId.root} className={`${styles.field_error} ${styles.root_error}`} role="alert" aria-live="polite">
 					{errors.root?.message}
 				</p>
 			</div>
