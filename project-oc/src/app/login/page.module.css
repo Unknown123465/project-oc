@@ -67,7 +67,8 @@
 	justify-content: space-between;
 	gap: 12px;
 
-	& button {
+	& button,
+	& a {
 		padding: 0;
 		color: var(--muted);
 		font-size: 13px;
@@ -78,6 +79,11 @@
 		&:disabled {
 			cursor: not-allowed;
 		}
+	}
+
+	& a:hover {
+		color: var(--title-text);
+		text-decoration: underline;
 	}
 }
 

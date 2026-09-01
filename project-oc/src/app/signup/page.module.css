@@ -39,16 +39,14 @@
 	display: flex;
 	justify-content: center;
 
-	& button {
-		padding: 0;
+	& a {
 		color: var(--muted);
 		font-size: 13px;
 		font-weight: 650;
-		background-color: transparent;
-		border: 0;
 
-		&:disabled {
-			cursor: not-allowed;
+		&:hover {
+			color: var(--title-text);
+			text-decoration: underline;
 		}
 	}
 }

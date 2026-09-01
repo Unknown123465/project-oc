@@ -4,6 +4,7 @@ import AuthAside from "../_components/auth/AuthAside";
 import SocialLoginList from "../_components/login/SocialLoginList";
 import {auth} from "@/auth/auth";
 import {redirect} from "next/navigation";
+import Link from "next/link";
 
 export default async function Login() {
 	const authInfo = await auth();
@@ -44,9 +45,7 @@ export default async function Login() {
 							계정을 잊으셨나요?
 						</button>
 
-						<button type="button" disabled>
-							처음이신가요?
-						</button>
+						<Link href="/signup">처음이신가요?</Link>
 					</div>
 				</article>
 			</section>

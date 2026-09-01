@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./page.module.css";
 import AuthAside from "../_components/auth/AuthAside";
 import SignupForm from "../_components/signup/SignupForm";
@@ -27,9 +28,7 @@ export default function Signup() {
 					<p className={styles.terms}>가입하면 프로젝트 OC의 이용 정책과 개인정보 처리방침에 동의하게 됩니다.</p>
 
 					<div className={styles.sub_links}>
-						<button type="button" disabled>
-							이미 계정이 있으신가요?
-						</button>
+						<Link href="/login">이미 계정이 있으신가요?</Link>
 					</div>
 				</article>
 			</section>
