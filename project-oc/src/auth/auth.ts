@@ -14,7 +14,7 @@ import {resolveUniqueUserName} from "./userName";
 
 /** Credentials 가입자의 Account.provider 값.
  *  Auth.js가 OAuth처럼 정해 주는 값이 없어 직접 정한다. */
-export const NORMAL_PROVIDER = "normal";
+export const NORMAL_PROVIDER: string = "normal";
 
 const providers: Provider[] = [
 	Credentials({
@@ -32,15 +32,31 @@ const providers: Provider[] = [
 			const {userName, password} = check.data;
 
 			const user = await db.user.findUnique({
-				where: {username: userName},
-				select: {id: true, name: true, email: true, image: true, password: true},
+				where: {
+					username: userName,
+				},
+				include: {
+					accounts: {
+						select: {
+							provider: true,
+						},
+						where: {
+							provider: NORMAL_PROVIDER,
+						},
+					},
+				},
 			});
 
-			/* 계정이 없을 때도 verifyPassword를 거친다. 안에서 더미 해시와 비교해
-			   없는 계정과 틀린 비밀번호의 응답 시간을 맞춘다. */
-			const matched = await verifyPassword(password, user?.password ?? null);
+			/* username은 있지만 소셜로만 가입한 계정일 수 있다. 그런 계정은 password가
+			   항상 null이라 verifyPassword에서도 걸리지만, accounts로 한 번 더 명시적으로
+			   막아 이 게이트가 실제로 무엇을 확인하는지 코드로 드러낸다. */
+			const hasNormalAccount: boolean = (user?.accounts.length ?? 0) > 0;
 
-			if (user === null || !matched) {
+			/* 계정이 없거나 normal 계정이 아닐 때도 verifyPassword를 거친다. 안에서
+			   더미 해시와 비교해 실패 사유에 따라 응답 시간이 갈리지 않게 한다. */
+			const matched: boolean = await verifyPassword(password, hasNormalAccount ? user!.password : null);
+
+			if (user === null || !hasNormalAccount || !matched) {
 				return null;
 			}
 
