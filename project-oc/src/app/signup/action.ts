@@ -3,15 +3,20 @@
 import "server-only";
 import {AuthError} from "next-auth";
 import db from "@/prisma/client";
-import {authProviders, NORMAL_PROVIDER, signIn} from "@/auth/auth";
+import {auth, authProviders, NORMAL_PROVIDER, signIn} from "@/auth/auth";
 import {hashPassword} from "@/auth/password";
 import {signupForm, type SignupFormType} from "./validator";
 
 export type SignupActionResult = {success: true} | {success: false; message: string};
 
 export async function signupAction(data: SignupFormType): Promise<SignupActionResult> {
-	/* 클라이언트에서 이미 같은 스키마로 걸렀지만 서버 액션은 직접 호출될 수 있다.
-	   여기가 신뢰 경계이므로 다시 검사한다. */
+	/* 서버 액션은 페이지를 거치지 않고 직접 호출될 수 있어 페이지의 가드를 믿을 수 없다.
+	   로그인한 채로 가입하면 지금 세션과 새 계정이 어긋난다. */
+	if ((await auth()) !== null) {
+		return {success: false, message: "이미 로그인되어 있습니다."};
+	}
+
+	/* 클라이언트에서 이미 같은 스키마로 걸렀지만 여기가 신뢰 경계이므로 다시 검사한다. */
 	const check = signupForm.safeParse(data);
 
 	if (!check.success) {

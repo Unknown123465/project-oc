@@ -1,9 +1,18 @@
 import Link from "next/link";
+import {redirect} from "next/navigation";
 import styles from "./page.module.css";
 import AuthAside from "../_components/auth/AuthAside";
 import SignupForm from "../_components/signup/SignupForm";
+import {auth} from "@/auth/auth";
 
-export default function Signup() {
+export default async function Signup() {
+	const authInfo = await auth();
+
+	/* 이미 로그인한 사용자에게 가입 폼을 보여 줄 이유가 없다. 로그인 페이지와 같은 처리. */
+	if (authInfo !== null) {
+		return redirect("/", "replace");
+	}
+
 	return (
 		<main className={styles.main}>
 			<AuthAside
