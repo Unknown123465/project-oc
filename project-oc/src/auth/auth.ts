@@ -50,7 +50,7 @@ const providers: Provider[] = [
 			/* username은 있지만 소셜로만 가입한 계정일 수 있다. 그런 계정은 password가
 			   항상 null이라 verifyPassword에서도 걸리지만, accounts로 한 번 더 명시적으로
 			   막아 이 게이트가 실제로 무엇을 확인하는지 코드로 드러낸다. */
-			const hasNormalAccount: boolean = (user?.accounts.length ?? 0) > 0;
+			const hasNormalAccount: boolean = Array.isArray(user?.accounts) && user.accounts.length > 0;
 
 			/* 계정이 없거나 normal 계정이 아닐 때도 verifyPassword를 거친다. 안에서
 			   더미 해시와 비교해 실패 사유에 따라 응답 시간이 갈리지 않게 한다. */
@@ -61,7 +61,12 @@ const providers: Provider[] = [
 			}
 
 			/* password는 절대 돌려주지 않는다. 여기서 반환한 값이 그대로 토큰에 실린다. */
-			return {id: user.id, name: user.name, email: user.email, image: user.image};
+			return {
+				id: user.id,
+				name: user.name,
+				email: user.email,
+				image: user.image,
+			};
 		},
 	}),
 	GoogleProvider<GoogleProfile>({

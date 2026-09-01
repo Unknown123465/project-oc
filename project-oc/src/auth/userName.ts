@@ -5,11 +5,11 @@ import {USER_NAME_MAX_LENGTH} from "@/app/signup/validator";
 
 /** 중복일 때 붙이는 임의 문자 길이. 접미사까지 합쳐도 회원가입 규칙과 같은
  *  최대 길이를 넘지 않도록 뒤에서 잘라 낸다. */
-const SUFFIX_LENGTH = 4;
-const SUFFIX_SEPARATOR = "_";
-const MAX_ATTEMPTS = 5;
+const SUFFIX_LENGTH: number = 4;
+const SUFFIX_SEPARATOR: string = "_";
+const MAX_ATTEMPTS: number = 5;
 
-const FALLBACK_BASE = "user";
+const FALLBACK_BASE: string = "user";
 
 function randomSuffix(): string {
 	/* toString("hex")는 바이트당 두 글자를 만드므로 절반만 뽑아 자른다. */
@@ -19,7 +19,14 @@ function randomSuffix(): string {
 }
 
 async function isTaken(userName: string): Promise<boolean> {
-	const owner = await db.user.findUnique({where: {username: userName}, select: {id: true}});
+	const owner = await db.user.findUnique({
+		where: {
+			username: userName,
+		},
+		select: {
+			id: true,
+		},
+	});
 
 	return owner !== null;
 }
@@ -32,16 +39,16 @@ async function isTaken(userName: string): Promise<boolean> {
  * 유일성이 보장되지 않는다. 최종 방어선은 username 컬럼의 UNIQUE 제약이다.
  */
 export async function resolveUniqueUserName(name: string | null | undefined): Promise<string> {
-	const base = (name ?? "").trim().slice(0, USER_NAME_MAX_LENGTH) || FALLBACK_BASE;
+	const base: string = (name ?? "").trim().slice(0, USER_NAME_MAX_LENGTH) || FALLBACK_BASE;
 
 	if (!(await isTaken(base))) {
 		return base;
 	}
 
-	const shortBase = base.slice(0, USER_NAME_MAX_LENGTH - SUFFIX_LENGTH - SUFFIX_SEPARATOR.length);
+	const shortBase: string = base.slice(0, USER_NAME_MAX_LENGTH - SUFFIX_LENGTH - SUFFIX_SEPARATOR.length);
 
-	for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
-		const candidate = `${shortBase}${SUFFIX_SEPARATOR}${randomSuffix()}`;
+	for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+		const candidate: string = `${shortBase}${SUFFIX_SEPARATOR}${randomSuffix()}`;
 
 		if (!(await isTaken(candidate))) {
 			return candidate;
