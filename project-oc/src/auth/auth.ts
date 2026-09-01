@@ -6,10 +6,7 @@ import TwitterProvider from "next-auth/providers/twitter";
 import {PrismaAdapter} from "@auth/prisma-adapter";
 import type {Provider} from "next-auth/providers";
 import db from "@/prisma/client";
-import {withAccelerate} from "@prisma/extension-accelerate";
 import Credentials from "next-auth/providers/credentials"; //https://authjs.dev/getting-started/authentication/credentials
-
-const prisma = await db.$extends(withAccelerate());
 
 const providers: Provider[] = [
 	GoogleProvider<GoogleProfile>({
@@ -75,7 +72,7 @@ export const authProviders = providers
 	.reduce<Record<string, string>>((prev, current) => ({...prev, [current.name]: current.id}), {});
 
 export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
-	adapter: PrismaAdapter(prisma),
+	adapter: PrismaAdapter(db),
 	providers,
 	debug: true,
 	secret: process.env.BETTER_AUTH_SECRET,
