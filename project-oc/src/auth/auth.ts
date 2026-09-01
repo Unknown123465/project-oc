@@ -5,10 +5,12 @@ import KakaoProvider, {type KakaoProfile} from "next-auth/providers/kakao";
 import TwitterProvider from "next-auth/providers/twitter";
 import {PrismaAdapter} from "@auth/prisma-adapter";
 import type {Provider} from "next-auth/providers";
+import type {Adapter, AdapterUser} from "next-auth/adapters";
 import db from "@/prisma/client";
 import Credentials from "next-auth/providers/credentials"; //https://authjs.dev/getting-started/authentication/credentials
 import {verifyPassword} from "./password";
 import {credentialsLogin} from "./credentialsValidator";
+import {resolveUniqueUserName} from "./userName";
 
 /** Credentials 가입자의 Account.provider 값.
  *  Auth.js가 OAuth처럼 정해 주는 값이 없어 직접 정한다. */
@@ -108,8 +110,35 @@ export const authProviders = providers
 	})
 	.reduce<Record<string, string>>((prev, current) => ({...prev, [current.name]: current.id}), {});
 
+const prismaAdapter = PrismaAdapter(db);
+
+/* 소셜 가입자에게도 username을 채운다. Auth.js는 name만 넘겨주고
+   PrismaAdapter는 그대로 저장하므로 여기서 끼어들어야 한다.
+   createUser는 계정을 처음 만들 때만 불리므로 로그인마다 조회하지 않는다. */
+const adapter: Adapter = {
+	...prismaAdapter,
+	async createUser(user) {
+		/* 넘어온 값을 통째로 펼치지 않고 쓸 컬럼만 적는다. id는 적지 않아야
+		   Prisma가 cuid를 만든다(PrismaAdapter 원본도 id를 떼고 넘긴다).
+		   provider profile이 실어 보낸 값이 그대로 컬럼에 닿지도 않는다. */
+		const created = await db.user.create({
+			data: {
+				name: user.name,
+				email: user.email,
+				emailVerified: user.emailVerified,
+				image: user.image,
+				username: await resolveUniqueUserName(user.name),
+			},
+		});
+
+		/* Prisma의 User는 email이 nullable이라 AdapterUser와 어긋난다.
+		   PrismaAdapter 원본도 같은 이유로 내부에서 타입을 풀고 쓴다. */
+		return created as AdapterUser;
+	},
+};
+
 export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
-	adapter: PrismaAdapter(db),
+	adapter,
 	providers,
 	debug: true,
 	secret: process.env.BETTER_AUTH_SECRET,
