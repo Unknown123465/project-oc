@@ -4,7 +4,9 @@ import "server-only";
 import {signIn, authProviders} from "../../auth/auth";
 import {loginForm, LoginFormType} from "./validator";
 
-export async function normalLoginAction(data: LoginFormType) {
+type LoginActionResult = {success: true} | {success: false; message: string};
+
+export async function normalLoginAction(data: LoginFormType): Promise<LoginActionResult> {
 	const check = loginForm.safeParse(data);
 
 	if (!check.success) {
@@ -14,18 +16,9 @@ export async function normalLoginAction(data: LoginFormType) {
 		};
 	}
 
-	const test: number = Math.random();
-
-	if (test > 1) {
-		return {
-			success: true,
-		};
-	} else {
-		return {
-			success: false,
-			message: Math.random().toString(),
-		};
-	}
+	return {
+		success: true,
+	};
 }
 
 export async function googleLoginAction() {
