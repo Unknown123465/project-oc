@@ -7,8 +7,45 @@ import {PrismaAdapter} from "@auth/prisma-adapter";
 import type {Provider} from "next-auth/providers";
 import db from "@/prisma/client";
 import Credentials from "next-auth/providers/credentials"; //https://authjs.dev/getting-started/authentication/credentials
+import {verifyPassword} from "./password";
+import {credentialsLogin} from "./credentialsValidator";
+
+/** Credentials 가입자의 Account.provider 값.
+ *  Auth.js가 OAuth처럼 정해 주는 값이 없어 직접 정한다. */
+export const NORMAL_PROVIDER = "normal";
 
 const providers: Provider[] = [
+	Credentials({
+		credentials: {
+			userName: {label: "사용자 이름", type: "text"},
+			password: {label: "비밀번호", type: "password"},
+		},
+		async authorize(credentials) {
+			const check = credentialsLogin.safeParse(credentials);
+
+			if (!check.success) {
+				return null;
+			}
+
+			const {userName, password} = check.data;
+
+			const user = await db.user.findUnique({
+				where: {username: userName},
+				select: {id: true, name: true, email: true, image: true, password: true},
+			});
+
+			/* 계정이 없을 때도 verifyPassword를 거친다. 안에서 더미 해시와 비교해
+			   없는 계정과 틀린 비밀번호의 응답 시간을 맞춘다. */
+			const matched = await verifyPassword(password, user?.password ?? null);
+
+			if (user === null || !matched) {
+				return null;
+			}
+
+			/* password는 절대 돌려주지 않는다. 여기서 반환한 값이 그대로 토큰에 실린다. */
+			return {id: user.id, name: user.name, email: user.email, image: user.image};
+		},
+	}),
 	GoogleProvider<GoogleProfile>({
 		clientId: process.env.GOOGLE_CLIENT_ID,
 		clientSecret: process.env.GOOGLE_CLIENT_SECRET,
