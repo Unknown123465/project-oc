@@ -1,10 +1,11 @@
 "use client";
 
-import {useCallback, useState, type ChangeEvent, type CSSProperties} from "react";
+import {useCallback, useId, useState, type CSSProperties} from "react";
 import styles from "./styles.module.css";
 import {FieldValues, useController, type UseControllerProps} from "react-hook-form";
 
 interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
+	label: string;
 	width?: number | string;
 	height?: number | string;
 	padding?: number | string;
@@ -13,6 +14,8 @@ interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
 	focusAnimation?: boolean;
 	invalidStyle?: boolean;
 	readOnly?: boolean;
+	describedBy?: string;
+	autoComplete?: string;
 }
 
 interface TextInputProps<K extends FieldValues> extends InputProps<K> {
@@ -20,6 +23,7 @@ interface TextInputProps<K extends FieldValues> extends InputProps<K> {
 }
 
 export function TextInput<K extends FieldValues>({
+	label,
 	width,
 	height,
 	padding,
@@ -29,29 +33,44 @@ export function TextInput<K extends FieldValues>({
 	invalidStyle = true,
 	readOnly,
 	disabled,
+	describedBy,
+	autoComplete,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
 	const {field, fieldState} = useController(fieldProps);
 
+	const id = useId();
+
 	return (
-		<div className={styles.box} style={{width, height, ...style}}>
-			<input
-				{...field}
-				type="text"
-				className={`${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
-				readOnly={readOnly}
-				aria-readonly={readOnly}
-				disabled={disabled}
-				aria-disabled={disabled}
-				style={{padding, borderRadius}}
-				placeholder={placeholder}
-			/>
+		<div className={styles.field} style={{width, ...style}}>
+			<label htmlFor={id} className={styles.label}>
+				{label}
+			</label>
+
+			<div className={styles.box} style={{height}}>
+				<input
+					{...field}
+					id={id}
+					type="text"
+					className={`${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
+					readOnly={readOnly}
+					aria-readonly={readOnly}
+					disabled={disabled}
+					aria-disabled={disabled}
+					aria-invalid={fieldState.invalid}
+					aria-describedby={describedBy}
+					autoComplete={autoComplete}
+					style={{padding, borderRadius}}
+					placeholder={placeholder}
+				/>
+			</div>
 		</div>
 	);
 }
 
 export function PasswordInput<K extends FieldValues>({
+	label,
 	width,
 	height,
 	padding,
@@ -61,37 +80,46 @@ export function PasswordInput<K extends FieldValues>({
 	invalidStyle = true,
 	readOnly,
 	disabled,
+	describedBy,
+	autoComplete,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
 	const {field, fieldState} = useController(fieldProps);
 
+	const id = useId();
+
 	const [show, setShow] = useState<boolean>(false);
 
-	const showChange = useCallback((e: ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
-		const {checked} = e.target;
-
-		setShow(checked);
-	}, []);
+	const showChange = useCallback(() => setShow((prev) => !prev), []);
 
 	return (
-		<div className={styles.box} style={{width, height, ...style}}>
-			<input
-				{...field}
-				type={show ? "text" : "password"}
-				className={`${focusAnimation && fieldState.isTouched ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
-				readOnly={readOnly}
-				aria-readonly={readOnly}
-				disabled={disabled}
-				aria-disabled={disabled}
-				style={{padding, borderRadius}}
-				placeholder={placeholder}
-			/>
-
-			<label className={styles.eye} role="checkbox" aria-checked={show}>
-				<i className={`bi ${show ? "bi-eye" : "bi-eye-slash"}`}></i>
-				<input type="checkbox" name="eye" checked={show} hidden onChange={showChange} />
+		<div className={styles.field} style={{width, ...style}}>
+			<label htmlFor={id} className={styles.label}>
+				{label}
 			</label>
+
+			<div className={styles.box} style={{height}}>
+				<input
+					{...field}
+					id={id}
+					type={show ? "text" : "password"}
+					className={`${styles.has_action} ${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
+					readOnly={readOnly}
+					aria-readonly={readOnly}
+					disabled={disabled}
+					aria-disabled={disabled}
+					aria-invalid={fieldState.invalid}
+					aria-describedby={describedBy}
+					autoComplete={autoComplete}
+					style={{padding, borderRadius}}
+					placeholder={placeholder}
+				/>
+
+				<button type="button" className={styles.eye} aria-pressed={show} aria-label={show ? "비밀번호 숨기기" : "비밀번호 보기"} onClick={showChange}>
+					<i className={`bi ${show ? "bi-eye" : "bi-eye-slash"}`} aria-hidden="true"></i>
+				</button>
+			</div>
 		</div>
 	);
 }
