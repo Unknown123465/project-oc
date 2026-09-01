@@ -1,6 +1,6 @@
 "use client";
 
-import {useCallback} from "react";
+import {useCallback, useId} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useRouter} from "next/navigation";
@@ -13,6 +13,8 @@ import {signupForm, type SignupFormType} from "@/app/signup/validator";
 
 export default function SignupForm() {
 	const router = useRouter();
+
+	const rootErrorId = useId();
 
 	const {
 		control,
@@ -47,23 +49,9 @@ export default function SignupForm() {
 
 	return (
 		<form className={styles.signup_form} onSubmit={handleSubmit(onSubmit)} noValidate>
-			<TextInput
-				name="email"
-				control={control}
-				label="이메일 주소"
-				placeholder="example@email.com"
-				autoComplete="email"
-				showFieldError
-			/>
+			<TextInput name="email" control={control} label="이메일 주소" placeholder="example@email.com" autoComplete="email" showFieldError required />
 
-			<TextInput
-				name="userName"
-				control={control}
-				label="사용자 이름"
-				placeholder="2~20자로 입력하세요"
-				autoComplete="username"
-				showFieldError
-			/>
+			<TextInput name="userName" control={control} label="사용자 이름" placeholder="2~20자로 입력하세요" autoComplete="username" showFieldError required />
 
 			<PasswordInput
 				name="password"
@@ -73,6 +61,7 @@ export default function SignupForm() {
 				autoComplete="new-password"
 				help="6~20자의 영문과 숫자 조합"
 				showFieldError
+				required
 			/>
 
 			<div className={styles.repeat_field}>
@@ -83,9 +72,15 @@ export default function SignupForm() {
 					placeholder="비밀번호를 다시 입력하세요"
 					autoComplete="new-password"
 					showFieldError
+					required
+					describedBy={errors.root ? rootErrorId : undefined}
 				/>
 
-				{errors.root?.message ? <p className={styles.root_error}>{errors.root.message}</p> : null}
+				{/* 서버가 되돌려준 실패는 초점이 옮겨 가지 않아 스스로 읽히지 않는다.
+				    폼에서 유일하게 live 영역이 필요한 자리다. */}
+				<p id={rootErrorId} className={styles.root_error} role="alert" aria-live="polite">
+					{errors.root?.message}
+				</p>
 			</div>
 
 			<SubmitButton className={styles.submit_button} disabled={isSubmitting}>

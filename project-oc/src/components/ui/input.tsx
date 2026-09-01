@@ -23,6 +23,13 @@ interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
 	/** 입력 아래에 이 필드의 검증 오류를 직접 출력한다.
 	 *  로그인처럼 오류를 폼 한곳에 모으는 화면은 끈 채로 둔다. */
 	showFieldError?: boolean;
+	required?: boolean;
+}
+
+/** 입력이 가리켜야 할 설명 요소들을 aria-describedby 한 줄로 합친다.
+ *  describedBy(바깥에서 넘긴 것)와 컴포넌트가 직접 그리는 안내/오류가 함께 있을 수 있다. */
+function joinDescribedBy(ids: (string | undefined)[]): string | undefined {
+	return ids.filter(Boolean).join(" ") || undefined;
 }
 
 interface TextInputProps<K extends FieldValues> extends InputProps<K> {
@@ -46,6 +53,7 @@ export function TextInput<K extends FieldValues>({
 	autoComplete,
 	help,
 	showFieldError = false,
+	required,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
@@ -56,6 +64,10 @@ export function TextInput<K extends FieldValues>({
 	const fieldErrorId = useId();
 
 	const inputId = id ?? defaultId;
+
+	const fieldErrorMessage = showFieldError ? fieldState.error?.message : undefined;
+
+	const ariaDescribedBy = joinDescribedBy([describedBy, help ? helpId : undefined, fieldErrorMessage ? fieldErrorId : undefined]);
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
@@ -73,7 +85,8 @@ export function TextInput<K extends FieldValues>({
 					disabled={disabled}
 					aria-disabled={disabled}
 					aria-invalid={fieldState.invalid}
-					aria-describedby={describedBy}
+					aria-describedby={ariaDescribedBy}
+					aria-required={required}
 					autoComplete={autoComplete}
 					style={{padding, borderRadius}}
 					placeholder={placeholder}
@@ -86,9 +99,12 @@ export function TextInput<K extends FieldValues>({
 				</p>
 			) : null}
 
-			{showFieldError && fieldState.error?.message ? (
+			{/* 오류가 여러 필드에서 한꺼번에 나므로 필드마다 role="alert"를 두지 않는다.
+			    제출 실패 시 react-hook-form이 첫 오류 필드로 초점을 옮기고,
+			    그때 aria-describedby로 연결된 이 문구가 읽힌다. */}
+			{fieldErrorMessage ? (
 				<p id={fieldErrorId} className={styles.error}>
-					{fieldState.error.message}
+					{fieldErrorMessage}
 				</p>
 			) : null}
 		</div>
@@ -112,6 +128,7 @@ export function PasswordInput<K extends FieldValues>({
 	autoComplete,
 	help,
 	showFieldError = false,
+	required,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
@@ -124,6 +141,10 @@ export function PasswordInput<K extends FieldValues>({
 	const [show, setShow] = useState<boolean>(false);
 
 	const inputId = id ?? defaultId;
+
+	const fieldErrorMessage = showFieldError ? fieldState.error?.message : undefined;
+
+	const ariaDescribedBy = joinDescribedBy([describedBy, help ? helpId : undefined, fieldErrorMessage ? fieldErrorId : undefined]);
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
@@ -141,7 +162,8 @@ export function PasswordInput<K extends FieldValues>({
 					disabled={disabled}
 					aria-disabled={disabled}
 					aria-invalid={fieldState.invalid}
-					aria-describedby={describedBy}
+					aria-describedby={ariaDescribedBy}
+					aria-required={required}
 					autoComplete={autoComplete}
 					style={{padding, borderRadius}}
 					placeholder={placeholder}
@@ -158,9 +180,12 @@ export function PasswordInput<K extends FieldValues>({
 				</p>
 			) : null}
 
-			{showFieldError && fieldState.error?.message ? (
+			{/* 오류가 여러 필드에서 한꺼번에 나므로 필드마다 role="alert"를 두지 않는다.
+			    제출 실패 시 react-hook-form이 첫 오류 필드로 초점을 옮기고,
+			    그때 aria-describedby로 연결된 이 문구가 읽힌다. */}
+			{fieldErrorMessage ? (
 				<p id={fieldErrorId} className={styles.error}>
-					{fieldState.error.message}
+					{fieldErrorMessage}
 				</p>
 			) : null}
 		</div>
