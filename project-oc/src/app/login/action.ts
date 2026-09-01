@@ -4,31 +4,24 @@ import "server-only";
 import {signIn, authProviders} from "../../auth/auth";
 import {loginForm, LoginFormType} from "./validator";
 
-export async function normalLoginAction(data: LoginFormType) {
+type LoginActionResult = {success: true} | {success: false; message: string};
+
+export async function normalLoginAction(data: LoginFormType): Promise<LoginActionResult> {
 	const check = loginForm.safeParse(data);
 
-	if (!check.success) {
-		return {
-			success: false,
-			message: check.error.issues[0].message,
-		};
-	}
-
-	const test: number = Math.random();
-
-	if (test > 1) {
+	if (check.success) {
 		return {
 			success: true,
 		};
 	} else {
 		return {
 			success: false,
-			message: Math.random().toString(),
+			message: check.error.issues[0].message,
 		};
 	}
 }
 
-export async function googleLoginAction() {
+export async function googleLoginAction(): Promise<void> {
 	const id = authProviders.Google;
 
 	await signIn(id, {
@@ -36,7 +29,7 @@ export async function googleLoginAction() {
 	});
 }
 
-export async function naverLoginAction() {
+export async function naverLoginAction(): Promise<void> {
 	const id = authProviders.Naver;
 
 	await signIn(id, {
@@ -44,7 +37,7 @@ export async function naverLoginAction() {
 	});
 }
 
-export async function kakaoLoginAction() {
+export async function kakaoLoginAction(): Promise<void> {
 	const id = authProviders.Kakao;
 
 	await signIn(id, {
@@ -52,7 +45,7 @@ export async function kakaoLoginAction() {
 	});
 }
 
-export async function twitterLoginAction() {
+export async function twitterLoginAction(): Promise<void> {
 	const id = authProviders.Twitter;
 
 	await signIn(id, {

@@ -1,63 +1,80 @@
+.field {
+	display: grid;
+	gap: 8px;
+
+	& > label {
+		color: var(--title-text);
+		font-size: 13.5px;
+		font-weight: 700;
+	}
+}
+
 .box {
+	width: 100%;
+	height: 46px;
 	position: relative;
 
-	&:has(input:is([type="text"], [type="password"])) {
-		width: 100%;
-		height: 46px;
-	}
-
 	& input {
+		width: 100%;
+		height: 100%;
+		padding: 0 15px;
 		color: var(--input-text);
 		font-size: 15px;
 		font-weight: 400;
+		background-color: var(--input-back);
+		border: 1px solid var(--input-line);
+		border-radius: 10px;
 
-		&[type="text"],
-		&[type="password"] {
-			width: 100%;
-			height: 100%;
-			padding: 0 15px;
-			background-color: var(--input-back);
-			border: 1px solid var(--input-line);
-			transition:
-				box-shadow 0.15s,
-				border-color 0.15s;
-			border-radius: 10px;
+		&::placeholder {
+			color: var(--muted);
+		}
 
-			&:not(.invalid).focus_animation:focus {
-				box-shadow: 0 0 7px var(--personal);
-				border-color: var(--input-select-line);
-				outline: 0;
-			}
+		&.has_action {
+			padding-right: 46px;
+		}
 
-			&:focus-visible {
-				outline: 0;
-			}
+		&:not(.invalid).focus_animation:focus {
+			border-color: var(--input-select-line);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--personal) 45%, transparent);
+		}
 
-			&.invalid {
-				box-shadow: 0 0 6px red;
-			}
+		&:focus {
+			outline: 0;
+		}
+
+		&.invalid {
+			border-color: var(--error-text);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--error-text) 22%, transparent);
 		}
 	}
 
 	& .eye {
-		min-height: 15px;
-		height: 70%;
-		aspect-ratio: 1;
+		width: 34px;
+		height: 34px;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		position: absolute;
-		right: 7px;
-		bottom: 15%;
-		border-radius: 10px;
-		font-size: 115%;
-		color: var(--text-thin-2);
+		right: 6px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: var(--muted);
+		font-size: 15px;
+		line-height: 0;
 		background-color: transparent;
+		border: 0;
+		border-radius: 8px;
 		cursor: pointer;
 
-		&:hover {
-			color: black;
-			background-color: var(--button-back-hover);
+		&:hover,
+		&[aria-pressed="true"] {
+			color: var(--input-text);
+			background-color: var(--card-dark-2);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--input-select-line);
+			outline-offset: 1px;
 		}
 	}
 }
@@ -73,7 +90,7 @@
 	font-size: 15px;
 	font-weight: 750;
 	letter-spacing: -0.05em;
-	word-break: break-all;
+	word-break: keep-all;
 	border: 1px solid;
 	border-radius: 10px;
 
@@ -88,23 +105,35 @@
 		}
 	}
 
+	/* 기본 제출 버튼은 보조 동작(소셜 로그인)용 중립 스타일.
+	   페이지당 하나뿐인 주요 동작에만 .attention을 얹어 색을 준다. */
 	&.submit {
-		color: var(--button-submit-text);
-		border-color: var(--personal-dark);
-
 		&:enabled {
+			color: var(--button-normal-text);
+			border-color: var(--button-normal-line);
+			background-color: var(--button-normal-back);
+
+			&:hover {
+				border-color: var(--button-normal-line-hover);
+				background-color: var(--button-normal-back-hover);
+			}
+		}
+
+		&.attention:enabled {
+			color: var(--button-submit-text);
+			border-color: var(--button-submit-line);
 			background-color: var(--button-submit-back);
 
 			&:hover {
-				background-color: #ffd23f;
+				background-color: var(--personal-dark);
 			}
 		}
 
 		&:disabled {
-			color: var(--submit-disabled-text);
-			background-color: var(--submit-disabled-back);
-			border-color: var(--submit-disabled-line);
-			cursor: no-drop;
+			color: var(--input-disabled);
+			border-color: var(--line-color-1);
+			background-color: var(--card-dark-2);
+			cursor: not-allowed;
 		}
 	}
 
