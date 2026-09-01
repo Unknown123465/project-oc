@@ -14,7 +14,22 @@ import {signupForm, type SignupFormType} from "@/app/signup/validator";
 export default function SignupForm() {
 	const router = useRouter();
 
-	const rootErrorId = useId();
+	const baseId = useId();
+
+	/* 안내와 오류 문구는 폼이 직접 그린다. 입력 컴포넌트는 값과 라벨만 맡고
+	   무엇을 어디에 낼지는 이 폼의 몫이다. */
+	const errorId = {
+		email: `${baseId}-email-error`,
+		userName: `${baseId}-user-name-error`,
+		password: `${baseId}-password-error`,
+		passwordRepeat: `${baseId}-password-repeat-error`,
+		root: `${baseId}-root-error`,
+	};
+
+	const passwordHelpId = `${baseId}-password-help`;
+
+	/** 입력이 가리킬 설명 요소가 여럿일 때 aria-describedby 한 줄로 잇는다. */
+	const describedBy = (...ids: (string | false | undefined)[]) => ids.filter(Boolean).join(" ") || undefined;
 
 	const {
 		control,
@@ -49,36 +64,84 @@ export default function SignupForm() {
 
 	return (
 		<form className={styles.signup_form} onSubmit={handleSubmit(onSubmit)} noValidate>
-			<TextInput name="email" control={control} label="이메일 주소" placeholder="example@email.com" autoComplete="email" showFieldError required />
+			<div className={styles.field_group}>
+				<TextInput
+					name="email"
+					control={control}
+					label="이메일 주소"
+					placeholder="example@email.com"
+					autoComplete="email"
+					required
+					describedBy={errors.email ? errorId.email : undefined}
+				/>
 
-			<TextInput name="userName" control={control} label="사용자 이름" placeholder="2~20자로 입력하세요" autoComplete="username" showFieldError required />
+				{errors.email?.message ? (
+					<p id={errorId.email} className={styles.field_error}>
+						{errors.email.message}
+					</p>
+				) : null}
+			</div>
 
-			<PasswordInput
-				name="password"
-				control={control}
-				label="비밀번호"
-				placeholder="영문과 숫자를 조합해 주세요"
-				autoComplete="new-password"
-				help="6~20자의 영문과 숫자 조합"
-				showFieldError
-				required
-			/>
+			<div className={styles.field_group}>
+				<TextInput
+					name="userName"
+					control={control}
+					label="사용자 이름"
+					placeholder="2~20자로 입력하세요"
+					autoComplete="username"
+					required
+					describedBy={errors.userName ? errorId.userName : undefined}
+				/>
 
-			<div className={styles.repeat_field}>
+				{errors.userName?.message ? (
+					<p id={errorId.userName} className={styles.field_error}>
+						{errors.userName.message}
+					</p>
+				) : null}
+			</div>
+
+			<div className={styles.field_group}>
+				<PasswordInput
+					name="password"
+					control={control}
+					label="비밀번호"
+					placeholder="영문과 숫자를 조합해 주세요"
+					autoComplete="new-password"
+					required
+					describedBy={describedBy(passwordHelpId, errors.password && errorId.password)}
+				/>
+
+				<p id={passwordHelpId} className={styles.field_help}>
+					6~20자의 영문과 숫자 조합
+				</p>
+
+				{errors.password?.message ? (
+					<p id={errorId.password} className={styles.field_error}>
+						{errors.password.message}
+					</p>
+				) : null}
+			</div>
+
+			<div className={styles.field_group}>
 				<PasswordInput
 					name="passwordRepeat"
 					control={control}
 					label="비밀번호 확인"
 					placeholder="비밀번호를 다시 입력하세요"
 					autoComplete="new-password"
-					showFieldError
 					required
-					describedBy={errors.root ? rootErrorId : undefined}
+					describedBy={describedBy(errors.passwordRepeat && errorId.passwordRepeat, errors.root && errorId.root)}
 				/>
+
+				{errors.passwordRepeat?.message ? (
+					<p id={errorId.passwordRepeat} className={styles.field_error}>
+						{errors.passwordRepeat.message}
+					</p>
+				) : null}
 
 				{/* 서버가 되돌려준 실패는 초점이 옮겨 가지 않아 스스로 읽히지 않는다.
 				    폼에서 유일하게 live 영역이 필요한 자리다. */}
-				<p id={rootErrorId} className={styles.root_error} role="alert" aria-live="polite">
+				<p id={errorId.root} className={styles.field_error} role="alert" aria-live="polite">
 					{errors.root?.message}
 				</p>
 			</div>

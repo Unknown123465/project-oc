@@ -16,21 +16,15 @@ interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
 	focusAnimation?: boolean;
 	invalidStyle?: boolean;
 	readOnly?: boolean;
+	/** 입력을 설명하는 요소들의 id. 여러 개면 공백으로 이어 넘긴다. */
 	describedBy?: string;
 	autoComplete?: string;
-	/** 입력 아래에 항상 보이는 안내 문구. */
-	help?: string;
-	/** 입력 아래에 이 필드의 검증 오류를 직접 출력한다.
-	 *  로그인처럼 오류를 폼 한곳에 모으는 화면은 끈 채로 둔다. */
-	showFieldError?: boolean;
 	required?: boolean;
 }
 
-/** 입력이 가리켜야 할 설명 요소들을 aria-describedby 한 줄로 합친다.
- *  describedBy(바깥에서 넘긴 것)와 컴포넌트가 직접 그리는 안내/오류가 함께 있을 수 있다. */
-function joinDescribedBy(ids: (string | undefined)[]): string | undefined {
-	return ids.filter(Boolean).join(" ") || undefined;
-}
+/* 안내 문구와 검증 오류는 이 파일에서 그리지 않는다. 무엇을 어디에 어떤 순서로
+   낼지는 폼마다 다르므로 호출하는 쪽이 입력 아래에 직접 렌더하고,
+   그 요소의 id를 describedBy로 넘겨 입력과 연결한다. */
 
 interface TextInputProps<K extends FieldValues> extends InputProps<K> {
 	placeholder?: string;
@@ -51,8 +45,6 @@ export function TextInput<K extends FieldValues>({
 	disabled,
 	describedBy,
 	autoComplete,
-	help,
-	showFieldError = false,
 	required,
 	placeholder,
 	...fieldProps
@@ -60,14 +52,8 @@ export function TextInput<K extends FieldValues>({
 	const {field, fieldState} = useController(fieldProps);
 
 	const defaultId = useId();
-	const helpId = useId();
-	const fieldErrorId = useId();
 
 	const inputId = id ?? defaultId;
-
-	const fieldErrorMessage = showFieldError ? fieldState.error?.message : undefined;
-
-	const ariaDescribedBy = joinDescribedBy([describedBy, help ? helpId : undefined, fieldErrorMessage ? fieldErrorId : undefined]);
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
@@ -85,28 +71,13 @@ export function TextInput<K extends FieldValues>({
 					disabled={disabled}
 					aria-disabled={disabled}
 					aria-invalid={fieldState.invalid}
-					aria-describedby={ariaDescribedBy}
+					aria-describedby={describedBy}
 					aria-required={required}
 					autoComplete={autoComplete}
 					style={{padding, borderRadius}}
 					placeholder={placeholder}
 				/>
 			</div>
-
-			{help ? (
-				<p id={helpId} className={styles.help}>
-					{help}
-				</p>
-			) : null}
-
-			{/* 오류가 여러 필드에서 한꺼번에 나므로 필드마다 role="alert"를 두지 않는다.
-			    제출 실패 시 react-hook-form이 첫 오류 필드로 초점을 옮기고,
-			    그때 aria-describedby로 연결된 이 문구가 읽힌다. */}
-			{fieldErrorMessage ? (
-				<p id={fieldErrorId} className={styles.error}>
-					{fieldErrorMessage}
-				</p>
-			) : null}
 		</div>
 	);
 }
@@ -126,8 +97,6 @@ export function PasswordInput<K extends FieldValues>({
 	disabled,
 	describedBy,
 	autoComplete,
-	help,
-	showFieldError = false,
 	required,
 	placeholder,
 	...fieldProps
@@ -135,16 +104,10 @@ export function PasswordInput<K extends FieldValues>({
 	const {field, fieldState} = useController(fieldProps);
 
 	const defaultId = useId();
-	const helpId = useId();
-	const fieldErrorId = useId();
 
 	const [show, setShow] = useState<boolean>(false);
 
 	const inputId = id ?? defaultId;
-
-	const fieldErrorMessage = showFieldError ? fieldState.error?.message : undefined;
-
-	const ariaDescribedBy = joinDescribedBy([describedBy, help ? helpId : undefined, fieldErrorMessage ? fieldErrorId : undefined]);
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
@@ -162,7 +125,7 @@ export function PasswordInput<K extends FieldValues>({
 					disabled={disabled}
 					aria-disabled={disabled}
 					aria-invalid={fieldState.invalid}
-					aria-describedby={ariaDescribedBy}
+					aria-describedby={describedBy}
 					aria-required={required}
 					autoComplete={autoComplete}
 					style={{padding, borderRadius}}
@@ -173,21 +136,6 @@ export function PasswordInput<K extends FieldValues>({
 					<i className={`bi ${show ? "bi-eye" : "bi-eye-slash"}`} aria-hidden="true"></i>
 				</button>
 			</div>
-
-			{help ? (
-				<p id={helpId} className={styles.help}>
-					{help}
-				</p>
-			) : null}
-
-			{/* 오류가 여러 필드에서 한꺼번에 나므로 필드마다 role="alert"를 두지 않는다.
-			    제출 실패 시 react-hook-form이 첫 오류 필드로 초점을 옮기고,
-			    그때 aria-describedby로 연결된 이 문구가 읽힌다. */}
-			{fieldErrorMessage ? (
-				<p id={fieldErrorId} className={styles.error}>
-					{fieldErrorMessage}
-				</p>
-			) : null}
 		</div>
 	);
 }

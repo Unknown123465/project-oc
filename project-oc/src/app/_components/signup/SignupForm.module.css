@@ -4,14 +4,24 @@
 	gap: 18px;
 }
 
-.repeat_field {
+/* 입력 컴포넌트와 그 아래 오류 문구를 한 덩어리로 묶는다.
+   간격은 입력 컴포넌트 안쪽(라벨-입력)과 같은 8px. */
+.field_group {
 	display: grid;
 	gap: 8px;
 }
 
-/* role="alert"가 붙어 있어 요소를 조건부로 그리면 live 영역이 매번 새로 만들어져
-   읽히지 않을 수 있다. 항상 두고 비었을 때만 감춘다. */
-.root_error {
+.field_help {
+	margin: 0;
+	color: var(--muted);
+	font-size: 12.5px;
+	line-height: 1.5;
+	word-break: keep-all;
+}
+
+/* root 오류에는 role="alert"가 붙어 있어 요소를 조건부로 그리면 live 영역이
+   매번 새로 만들어져 읽히지 않을 수 있다. 항상 두고 비었을 때만 감춘다. */
+.field_error {
 	margin: 0;
 	color: var(--error-text);
 	font-size: 13px;
