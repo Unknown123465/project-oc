@@ -39,7 +39,7 @@ async function isTaken(userName: string): Promise<boolean> {
  * 유일성이 보장되지 않는다. 최종 방어선은 username 컬럼의 UNIQUE 제약이다.
  */
 export async function resolveUniqueUserName(name: string | null | undefined): Promise<string> {
-	const base: string = (name ?? "").trim().slice(0, USER_NAME_MAX_LENGTH) || FALLBACK_BASE;
+	const base: string = typeof name === "string" && name.trim() ? name.trim().slice(0, USER_NAME_MAX_LENGTH) || FALLBACK_BASE : FALLBACK_BASE;
 
 	if (!(await isTaken(base))) {
 		return base;
