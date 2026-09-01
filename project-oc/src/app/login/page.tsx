@@ -15,16 +15,7 @@ export default async function Login() {
 
 	return (
 		<main className={styles.main}>
-			<AuthAside
-				title={
-					<>
-						다시 만난
-						<br />
-						당신의 캐릭터.
-					</>
-				}
-				description="작성하던 프로필을 이어서 완성하고, 독자에게 도착한 좋아요와 코멘트를 확인하세요."
-			/>
+			<AuthAside title={`다시 만난\n당신의 캐릭터.`} description="작성하던 프로필을 이어서 완성하고, 독자에게 도착한 좋아요와 코멘트를 확인하세요." />
 
 			<section className={styles.form_area}>
 				<article className={styles.form_box}>

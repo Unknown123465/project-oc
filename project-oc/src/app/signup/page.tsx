@@ -15,16 +15,7 @@ export default async function Signup() {
 
 	return (
 		<main className={styles.main}>
-			<AuthAside
-				title={
-					<>
-						몇 가지만 적으면
-						<br />
-						프로필 완성.
-					</>
-				}
-				description="프로젝트 OC에 가입하고 첫 번째 캐릭터 프로필을 만들어 보세요. 기본 기능은 무료입니다."
-			/>
+			<AuthAside title={`몇 가지만 적으면\n프로필 완성.`} description="프로젝트 OC에 가입하고 첫 번째 캐릭터 프로필을 만들어 보세요. 기본 기능은 무료입니다." />
 
 			<section className={styles.form_area}>
 				<article className={styles.form_box}>
