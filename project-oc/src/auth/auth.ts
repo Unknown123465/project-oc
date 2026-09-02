@@ -16,6 +16,8 @@ import {resolveUniqueUserName} from "./userName";
  *  Auth.js가 OAuth처럼 정해 주는 값이 없어 직접 정한다. */
 export const NORMAL_PROVIDER: string = "normal";
 
+const SESSION_MAX_AGE_DAYS: number = 7;
+
 const providers: Provider[] = [
 	Credentials({
 		credentials: {
@@ -170,6 +172,8 @@ export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
 	   Session 테이블만 쓰이지 않게 되고 User / Account 적재는 adapter가 그대로 맡는다. */
 	session: {
 		strategy: "jwt",
+		/* 세션 최대 유지 시간 (단위: 초) */
+		maxAge: 60 * 60 * 24 * SESSION_MAX_AGE_DAYS,
 	},
 	callbacks: {
 		signIn({account, profile}) {
