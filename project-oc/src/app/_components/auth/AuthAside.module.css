@@ -24,6 +24,7 @@
 		font-weight: 900;
 		line-height: 1.1;
 		letter-spacing: -0.07em;
+		white-space: pre-wrap;
 	}
 
 	& p {

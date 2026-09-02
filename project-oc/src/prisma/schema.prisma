@@ -16,6 +16,8 @@ model User {
   email         String?         @unique
   emailVerified DateTime?
   image         String?
+  // Credentials 가입자만 채워지는 bcrypt 해시. 소셜 가입자는 null로 남는다.
+  password      String?         @db.VarChar(100)
   accounts      Account[]
   sessions      Session[]
   Authenticator Authenticator[]

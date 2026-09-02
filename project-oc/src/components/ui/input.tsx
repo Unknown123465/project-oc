@@ -16,9 +16,15 @@ interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
 	focusAnimation?: boolean;
 	invalidStyle?: boolean;
 	readOnly?: boolean;
+	/** 입력을 설명하는 요소들의 id. 여러 개면 공백으로 이어 넘긴다. */
 	describedBy?: string;
 	autoComplete?: string;
+	required?: boolean;
 }
+
+/* 안내 문구와 검증 오류는 이 파일에서 그리지 않는다. 무엇을 어디에 어떤 순서로
+   낼지는 폼마다 다르므로 호출하는 쪽이 입력 아래에 직접 렌더하고,
+   그 요소의 id를 describedBy로 넘겨 입력과 연결한다. */
 
 interface TextInputProps<K extends FieldValues> extends InputProps<K> {
 	placeholder?: string;
@@ -39,6 +45,7 @@ export function TextInput<K extends FieldValues>({
 	disabled,
 	describedBy,
 	autoComplete,
+	required,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
@@ -65,6 +72,7 @@ export function TextInput<K extends FieldValues>({
 					aria-disabled={disabled}
 					aria-invalid={fieldState.invalid}
 					aria-describedby={describedBy}
+					aria-required={required}
 					autoComplete={autoComplete}
 					style={{padding, borderRadius}}
 					placeholder={placeholder}
@@ -89,6 +97,7 @@ export function PasswordInput<K extends FieldValues>({
 	disabled,
 	describedBy,
 	autoComplete,
+	required,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
@@ -117,6 +126,7 @@ export function PasswordInput<K extends FieldValues>({
 					aria-disabled={disabled}
 					aria-invalid={fieldState.invalid}
 					aria-describedby={describedBy}
+					aria-required={required}
 					autoComplete={autoComplete}
 					style={{padding, borderRadius}}
 					placeholder={placeholder}

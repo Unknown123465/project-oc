@@ -1,9 +1,10 @@
 import {LoginForm} from "./client";
 import styles from "./page.module.css";
-import AuthAside from "../_components/login/AuthAside";
+import AuthAside from "../_components/auth/AuthAside";
 import SocialLoginList from "../_components/login/SocialLoginList";
 import {auth} from "@/auth/auth";
 import {redirect} from "next/navigation";
+import Link from "next/link";
 
 export default async function Login() {
 	const authInfo = await auth();
@@ -14,7 +15,7 @@ export default async function Login() {
 
 	return (
 		<main className={styles.main}>
-			<AuthAside />
+			<AuthAside title={`다시 만난\n당신의 캐릭터.`} description="작성하던 프로필을 이어서 완성하고, 독자에게 도착한 좋아요와 코멘트를 확인하세요." />
 
 			<section className={styles.form_area}>
 				<article className={styles.form_box}>
@@ -35,9 +36,7 @@ export default async function Login() {
 							계정을 잊으셨나요?
 						</button>
 
-						<button type="button" disabled>
-							처음이신가요?
-						</button>
+						<Link href="/signup">처음이신가요?</Link>
 					</div>
 				</article>
 			</section>

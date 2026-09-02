@@ -145,3 +145,34 @@
 		}
 	}
 }
+
+/* a 요소에는 :enabled와 button 전역 transition이 걸리지 않아 색과 반응을 따로 적는다. */
+.anchor {
+	color: var(--button-normal-text);
+	border-color: var(--button-normal-line);
+	background-color: var(--button-normal-back);
+	transition:
+		background-color 0.18s ease,
+		border-color 0.18s ease,
+		transform 0.18s ease,
+		color 0.18s ease;
+
+	&:hover {
+		border-color: var(--button-normal-line-hover);
+		background-color: var(--button-normal-back-hover);
+	}
+
+	&.attention {
+		color: var(--button-submit-text);
+		border-color: var(--button-submit-line);
+		background-color: var(--button-submit-back);
+
+		&:hover {
+			background-color: var(--personal-dark);
+		}
+	}
+
+	&:active {
+		transform: scale(0.98);
+	}
+}

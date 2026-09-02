@@ -26,64 +26,28 @@
 	}
 }
 
-.login_form {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
-
-	& .form_error {
-		/* 메시지가 없을 때도 자리를 잡아 두어 오류 출력 시 폼이 밀리지 않게 함 */
-		min-height: 1.45em;
-		margin: 0;
-		color: var(--error-text);
-		font-size: 13px;
-		font-weight: 650;
-		line-height: 1.45;
-		word-break: keep-all;
-	}
-}
-
-.divider {
-	display: grid;
-	grid-template-columns: 1fr auto 1fr;
-	align-items: center;
-	gap: 14px;
-	margin: 24px 0;
+.terms {
+	margin: 18px 0 0;
 	color: var(--muted);
-	font-size: 12px;
-	font-weight: 600;
-
-	&::before,
-	&::after {
-		content: "";
-		height: 1px;
-		background-color: var(--line-color-1);
-	}
+	font-size: 12.5px;
+	line-height: 1.6;
+	word-break: keep-all;
 }
 
 .sub_links {
-	margin-top: 26px;
+	margin-top: 22px;
 	display: flex;
-	justify-content: space-between;
-	gap: 12px;
+	justify-content: center;
 
-	& button,
 	& a {
-		padding: 0;
 		color: var(--muted);
 		font-size: 13px;
 		font-weight: 650;
-		background-color: transparent;
-		border: 0;
 
-		&:disabled {
-			cursor: not-allowed;
+		&:hover {
+			color: var(--title-text);
+			text-decoration: underline;
 		}
-	}
-
-	& a:hover {
-		color: var(--title-text);
-		text-decoration: underline;
 	}
 }
 
