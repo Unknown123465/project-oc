@@ -1,1 +1,494 @@
-/* 레이아웃은 다음 커밋에서 작성. 지금은 뼈대의 className만 잡아 둔 상태. */
+.main {
+	width: calc(100% - 40px);
+	max-width: var(--page-width);
+	margin: 40px auto 80px;
+}
+
+.heading {
+	margin-bottom: 32px;
+
+	& h1 {
+		margin: 0 0 8px;
+		color: var(--title-text);
+		font-size: 32px;
+		font-weight: 900;
+		letter-spacing: -0.06em;
+	}
+}
+
+.subtitle {
+	margin: 0;
+	color: var(--muted);
+	font-size: 15px;
+}
+
+.mobile_tabs {
+	display: none;
+}
+
+.layout {
+	display: grid;
+	gap: 42px;
+	align-items: start;
+}
+
+.form {
+	min-width: 0;
+}
+
+.section {
+	padding: 26px 0;
+	border-bottom: 1px solid var(--line-color-1);
+
+	&:first-child {
+		padding-top: 0;
+	}
+
+	& h2 {
+		margin: 0 0 18px;
+		color: var(--title-text);
+		font-size: 17px;
+		font-weight: 800;
+		letter-spacing: -0.04em;
+	}
+}
+
+.required {
+	color: var(--error-text);
+}
+
+.field {
+	display: grid;
+	gap: 8px;
+	margin-bottom: 18px;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+
+	& label {
+		color: var(--title-text);
+		font-size: 13.5px;
+		font-weight: 700;
+	}
+}
+
+.field_row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 18px;
+	margin-bottom: 18px;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.field_help {
+	margin: 0;
+	color: var(--muted);
+	font-size: 12.5px;
+}
+
+.input,
+.textarea {
+	width: 100%;
+	padding: 12px 15px;
+	color: var(--input-text);
+	font: inherit;
+	font-size: 15px;
+	background-color: var(--input-back);
+	border: 1px solid var(--input-line);
+	border-radius: var(--radius-2);
+
+	&::placeholder {
+		color: var(--muted);
+	}
+
+	&:focus {
+		outline: 0;
+		border-color: var(--input-select-line);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--personal) 45%, transparent);
+	}
+}
+
+.textarea {
+	resize: vertical;
+	min-height: 90px;
+	line-height: 1.5;
+}
+
+.color_input {
+	width: 64px;
+	height: 44px;
+	padding: 5px;
+	background-color: var(--input-back);
+	border: 1px solid var(--input-line);
+	border-radius: var(--radius-2);
+	cursor: pointer;
+}
+
+.upload_zone {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 6px;
+	text-align: center;
+	color: var(--muted);
+	background-color: var(--card-dark-2);
+	border: 1px dashed var(--line-color-2);
+	border-radius: var(--radius-2);
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+}
+
+.upload_preview {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	position: absolute;
+	inset: 0;
+}
+
+.upload_prompt {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	position: relative;
+
+	& strong {
+		color: var(--title-text);
+		font-size: 15px;
+	}
+
+	& span {
+		font-size: 13px;
+	}
+}
+
+.upload_meta {
+	margin-top: 12px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: var(--muted);
+	font-size: 13px;
+}
+
+.text_link {
+	margin-left: auto;
+	padding: 0;
+	color: var(--personal-dark);
+	font-size: 13px;
+	font-weight: 700;
+	background: none;
+	border: 0;
+	cursor: pointer;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.optional_fields {
+	margin-top: 22px;
+
+	& summary {
+		color: var(--title-text);
+		font-size: 14px;
+		font-weight: 700;
+		cursor: pointer;
+	}
+}
+
+.optional_fields_body {
+	margin-top: 18px;
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+.warning {
+	margin: -6px 0 16px;
+	color: var(--error-text);
+	font-size: 13px;
+}
+
+.choice_list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.choice_card {
+	padding: 14px 16px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background-color: var(--card-dark-1);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-2);
+	cursor: pointer;
+
+	& input {
+		margin: 0;
+		accent-color: var(--personal-dark);
+	}
+
+	& strong {
+		display: block;
+		color: var(--title-text);
+		font-size: 14.5px;
+		font-weight: 700;
+	}
+
+	& small {
+		color: var(--muted);
+		font-size: 12.5px;
+	}
+
+	&:has(input:checked) {
+		border-color: var(--personal-dark);
+		background-color: var(--personal-bright);
+	}
+}
+
+.actions {
+	margin-top: 32px;
+	display: flex;
+	gap: 12px;
+}
+
+.submit_button,
+.draft_button {
+	flex: 1;
+	min-height: 48px;
+	font-size: 15px;
+	font-weight: 750;
+	border-radius: var(--radius-2);
+	border: 1px solid;
+	cursor: pointer;
+}
+
+.submit_button {
+	color: var(--button-submit-text);
+	background-color: var(--button-submit-back);
+	border-color: var(--button-submit-line);
+
+	&:hover {
+		background-color: var(--personal-dark);
+	}
+}
+
+.draft_button {
+	color: var(--button-normal-text);
+	background-color: var(--button-normal-back);
+	border-color: var(--button-normal-line);
+
+	&:hover {
+		border-color: var(--button-normal-line-hover);
+		background-color: var(--button-normal-back-hover);
+	}
+}
+
+.preview {
+	position: sticky;
+	top: calc(var(--header-height) + 24px);
+}
+
+.preview_label {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 12px;
+	color: var(--muted);
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.preview_sheet {
+	background-color: var(--card-dark-1);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-3);
+	overflow: hidden;
+}
+
+.preview_image {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	background-color: var(--card-dark-2);
+}
+
+.preview_body {
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.preview_identity {
+	& h2 {
+		margin: 0 0 6px;
+		color: var(--title-text);
+		font-size: 24px;
+		font-weight: 800;
+		letter-spacing: -0.04em;
+	}
+
+	& p {
+		margin: 0;
+		color: var(--muted);
+		font-size: 14px;
+	}
+}
+
+.preview_facts {
+	margin: 0;
+	padding: 16px;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+	gap: 14px;
+	background-color: var(--card-dark-2);
+	border-radius: var(--radius-2);
+}
+
+.fact {
+	& dt {
+		margin: 0 0 4px;
+		color: var(--muted);
+		font-size: 12px;
+	}
+
+	& dd {
+		margin: 0;
+		color: var(--title-text);
+		font-size: 14px;
+		font-weight: 700;
+	}
+}
+
+.preview_blocks {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 14px;
+}
+
+.preview_block,
+.preview_block_wide {
+	padding: 16px;
+	background-color: var(--card-dark-2);
+	border-radius: var(--radius-2);
+
+	& h3 {
+		margin: 0 0 8px;
+		color: var(--title-text);
+		font-size: 13px;
+		font-weight: 700;
+	}
+
+	& p,
+	& ul {
+		margin: 0;
+		color: var(--sub-text);
+		font-size: 13.5px;
+		line-height: 1.6;
+	}
+
+	& ul {
+		padding-left: 18px;
+	}
+}
+
+.preview_block_wide {
+	grid-column: 1 / -1;
+}
+
+@media (width >= 876px) {
+	.layout {
+		grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+	}
+}
+
+@media (width < 876px) {
+	.mobile_tabs {
+		position: sticky;
+		top: var(--header-height);
+		z-index: 5;
+		margin: 0 0 24px;
+		padding: 4px;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 4px;
+		background-color: var(--card-dark-1);
+		border: 1px solid var(--card-dark-line);
+		border-radius: var(--radius-2);
+
+		& button {
+			min-height: 40px;
+			color: var(--muted);
+			font-size: 14px;
+			font-weight: 700;
+			background: transparent;
+			border: 0;
+			border-radius: var(--radius-1);
+			cursor: pointer;
+
+			&[aria-selected="true"] {
+				color: var(--button-submit-text);
+				background-color: var(--button-submit-back);
+			}
+		}
+	}
+
+	.layout {
+		display: block;
+	}
+
+	/* 탭 전환 상호작용은 다음 커밋에서 붙는다. 지금은 뼈대의 aria-selected 기본값(작성)에 맞춰 미리보기를 정적으로 숨겨 둔 상태. */
+	.preview {
+		display: none;
+	}
+
+	.form {
+		padding-bottom: 88px;
+	}
+
+	.actions {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 10;
+		margin: 0;
+		padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+		background-color: var(--card-dark-1);
+		border-top: 1px solid var(--card-dark-line);
+	}
+}
+
+@media (width < 768px) {
+	.main {
+		width: calc(100% - 28px);
+		margin-top: 28px;
+	}
+
+	.heading h1 {
+		font-size: 28px;
+	}
+
+	.field_row {
+		grid-template-columns: 1fr;
+		gap: 14px;
+	}
+
+	.preview_blocks {
+		grid-template-columns: 1fr;
+	}
+}
