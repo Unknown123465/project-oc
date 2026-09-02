@@ -52,8 +52,8 @@ export default function SignupForm() {
 			const result = await signupAction(data);
 
 			if (result.success) {
-				//TODO: 내 캐릭터 페이지 완성 시 해당 페이지로 리다이렉트 되게 구현 할 예정
-				router.replace("/");
+				/* 뒤로 가기로 방금 채운 폼에 돌아오지 않도록 replace로 넘긴다. */
+				router.replace("/signup/complete");
 			} else {
 				/* 서버에서만 알 수 있는 실패(중복 가입 등)는 필드를 특정할 수 없어
 				   root로 받아 비밀번호 확인 아래 한곳에 낸다. */

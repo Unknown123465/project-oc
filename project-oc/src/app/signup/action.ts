@@ -1,11 +1,13 @@
 "use server";
 
 import "server-only";
+import {cookies} from "next/headers";
 import {AuthError} from "next-auth";
 import db from "@/prisma/client";
 import {auth, authProviders, NORMAL_PROVIDER, signIn} from "@/auth/auth";
 import {hashPassword} from "@/auth/password";
 import {signupForm, type SignupFormType} from "./validator";
+import {SIGNUP_COMPLETE_COOKIE, SIGNUP_COMPLETE_MAX_AGE, SIGNUP_COMPLETE_PATH} from "./completeCookie";
 
 export type SignupActionResult = {success: true} | {success: false; message: string};
 
@@ -76,6 +78,18 @@ export async function signupAction(data: SignupFormType): Promise<SignupActionRe
 
 		throw error;
 	}
+
+	/* 완료 페이지를 여는 열쇠. 이 액션을 거치지 않고는 얻을 수 없어야 하므로
+	   자동 로그인까지 끝난 뒤에만 심는다. */
+	const cookieStore = await cookies();
+
+	cookieStore.set(SIGNUP_COMPLETE_COOKIE, "1", {
+		httpOnly: true,
+		sameSite: "lax",
+		secure: process.env.NODE_ENV === "production",
+		path: SIGNUP_COMPLETE_PATH,
+		maxAge: SIGNUP_COMPLETE_MAX_AGE,
+	});
 
 	return {success: true};
 }
