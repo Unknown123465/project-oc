@@ -66,3 +66,8 @@ export type VerificationToken = Prisma.VerificationTokenModel
  * 
  */
 export type Authenticator = Prisma.AuthenticatorModel
+/**
+ * Model character
+ * 
+ */
+export type character = Prisma.characterModel

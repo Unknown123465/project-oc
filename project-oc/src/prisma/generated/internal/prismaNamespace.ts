@@ -401,7 +401,8 @@ export const ModelName = {
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
-  Authenticator: 'Authenticator'
+  Authenticator: 'Authenticator',
+  character: 'character'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "session" | "verificationToken" | "authenticator"
+    modelProps: "user" | "account" | "session" | "verificationToken" | "authenticator" | "character"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -751,6 +752,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    character: {
+      payload: Prisma.$characterPayload<ExtArgs>
+      fields: Prisma.characterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.characterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$characterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.characterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$characterPayload>
+        }
+        findFirst: {
+          args: Prisma.characterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$characterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.characterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$characterPayload>
+        }
+        findMany: {
+          args: Prisma.characterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$characterPayload>[]
+        }
+        create: {
+          args: Prisma.characterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$characterPayload>
+        }
+        createMany: {
+          args: Prisma.characterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.characterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$characterPayload>
+        }
+        update: {
+          args: Prisma.characterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$characterPayload>
+        }
+        deleteMany: {
+          args: Prisma.characterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.characterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.characterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$characterPayload>
+        }
+        aggregate: {
+          args: Prisma.CharacterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCharacter>
+        }
+        groupBy: {
+          args: Prisma.characterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CharacterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.characterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CharacterCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -861,12 +928,48 @@ export const AuthenticatorScalarFieldEnum = {
 export type AuthenticatorScalarFieldEnum = (typeof AuthenticatorScalarFieldEnum)[keyof typeof AuthenticatorScalarFieldEnum]
 
 
+export const CharacterScalarFieldEnum = {
+  char_id: 'char_id',
+  char_name: 'char_name',
+  char_image: 'char_image',
+  char_message: 'char_message',
+  char_kind: 'char_kind',
+  char_color: 'char_color',
+  char_music: 'char_music',
+  char_like: 'char_like',
+  char_hate: 'char_hate',
+  char_mbti: 'char_mbti',
+  char_birthplace: 'char_birthplace',
+  char_age: 'char_age',
+  char_birthday: 'char_birthday',
+  char_height: 'char_height',
+  char_personality: 'char_personality',
+  char_tmi: 'char_tmi',
+  char_public_mode: 'char_public_mode',
+  ai_used: 'ai_used',
+  char_public_link: 'char_public_link',
+  char_uploader_id: 'char_uploader_id',
+  create_dt: 'create_dt',
+  update_dt: 'update_dt'
+} as const
+
+export type CharacterScalarFieldEnum = (typeof CharacterScalarFieldEnum)[keyof typeof CharacterScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const NullsOrder = {
@@ -935,6 +1038,44 @@ export const AuthenticatorOrderByRelevanceFieldEnum = {
 export type AuthenticatorOrderByRelevanceFieldEnum = (typeof AuthenticatorOrderByRelevanceFieldEnum)[keyof typeof AuthenticatorOrderByRelevanceFieldEnum]
 
 
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const characterOrderByRelevanceFieldEnum = {
+  char_name: 'char_name',
+  char_image: 'char_image',
+  char_message: 'char_message',
+  char_kind: 'char_kind',
+  char_color: 'char_color',
+  char_music: 'char_music',
+  char_like: 'char_like',
+  char_hate: 'char_hate',
+  char_mbti: 'char_mbti',
+  char_birthplace: 'char_birthplace',
+  char_age: 'char_age',
+  char_birthday: 'char_birthday',
+  char_height: 'char_height',
+  char_personality: 'char_personality',
+  char_uploader_id: 'char_uploader_id'
+} as const
+
+export type characterOrderByRelevanceFieldEnum = (typeof characterOrderByRelevanceFieldEnum)[keyof typeof characterOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -966,6 +1107,34 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'Bytes'
+ */
+export type BytesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Bytes'>
     
 
 
@@ -1131,6 +1300,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   verificationToken?: Prisma.VerificationTokenOmit
   authenticator?: Prisma.AuthenticatorOmit
+  character?: Prisma.characterOmit
 }
 
 /* Types for Logging */

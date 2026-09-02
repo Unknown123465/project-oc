@@ -55,7 +55,8 @@ export const ModelName = {
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
-  Authenticator: 'Authenticator'
+  Authenticator: 'Authenticator',
+  character: 'character'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -145,12 +146,48 @@ export const AuthenticatorScalarFieldEnum = {
 export type AuthenticatorScalarFieldEnum = (typeof AuthenticatorScalarFieldEnum)[keyof typeof AuthenticatorScalarFieldEnum]
 
 
+export const CharacterScalarFieldEnum = {
+  char_id: 'char_id',
+  char_name: 'char_name',
+  char_image: 'char_image',
+  char_message: 'char_message',
+  char_kind: 'char_kind',
+  char_color: 'char_color',
+  char_music: 'char_music',
+  char_like: 'char_like',
+  char_hate: 'char_hate',
+  char_mbti: 'char_mbti',
+  char_birthplace: 'char_birthplace',
+  char_age: 'char_age',
+  char_birthday: 'char_birthday',
+  char_height: 'char_height',
+  char_personality: 'char_personality',
+  char_tmi: 'char_tmi',
+  char_public_mode: 'char_public_mode',
+  ai_used: 'ai_used',
+  char_public_link: 'char_public_link',
+  char_uploader_id: 'char_uploader_id',
+  create_dt: 'create_dt',
+  update_dt: 'update_dt'
+} as const
+
+export type CharacterScalarFieldEnum = (typeof CharacterScalarFieldEnum)[keyof typeof CharacterScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const NullsOrder = {
@@ -217,4 +254,42 @@ export const AuthenticatorOrderByRelevanceFieldEnum = {
 } as const
 
 export type AuthenticatorOrderByRelevanceFieldEnum = (typeof AuthenticatorOrderByRelevanceFieldEnum)[keyof typeof AuthenticatorOrderByRelevanceFieldEnum]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const characterOrderByRelevanceFieldEnum = {
+  char_name: 'char_name',
+  char_image: 'char_image',
+  char_message: 'char_message',
+  char_kind: 'char_kind',
+  char_color: 'char_color',
+  char_music: 'char_music',
+  char_like: 'char_like',
+  char_hate: 'char_hate',
+  char_mbti: 'char_mbti',
+  char_birthplace: 'char_birthplace',
+  char_age: 'char_age',
+  char_birthday: 'char_birthday',
+  char_height: 'char_height',
+  char_personality: 'char_personality',
+  char_uploader_id: 'char_uploader_id'
+} as const
+
+export type characterOrderByRelevanceFieldEnum = (typeof characterOrderByRelevanceFieldEnum)[keyof typeof characterOrderByRelevanceFieldEnum]
 

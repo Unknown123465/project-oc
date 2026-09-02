@@ -2,8 +2,6 @@ datasource db {
   provider = "mysql"
 }
 
-
-
 generator client {
   provider = "prisma-client"
   output   = "./generated"
@@ -21,11 +19,12 @@ model User {
   accounts      Account[]
   sessions      Session[]
   Authenticator Authenticator[]
- 
+  characters    character[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model Account {
   id                       String  @id @default(cuid())
   userId                   String  @unique
@@ -41,35 +40,35 @@ model Account {
   session_state            String?
   refresh_token_expires_in Int?
   user                     User?   @relation(fields: [userId], references: [id])
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
- 
+
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id])
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   @@index([userId])
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@unique([identifier, token])
 }
- 
+
 model Authenticator {
   credentialID         String  @unique
   userId               String
@@ -79,8 +78,38 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([userId, credentialID])
+}
+
+model character {
+  char_id          BigInt  @id @default(autoincrement())
+  char_name        String  @db.VarChar(20)
+  char_image       String  @db.Char(41)
+  char_message     String  @db.VarChar(30)
+  char_kind        String? @db.VarChar(10)
+  char_color       String  @default("#d3d3d3") @db.Char(7)
+  char_music       String? @db.Text
+  char_like        String? @db.VarChar(100)
+  char_hate        String? @db.VarChar(100)
+  char_mbti        String? @db.Char(4)
+  char_birthplace  String? @db.VarChar(20)
+  char_age         String? @db.VarChar(20)
+  char_birthday    String? @db.VarChar(10)
+  char_height      String? @db.VarChar(10)
+  char_personality String? @db.VarChar(100)
+  char_tmi         Json?
+  char_public_mode Int     @db.TinyInt
+  ai_used          Int     @db.TinyInt
+  char_public_link Bytes   @unique(map: "idx_public_link") @db.Binary(16)
+  char_uploader_id String  @db.VarChar(191)
+  user             User    @relation(fields: [char_uploader_id], references: [id])
+
+  create_dt DateTime  @default(now()) @db.DateTime(0)
+  update_dt DateTime? @updatedAt @db.DateTime(0)
+
+  @@index([char_uploader_id, create_dt(sort: Desc)], map: "idx_uploader_created")
+  @@index([char_public_mode, create_dt(sort: Desc)], map: "idx_public_mode_created")
 }
