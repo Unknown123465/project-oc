@@ -2,7 +2,8 @@ import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 import styles from "./page.module.css";
 import AuthAside from "../../_components/auth/AuthAside";
-import {LinkButton} from "@/components/ui/button";
+import SuccessMark from "../../_components/signup/complete/SuccessMark";
+import CompleteActions from "../../_components/signup/complete/CompleteActions";
 import {auth} from "@/auth/auth";
 import {SIGNUP_COMPLETE_COOKIE} from "../completeCookie";
 
@@ -25,9 +26,7 @@ export default async function SignupComplete() {
 
 			<section className={styles.result_area}>
 				<article className={styles.result_box}>
-					<div className={styles.check} aria-hidden="true">
-						<i className="bi bi-check-lg"></i>
-					</div>
+					<SuccessMark />
 
 					<h2>가입이 완료되었습니다</h2>
 
@@ -35,13 +34,7 @@ export default async function SignupComplete() {
 
 					<p className={styles.note}>이름과 몇 가지 설정만 채우면 첫 번째 캐릭터 프로필이 완성됩니다. 지금 만들지 않아도 언제든 다시 시작할 수 있습니다.</p>
 
-					<div className={styles.actions}>
-						<LinkButton href="/create">프로필 만들기</LinkButton>
-
-						<LinkButton href="/" styleType="simple">
-							홈으로
-						</LinkButton>
-					</div>
+					<CompleteActions />
 				</article>
 			</section>
 		</main>
