@@ -1,4 +1,5 @@
 import styles from "./page.module.css";
+import LivePreview from "../_components/create/LivePreview";
 
 export default function Create() {
 	return (
@@ -52,27 +53,27 @@ export default function Create() {
 					<section className={styles.section} aria-labelledby="create-core-heading">
 						<h2 id="create-core-heading">핵심 정보</h2>
 
-						<div className={styles.field}>
-							<label htmlFor="create-name">
-								이름 <span className={styles.required}>*</span>
-							</label>
+						<div className={styles.main_feature}>
+							<div className={styles.field}>
+								<label htmlFor="create-name">
+									이름 <span className={styles.required}>*</span>
+								</label>
 
-							<input className={styles.input} id="create-name" name="charName" maxLength={20} placeholder="캐릭터 이름을 입력하세요" />
+								<input className={styles.input} id="create-name" name="charName" maxLength={20} placeholder="캐릭터 이름을 입력하세요" />
 
-							<p className={styles.field_help}>최대 20자</p>
-						</div>
+								<p className={styles.field_help}>최대 20자</p>
+							</div>
 
-						<div className={styles.field}>
-							<label htmlFor="create-message">
-								한 줄 소개 <span className={styles.required}>*</span>
-							</label>
+							<div className={styles.field}>
+								<label htmlFor="create-message">
+									한 줄 소개 <span className={styles.required}>*</span>
+								</label>
 
-							<input className={styles.input} id="create-message" name="charMessage" maxLength={30} placeholder="이 캐릭터를 한 문장으로 소개해 주세요" />
+								<input className={styles.input} id="create-message" name="charMessage" maxLength={30} placeholder="이 캐릭터를 한 문장으로 소개해 주세요" />
 
-							<p className={styles.field_help}>최대 30자</p>
-						</div>
+								<p className={styles.field_help}>최대 30자</p>
+							</div>
 
-						<div className={styles.field_row}>
 							<div className={styles.field}>
 								<label htmlFor="create-like">좋아하는 것</label>
 
@@ -88,29 +89,29 @@ export default function Create() {
 
 								<p className={styles.field_help}>최대 100자 (공백 포함)</p>
 							</div>
-						</div>
 
-						<div className={styles.field}>
-							<label htmlFor="create-personality">성격</label>
+							<div className={styles.field}>
+								<label htmlFor="create-personality">성격</label>
 
-							<textarea
-								className={styles.textarea}
-								id="create-personality"
-								name="charPersonality"
-								rows={4}
-								maxLength={100}
-								placeholder="밝고 긍정적이며 꾸준히 노력하는 성격입니다."
-							/>
+								<textarea
+									className={styles.textarea}
+									id="create-personality"
+									name="charPersonality"
+									rows={4}
+									maxLength={100}
+									placeholder="밝고 긍정적이며 꾸준히 노력하는 성격입니다."
+								/>
 
-							<p className={styles.field_help}>최대 100자 (공백 포함)</p>
-						</div>
+								<p className={styles.field_help}>최대 100자 (공백 포함)</p>
+							</div>
 
-						<div className={styles.field}>
-							<label htmlFor="create-tmi">TMI</label>
+							<div className={styles.field}>
+								<label htmlFor="create-tmi">TMI</label>
 
-							<textarea className={styles.textarea} id="create-tmi" name="charTmi" placeholder="한 줄에 하나씩, 최대 10개까지 입력하세요" />
+								<textarea className={styles.textarea} id="create-tmi" name="charTmi" placeholder="한 줄에 하나씩, 최대 10개까지 입력하세요" />
 
-							<p className={styles.field_help}>줄바꿈으로 구분, 한 줄 최대 30자</p>
+								<p className={styles.field_help}>줄바꿈으로 구분, 한 줄 최대 30자</p>
+							</div>
 						</div>
 					</section>
 
@@ -129,46 +130,58 @@ export default function Create() {
 							<summary>선택 정보 추가</summary>
 
 							<div className={styles.optional_fields_body}>
-								<div className={styles.field_row}>
-									<div className={styles.field}>
-										<label htmlFor="create-kind">종족</label>
+								<div className={styles.field}>
+									<label htmlFor="create-kind">종족</label>
 
-										<input className={styles.input} id="create-kind" name="charKind" maxLength={10} placeholder="예: 엘프" />
-									</div>
+									<div className={styles.select_wrap}>
+										<select className={styles.select} id="create-kind" name="charKind" defaultValue="">
+											<option value="">선택하지 않음</option>
+											<option value="인간">인간</option>
+											<option value="엘프">엘프</option>
+											<option value="천사">천사</option>
+											<option value="악마">악마</option>
+											<option value="수인">수인</option>
+											<option value="노바">노바</option>
+										</select>
 
-									<div className={styles.field}>
-										<label htmlFor="create-age">나이</label>
-
-										<input className={styles.input} id="create-age" name="charAge" maxLength={20} placeholder="예: 19세" />
-									</div>
-								</div>
-
-								<div className={styles.field_row}>
-									<div className={styles.field}>
-										<label htmlFor="create-birthday">생일</label>
-
-										<input className={styles.input} id="create-birthday" name="charBirthday" maxLength={10} placeholder="예: 2월 7일" />
-									</div>
-
-									<div className={styles.field}>
-										<label htmlFor="create-height">키</label>
-
-										<input className={styles.input} id="create-height" name="charHeight" maxLength={10} placeholder="예: 162cm" />
+										<i className="bi bi-caret-down-fill" aria-hidden="true"></i>
 									</div>
 								</div>
 
-								<div className={styles.field_row}>
-									<div className={styles.field}>
-										<label htmlFor="create-mbti">MBTI</label>
+								<div className={styles.field}>
+									<label htmlFor="create-age">나이</label>
 
-										<input className={styles.input} id="create-mbti" name="charMbti" maxLength={4} placeholder="예: ENFP" />
-									</div>
+									<input className={styles.input} id="create-age" name="charAge" maxLength={20} placeholder="예: 19세" />
+								</div>
 
-									<div className={styles.field}>
-										<label htmlFor="create-music">테마곡 링크</label>
+								<div className={styles.field}>
+									<label htmlFor="create-birthday">생일</label>
 
-										<input className={styles.input} id="create-music" name="charMusic" type="url" placeholder="YouTube 또는 음악 링크" />
-									</div>
+									<input className={styles.input} id="create-birthday" name="charBirthday" maxLength={10} placeholder="예: 2월 7일" />
+								</div>
+
+								<div className={styles.field}>
+									<label htmlFor="create-height">키</label>
+
+									<input className={styles.input} id="create-height" name="charHeight" maxLength={10} placeholder="예: 162cm" />
+								</div>
+
+								<div className={styles.field}>
+									<label htmlFor="create-birthplace">출신</label>
+
+									<input className={styles.input} id="create-birthplace" name="charBirthplace" maxLength={20} placeholder="예: 서울" />
+								</div>
+
+								<div className={styles.field}>
+									<label htmlFor="create-mbti">MBTI</label>
+
+									<input className={styles.input} id="create-mbti" name="charMbti" maxLength={4} placeholder="예: ENFP" />
+								</div>
+
+								<div className={styles.field}>
+									<label htmlFor="create-music">테마곡 링크</label>
+
+									<input className={styles.input} id="create-music" name="charMusic" type="url" placeholder="유튜브 또는 스포티파이, 사운드클라우드 링크" />
 								</div>
 							</div>
 						</details>
@@ -244,77 +257,7 @@ export default function Create() {
 					</div>
 				</form>
 
-				<aside className={styles.preview} aria-label="캐릭터 프로필 미리보기">
-					<div className={styles.preview_label}>
-						<span>실시간 미리보기</span>
-						<span>가로형 프로필</span>
-					</div>
-
-					<article className={styles.preview_sheet}>
-						<div className={styles.preview_hero}>
-							<img className={styles.preview_image} alt="캐릭터 프로필 이미지" />
-
-							<div className={styles.preview_body}>
-								<div className={styles.preview_identity}>
-									<h2>캐릭터 이름</h2>
-
-									<p>이 캐릭터를 한 문장으로 소개해 주세요.</p>
-								</div>
-
-								<dl className={styles.preview_facts}>
-									<div className={styles.fact}>
-										<dt>종족</dt>
-										<dd>미입력</dd>
-									</div>
-
-									<div className={styles.fact}>
-										<dt>나이</dt>
-										<dd>미입력</dd>
-									</div>
-
-									<div className={styles.fact}>
-										<dt>생일</dt>
-										<dd>미입력</dd>
-									</div>
-
-									<div className={styles.fact}>
-										<dt>키</dt>
-										<dd>미입력</dd>
-									</div>
-
-									<div className={styles.fact}>
-										<dt>MBTI</dt>
-										<dd>미입력</dd>
-									</div>
-								</dl>
-
-								<div className={styles.preview_blocks}>
-									<section className={styles.preview_block}>
-										<h3>좋아하는 것</h3>
-										<p>좋아하는 것을 입력해 주세요.</p>
-									</section>
-
-									<section className={styles.preview_block}>
-										<h3>싫어하는 것</h3>
-										<p>싫어하는 것을 입력해 주세요.</p>
-									</section>
-
-									<section className={styles.preview_block_wide}>
-										<h3>성격</h3>
-										<p>성격을 간단히 소개해 주세요.</p>
-									</section>
-
-									<section className={styles.preview_block_wide}>
-										<h3>TMI</h3>
-										<ul>
-											<li>작은 습관이나 숨은 설정을 적어 주세요.</li>
-										</ul>
-									</section>
-								</div>
-							</div>
-						</div>
-					</article>
-				</aside>
+				<LivePreview />
 			</div>
 		</main>
 	);

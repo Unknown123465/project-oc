@@ -53,6 +53,12 @@
 	}
 }
 
+.main_feature {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
 .required {
 	color: var(--error-text);
 }
@@ -60,7 +66,6 @@
 .field {
 	display: grid;
 	gap: 8px;
-	margin-bottom: 18px;
 
 	&:last-child {
 		margin-bottom: 0;
@@ -73,17 +78,6 @@
 	}
 }
 
-.field_row {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 18px;
-	margin-bottom: 18px;
-
-	&:last-child {
-		margin-bottom: 0;
-	}
-}
-
 .field_help {
 	margin: 0;
 	color: var(--muted);
@@ -91,7 +85,8 @@
 }
 
 .input,
-.textarea {
+.textarea,
+.select {
 	width: 100%;
 	padding: 12px 15px;
 	color: var(--input-text);
@@ -116,6 +111,26 @@
 	resize: vertical;
 	min-height: 90px;
 	line-height: 1.5;
+}
+
+.select_wrap {
+	position: relative;
+
+	& i {
+		position: absolute;
+		top: 50%;
+		right: 15px;
+		color: var(--muted);
+		font-size: 11px;
+		transform: translateY(-50%);
+		pointer-events: none;
+	}
+}
+
+.select {
+	appearance: none;
+	padding-right: 38px;
+	cursor: pointer;
 }
 
 .color_input {
@@ -197,8 +212,12 @@
 
 .optional_fields {
 	margin-top: 22px;
+	background-color: var(--input-back);
+	border: 1px solid var(--line-color-1);
+	border-radius: var(--radius-2);
 
 	& summary {
+		padding: 16px 18px;
 		color: var(--title-text);
 		font-size: 14px;
 		font-weight: 700;
@@ -207,10 +226,10 @@
 }
 
 .optional_fields_body {
+	padding: 0 18px 18px;
 	margin-top: 18px;
-	display: flex;
-	flex-direction: column;
-	gap: 18px;
+	display: grid;
+	grid-auto-rows: minmax(80px, auto);
 }
 
 .warning {
@@ -236,6 +255,8 @@
 	cursor: pointer;
 
 	& input {
+		width: 18px;
+		height: 18px;
 		margin: 0;
 		accent-color: var(--personal-dark);
 	}
@@ -296,120 +317,6 @@
 	}
 }
 
-.preview {
-	position: sticky;
-	top: calc(var(--header-height) + 24px);
-}
-
-.preview_label {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 16px;
-	margin-bottom: 12px;
-	color: var(--muted);
-	font-size: 13px;
-	font-weight: 700;
-}
-
-.preview_sheet {
-	background-color: var(--card-dark-1);
-	border: 1px solid var(--card-dark-line);
-	border-radius: var(--radius-3);
-	overflow: hidden;
-}
-
-.preview_image {
-	width: 100%;
-	aspect-ratio: 16 / 9;
-	object-fit: cover;
-	background-color: var(--card-dark-2);
-}
-
-.preview_body {
-	padding: 24px;
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-}
-
-.preview_identity {
-	& h2 {
-		margin: 0 0 6px;
-		color: var(--title-text);
-		font-size: 24px;
-		font-weight: 800;
-		letter-spacing: -0.04em;
-	}
-
-	& p {
-		margin: 0;
-		color: var(--muted);
-		font-size: 14px;
-	}
-}
-
-.preview_facts {
-	margin: 0;
-	padding: 16px;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
-	gap: 14px;
-	background-color: var(--card-dark-2);
-	border-radius: var(--radius-2);
-}
-
-.fact {
-	& dt {
-		margin: 0 0 4px;
-		color: var(--muted);
-		font-size: 12px;
-	}
-
-	& dd {
-		margin: 0;
-		color: var(--title-text);
-		font-size: 14px;
-		font-weight: 700;
-	}
-}
-
-.preview_blocks {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 14px;
-}
-
-.preview_block,
-.preview_block_wide {
-	padding: 16px;
-	background-color: var(--card-dark-2);
-	border-radius: var(--radius-2);
-
-	& h3 {
-		margin: 0 0 8px;
-		color: var(--title-text);
-		font-size: 13px;
-		font-weight: 700;
-	}
-
-	& p,
-	& ul {
-		margin: 0;
-		color: var(--sub-text);
-		font-size: 13.5px;
-		line-height: 1.6;
-	}
-
-	& ul {
-		padding-left: 18px;
-	}
-}
-
-.preview_block_wide {
-	grid-column: 1 / -1;
-}
-
 @media (width >= 876px) {
 	.layout {
 		grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
@@ -451,11 +358,6 @@
 		display: block;
 	}
 
-	/* 탭 전환 상호작용은 다음 커밋에서 붙는다. 지금은 뼈대의 aria-selected 기본값(작성)에 맞춰 미리보기를 정적으로 숨겨 둔 상태. */
-	.preview {
-		display: none;
-	}
-
 	.form {
 		padding-bottom: 88px;
 	}
@@ -473,6 +375,17 @@
 	}
 }
 
+@media (width >= 768px) {
+	.optional_fields_body {
+		grid-template-columns: 1fr 1fr;
+		gap: 18px;
+
+		& .field:nth-of-type(odd):last-of-type {
+			grid-column: 1 / span 2;
+		}
+	}
+}
+
 @media (width < 768px) {
 	.main {
 		width: calc(100% - 28px);
@@ -483,12 +396,8 @@
 		font-size: 28px;
 	}
 
-	.field_row {
+	.optional_fields_body {
 		grid-template-columns: 1fr;
 		gap: 14px;
-	}
-
-	.preview_blocks {
-		grid-template-columns: 1fr;
 	}
 }
