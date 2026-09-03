@@ -1,0 +1,27 @@
+.form {
+	min-width: 0;
+}
+
+.actions {
+	margin-top: 32px;
+	display: flex;
+	gap: 12px;
+}
+
+@media (width < 876px) {
+	.form {
+		padding-bottom: 88px;
+	}
+
+	.actions {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 10;
+		margin: 0;
+		padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+		background-color: var(--card-dark-1);
+		border-top: 1px solid var(--card-dark-line);
+	}
+}

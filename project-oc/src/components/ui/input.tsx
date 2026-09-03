@@ -20,6 +20,7 @@ interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
 	describedBy?: string;
 	autoComplete?: string;
 	required?: boolean;
+	maxLength?: number;
 }
 
 /* 안내 문구와 검증 오류는 이 파일에서 그리지 않는다. 무엇을 어디에 어떤 순서로
@@ -46,6 +47,7 @@ export function TextInput<K extends FieldValues>({
 	describedBy,
 	autoComplete,
 	required,
+	maxLength,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
@@ -57,7 +59,11 @@ export function TextInput<K extends FieldValues>({
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
-			{!ariaLabelOnly ? <label htmlFor={inputId}>{label}</label> : null}
+			{!ariaLabelOnly ? (
+				<label htmlFor={inputId}>
+					{label} {required ? <span className={styles.required}>*</span> : null}
+				</label>
+			) : null}
 
 			<div className={styles.box} style={{height}}>
 				<input
@@ -74,6 +80,7 @@ export function TextInput<K extends FieldValues>({
 					aria-describedby={describedBy}
 					aria-required={required}
 					autoComplete={autoComplete}
+					maxLength={maxLength}
 					style={{padding, borderRadius}}
 					placeholder={placeholder}
 				/>
@@ -98,6 +105,7 @@ export function PasswordInput<K extends FieldValues>({
 	describedBy,
 	autoComplete,
 	required,
+	maxLength,
 	placeholder,
 	...fieldProps
 }: TextInputProps<K>) {
@@ -111,7 +119,11 @@ export function PasswordInput<K extends FieldValues>({
 
 	return (
 		<div className={styles.field} style={{width, ...style}}>
-			{!ariaLabelOnly ? <label htmlFor={inputId}>{label}</label> : null}
+			{!ariaLabelOnly ? (
+				<label htmlFor={inputId}>
+					{label} {required ? <span className={styles.required}>*</span> : null}
+				</label>
+			) : null}
 
 			<div className={styles.box} style={{height}}>
 				<input
@@ -128,6 +140,7 @@ export function PasswordInput<K extends FieldValues>({
 					aria-describedby={describedBy}
 					aria-required={required}
 					autoComplete={autoComplete}
+					maxLength={maxLength}
 					style={{padding, borderRadius}}
 					placeholder={placeholder}
 				/>

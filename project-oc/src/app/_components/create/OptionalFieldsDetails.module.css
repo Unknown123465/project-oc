@@ -1,0 +1,40 @@
+.optional_fields {
+	margin-top: 22px;
+	background-color: var(--input-back);
+	border: 1px solid var(--line-color-1);
+	border-radius: var(--radius-2);
+
+	& summary {
+		padding: 16px 18px;
+		color: var(--title-text);
+		font-size: 14px;
+		font-weight: 700;
+		cursor: pointer;
+	}
+}
+
+.optional_fields_body {
+	padding: 0 18px 18px;
+	margin-top: 18px;
+	display: grid;
+	grid-auto-rows: minmax(80px, auto);
+}
+
+@media (width >= 768px) {
+	.optional_fields_body {
+		grid-template-columns: 1fr 1fr;
+		gap: 18px;
+
+		/* 홀수 개일 때 마지막 요소가 가로 영역을 전부 차지하게 함 */
+		& > *:last-child:nth-child(odd) {
+			grid-column: 1 / span 2;
+		}
+	}
+}
+
+@media (width < 768px) {
+	.optional_fields_body {
+		grid-template-columns: 1fr;
+		gap: 14px;
+	}
+}

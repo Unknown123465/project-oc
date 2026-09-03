@@ -1,5 +1,11 @@
+import {UseFormWatch} from "react-hook-form";
 import styles from "./LivePreview.module.css";
 import ProfileSheet, {type ProfileLayout} from "./ProfileSheet";
+import {CreateCharFormInputType} from "@/app/create/validator";
+
+interface LivePreviewProps {
+	watch: UseFormWatch<CreateCharFormInputType>;
+}
 
 const LAYOUT_LABEL: Record<ProfileLayout, string> = {
 	horizontal: "가로형 프로필",
@@ -7,7 +13,7 @@ const LAYOUT_LABEL: Record<ProfileLayout, string> = {
 	square: "정사각형 프로필",
 };
 
-export default function LivePreview() {
+export default function LivePreview({watch}: LivePreviewProps) {
 	const layout: ProfileLayout = "horizontal";
 
 	return (
