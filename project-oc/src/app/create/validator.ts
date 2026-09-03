@@ -8,7 +8,7 @@ export const createCharForm = z.object({
 	charPersonality: z.string().max(100, "성격을 100자 이하로 입력해 주세요."),
 	charTmi: z
 		.string()
-		.refine((data) => data.split("\n").length < 5, "TMI는 최대 5개까지 입력 할 수 있어요.")
+		.refine((data) => data.split("\n").length <= 5, "TMI는 최대 5개까지 입력 할 수 있어요.")
 		.refine((data) => data.split("\n").every((tmi) => tmi.length <= 30), "TMI는 각 최대 30자 이하로 입력할 수 있어요."),
 	charKind: z.string().max(10, "종족을 10자 이하로 입력해 주세요."),
 	charAge: z.string().max(20, "나이를 20자 이하로 입력해 주세요."),

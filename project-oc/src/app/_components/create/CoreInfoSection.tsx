@@ -87,7 +87,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 				</div>
 
 				<div className={styles.field}>
-					<Textarea id={tmiId} name="charTmi" control={control} label="TMI" placeholder="한 줄에 하나씩, 최대 10개까지 입력하세요" describedBy={`${tmiId}-help`} />
+					<Textarea id={tmiId} name="charTmi" control={control} label="TMI" placeholder="한 줄에 하나씩, 최대 5개까지 입력하세요" describedBy={`${tmiId}-help`} />
 
 					<p id={`${tmiId}-help`} className={styles.field_help}>
 						줄바꿈으로 구분, 한 줄 최대 30자
