@@ -17,8 +17,6 @@ model User {
   // Credentials 가입자만 채워지는 bcrypt 해시. 소셜 가입자는 null로 남는다.
   password      String?         @db.VarChar(100)
   accounts      Account[]
-  sessions      Session[]
-  Authenticator Authenticator[]
   characters    Character[]
 
   createdAt DateTime @default(now())
@@ -48,40 +46,12 @@ model Account {
   @@index([userId])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-}
-
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-model Authenticator {
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([userId, credentialID])
 }
 
 model Character {
