@@ -87,9 +87,9 @@ model Authenticator {
 model Character {
   charId            BigInt  @id @default(autoincrement())
   charName          String  @db.VarChar(20)
-  charImage         String  @db.Char(41)
-  charProfileLayout String  @db.VarChar(1)
-  charImageFrame    String  @db.VarChar(6)
+  charImage         String  @db.VarChar(41)
+  charProfileLayout String  @db.Char(1)
+  charImageFrame    String  @db.Char(6)
   charMessage       String  @db.VarChar(30)
   charKind          String? @db.VarChar(10)
   charColor         String  @default("#d3d3d3") @db.Char(7)
