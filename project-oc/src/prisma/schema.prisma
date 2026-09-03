@@ -19,7 +19,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   Authenticator Authenticator[]
-  characters    character[]
+  characters    Character[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -84,32 +84,35 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
-model character {
-  char_id          BigInt  @id @default(autoincrement())
-  char_name        String  @db.VarChar(20)
-  char_image       String  @db.Char(41)
-  char_message     String  @db.VarChar(30)
-  char_kind        String? @db.VarChar(10)
-  char_color       String  @default("#d3d3d3") @db.Char(7)
-  char_music       String? @db.Text
-  char_like        String? @db.VarChar(100)
-  char_hate        String? @db.VarChar(100)
-  char_mbti        String? @db.Char(4)
-  char_birthplace  String? @db.VarChar(20)
-  char_age         String? @db.VarChar(20)
-  char_birthday    String? @db.VarChar(10)
-  char_height      String? @db.VarChar(10)
-  char_personality String? @db.VarChar(100)
-  char_tmi         Json?
-  char_public_mode Int     @db.TinyInt
-  ai_used          Int     @db.TinyInt
-  char_public_link Bytes   @unique(map: "idx_public_link") @db.Binary(16)
-  char_uploader_id String  @db.VarChar(191)
-  user             User    @relation(fields: [char_uploader_id], references: [id])
+model Character {
+  charId            BigInt  @id @default(autoincrement())
+  charName          String  @db.VarChar(20)
+  charImage         String  @db.Char(41)
+  charProfileLayout String  @db.VarChar(1)
+  charImageFrame    String  @db.VarChar(6)
+  charMessage       String  @db.VarChar(30)
+  charKind          String? @db.VarChar(10)
+  charColor         String  @default("#d3d3d3") @db.Char(7)
+  charMusic         String? @db.Text
+  charLike          String? @db.VarChar(100)
+  charHate          String? @db.VarChar(100)
+  charMbti          String? @db.Char(4)
+  charBirthplace    String? @db.VarChar(20)
+  charAge           String? @db.VarChar(20)
+  charBirthday      String? @db.VarChar(10)
+  charHeight        String? @db.VarChar(10)
+  charPersonality   String? @db.VarChar(100)
+  charTmi           Json?
+  charPublicMode    Int     @db.TinyInt
+  aiUsed            Int     @db.TinyInt
+  charPublicLink    Bytes   @unique(map: "idx_public_link") @db.Binary(16)
+  charUploaderId    String  @db.VarChar(191)
+  user              User    @relation(fields: [charUploaderId], references: [id])
 
-  create_dt DateTime  @default(now()) @db.DateTime(0)
-  update_dt DateTime? @updatedAt @db.DateTime(0)
+  createdAt DateTime  @default(now()) @db.DateTime(0)
+  updatedAt DateTime? @updatedAt @db.DateTime(0)
 
-  @@index([char_uploader_id, create_dt(sort: Desc)], map: "idx_uploader_created")
-  @@index([char_public_mode, create_dt(sort: Desc)], map: "idx_public_mode_created")
+  @@index([charUploaderId, createdAt(sort: Desc)], map: "idx_uploader_created")
+  @@index([charPublicMode, createdAt(sort: Desc)], map: "idx_public_mode_created")
+  @@map("character")
 }
