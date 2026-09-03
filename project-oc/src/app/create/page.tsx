@@ -1,42 +1,7 @@
-"use client";
-
 import styles from "./page.module.css";
-import LivePreview from "../_components/create/LivePreview";
-import CreateForm from "../_components/create/CreateForm";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {createCharForm, CreateCharFormType, CreateCharFormInputType} from "@/app/create/validator";
-import {useForm} from "react-hook-form";
+import CreateWorkspace from "../_components/create/CreateWorkspace";
 
 export default function Create() {
-	const {
-		control,
-		register,
-		handleSubmit,
-		setError,
-		watch,
-		formState: {errors, isSubmitting},
-	} = useForm<CreateCharFormInputType, unknown, CreateCharFormType>({
-		defaultValues: {
-			charName: "",
-			charMessage: "",
-			charLike: "",
-			charHate: "",
-			charPersonality: "",
-			charTmi: "",
-			charKind: "",
-			charAge: "",
-			charBirthday: "",
-			charHeight: "",
-			charBirthplace: "",
-			charMbti: "",
-			charMusic: "",
-			charColor: "#d3d3d3",
-			aiUsed: "",
-			publicMode: "0",
-		},
-		resolver: zodResolver(createCharForm),
-	});
-
 	return (
 		<main className={styles.main}>
 			<section className={styles.heading}>
@@ -55,11 +20,7 @@ export default function Create() {
 				</button>
 			</div>
 
-			<div className={styles.layout}>
-				<CreateForm control={control} register={register} handleSubmit={handleSubmit} setError={setError} errors={errors} isSubmitting={isSubmitting} />
-
-				<LivePreview watch={watch} />
-			</div>
+			<CreateWorkspace />
 		</main>
 	);
 }
