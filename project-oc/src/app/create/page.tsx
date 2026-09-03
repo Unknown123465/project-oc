@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "./page.module.css";
 import LivePreview from "../_components/create/LivePreview";
 import CreateForm from "../_components/create/CreateForm";
