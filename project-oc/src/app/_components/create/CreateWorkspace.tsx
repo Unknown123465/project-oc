@@ -6,34 +6,13 @@ import LivePreview from "./LivePreview";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {createCharForm, CreateCharFormType, CreateCharFormInputType} from "@/app/create/validator";
-import {useState, useSyncExternalStore} from "react";
+import {useState} from "react";
+import {useMediaQuery} from "@/hooks/useMediaQuery";
 
 type MobileTab = "create" | "preview";
 
 /* CreateWorkspace.module.css의 .mobile_tabs를 숨기는 분기점과 같은 값이어야 한다. */
 const MOBILE_QUERY = "(width < 876px)";
-
-/* 뷰포트 폭은 React 밖에 있는 브라우저 상태라 useSyncExternalStore로 구독한다.
-   effect 안에서 setState로 맞추면 첫 렌더가 한 번 버려지고, 저장소 lint 규칙
-   react-hooks/set-state-in-effect에도 걸린다. */
-function subscribeMobile(onStoreChange: () => void) {
-	const mediaQuery: MediaQueryList = window.matchMedia(MOBILE_QUERY);
-
-	mediaQuery.addEventListener("change", onStoreChange);
-
-	return () => {
-		mediaQuery.removeEventListener("change", onStoreChange);
-	};
-}
-
-function getMobileSnapshot(): boolean {
-	return window.matchMedia(MOBILE_QUERY).matches;
-}
-
-/* 서버에는 뷰포트가 없다. 데스크톱으로 그려 두면 하이드레이션 직후 실제 폭으로 정정된다. */
-function getMobileServerSnapshot(): boolean {
-	return false;
-}
 
 /* CreateForm(입력)과 LivePreview(실시간 미리보기)가 같은 form 인스턴스를 봐야 해서
    두 컴포넌트의 공통 조상인 이곳에서 useForm을 만든다. page.tsx에 두면 페이지가
@@ -71,7 +50,7 @@ export default function CreateWorkspace() {
 		mode: "onChange",
 	});
 
-	const isMobile: boolean = useSyncExternalStore(subscribeMobile, getMobileSnapshot, getMobileServerSnapshot);
+	const isMobile: boolean = useMediaQuery(MOBILE_QUERY);
 
 	const [mobileTab, setMobileTab] = useState<MobileTab>("create");
 
