@@ -22,8 +22,6 @@
 	font-size: 15px;
 }
 
-
-
 @media (width < 768px) {
 	.main {
 		width: calc(100% - 28px);
