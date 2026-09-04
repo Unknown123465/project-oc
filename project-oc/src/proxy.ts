@@ -1,7 +1,7 @@
 import {type NextRequest, NextResponse, type ProxyConfig} from "next/server";
 
 export function proxy(req: NextRequest) {
-	const SELF= "'self'" as const;
+	const SELF = "'self'" as const;
 	const UNSAFE_INLINE = "'unsafe-inline'" as const;
 	const UNSAFE_EVAL = "'unsafe-eval'" as const;
 
@@ -12,6 +12,7 @@ export function proxy(req: NextRequest) {
 		["img-src", SELF],
 		["font-src", SELF],
 		["form-action", SELF],
+		["frame-src", "https://www.youtube.com", "https://open.spotify.com", "https://w.soundcloud.com"],
 		["upgrade-insecure-requests"],
 	];
 
