@@ -2,7 +2,7 @@
 
 import {useCallback, useId, useState, type CSSProperties} from "react";
 import styles from "./styles.module.css";
-import {FieldValues, useController, type UseControllerProps} from "react-hook-form";
+import {ControllerFieldState, ControllerRenderProps, type FieldValues, useController, type UseControllerProps} from "react-hook-form";
 
 interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
 	label: string;
@@ -21,6 +21,7 @@ interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
 	autoComplete?: string;
 	required?: boolean;
 	maxLength?: number;
+	spellCheck?: boolean;
 }
 
 /* 안내 문구와 검증 오류는 이 파일에서 그리지 않는다. 무엇을 어디에 어떤 순서로
@@ -49,6 +50,7 @@ export function TextInput<K extends FieldValues>({
 	required,
 	maxLength,
 	placeholder,
+	spellCheck,
 	...fieldProps
 }: TextInputProps<K>) {
 	const {field, fieldState} = useController(fieldProps);
@@ -81,6 +83,74 @@ export function TextInput<K extends FieldValues>({
 					aria-required={required}
 					autoComplete={autoComplete}
 					maxLength={maxLength}
+					spellCheck={spellCheck}
+					style={{padding, borderRadius}}
+					placeholder={placeholder}
+				/>
+			</div>
+		</div>
+	);
+}
+
+/* Controller가 만들어 준 field를 그대로 받는다. name·control 같은 useController
+   입력값은 여기서 필요 없으므로 InputProps에서 덜어내고, 대신 ControllerRenderProps가
+   주는 값(value·onChange·onBlur·ref·name)만 받는다. */
+interface TextInputWithFieldProps<K extends FieldValues> extends Omit<InputProps<K>, keyof UseControllerProps<K>>, ControllerRenderProps<K> {
+	placeholder?: string;
+	fieldState: ControllerFieldState;
+}
+
+export function TextInputWithField<K extends FieldValues>({
+	label,
+	ariaLabelOnly = false,
+	width,
+	height,
+	padding,
+	borderRadius,
+	style,
+	id,
+	focusAnimation = true,
+	invalidStyle = true,
+	readOnly,
+	disabled,
+	describedBy,
+	autoComplete,
+	required,
+	maxLength,
+	placeholder,
+	fieldState,
+	spellCheck,
+	...field
+}: TextInputWithFieldProps<K>) {
+	const defaultId = useId();
+
+	const inputId = id ?? defaultId;
+
+	return (
+		<div className={styles.field} style={{width, ...style}}>
+			{!ariaLabelOnly ? (
+				<label htmlFor={inputId}>
+					{label} {required ? <span className={styles.required}>*</span> : null}
+				</label>
+			) : null}
+
+			<div className={styles.box} style={{height}}>
+				<input
+					{...field}
+					id={inputId}
+					type="text"
+					className={`${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
+					readOnly={readOnly}
+					aria-label={ariaLabelOnly ? label : undefined}
+					aria-readonly={readOnly}
+					disabled={disabled}
+					aria-disabled={disabled}
+					aria-invalid={fieldState.invalid}
+					aria-describedby={describedBy}
+					aria-required={required}
+					autoComplete={autoComplete}
+					maxLength={maxLength}
+					spellCheck={spellCheck}
 					style={{padding, borderRadius}}
 					placeholder={placeholder}
 				/>

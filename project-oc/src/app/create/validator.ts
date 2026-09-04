@@ -26,7 +26,10 @@ export const createCharForm = z.object({
 		.httpUrl("링크가 유효하지 않아요.")
 		.max(255, "테마곡 주소가 너무 길어요. 255자 이하로 입력해 주세요.")
 		.or(z.string().refine((data) => data.trim() === "")),
-	charColor: z.string().regex(/^#[0-9a-f]{6}$/i, "퍼스널 컬러를 지정해 주세요."),
+	charColor: z
+		.string()
+		.length(7, "퍼스널 컬러를 입력해 주세요.")
+		.regex(/^#[0-9a-f]{6}$/i, "퍼스널 컬러가 올바르지 않아요. HEX로 입력해 주세요."),
 	aiUsed: z.enum(["", "0", "1"], "AI 사용 여부를 선택해 주세요.").refine((data) => data === "0" || data === "1", "AI 사용 여부를 선택해 주세요."),
 	publicMode: z.enum(["0", "1", "2"], "공개 여부를 선택해 주세요."),
 });

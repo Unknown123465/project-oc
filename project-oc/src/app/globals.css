@@ -78,7 +78,7 @@
 	--input-back: light-dark(#fffef9, #23231f);
 	--input-line: light-dark(#b7b8ae, #68685f);
 
-	--input-select-text: #29251a;
+	--input-select-text: light-dark(#29251a, #f1f0e8);
 	--input-select-back: light-dark(#fff4c2, #453c16);
 	--input-select-line: #e8b300;
 
@@ -152,7 +152,8 @@ a {
 
 input:is([type="text"], [type="search"], [type="password"]),
 textarea,
-select {
+select,
+.custom-select {
 	transition:
 		background-color 0.18s ease,
 		border-color 0.18s ease,

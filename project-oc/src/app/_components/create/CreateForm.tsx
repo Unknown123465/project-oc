@@ -49,7 +49,7 @@ export default function CreateForm({control, register, handleSubmit, setError, e
 
 			<CoreInfoSection control={control} errors={errors} />
 
-			<ColorSection control={control} register={register} errors={errors} />
+			<ColorSection control={control} errors={errors} />
 
 			<ChoiceSection
 				headingId={aiHeadingId}
