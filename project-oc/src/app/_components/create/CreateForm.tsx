@@ -45,11 +45,7 @@ export default function CreateForm({control, register, handleSubmit, setError, e
 
 	return (
 		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-			<input type="hidden" name="imageType" />
-			<input type="hidden" name="imageFrame" />
-			<input type="hidden" name="imageCrop" />
-
-			<ImageUploadField />
+			<ImageUploadField control={control} errors={errors} />
 
 			<CoreInfoSection control={control} errors={errors} />
 

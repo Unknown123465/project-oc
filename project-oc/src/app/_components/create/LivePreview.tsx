@@ -1,20 +1,24 @@
-import {UseFormWatch} from "react-hook-form";
+import {useWatch, type Control} from "react-hook-form";
 import styles from "./LivePreview.module.css";
 import ProfileSheet, {type ProfileLayout} from "./ProfileSheet";
 import {CreateCharFormInputType} from "@/app/create/validator";
 
 interface LivePreviewProps {
-	watch: UseFormWatch<CreateCharFormInputType>;
+	control: Control<CreateCharFormInputType>;
 }
 
 const LAYOUT_LABEL: Record<ProfileLayout, string> = {
-	horizontal: "가로형 프로필",
-	vertical: "세로형 프로필",
-	square: "정사각형 프로필",
+	"": "프로필 미지정",
+	h: "가로형 프로필",
+	v: "세로형 프로필",
+	s: "정사각형 프로필",
 };
 
-export default function LivePreview({watch}: LivePreviewProps) {
-	const layout: ProfileLayout = "horizontal";
+export default function LivePreview({control}: LivePreviewProps) {
+	const layout = useWatch({
+		name: "charProfileLayout",
+		control,
+	});
 
 	return (
 		<aside className={styles.preview} aria-label="캐릭터 프로필 미리보기">
@@ -24,7 +28,7 @@ export default function LivePreview({watch}: LivePreviewProps) {
 				<span>{LAYOUT_LABEL[layout]}</span>
 			</div>
 
-			<ProfileSheet layout={layout} />
+			<ProfileSheet control={control} />
 		</aside>
 	);
 }

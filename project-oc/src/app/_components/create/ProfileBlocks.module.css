@@ -26,8 +26,17 @@
 		line-height: 1.6;
 	}
 
+	& p {
+		word-break: break-all;
+	}
+
 	& ul {
 		padding-left: 18px;
+	}
+
+	& iframe {
+		width: 100%;
+		border: 0;
 	}
 }
 

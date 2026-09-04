@@ -16,11 +16,13 @@ export default function CreateWorkspace() {
 		register,
 		handleSubmit,
 		setError,
-		watch,
 		formState: {errors, isSubmitting},
 	} = useForm<CreateCharFormInputType, unknown, CreateCharFormType>({
 		defaultValues: {
 			charName: "",
+			charImage: null,
+			charProfileLayout: "",
+			charImageFrame: "",
 			charMessage: "",
 			charLike: "",
 			charHate: "",
@@ -38,13 +40,14 @@ export default function CreateWorkspace() {
 			publicMode: "0",
 		},
 		resolver: zodResolver(createCharForm),
+		mode: "onChange",
 	});
 
 	return (
 		<div className={styles.layout}>
 			<CreateForm control={control} register={register} handleSubmit={handleSubmit} setError={setError} errors={errors} isSubmitting={isSubmitting} />
 
-			<LivePreview watch={watch} />
+			<LivePreview control={control} />
 		</div>
 	);
 }
