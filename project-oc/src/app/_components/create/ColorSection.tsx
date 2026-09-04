@@ -27,6 +27,8 @@ export default function ColorSection({control, register, errors}: ColorSectionPr
 				<input className={styles.color_input} id={colorId} type="color" {...register("charColor")} />
 
 				<p className={styles.field_help}>캐릭터의 강조선과 배경에 적용됩니다.</p>
+
+				<p className={sectionStyles.error_message}>{errors.charColor?.message}</p>
 			</div>
 
 			<OptionalFieldsDetails control={control} errors={errors} />
