@@ -164,25 +164,25 @@ export default function ProfileBlocks({control}: ProfileBlocksProps) {
 				</section>
 			) : null}
 
-			<section className={styles.block_wide}>
-				<h3>테마곡</h3>
+			{musicView.kind !== "empty" ? (
+				<section className={styles.block_wide}>
+					<h3>테마곡</h3>
 
-				{musicView.kind === "empty" ? <p>테마곡 링크를 입력하면 여기에 표시돼요.</p> : null}
+					{musicView.kind === "invalid" ? <p>{musicView.message}</p> : null}
 
-				{musicView.kind === "invalid" ? <p>{musicView.message}</p> : null}
+					{musicView.kind === "unsupported" ? <p>유튜브, 스포티파이, 사운드클라우드 링크만 재생할 수 있어요.</p> : null}
 
-				{musicView.kind === "unsupported" ? <p>유튜브, 스포티파이, 사운드클라우드 링크만 재생할 수 있어요.</p> : null}
-
-				{musicView.kind === "embed" ? (
-					<iframe
-						src={musicView.src}
-						height={musicView.height}
-						title="테마곡 미리듣기"
-						sandbox="allow-scripts allow-same-origin allow-presentation"
-						allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope;"
-						loading="lazy"></iframe>
-				) : null}
-			</section>
+					{musicView.kind === "embed" ? (
+						<iframe
+							src={musicView.src}
+							height={musicView.height}
+							title="테마곡 미리듣기"
+							sandbox="allow-scripts allow-same-origin allow-presentation"
+							allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope;"
+							loading="lazy"></iframe>
+					) : null}
+				</section>
+			) : null}
 		</div>
 	);
 }
