@@ -16,8 +16,4 @@
 }
 
 @media (width < 876px) {
-	/* 탭 전환 상호작용은 다음 커밋에서 붙는다. 지금은 create/page.tsx 뼈대의 aria-selected 기본값(작성)에 맞춰 정적으로 숨겨 둔 상태. */
-	.preview {
-		display: none;
-	}
 }
