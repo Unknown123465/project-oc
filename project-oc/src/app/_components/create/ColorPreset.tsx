@@ -116,6 +116,8 @@ const LAST_INDEX = PRESET_LIST.length - 1;
    여기서 어긋나면 모달이 아닌 그냥 펼침 목록인데도 배경 스크롤을 잠그게 된다. */
 const MODAL_QUERY = "(width < 768px)";
 
+const HEX = /^#[0-9a-f]{6}$/i;
+
 export default function ColorPreset({value, onChange}: ColorPresetProps) {
 	const listId = useId();
 
@@ -129,6 +131,14 @@ export default function ColorPreset({value, onChange}: ColorPresetProps) {
 
 	const selectedIndex: number = PRESET_LIST.findIndex((preset) => preset.hex.toLowerCase() === value.toLowerCase());
 	const currentPreset: PresetList | null = selectedIndex === -1 ? null : PRESET_LIST[selectedIndex];
+
+	/* role=combobox는 버튼 안의 글자를 그대로 현재 값으로 읽어 준다. 프리셋에 없는
+	   색일 때 "프리셋..."만 남겨 두면 눈으로도 낭독기로도 무슨 색인지 알 수 없으므로,
+	   이름이 없는 색은 HEX를 그대로 값으로 내보인다. 아직 다 못 적은 값만 안내 문구로 둔다. */
+	const isNamelessColor: boolean = currentPreset === null && HEX.test(value);
+
+	const currentSwatch: string | null = currentPreset?.hex ?? (isNamelessColor ? value : null);
+	const currentLabel: string = currentPreset?.label ?? (isNamelessColor ? value : "프리셋...");
 
 	const isModal: boolean = useMediaQuery(MODAL_QUERY);
 
@@ -242,9 +252,9 @@ export default function ColorPreset({value, onChange}: ColorPresetProps) {
 				onClick={() => (isOpen ? setIsOpen(false) : open())}
 				onKeyDown={keyDown}>
 				<div className={styles.current_value}>
-					{currentPreset !== null ? <span className={styles.color_icon} style={{"--bg": currentPreset.hex}}></span> : null}
+					{currentSwatch !== null ? <span className={styles.color_icon} style={{"--bg": currentSwatch}}></span> : null}
 
-					<span className={styles.color_name}>{currentPreset?.label ?? "프리셋..."}</span>
+					<span className={styles.color_name}>{currentLabel}</span>
 				</div>
 
 				<i className={`bi bi-caret-down-fill ${styles.arrow} ${isOpen ? styles.rotate : ""}`}></i>
