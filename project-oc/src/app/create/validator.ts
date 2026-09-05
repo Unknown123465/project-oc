@@ -1,4 +1,5 @@
 import z from "zod";
+import {MUSIC_HOST_PATTERN, MUSIC_PROTOCOL_PATTERN} from "./musicEmbed";
 
 export const createCharForm = z.object({
 	charName: z.string().min(1, "캐릭터 이름을 입력해 주세요.").max(20, "캐릭터 이름을 20자 이하로 입력해 주세요."),
@@ -24,8 +25,8 @@ export const createCharForm = z.object({
 	charMbti: z.string().max(4, "MBTI를 4자 이하로 입력해 주세요."),
 	charMusic: z
 		.url({
-			protocol: /^https$/,
-			hostname: /^((m\.)?youtube\.com|youtu\.be|open\.spotify\.com|soundcloud\.com)/,
+			protocol: MUSIC_PROTOCOL_PATTERN,
+			hostname: MUSIC_HOST_PATTERN,
 			message: "링크가 유효하지 않아요.",
 		})
 		.max(255, "테마곡 주소가 너무 길어요. 255자 이하로 입력해 주세요.")

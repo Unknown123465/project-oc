@@ -1,13 +1,8 @@
 import {useWatch, type Control} from "react-hook-form";
 import styles from "./ProfileBlocks.module.css";
 import {CreateCharFormInputType} from "@/app/create/validator";
+import {toMusicEmbed, type IframeHeight} from "@/app/create/musicEmbed";
 import z from "zod";
-
-const YOUTUBE_HEIGHT = 250;
-const SPOTIFY_HEIGHT = 80;
-const SOUNDCLOUD_HEIGHT = 155;
-
-type IframeHeight = typeof YOUTUBE_HEIGHT | typeof SPOTIFY_HEIGHT | typeof SOUNDCLOUD_HEIGHT;
 
 interface ProfileBlocksProps {
 	control: Control<CreateCharFormInputType>;
@@ -20,54 +15,6 @@ const MUSIC_URL = z.httpUrl("링크가 유효하지 않아요.");
 
 type MusicView = {kind: "empty"} | {kind: "invalid"; message: string} | {kind: "unsupported"} | {kind: "embed"; src: string; height: IframeHeight};
 
-/* iframe은 우리 페이지 안에서 남의 사이트를 실행시키는 것이라, URL 형식만 보고
-   그대로 넣으면 아무 사이트나 임베드된다. 그래서 도메인을 화이트리스트로 막는다.
-   덧붙여 유튜브는 watch 주소의 임베드를 X-Frame-Options로 거부하므로,
-   서비스마다 정해진 임베드 전용 주소로 바꿔 줘야 실제로 재생된다. */
-function toEmbedUrl(raw: string): {src: string; height: IframeHeight} | null {
-	let url: URL;
-
-	try {
-		url = new URL(raw);
-	} catch {
-		return null;
-	}
-
-	const host = url.hostname.replace(/^www\./, "");
-
-	if (host === "youtube.com" || host === "m.youtube.com") {
-		const videoId: string | null = url.searchParams.get("v");
-
-		return videoId
-			? {
-					src: `https://www.youtube.com/embed/${videoId}`,
-					height: YOUTUBE_HEIGHT,
-				}
-			: null;
-	} else if (host === "youtu.be") {
-		const videoId: string = url.pathname.slice(1);
-
-		return videoId.trim()
-			? {
-					src: `https://www.youtube.com/embed/${videoId}`,
-					height: YOUTUBE_HEIGHT,
-				}
-			: null;
-	} else if (host === "open.spotify.com") {
-		return {
-			src: url.pathname.startsWith("/embed/") ? `https://open.spotify.com${url.pathname}` : `https://open.spotify.com/embed${url.pathname}`,
-			height: SPOTIFY_HEIGHT,
-		};
-	} else if (host === "soundcloud.com") {
-		return {
-			src: `https://w.soundcloud.com/player/?url=${encodeURIComponent(url.href)}`,
-			height: SOUNDCLOUD_HEIGHT,
-		};
-	} else {
-		return null;
-	}
-}
-
 function resolveMusic(raw: string): MusicView {
 	if (!raw) {
 		return {kind: "empty"};
@@ -79,7 +26,7 @@ function resolveMusic(raw: string): MusicView {
 		return {kind: "invalid", message: parsed.error.issues[0].message};
 	}
 
-	const result = toEmbedUrl(parsed.data);
+	const result = toMusicEmbed(parsed.data);
 
 	return result === null ? {kind: "unsupported"} : {kind: "embed", ...result};
 }
