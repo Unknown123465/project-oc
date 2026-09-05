@@ -1,7 +1,15 @@
 import styles from "./page.module.css";
 import CreateWorkspace from "../_components/create/CreateWorkspace";
+import {auth} from "@/auth/auth";
+import {redirect} from "next/navigation";
 
-export default function Create() {
+export default async function Create() {
+	const authInfo = await auth();
+
+	if (authInfo === null) {
+		return redirect("/", "replace");
+	}
+
 	return (
 		<main className={styles.main}>
 			<section className={styles.heading}>
