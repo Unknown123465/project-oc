@@ -23,9 +23,13 @@ export const createCharForm = z.object({
 	charBirthplace: z.string().max(20, "출생지를 20자 이하로 입력해 주세요."),
 	charMbti: z.string().max(4, "MBTI를 4자 이하로 입력해 주세요."),
 	charMusic: z
-		.httpUrl("링크가 유효하지 않아요.")
+		.url({
+			protocol: /^https$/,
+			hostname: /^((m\.)?youtube\.com|youtu\.be|open\.spotify\.com|soundcloud\.com)/,
+			message: "링크가 유효하지 않아요.",
+		})
 		.max(255, "테마곡 주소가 너무 길어요. 255자 이하로 입력해 주세요.")
-		.or(z.string().refine((data) => data.trim() === "")),
+		.or(z.string().refine((data) => data === "")),
 	charColor: z
 		.string()
 		.length(7, "퍼스널 컬러를 입력해 주세요.")
