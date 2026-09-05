@@ -101,6 +101,7 @@
 	--success: light-dark(#26724e, #73d4a5);
 
 	--error-text: light-dark(#bd3d3d, #ff8c88);
+	--success-text: light-dark(#00db0b, #73d4a5);
 
 	--shadow-1: 0 8px 24px light-dark(rgba(72, 67, 43, 0.08), rgba(0, 0, 0, 0.28));
 	--shadow-2: 0 18px 48px light-dark(rgba(72, 67, 43, 0.11), rgba(0, 0, 0, 0.2));

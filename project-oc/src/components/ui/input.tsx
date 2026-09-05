@@ -15,6 +15,7 @@ interface InputProps<K extends FieldValues> extends UseControllerProps<K> {
 	id?: string;
 	focusAnimation?: boolean;
 	invalidStyle?: boolean;
+	validStyle?: boolean;
 	readOnly?: boolean;
 	/** 입력을 설명하는 요소들의 id. 여러 개면 공백으로 이어 넘긴다. */
 	describedBy?: string;
@@ -43,6 +44,7 @@ export function TextInput<K extends FieldValues>({
 	id,
 	focusAnimation = true,
 	invalidStyle = true,
+	validStyle = false,
 	readOnly,
 	disabled,
 	describedBy,
@@ -59,6 +61,8 @@ export function TextInput<K extends FieldValues>({
 
 	const inputId = id ?? defaultId;
 
+	const isValid: boolean = fieldState.isTouched && !fieldState.invalid && field.value.trim();
+
 	return (
 		<div className={styles.field} style={{width, ...style}}>
 			{!ariaLabelOnly ? (
@@ -72,7 +76,7 @@ export function TextInput<K extends FieldValues>({
 					{...field}
 					id={inputId}
 					type="text"
-					className={`${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
+					className={`${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""} ${validStyle && isValid ? styles.valid : ""}`}
 					readOnly={readOnly}
 					aria-label={ariaLabelOnly ? label : undefined}
 					aria-readonly={readOnly}
@@ -111,6 +115,7 @@ export function TextInputWithField<K extends FieldValues>({
 	id,
 	focusAnimation = true,
 	invalidStyle = true,
+	validStyle = false,
 	readOnly,
 	disabled,
 	describedBy,
@@ -126,6 +131,8 @@ export function TextInputWithField<K extends FieldValues>({
 
 	const inputId = id ?? defaultId;
 
+	const isValid: boolean = fieldState.isTouched && !fieldState.invalid && field.value.trim();
+
 	return (
 		<div className={styles.field} style={{width, ...style}}>
 			{!ariaLabelOnly ? (
@@ -139,7 +146,7 @@ export function TextInputWithField<K extends FieldValues>({
 					{...field}
 					id={inputId}
 					type="text"
-					className={`${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
+					className={`${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""} ${validStyle && isValid ? styles.valid : ""}`}
 					readOnly={readOnly}
 					aria-label={ariaLabelOnly ? label : undefined}
 					aria-readonly={readOnly}
@@ -170,6 +177,7 @@ export function PasswordInput<K extends FieldValues>({
 	id,
 	focusAnimation = true,
 	invalidStyle = true,
+	validStyle = false,
 	readOnly,
 	disabled,
 	describedBy,
@@ -187,6 +195,8 @@ export function PasswordInput<K extends FieldValues>({
 
 	const inputId = id ?? defaultId;
 
+	const isValid: boolean = fieldState.isTouched && !fieldState.invalid && field.value.trim();
+
 	return (
 		<div className={styles.field} style={{width, ...style}}>
 			{!ariaLabelOnly ? (
@@ -200,7 +210,7 @@ export function PasswordInput<K extends FieldValues>({
 					{...field}
 					id={inputId}
 					type={show ? "text" : "password"}
-					className={`${styles.has_action} ${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""}`}
+					className={`${styles.has_action} ${focusAnimation ? styles.focus_animation : ""} ${invalidStyle && fieldState.invalid ? styles.invalid : ""} ${validStyle && isValid ? styles.valid : ""}`}
 					readOnly={readOnly}
 					aria-label={ariaLabelOnly ? label : undefined}
 					aria-readonly={readOnly}

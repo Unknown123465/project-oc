@@ -48,6 +48,11 @@
 			outline: 0;
 		}
 
+		&.valid {
+			border-color: var(--success-text);
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--success-text) 22%, transparent);
+		}
+
 		&.invalid {
 			border-color: var(--error-text);
 			box-shadow: 0 0 0 3px color-mix(in srgb, var(--error-text) 22%, transparent);
