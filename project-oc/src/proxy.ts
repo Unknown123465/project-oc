@@ -8,7 +8,7 @@ export function proxy(req: NextRequest) {
 
 	const cspList: string[][] = [
 		["default-src", SELF],
-		["script-src", SELF, UNSAFE_INLINE, process.env.NODE_ENV === "development" ? UNSAFE_EVAL : ""],
+		["script-src", SELF, UNSAFE_INLINE, "https://cdn.jsdelivr.net", process.env.NODE_ENV === "development" ? UNSAFE_EVAL : ""],
 		["style-src", SELF, UNSAFE_INLINE],
 		["img-src", SELF, "blob:"],
 		["worker-src", SELF, "blob:"],
