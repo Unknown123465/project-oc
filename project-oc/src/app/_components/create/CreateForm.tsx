@@ -6,7 +6,7 @@ import CoreInfoSection from "./CoreInfoSection";
 import ColorSection from "./ColorSection";
 import ChoiceSection from "./ChoiceSection";
 import {SubmitButton, NormalButton} from "@/components/ui/button";
-import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError} from "react-hook-form";
+import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue} from "react-hook-form";
 import {CreateCharFormInputType} from "@/app/create/validator";
 import {useId} from "react";
 import {useRouter} from "next/navigation";
@@ -16,11 +16,12 @@ interface CreateFormProps {
 	register: UseFormRegister<CreateCharFormInputType>;
 	handleSubmit: UseFormHandleSubmit<CreateCharFormInputType>;
 	setError: UseFormSetError<CreateCharFormInputType>;
+	setValue: UseFormSetValue<CreateCharFormInputType>;
 	errors: FieldErrors<CreateCharFormInputType>;
 	isSubmitting: boolean;
 }
 
-export default function CreateForm({control, register, handleSubmit, setError, errors, isSubmitting}: CreateFormProps) {
+export default function CreateForm({control, register, handleSubmit, setError, setValue, errors, isSubmitting}: CreateFormProps) {
 	const router = useRouter();
 
 	const aiHeadingId = useId();
@@ -45,7 +46,7 @@ export default function CreateForm({control, register, handleSubmit, setError, e
 
 	return (
 		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-			<ImageUploadField control={control} errors={errors} />
+			<ImageUploadField control={control} errors={errors} setValue={setValue} />
 
 			<CoreInfoSection control={control} errors={errors} />
 
