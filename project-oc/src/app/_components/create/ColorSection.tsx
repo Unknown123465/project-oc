@@ -8,6 +8,7 @@ import OptionalFieldsDetails from "./OptionalFieldsDetails";
 import type {CreateCharFormInputType} from "@/app/create/validator";
 import {TextInputWithField} from "@/components/ui/input";
 import ColorPreset from "./ColorPreset";
+import {describedBy} from "@/components/ui/aria";
 
 interface ColorSectionProps {
 	control: Control<CreateCharFormInputType>;
@@ -16,7 +17,7 @@ interface ColorSectionProps {
 
 /* input[type=color]는 #rrggbb만 받는다. 텍스트 칸에 아직 다 못 적은 값을 넘기면
    브라우저가 제 나름대로 보정해 버리므로, 완성된 값일 때만 넘긴다. */
-const HEX = /^#[0-9a-f]{6}$/i;
+const HEX: RegExp = /^#[0-9a-f]{6}$/i;
 
 export default function ColorSection({control, errors}: ColorSectionProps) {
 	const titleId = useId();
@@ -47,7 +48,7 @@ export default function ColorSection({control, errors}: ColorSectionProps) {
 								value={HEX.test(field.value) ? field.value : "#000000"}
 								onChange={field.onChange}
 								onBlur={field.onBlur}
-								aria-describedby={`${colorHelpId} ${colorErrorId}`}
+								aria-describedby={describedBy(colorHelpId, errors.charColor && colorErrorId)}
 							/>
 
 							<TextInputWithField
@@ -60,7 +61,7 @@ export default function ColorSection({control, errors}: ColorSectionProps) {
 								padding={10}
 								maxLength={7}
 								spellCheck={false}
-								describedBy={`${colorHelpId} ${colorErrorId}`}
+								describedBy={describedBy(colorHelpId, errors.charColor && colorErrorId)}
 							/>
 
 							<ColorPreset value={field.value} onChange={field.onChange} />
