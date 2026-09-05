@@ -6,6 +6,7 @@ import sectionStyles from "./Section.module.css";
 import styles from "./CoreInfoSection.module.css";
 import {TextInput} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
+import {describedBy} from "@/components/ui/aria";
 import type {CreateCharFormInputType} from "@/app/create/validator";
 
 interface CoreInfoSectionProps {
@@ -49,14 +50,25 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 
 			<div className={styles.fields}>
 				<div className={styles.field}>
-					<TextInput id={inputId.charName} name="charName" control={control} label="이름" required maxLength={20} placeholder="캐릭터 이름을 입력하세요" describedBy={helpId.charName} />
+					<TextInput
+						id={inputId.charName}
+						name="charName"
+						control={control}
+						label="이름"
+						required
+						maxLength={20}
+						placeholder="캐릭터 이름을 입력하세요"
+						describedBy={describedBy(helpId.charName, errors.charName && errorId.charName)}
+					/>
 
 					<div>
 						<p id={helpId.charName} className={styles.field_help}>
 							최대 20자
 						</p>
 
-						<p className={sectionStyles.error_message}>{errors.charName?.message}</p>
+						<p id={errorId.charName} className={sectionStyles.error_message}>
+							{errors.charName?.message}
+						</p>
 					</div>
 				</div>
 
@@ -69,7 +81,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 						required
 						maxLength={30}
 						placeholder="이 캐릭터를 한 문장으로 소개해 주세요"
-						describedBy={helpId.charMessage}
+						describedBy={describedBy(helpId.charMessage, errors.charMessage && errorId.charMessage)}
 					/>
 
 					<div>
@@ -77,31 +89,55 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 							최대 30자
 						</p>
 
-						<p className={sectionStyles.error_message}>{errors.charMessage?.message}</p>
+						<p id={errorId.charMessage} className={sectionStyles.error_message}>
+							{errors.charMessage?.message}
+						</p>
 					</div>
 				</div>
 
 				<div className={styles.field}>
-					<Textarea id={inputId.charLike} name="charLike" control={control} label="좋아하는 것" rows={3} maxLength={100} placeholder="무대 위에 서는 것" describedBy={helpId.charLike} />
+					<Textarea
+						id={inputId.charLike}
+						name="charLike"
+						control={control}
+						label="좋아하는 것"
+						rows={3}
+						maxLength={100}
+						placeholder="무대 위에 서는 것"
+						describedBy={describedBy(helpId.charLike, errors.charLike && errorId.charLike)}
+					/>
 
 					<div>
 						<p id={helpId.charLike} className={styles.field_help}>
 							최대 100자 (공백 포함)
 						</p>
 
-						<p className={sectionStyles.error_message}>{errors.charLike?.message}</p>
+						<p id={errorId.charLike} className={sectionStyles.error_message}>
+							{errors.charLike?.message}
+						</p>
 					</div>
 				</div>
 
 				<div className={styles.field}>
-					<Textarea id={inputId.charHate} name="charHate" control={control} label="싫어하는 것" rows={3} maxLength={100} placeholder="포기하는 것" describedBy={helpId.charHate} />
+					<Textarea
+						id={inputId.charHate}
+						name="charHate"
+						control={control}
+						label="싫어하는 것"
+						rows={3}
+						maxLength={100}
+						placeholder="포기하는 것"
+						describedBy={describedBy(helpId.charHate, errors.charHate && errorId.charHate)}
+					/>
 
 					<div>
 						<p id={helpId.charHate} className={styles.field_help}>
 							최대 100자 (공백 포함)
 						</p>
 
-						<p className={sectionStyles.error_message}>{errors.charHate?.message}</p>
+						<p id={errorId.charHate} className={sectionStyles.error_message}>
+							{errors.charHate?.message}
+						</p>
 					</div>
 				</div>
 
@@ -114,7 +150,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 						rows={4}
 						maxLength={100}
 						placeholder="밝고 긍정적이며 꾸준히 노력하는 성격입니다."
-						describedBy={helpId.charPersonality}
+						describedBy={describedBy(helpId.charPersonality, errors.charPersonality && errorId.charPersonality)}
 					/>
 
 					<div>
@@ -122,19 +158,30 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 							최대 100자 (공백 포함)
 						</p>
 
-						<p className={sectionStyles.error_message}>{errors.charPersonality?.message}</p>
+						<p id={errorId.charPersonality} className={sectionStyles.error_message}>
+							{errors.charPersonality?.message}
+						</p>
 					</div>
 				</div>
 
 				<div className={styles.field}>
-					<Textarea id={inputId.charTmi} name="charTmi" control={control} label="TMI" placeholder="한 줄에 하나씩, 최대 5개까지 입력하세요" describedBy={helpId.charTmi} />
+					<Textarea
+						id={inputId.charTmi}
+						name="charTmi"
+						control={control}
+						label="TMI"
+						placeholder="한 줄에 하나씩, 최대 5개까지 입력하세요"
+						describedBy={describedBy(helpId.charTmi, errors.charTmi && errorId.charTmi)}
+					/>
 
 					<div>
 						<p id={helpId.charTmi} className={styles.field_help}>
 							줄바꿈으로 구분, 한 줄 최대 30자
 						</p>
 
-						<p className={sectionStyles.error_message}>{errors.charTmi?.message}</p>
+						<p id={errorId.charTmi} className={sectionStyles.error_message}>
+							{errors.charTmi?.message}
+						</p>
 					</div>
 				</div>
 			</div>

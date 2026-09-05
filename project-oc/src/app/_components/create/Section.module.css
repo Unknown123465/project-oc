@@ -20,7 +20,7 @@
 }
 
 .error_message {
-	min-height: 1em;
+	min-height: 1.5em;
 	margin: 0;
 	color: var(--error-text);
 	font-size: 12.5px;
