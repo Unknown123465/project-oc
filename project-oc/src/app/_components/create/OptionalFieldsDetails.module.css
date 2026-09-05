@@ -18,6 +18,12 @@
 	margin-top: 18px;
 	display: grid;
 	grid-auto-rows: minmax(80px, auto);
+
+	& .field {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
 }
 
 @media (width >= 768px) {
@@ -26,7 +32,7 @@
 		gap: 18px;
 
 		/* 홀수 개일 때 마지막 요소가 가로 영역을 전부 차지하게 함 */
-		& > *:last-child:nth-child(odd) {
+		& .field:nth-child(odd):last-child {
 			grid-column: 1 / span 2;
 		}
 	}
