@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `character` model and its related types.
+ * This file exports the `Character` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
 /**
- * Model character
+ * Model Character
  * 
  */
-export type characterModel = runtime.Types.Result.DefaultSelection<Prisma.$characterPayload>
+export type CharacterModel = runtime.Types.Result.DefaultSelection<Prisma.$CharacterPayload>
 
 export type AggregateCharacter = {
   _count: CharacterCountAggregateOutputType | null
@@ -27,211 +27,223 @@ export type AggregateCharacter = {
 }
 
 export type CharacterAvgAggregateOutputType = {
-  char_id: number | null
-  char_public_mode: number | null
-  ai_used: number | null
+  charId: number | null
+  charPublicMode: number | null
+  aiUsed: number | null
 }
 
 export type CharacterSumAggregateOutputType = {
-  char_id: bigint | null
-  char_public_mode: number | null
-  ai_used: number | null
+  charId: bigint | null
+  charPublicMode: number | null
+  aiUsed: number | null
 }
 
 export type CharacterMinAggregateOutputType = {
-  char_id: bigint | null
-  char_name: string | null
-  char_image: string | null
-  char_message: string | null
-  char_kind: string | null
-  char_color: string | null
-  char_music: string | null
-  char_like: string | null
-  char_hate: string | null
-  char_mbti: string | null
-  char_birthplace: string | null
-  char_age: string | null
-  char_birthday: string | null
-  char_height: string | null
-  char_personality: string | null
-  char_public_mode: number | null
-  ai_used: number | null
-  char_public_link: runtime.Bytes | null
-  char_uploader_id: string | null
-  create_dt: Date | null
-  update_dt: Date | null
+  charId: bigint | null
+  charName: string | null
+  charImage: string | null
+  charProfileLayout: string | null
+  charImageFrame: string | null
+  charMessage: string | null
+  charKind: string | null
+  charColor: string | null
+  charMusic: string | null
+  charLike: string | null
+  charHate: string | null
+  charMbti: string | null
+  charBirthplace: string | null
+  charAge: string | null
+  charBirthday: string | null
+  charHeight: string | null
+  charPersonality: string | null
+  charPublicMode: number | null
+  aiUsed: number | null
+  charPublicLink: runtime.Bytes | null
+  charUploaderId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type CharacterMaxAggregateOutputType = {
-  char_id: bigint | null
-  char_name: string | null
-  char_image: string | null
-  char_message: string | null
-  char_kind: string | null
-  char_color: string | null
-  char_music: string | null
-  char_like: string | null
-  char_hate: string | null
-  char_mbti: string | null
-  char_birthplace: string | null
-  char_age: string | null
-  char_birthday: string | null
-  char_height: string | null
-  char_personality: string | null
-  char_public_mode: number | null
-  ai_used: number | null
-  char_public_link: runtime.Bytes | null
-  char_uploader_id: string | null
-  create_dt: Date | null
-  update_dt: Date | null
+  charId: bigint | null
+  charName: string | null
+  charImage: string | null
+  charProfileLayout: string | null
+  charImageFrame: string | null
+  charMessage: string | null
+  charKind: string | null
+  charColor: string | null
+  charMusic: string | null
+  charLike: string | null
+  charHate: string | null
+  charMbti: string | null
+  charBirthplace: string | null
+  charAge: string | null
+  charBirthday: string | null
+  charHeight: string | null
+  charPersonality: string | null
+  charPublicMode: number | null
+  aiUsed: number | null
+  charPublicLink: runtime.Bytes | null
+  charUploaderId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type CharacterCountAggregateOutputType = {
-  char_id: number
-  char_name: number
-  char_image: number
-  char_message: number
-  char_kind: number
-  char_color: number
-  char_music: number
-  char_like: number
-  char_hate: number
-  char_mbti: number
-  char_birthplace: number
-  char_age: number
-  char_birthday: number
-  char_height: number
-  char_personality: number
-  char_tmi: number
-  char_public_mode: number
-  ai_used: number
-  char_public_link: number
-  char_uploader_id: number
-  create_dt: number
-  update_dt: number
+  charId: number
+  charName: number
+  charImage: number
+  charProfileLayout: number
+  charImageFrame: number
+  charMessage: number
+  charKind: number
+  charColor: number
+  charMusic: number
+  charLike: number
+  charHate: number
+  charMbti: number
+  charBirthplace: number
+  charAge: number
+  charBirthday: number
+  charHeight: number
+  charPersonality: number
+  charTmi: number
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: number
+  charUploaderId: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
 
 export type CharacterAvgAggregateInputType = {
-  char_id?: true
-  char_public_mode?: true
-  ai_used?: true
+  charId?: true
+  charPublicMode?: true
+  aiUsed?: true
 }
 
 export type CharacterSumAggregateInputType = {
-  char_id?: true
-  char_public_mode?: true
-  ai_used?: true
+  charId?: true
+  charPublicMode?: true
+  aiUsed?: true
 }
 
 export type CharacterMinAggregateInputType = {
-  char_id?: true
-  char_name?: true
-  char_image?: true
-  char_message?: true
-  char_kind?: true
-  char_color?: true
-  char_music?: true
-  char_like?: true
-  char_hate?: true
-  char_mbti?: true
-  char_birthplace?: true
-  char_age?: true
-  char_birthday?: true
-  char_height?: true
-  char_personality?: true
-  char_public_mode?: true
-  ai_used?: true
-  char_public_link?: true
-  char_uploader_id?: true
-  create_dt?: true
-  update_dt?: true
+  charId?: true
+  charName?: true
+  charImage?: true
+  charProfileLayout?: true
+  charImageFrame?: true
+  charMessage?: true
+  charKind?: true
+  charColor?: true
+  charMusic?: true
+  charLike?: true
+  charHate?: true
+  charMbti?: true
+  charBirthplace?: true
+  charAge?: true
+  charBirthday?: true
+  charHeight?: true
+  charPersonality?: true
+  charPublicMode?: true
+  aiUsed?: true
+  charPublicLink?: true
+  charUploaderId?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type CharacterMaxAggregateInputType = {
-  char_id?: true
-  char_name?: true
-  char_image?: true
-  char_message?: true
-  char_kind?: true
-  char_color?: true
-  char_music?: true
-  char_like?: true
-  char_hate?: true
-  char_mbti?: true
-  char_birthplace?: true
-  char_age?: true
-  char_birthday?: true
-  char_height?: true
-  char_personality?: true
-  char_public_mode?: true
-  ai_used?: true
-  char_public_link?: true
-  char_uploader_id?: true
-  create_dt?: true
-  update_dt?: true
+  charId?: true
+  charName?: true
+  charImage?: true
+  charProfileLayout?: true
+  charImageFrame?: true
+  charMessage?: true
+  charKind?: true
+  charColor?: true
+  charMusic?: true
+  charLike?: true
+  charHate?: true
+  charMbti?: true
+  charBirthplace?: true
+  charAge?: true
+  charBirthday?: true
+  charHeight?: true
+  charPersonality?: true
+  charPublicMode?: true
+  aiUsed?: true
+  charPublicLink?: true
+  charUploaderId?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type CharacterCountAggregateInputType = {
-  char_id?: true
-  char_name?: true
-  char_image?: true
-  char_message?: true
-  char_kind?: true
-  char_color?: true
-  char_music?: true
-  char_like?: true
-  char_hate?: true
-  char_mbti?: true
-  char_birthplace?: true
-  char_age?: true
-  char_birthday?: true
-  char_height?: true
-  char_personality?: true
-  char_tmi?: true
-  char_public_mode?: true
-  ai_used?: true
-  char_public_link?: true
-  char_uploader_id?: true
-  create_dt?: true
-  update_dt?: true
+  charId?: true
+  charName?: true
+  charImage?: true
+  charProfileLayout?: true
+  charImageFrame?: true
+  charMessage?: true
+  charKind?: true
+  charColor?: true
+  charMusic?: true
+  charLike?: true
+  charHate?: true
+  charMbti?: true
+  charBirthplace?: true
+  charAge?: true
+  charBirthday?: true
+  charHeight?: true
+  charPersonality?: true
+  charTmi?: true
+  charPublicMode?: true
+  aiUsed?: true
+  charPublicLink?: true
+  charUploaderId?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
 export type CharacterAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which character to aggregate.
+   * Filter which Character to aggregate.
    */
-  where?: Prisma.characterWhereInput
+  where?: Prisma.CharacterWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of characters to fetch.
+   * Determine the order of Characters to fetch.
    */
-  orderBy?: Prisma.characterOrderByWithRelationInput | Prisma.characterOrderByWithRelationInput[]
+  orderBy?: Prisma.CharacterOrderByWithRelationInput | Prisma.CharacterOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.characterWhereUniqueInput
+  cursor?: Prisma.CharacterWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` characters from the position of the cursor.
+   * Take `±n` Characters from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` characters.
+   * Skip the first `n` Characters.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned characters
+   * Count returned Characters
   **/
   _count?: true | CharacterCountAggregateInputType
   /**
@@ -271,11 +283,11 @@ export type GetCharacterAggregateType<T extends CharacterAggregateArgs> = {
 
 
 
-export type characterGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.characterWhereInput
-  orderBy?: Prisma.characterOrderByWithAggregationInput | Prisma.characterOrderByWithAggregationInput[]
+export type CharacterGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CharacterWhereInput
+  orderBy?: Prisma.CharacterOrderByWithAggregationInput | Prisma.CharacterOrderByWithAggregationInput[]
   by: Prisma.CharacterScalarFieldEnum[] | Prisma.CharacterScalarFieldEnum
-  having?: Prisma.characterScalarWhereWithAggregatesInput
+  having?: Prisma.CharacterScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: CharacterCountAggregateInputType | true
@@ -286,28 +298,30 @@ export type characterGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 export type CharacterGroupByOutputType = {
-  char_id: bigint
-  char_name: string
-  char_image: string
-  char_message: string
-  char_kind: string | null
-  char_color: string
-  char_music: string | null
-  char_like: string | null
-  char_hate: string | null
-  char_mbti: string | null
-  char_birthplace: string | null
-  char_age: string | null
-  char_birthday: string | null
-  char_height: string | null
-  char_personality: string | null
-  char_tmi: runtime.JsonValue | null
-  char_public_mode: number
-  ai_used: number
-  char_public_link: runtime.Bytes
-  char_uploader_id: string
-  create_dt: Date
-  update_dt: Date | null
+  charId: bigint
+  charName: string
+  charImage: string
+  charProfileLayout: string
+  charImageFrame: string
+  charMessage: string
+  charKind: string | null
+  charColor: string
+  charMusic: string | null
+  charLike: string | null
+  charHate: string | null
+  charMbti: string | null
+  charBirthplace: string | null
+  charAge: string | null
+  charBirthday: string | null
+  charHeight: string | null
+  charPersonality: string | null
+  charTmi: runtime.JsonValue | null
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: runtime.Bytes
+  charUploaderId: string
+  createdAt: Date
+  updatedAt: Date | null
   _count: CharacterCountAggregateOutputType | null
   _avg: CharacterAvgAggregateOutputType | null
   _sum: CharacterSumAggregateOutputType | null
@@ -315,7 +329,7 @@ export type CharacterGroupByOutputType = {
   _max: CharacterMaxAggregateOutputType | null
 }
 
-export type GetCharacterGroupByPayload<T extends characterGroupByArgs> = Prisma.PrismaPromise<
+export type GetCharacterGroupByPayload<T extends CharacterGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CharacterGroupByOutputType, T['by']> &
       {
@@ -330,464 +344,494 @@ export type GetCharacterGroupByPayload<T extends characterGroupByArgs> = Prisma.
 
 
 
-export type characterWhereInput = {
-  AND?: Prisma.characterWhereInput | Prisma.characterWhereInput[]
-  OR?: Prisma.characterWhereInput[]
-  NOT?: Prisma.characterWhereInput | Prisma.characterWhereInput[]
-  char_id?: Prisma.BigIntFilter<"character"> | bigint | number
-  char_name?: Prisma.StringFilter<"character"> | string
-  char_image?: Prisma.StringFilter<"character"> | string
-  char_message?: Prisma.StringFilter<"character"> | string
-  char_kind?: Prisma.StringNullableFilter<"character"> | string | null
-  char_color?: Prisma.StringFilter<"character"> | string
-  char_music?: Prisma.StringNullableFilter<"character"> | string | null
-  char_like?: Prisma.StringNullableFilter<"character"> | string | null
-  char_hate?: Prisma.StringNullableFilter<"character"> | string | null
-  char_mbti?: Prisma.StringNullableFilter<"character"> | string | null
-  char_birthplace?: Prisma.StringNullableFilter<"character"> | string | null
-  char_age?: Prisma.StringNullableFilter<"character"> | string | null
-  char_birthday?: Prisma.StringNullableFilter<"character"> | string | null
-  char_height?: Prisma.StringNullableFilter<"character"> | string | null
-  char_personality?: Prisma.StringNullableFilter<"character"> | string | null
-  char_tmi?: Prisma.JsonNullableFilter<"character">
-  char_public_mode?: Prisma.IntFilter<"character"> | number
-  ai_used?: Prisma.IntFilter<"character"> | number
-  char_public_link?: Prisma.BytesFilter<"character"> | runtime.Bytes
-  char_uploader_id?: Prisma.StringFilter<"character"> | string
-  create_dt?: Prisma.DateTimeFilter<"character"> | Date | string
-  update_dt?: Prisma.DateTimeNullableFilter<"character"> | Date | string | null
+export type CharacterWhereInput = {
+  AND?: Prisma.CharacterWhereInput | Prisma.CharacterWhereInput[]
+  OR?: Prisma.CharacterWhereInput[]
+  NOT?: Prisma.CharacterWhereInput | Prisma.CharacterWhereInput[]
+  charId?: Prisma.BigIntFilter<"Character"> | bigint | number
+  charName?: Prisma.StringFilter<"Character"> | string
+  charImage?: Prisma.StringFilter<"Character"> | string
+  charProfileLayout?: Prisma.StringFilter<"Character"> | string
+  charImageFrame?: Prisma.StringFilter<"Character"> | string
+  charMessage?: Prisma.StringFilter<"Character"> | string
+  charKind?: Prisma.StringNullableFilter<"Character"> | string | null
+  charColor?: Prisma.StringFilter<"Character"> | string
+  charMusic?: Prisma.StringNullableFilter<"Character"> | string | null
+  charLike?: Prisma.StringNullableFilter<"Character"> | string | null
+  charHate?: Prisma.StringNullableFilter<"Character"> | string | null
+  charMbti?: Prisma.StringNullableFilter<"Character"> | string | null
+  charBirthplace?: Prisma.StringNullableFilter<"Character"> | string | null
+  charAge?: Prisma.StringNullableFilter<"Character"> | string | null
+  charBirthday?: Prisma.StringNullableFilter<"Character"> | string | null
+  charHeight?: Prisma.StringNullableFilter<"Character"> | string | null
+  charPersonality?: Prisma.StringNullableFilter<"Character"> | string | null
+  charTmi?: Prisma.JsonNullableFilter<"Character">
+  charPublicMode?: Prisma.IntFilter<"Character"> | number
+  aiUsed?: Prisma.IntFilter<"Character"> | number
+  charPublicLink?: Prisma.BytesFilter<"Character"> | runtime.Bytes
+  charUploaderId?: Prisma.StringFilter<"Character"> | string
+  createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
+  updatedAt?: Prisma.DateTimeNullableFilter<"Character"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
-export type characterOrderByWithRelationInput = {
-  char_id?: Prisma.SortOrder
-  char_name?: Prisma.SortOrder
-  char_image?: Prisma.SortOrder
-  char_message?: Prisma.SortOrder
-  char_kind?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_color?: Prisma.SortOrder
-  char_music?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_like?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_hate?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_mbti?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_birthplace?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_age?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_birthday?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_height?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_personality?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_tmi?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_public_mode?: Prisma.SortOrder
-  ai_used?: Prisma.SortOrder
-  char_public_link?: Prisma.SortOrder
-  char_uploader_id?: Prisma.SortOrder
-  create_dt?: Prisma.SortOrder
-  update_dt?: Prisma.SortOrderInput | Prisma.SortOrder
+export type CharacterOrderByWithRelationInput = {
+  charId?: Prisma.SortOrder
+  charName?: Prisma.SortOrder
+  charImage?: Prisma.SortOrder
+  charProfileLayout?: Prisma.SortOrder
+  charImageFrame?: Prisma.SortOrder
+  charMessage?: Prisma.SortOrder
+  charKind?: Prisma.SortOrderInput | Prisma.SortOrder
+  charColor?: Prisma.SortOrder
+  charMusic?: Prisma.SortOrderInput | Prisma.SortOrder
+  charLike?: Prisma.SortOrderInput | Prisma.SortOrder
+  charHate?: Prisma.SortOrderInput | Prisma.SortOrder
+  charMbti?: Prisma.SortOrderInput | Prisma.SortOrder
+  charBirthplace?: Prisma.SortOrderInput | Prisma.SortOrder
+  charAge?: Prisma.SortOrderInput | Prisma.SortOrder
+  charBirthday?: Prisma.SortOrderInput | Prisma.SortOrder
+  charHeight?: Prisma.SortOrderInput | Prisma.SortOrder
+  charPersonality?: Prisma.SortOrderInput | Prisma.SortOrder
+  charTmi?: Prisma.SortOrderInput | Prisma.SortOrder
+  charPublicMode?: Prisma.SortOrder
+  aiUsed?: Prisma.SortOrder
+  charPublicLink?: Prisma.SortOrder
+  charUploaderId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
-  _relevance?: Prisma.characterOrderByRelevanceInput
+  _relevance?: Prisma.CharacterOrderByRelevanceInput
 }
 
-export type characterWhereUniqueInput = Prisma.AtLeast<{
-  char_id?: bigint | number
-  char_public_link?: runtime.Bytes
-  AND?: Prisma.characterWhereInput | Prisma.characterWhereInput[]
-  OR?: Prisma.characterWhereInput[]
-  NOT?: Prisma.characterWhereInput | Prisma.characterWhereInput[]
-  char_name?: Prisma.StringFilter<"character"> | string
-  char_image?: Prisma.StringFilter<"character"> | string
-  char_message?: Prisma.StringFilter<"character"> | string
-  char_kind?: Prisma.StringNullableFilter<"character"> | string | null
-  char_color?: Prisma.StringFilter<"character"> | string
-  char_music?: Prisma.StringNullableFilter<"character"> | string | null
-  char_like?: Prisma.StringNullableFilter<"character"> | string | null
-  char_hate?: Prisma.StringNullableFilter<"character"> | string | null
-  char_mbti?: Prisma.StringNullableFilter<"character"> | string | null
-  char_birthplace?: Prisma.StringNullableFilter<"character"> | string | null
-  char_age?: Prisma.StringNullableFilter<"character"> | string | null
-  char_birthday?: Prisma.StringNullableFilter<"character"> | string | null
-  char_height?: Prisma.StringNullableFilter<"character"> | string | null
-  char_personality?: Prisma.StringNullableFilter<"character"> | string | null
-  char_tmi?: Prisma.JsonNullableFilter<"character">
-  char_public_mode?: Prisma.IntFilter<"character"> | number
-  ai_used?: Prisma.IntFilter<"character"> | number
-  char_uploader_id?: Prisma.StringFilter<"character"> | string
-  create_dt?: Prisma.DateTimeFilter<"character"> | Date | string
-  update_dt?: Prisma.DateTimeNullableFilter<"character"> | Date | string | null
+export type CharacterWhereUniqueInput = Prisma.AtLeast<{
+  charId?: bigint | number
+  charPublicLink?: runtime.Bytes
+  AND?: Prisma.CharacterWhereInput | Prisma.CharacterWhereInput[]
+  OR?: Prisma.CharacterWhereInput[]
+  NOT?: Prisma.CharacterWhereInput | Prisma.CharacterWhereInput[]
+  charName?: Prisma.StringFilter<"Character"> | string
+  charImage?: Prisma.StringFilter<"Character"> | string
+  charProfileLayout?: Prisma.StringFilter<"Character"> | string
+  charImageFrame?: Prisma.StringFilter<"Character"> | string
+  charMessage?: Prisma.StringFilter<"Character"> | string
+  charKind?: Prisma.StringNullableFilter<"Character"> | string | null
+  charColor?: Prisma.StringFilter<"Character"> | string
+  charMusic?: Prisma.StringNullableFilter<"Character"> | string | null
+  charLike?: Prisma.StringNullableFilter<"Character"> | string | null
+  charHate?: Prisma.StringNullableFilter<"Character"> | string | null
+  charMbti?: Prisma.StringNullableFilter<"Character"> | string | null
+  charBirthplace?: Prisma.StringNullableFilter<"Character"> | string | null
+  charAge?: Prisma.StringNullableFilter<"Character"> | string | null
+  charBirthday?: Prisma.StringNullableFilter<"Character"> | string | null
+  charHeight?: Prisma.StringNullableFilter<"Character"> | string | null
+  charPersonality?: Prisma.StringNullableFilter<"Character"> | string | null
+  charTmi?: Prisma.JsonNullableFilter<"Character">
+  charPublicMode?: Prisma.IntFilter<"Character"> | number
+  aiUsed?: Prisma.IntFilter<"Character"> | number
+  charUploaderId?: Prisma.StringFilter<"Character"> | string
+  createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
+  updatedAt?: Prisma.DateTimeNullableFilter<"Character"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "char_id" | "char_public_link">
+}, "charId" | "charPublicLink">
 
-export type characterOrderByWithAggregationInput = {
-  char_id?: Prisma.SortOrder
-  char_name?: Prisma.SortOrder
-  char_image?: Prisma.SortOrder
-  char_message?: Prisma.SortOrder
-  char_kind?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_color?: Prisma.SortOrder
-  char_music?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_like?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_hate?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_mbti?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_birthplace?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_age?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_birthday?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_height?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_personality?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_tmi?: Prisma.SortOrderInput | Prisma.SortOrder
-  char_public_mode?: Prisma.SortOrder
-  ai_used?: Prisma.SortOrder
-  char_public_link?: Prisma.SortOrder
-  char_uploader_id?: Prisma.SortOrder
-  create_dt?: Prisma.SortOrder
-  update_dt?: Prisma.SortOrderInput | Prisma.SortOrder
-  _count?: Prisma.characterCountOrderByAggregateInput
-  _avg?: Prisma.characterAvgOrderByAggregateInput
-  _max?: Prisma.characterMaxOrderByAggregateInput
-  _min?: Prisma.characterMinOrderByAggregateInput
-  _sum?: Prisma.characterSumOrderByAggregateInput
+export type CharacterOrderByWithAggregationInput = {
+  charId?: Prisma.SortOrder
+  charName?: Prisma.SortOrder
+  charImage?: Prisma.SortOrder
+  charProfileLayout?: Prisma.SortOrder
+  charImageFrame?: Prisma.SortOrder
+  charMessage?: Prisma.SortOrder
+  charKind?: Prisma.SortOrderInput | Prisma.SortOrder
+  charColor?: Prisma.SortOrder
+  charMusic?: Prisma.SortOrderInput | Prisma.SortOrder
+  charLike?: Prisma.SortOrderInput | Prisma.SortOrder
+  charHate?: Prisma.SortOrderInput | Prisma.SortOrder
+  charMbti?: Prisma.SortOrderInput | Prisma.SortOrder
+  charBirthplace?: Prisma.SortOrderInput | Prisma.SortOrder
+  charAge?: Prisma.SortOrderInput | Prisma.SortOrder
+  charBirthday?: Prisma.SortOrderInput | Prisma.SortOrder
+  charHeight?: Prisma.SortOrderInput | Prisma.SortOrder
+  charPersonality?: Prisma.SortOrderInput | Prisma.SortOrder
+  charTmi?: Prisma.SortOrderInput | Prisma.SortOrder
+  charPublicMode?: Prisma.SortOrder
+  aiUsed?: Prisma.SortOrder
+  charPublicLink?: Prisma.SortOrder
+  charUploaderId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  _count?: Prisma.CharacterCountOrderByAggregateInput
+  _avg?: Prisma.CharacterAvgOrderByAggregateInput
+  _max?: Prisma.CharacterMaxOrderByAggregateInput
+  _min?: Prisma.CharacterMinOrderByAggregateInput
+  _sum?: Prisma.CharacterSumOrderByAggregateInput
 }
 
-export type characterScalarWhereWithAggregatesInput = {
-  AND?: Prisma.characterScalarWhereWithAggregatesInput | Prisma.characterScalarWhereWithAggregatesInput[]
-  OR?: Prisma.characterScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.characterScalarWhereWithAggregatesInput | Prisma.characterScalarWhereWithAggregatesInput[]
-  char_id?: Prisma.BigIntWithAggregatesFilter<"character"> | bigint | number
-  char_name?: Prisma.StringWithAggregatesFilter<"character"> | string
-  char_image?: Prisma.StringWithAggregatesFilter<"character"> | string
-  char_message?: Prisma.StringWithAggregatesFilter<"character"> | string
-  char_kind?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_color?: Prisma.StringWithAggregatesFilter<"character"> | string
-  char_music?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_like?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_hate?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_mbti?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_birthplace?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_age?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_birthday?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_height?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_personality?: Prisma.StringNullableWithAggregatesFilter<"character"> | string | null
-  char_tmi?: Prisma.JsonNullableWithAggregatesFilter<"character">
-  char_public_mode?: Prisma.IntWithAggregatesFilter<"character"> | number
-  ai_used?: Prisma.IntWithAggregatesFilter<"character"> | number
-  char_public_link?: Prisma.BytesWithAggregatesFilter<"character"> | runtime.Bytes
-  char_uploader_id?: Prisma.StringWithAggregatesFilter<"character"> | string
-  create_dt?: Prisma.DateTimeWithAggregatesFilter<"character"> | Date | string
-  update_dt?: Prisma.DateTimeNullableWithAggregatesFilter<"character"> | Date | string | null
+export type CharacterScalarWhereWithAggregatesInput = {
+  AND?: Prisma.CharacterScalarWhereWithAggregatesInput | Prisma.CharacterScalarWhereWithAggregatesInput[]
+  OR?: Prisma.CharacterScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.CharacterScalarWhereWithAggregatesInput | Prisma.CharacterScalarWhereWithAggregatesInput[]
+  charId?: Prisma.BigIntWithAggregatesFilter<"Character"> | bigint | number
+  charName?: Prisma.StringWithAggregatesFilter<"Character"> | string
+  charImage?: Prisma.StringWithAggregatesFilter<"Character"> | string
+  charProfileLayout?: Prisma.StringWithAggregatesFilter<"Character"> | string
+  charImageFrame?: Prisma.StringWithAggregatesFilter<"Character"> | string
+  charMessage?: Prisma.StringWithAggregatesFilter<"Character"> | string
+  charKind?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charColor?: Prisma.StringWithAggregatesFilter<"Character"> | string
+  charMusic?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charLike?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charHate?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charMbti?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charBirthplace?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charAge?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charBirthday?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charHeight?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charPersonality?: Prisma.StringNullableWithAggregatesFilter<"Character"> | string | null
+  charTmi?: Prisma.JsonNullableWithAggregatesFilter<"Character">
+  charPublicMode?: Prisma.IntWithAggregatesFilter<"Character"> | number
+  aiUsed?: Prisma.IntWithAggregatesFilter<"Character"> | number
+  charPublicLink?: Prisma.BytesWithAggregatesFilter<"Character"> | runtime.Bytes
+  charUploaderId?: Prisma.StringWithAggregatesFilter<"Character"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Character"> | Date | string
+  updatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Character"> | Date | string | null
 }
 
-export type characterCreateInput = {
-  char_id?: bigint | number
-  char_name: string
-  char_image: string
-  char_message: string
-  char_kind?: string | null
-  char_color?: string
-  char_music?: string | null
-  char_like?: string | null
-  char_hate?: string | null
-  char_mbti?: string | null
-  char_birthplace?: string | null
-  char_age?: string | null
-  char_birthday?: string | null
-  char_height?: string | null
-  char_personality?: string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode: number
-  ai_used: number
-  char_public_link: runtime.Bytes
-  create_dt?: Date | string
-  update_dt?: Date | string | null
+export type CharacterCreateInput = {
+  charId?: bigint | number
+  charName: string
+  charImage: string
+  charProfileLayout: string
+  charImageFrame: string
+  charMessage: string
+  charKind?: string | null
+  charColor?: string
+  charMusic?: string | null
+  charLike?: string | null
+  charHate?: string | null
+  charMbti?: string | null
+  charBirthplace?: string | null
+  charAge?: string | null
+  charBirthday?: string | null
+  charHeight?: string | null
+  charPersonality?: string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: runtime.Bytes
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutCharactersInput
 }
 
-export type characterUncheckedCreateInput = {
-  char_id?: bigint | number
-  char_name: string
-  char_image: string
-  char_message: string
-  char_kind?: string | null
-  char_color?: string
-  char_music?: string | null
-  char_like?: string | null
-  char_hate?: string | null
-  char_mbti?: string | null
-  char_birthplace?: string | null
-  char_age?: string | null
-  char_birthday?: string | null
-  char_height?: string | null
-  char_personality?: string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode: number
-  ai_used: number
-  char_public_link: runtime.Bytes
-  char_uploader_id: string
-  create_dt?: Date | string
-  update_dt?: Date | string | null
+export type CharacterUncheckedCreateInput = {
+  charId?: bigint | number
+  charName: string
+  charImage: string
+  charProfileLayout: string
+  charImageFrame: string
+  charMessage: string
+  charKind?: string | null
+  charColor?: string
+  charMusic?: string | null
+  charLike?: string | null
+  charHate?: string | null
+  charMbti?: string | null
+  charBirthplace?: string | null
+  charAge?: string | null
+  charBirthday?: string | null
+  charHeight?: string | null
+  charPersonality?: string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: runtime.Bytes
+  charUploaderId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
 }
 
-export type characterUpdateInput = {
-  char_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  char_name?: Prisma.StringFieldUpdateOperationsInput | string
-  char_image?: Prisma.StringFieldUpdateOperationsInput | string
-  char_message?: Prisma.StringFieldUpdateOperationsInput | string
-  char_kind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_color?: Prisma.StringFieldUpdateOperationsInput | string
-  char_music?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_like?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_hate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_mbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_height?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode?: Prisma.IntFieldUpdateOperationsInput | number
-  ai_used?: Prisma.IntFieldUpdateOperationsInput | number
-  char_public_link?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  create_dt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  update_dt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+export type CharacterUpdateInput = {
+  charId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  charName?: Prisma.StringFieldUpdateOperationsInput | string
+  charImage?: Prisma.StringFieldUpdateOperationsInput | string
+  charProfileLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  charImageFrame?: Prisma.StringFieldUpdateOperationsInput | string
+  charMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  charKind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charColor?: Prisma.StringFieldUpdateOperationsInput | string
+  charMusic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charLike?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charMbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charAge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charPersonality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode?: Prisma.IntFieldUpdateOperationsInput | number
+  aiUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  charPublicLink?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCharactersNestedInput
 }
 
-export type characterUncheckedUpdateInput = {
-  char_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  char_name?: Prisma.StringFieldUpdateOperationsInput | string
-  char_image?: Prisma.StringFieldUpdateOperationsInput | string
-  char_message?: Prisma.StringFieldUpdateOperationsInput | string
-  char_kind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_color?: Prisma.StringFieldUpdateOperationsInput | string
-  char_music?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_like?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_hate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_mbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_height?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode?: Prisma.IntFieldUpdateOperationsInput | number
-  ai_used?: Prisma.IntFieldUpdateOperationsInput | number
-  char_public_link?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  char_uploader_id?: Prisma.StringFieldUpdateOperationsInput | string
-  create_dt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  update_dt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+export type CharacterUncheckedUpdateInput = {
+  charId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  charName?: Prisma.StringFieldUpdateOperationsInput | string
+  charImage?: Prisma.StringFieldUpdateOperationsInput | string
+  charProfileLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  charImageFrame?: Prisma.StringFieldUpdateOperationsInput | string
+  charMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  charKind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charColor?: Prisma.StringFieldUpdateOperationsInput | string
+  charMusic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charLike?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charMbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charAge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charPersonality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode?: Prisma.IntFieldUpdateOperationsInput | number
+  aiUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  charPublicLink?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  charUploaderId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type characterCreateManyInput = {
-  char_id?: bigint | number
-  char_name: string
-  char_image: string
-  char_message: string
-  char_kind?: string | null
-  char_color?: string
-  char_music?: string | null
-  char_like?: string | null
-  char_hate?: string | null
-  char_mbti?: string | null
-  char_birthplace?: string | null
-  char_age?: string | null
-  char_birthday?: string | null
-  char_height?: string | null
-  char_personality?: string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode: number
-  ai_used: number
-  char_public_link: runtime.Bytes
-  char_uploader_id: string
-  create_dt?: Date | string
-  update_dt?: Date | string | null
+export type CharacterCreateManyInput = {
+  charId?: bigint | number
+  charName: string
+  charImage: string
+  charProfileLayout: string
+  charImageFrame: string
+  charMessage: string
+  charKind?: string | null
+  charColor?: string
+  charMusic?: string | null
+  charLike?: string | null
+  charHate?: string | null
+  charMbti?: string | null
+  charBirthplace?: string | null
+  charAge?: string | null
+  charBirthday?: string | null
+  charHeight?: string | null
+  charPersonality?: string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: runtime.Bytes
+  charUploaderId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
 }
 
-export type characterUpdateManyMutationInput = {
-  char_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  char_name?: Prisma.StringFieldUpdateOperationsInput | string
-  char_image?: Prisma.StringFieldUpdateOperationsInput | string
-  char_message?: Prisma.StringFieldUpdateOperationsInput | string
-  char_kind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_color?: Prisma.StringFieldUpdateOperationsInput | string
-  char_music?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_like?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_hate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_mbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_height?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode?: Prisma.IntFieldUpdateOperationsInput | number
-  ai_used?: Prisma.IntFieldUpdateOperationsInput | number
-  char_public_link?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  create_dt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  update_dt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+export type CharacterUpdateManyMutationInput = {
+  charId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  charName?: Prisma.StringFieldUpdateOperationsInput | string
+  charImage?: Prisma.StringFieldUpdateOperationsInput | string
+  charProfileLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  charImageFrame?: Prisma.StringFieldUpdateOperationsInput | string
+  charMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  charKind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charColor?: Prisma.StringFieldUpdateOperationsInput | string
+  charMusic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charLike?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charMbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charAge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charPersonality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode?: Prisma.IntFieldUpdateOperationsInput | number
+  aiUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  charPublicLink?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type characterUncheckedUpdateManyInput = {
-  char_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  char_name?: Prisma.StringFieldUpdateOperationsInput | string
-  char_image?: Prisma.StringFieldUpdateOperationsInput | string
-  char_message?: Prisma.StringFieldUpdateOperationsInput | string
-  char_kind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_color?: Prisma.StringFieldUpdateOperationsInput | string
-  char_music?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_like?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_hate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_mbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_height?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode?: Prisma.IntFieldUpdateOperationsInput | number
-  ai_used?: Prisma.IntFieldUpdateOperationsInput | number
-  char_public_link?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  char_uploader_id?: Prisma.StringFieldUpdateOperationsInput | string
-  create_dt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  update_dt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+export type CharacterUncheckedUpdateManyInput = {
+  charId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  charName?: Prisma.StringFieldUpdateOperationsInput | string
+  charImage?: Prisma.StringFieldUpdateOperationsInput | string
+  charProfileLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  charImageFrame?: Prisma.StringFieldUpdateOperationsInput | string
+  charMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  charKind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charColor?: Prisma.StringFieldUpdateOperationsInput | string
+  charMusic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charLike?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charMbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charAge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charPersonality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode?: Prisma.IntFieldUpdateOperationsInput | number
+  aiUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  charPublicLink?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  charUploaderId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type CharacterListRelationFilter = {
-  every?: Prisma.characterWhereInput
-  some?: Prisma.characterWhereInput
-  none?: Prisma.characterWhereInput
+  every?: Prisma.CharacterWhereInput
+  some?: Prisma.CharacterWhereInput
+  none?: Prisma.CharacterWhereInput
 }
 
-export type characterOrderByRelationAggregateInput = {
+export type CharacterOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type characterOrderByRelevanceInput = {
-  fields: Prisma.characterOrderByRelevanceFieldEnum | Prisma.characterOrderByRelevanceFieldEnum[]
+export type CharacterOrderByRelevanceInput = {
+  fields: Prisma.CharacterOrderByRelevanceFieldEnum | Prisma.CharacterOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
 }
 
-export type characterCountOrderByAggregateInput = {
-  char_id?: Prisma.SortOrder
-  char_name?: Prisma.SortOrder
-  char_image?: Prisma.SortOrder
-  char_message?: Prisma.SortOrder
-  char_kind?: Prisma.SortOrder
-  char_color?: Prisma.SortOrder
-  char_music?: Prisma.SortOrder
-  char_like?: Prisma.SortOrder
-  char_hate?: Prisma.SortOrder
-  char_mbti?: Prisma.SortOrder
-  char_birthplace?: Prisma.SortOrder
-  char_age?: Prisma.SortOrder
-  char_birthday?: Prisma.SortOrder
-  char_height?: Prisma.SortOrder
-  char_personality?: Prisma.SortOrder
-  char_tmi?: Prisma.SortOrder
-  char_public_mode?: Prisma.SortOrder
-  ai_used?: Prisma.SortOrder
-  char_public_link?: Prisma.SortOrder
-  char_uploader_id?: Prisma.SortOrder
-  create_dt?: Prisma.SortOrder
-  update_dt?: Prisma.SortOrder
+export type CharacterCountOrderByAggregateInput = {
+  charId?: Prisma.SortOrder
+  charName?: Prisma.SortOrder
+  charImage?: Prisma.SortOrder
+  charProfileLayout?: Prisma.SortOrder
+  charImageFrame?: Prisma.SortOrder
+  charMessage?: Prisma.SortOrder
+  charKind?: Prisma.SortOrder
+  charColor?: Prisma.SortOrder
+  charMusic?: Prisma.SortOrder
+  charLike?: Prisma.SortOrder
+  charHate?: Prisma.SortOrder
+  charMbti?: Prisma.SortOrder
+  charBirthplace?: Prisma.SortOrder
+  charAge?: Prisma.SortOrder
+  charBirthday?: Prisma.SortOrder
+  charHeight?: Prisma.SortOrder
+  charPersonality?: Prisma.SortOrder
+  charTmi?: Prisma.SortOrder
+  charPublicMode?: Prisma.SortOrder
+  aiUsed?: Prisma.SortOrder
+  charPublicLink?: Prisma.SortOrder
+  charUploaderId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
-export type characterAvgOrderByAggregateInput = {
-  char_id?: Prisma.SortOrder
-  char_public_mode?: Prisma.SortOrder
-  ai_used?: Prisma.SortOrder
+export type CharacterAvgOrderByAggregateInput = {
+  charId?: Prisma.SortOrder
+  charPublicMode?: Prisma.SortOrder
+  aiUsed?: Prisma.SortOrder
 }
 
-export type characterMaxOrderByAggregateInput = {
-  char_id?: Prisma.SortOrder
-  char_name?: Prisma.SortOrder
-  char_image?: Prisma.SortOrder
-  char_message?: Prisma.SortOrder
-  char_kind?: Prisma.SortOrder
-  char_color?: Prisma.SortOrder
-  char_music?: Prisma.SortOrder
-  char_like?: Prisma.SortOrder
-  char_hate?: Prisma.SortOrder
-  char_mbti?: Prisma.SortOrder
-  char_birthplace?: Prisma.SortOrder
-  char_age?: Prisma.SortOrder
-  char_birthday?: Prisma.SortOrder
-  char_height?: Prisma.SortOrder
-  char_personality?: Prisma.SortOrder
-  char_public_mode?: Prisma.SortOrder
-  ai_used?: Prisma.SortOrder
-  char_public_link?: Prisma.SortOrder
-  char_uploader_id?: Prisma.SortOrder
-  create_dt?: Prisma.SortOrder
-  update_dt?: Prisma.SortOrder
+export type CharacterMaxOrderByAggregateInput = {
+  charId?: Prisma.SortOrder
+  charName?: Prisma.SortOrder
+  charImage?: Prisma.SortOrder
+  charProfileLayout?: Prisma.SortOrder
+  charImageFrame?: Prisma.SortOrder
+  charMessage?: Prisma.SortOrder
+  charKind?: Prisma.SortOrder
+  charColor?: Prisma.SortOrder
+  charMusic?: Prisma.SortOrder
+  charLike?: Prisma.SortOrder
+  charHate?: Prisma.SortOrder
+  charMbti?: Prisma.SortOrder
+  charBirthplace?: Prisma.SortOrder
+  charAge?: Prisma.SortOrder
+  charBirthday?: Prisma.SortOrder
+  charHeight?: Prisma.SortOrder
+  charPersonality?: Prisma.SortOrder
+  charPublicMode?: Prisma.SortOrder
+  aiUsed?: Prisma.SortOrder
+  charPublicLink?: Prisma.SortOrder
+  charUploaderId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
-export type characterMinOrderByAggregateInput = {
-  char_id?: Prisma.SortOrder
-  char_name?: Prisma.SortOrder
-  char_image?: Prisma.SortOrder
-  char_message?: Prisma.SortOrder
-  char_kind?: Prisma.SortOrder
-  char_color?: Prisma.SortOrder
-  char_music?: Prisma.SortOrder
-  char_like?: Prisma.SortOrder
-  char_hate?: Prisma.SortOrder
-  char_mbti?: Prisma.SortOrder
-  char_birthplace?: Prisma.SortOrder
-  char_age?: Prisma.SortOrder
-  char_birthday?: Prisma.SortOrder
-  char_height?: Prisma.SortOrder
-  char_personality?: Prisma.SortOrder
-  char_public_mode?: Prisma.SortOrder
-  ai_used?: Prisma.SortOrder
-  char_public_link?: Prisma.SortOrder
-  char_uploader_id?: Prisma.SortOrder
-  create_dt?: Prisma.SortOrder
-  update_dt?: Prisma.SortOrder
+export type CharacterMinOrderByAggregateInput = {
+  charId?: Prisma.SortOrder
+  charName?: Prisma.SortOrder
+  charImage?: Prisma.SortOrder
+  charProfileLayout?: Prisma.SortOrder
+  charImageFrame?: Prisma.SortOrder
+  charMessage?: Prisma.SortOrder
+  charKind?: Prisma.SortOrder
+  charColor?: Prisma.SortOrder
+  charMusic?: Prisma.SortOrder
+  charLike?: Prisma.SortOrder
+  charHate?: Prisma.SortOrder
+  charMbti?: Prisma.SortOrder
+  charBirthplace?: Prisma.SortOrder
+  charAge?: Prisma.SortOrder
+  charBirthday?: Prisma.SortOrder
+  charHeight?: Prisma.SortOrder
+  charPersonality?: Prisma.SortOrder
+  charPublicMode?: Prisma.SortOrder
+  aiUsed?: Prisma.SortOrder
+  charPublicLink?: Prisma.SortOrder
+  charUploaderId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
-export type characterSumOrderByAggregateInput = {
-  char_id?: Prisma.SortOrder
-  char_public_mode?: Prisma.SortOrder
-  ai_used?: Prisma.SortOrder
+export type CharacterSumOrderByAggregateInput = {
+  charId?: Prisma.SortOrder
+  charPublicMode?: Prisma.SortOrder
+  aiUsed?: Prisma.SortOrder
 }
 
-export type characterCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.characterCreateWithoutUserInput, Prisma.characterUncheckedCreateWithoutUserInput> | Prisma.characterCreateWithoutUserInput[] | Prisma.characterUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.characterCreateOrConnectWithoutUserInput | Prisma.characterCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.characterCreateManyUserInputEnvelope
-  connect?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
+export type CharacterCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutUserInput, Prisma.CharacterUncheckedCreateWithoutUserInput> | Prisma.CharacterCreateWithoutUserInput[] | Prisma.CharacterUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutUserInput | Prisma.CharacterCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CharacterCreateManyUserInputEnvelope
+  connect?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
 }
 
-export type characterUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.characterCreateWithoutUserInput, Prisma.characterUncheckedCreateWithoutUserInput> | Prisma.characterCreateWithoutUserInput[] | Prisma.characterUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.characterCreateOrConnectWithoutUserInput | Prisma.characterCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.characterCreateManyUserInputEnvelope
-  connect?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
+export type CharacterUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutUserInput, Prisma.CharacterUncheckedCreateWithoutUserInput> | Prisma.CharacterCreateWithoutUserInput[] | Prisma.CharacterUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutUserInput | Prisma.CharacterCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CharacterCreateManyUserInputEnvelope
+  connect?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
 }
 
-export type characterUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.characterCreateWithoutUserInput, Prisma.characterUncheckedCreateWithoutUserInput> | Prisma.characterCreateWithoutUserInput[] | Prisma.characterUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.characterCreateOrConnectWithoutUserInput | Prisma.characterCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.characterUpsertWithWhereUniqueWithoutUserInput | Prisma.characterUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.characterCreateManyUserInputEnvelope
-  set?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
-  disconnect?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
-  delete?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
-  connect?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
-  update?: Prisma.characterUpdateWithWhereUniqueWithoutUserInput | Prisma.characterUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.characterUpdateManyWithWhereWithoutUserInput | Prisma.characterUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.characterScalarWhereInput | Prisma.characterScalarWhereInput[]
+export type CharacterUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutUserInput, Prisma.CharacterUncheckedCreateWithoutUserInput> | Prisma.CharacterCreateWithoutUserInput[] | Prisma.CharacterUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutUserInput | Prisma.CharacterCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CharacterUpsertWithWhereUniqueWithoutUserInput | Prisma.CharacterUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CharacterCreateManyUserInputEnvelope
+  set?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
+  disconnect?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
+  delete?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
+  connect?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
+  update?: Prisma.CharacterUpdateWithWhereUniqueWithoutUserInput | Prisma.CharacterUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CharacterUpdateManyWithWhereWithoutUserInput | Prisma.CharacterUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CharacterScalarWhereInput | Prisma.CharacterScalarWhereInput[]
 }
 
-export type characterUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.characterCreateWithoutUserInput, Prisma.characterUncheckedCreateWithoutUserInput> | Prisma.characterCreateWithoutUserInput[] | Prisma.characterUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.characterCreateOrConnectWithoutUserInput | Prisma.characterCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.characterUpsertWithWhereUniqueWithoutUserInput | Prisma.characterUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.characterCreateManyUserInputEnvelope
-  set?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
-  disconnect?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
-  delete?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
-  connect?: Prisma.characterWhereUniqueInput | Prisma.characterWhereUniqueInput[]
-  update?: Prisma.characterUpdateWithWhereUniqueWithoutUserInput | Prisma.characterUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.characterUpdateManyWithWhereWithoutUserInput | Prisma.characterUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.characterScalarWhereInput | Prisma.characterScalarWhereInput[]
+export type CharacterUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutUserInput, Prisma.CharacterUncheckedCreateWithoutUserInput> | Prisma.CharacterCreateWithoutUserInput[] | Prisma.CharacterUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutUserInput | Prisma.CharacterCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CharacterUpsertWithWhereUniqueWithoutUserInput | Prisma.CharacterUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CharacterCreateManyUserInputEnvelope
+  set?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
+  disconnect?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
+  delete?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
+  connect?: Prisma.CharacterWhereUniqueInput | Prisma.CharacterWhereUniqueInput[]
+  update?: Prisma.CharacterUpdateWithWhereUniqueWithoutUserInput | Prisma.CharacterUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CharacterUpdateManyWithWhereWithoutUserInput | Prisma.CharacterUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CharacterScalarWhereInput | Prisma.CharacterScalarWhereInput[]
 }
 
 export type BigIntFieldUpdateOperationsInput = {
@@ -798,312 +842,340 @@ export type BigIntFieldUpdateOperationsInput = {
   divide?: bigint | number
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type BytesFieldUpdateOperationsInput = {
   set?: runtime.Bytes
 }
 
-export type characterCreateWithoutUserInput = {
-  char_id?: bigint | number
-  char_name: string
-  char_image: string
-  char_message: string
-  char_kind?: string | null
-  char_color?: string
-  char_music?: string | null
-  char_like?: string | null
-  char_hate?: string | null
-  char_mbti?: string | null
-  char_birthplace?: string | null
-  char_age?: string | null
-  char_birthday?: string | null
-  char_height?: string | null
-  char_personality?: string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode: number
-  ai_used: number
-  char_public_link: runtime.Bytes
-  create_dt?: Date | string
-  update_dt?: Date | string | null
+export type CharacterCreateWithoutUserInput = {
+  charId?: bigint | number
+  charName: string
+  charImage: string
+  charProfileLayout: string
+  charImageFrame: string
+  charMessage: string
+  charKind?: string | null
+  charColor?: string
+  charMusic?: string | null
+  charLike?: string | null
+  charHate?: string | null
+  charMbti?: string | null
+  charBirthplace?: string | null
+  charAge?: string | null
+  charBirthday?: string | null
+  charHeight?: string | null
+  charPersonality?: string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: runtime.Bytes
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
 }
 
-export type characterUncheckedCreateWithoutUserInput = {
-  char_id?: bigint | number
-  char_name: string
-  char_image: string
-  char_message: string
-  char_kind?: string | null
-  char_color?: string
-  char_music?: string | null
-  char_like?: string | null
-  char_hate?: string | null
-  char_mbti?: string | null
-  char_birthplace?: string | null
-  char_age?: string | null
-  char_birthday?: string | null
-  char_height?: string | null
-  char_personality?: string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode: number
-  ai_used: number
-  char_public_link: runtime.Bytes
-  create_dt?: Date | string
-  update_dt?: Date | string | null
+export type CharacterUncheckedCreateWithoutUserInput = {
+  charId?: bigint | number
+  charName: string
+  charImage: string
+  charProfileLayout: string
+  charImageFrame: string
+  charMessage: string
+  charKind?: string | null
+  charColor?: string
+  charMusic?: string | null
+  charLike?: string | null
+  charHate?: string | null
+  charMbti?: string | null
+  charBirthplace?: string | null
+  charAge?: string | null
+  charBirthday?: string | null
+  charHeight?: string | null
+  charPersonality?: string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: runtime.Bytes
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
 }
 
-export type characterCreateOrConnectWithoutUserInput = {
-  where: Prisma.characterWhereUniqueInput
-  create: Prisma.XOR<Prisma.characterCreateWithoutUserInput, Prisma.characterUncheckedCreateWithoutUserInput>
+export type CharacterCreateOrConnectWithoutUserInput = {
+  where: Prisma.CharacterWhereUniqueInput
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutUserInput, Prisma.CharacterUncheckedCreateWithoutUserInput>
 }
 
-export type characterCreateManyUserInputEnvelope = {
-  data: Prisma.characterCreateManyUserInput | Prisma.characterCreateManyUserInput[]
+export type CharacterCreateManyUserInputEnvelope = {
+  data: Prisma.CharacterCreateManyUserInput | Prisma.CharacterCreateManyUserInput[]
   skipDuplicates?: boolean
 }
 
-export type characterUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.characterWhereUniqueInput
-  update: Prisma.XOR<Prisma.characterUpdateWithoutUserInput, Prisma.characterUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.characterCreateWithoutUserInput, Prisma.characterUncheckedCreateWithoutUserInput>
+export type CharacterUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CharacterWhereUniqueInput
+  update: Prisma.XOR<Prisma.CharacterUpdateWithoutUserInput, Prisma.CharacterUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutUserInput, Prisma.CharacterUncheckedCreateWithoutUserInput>
 }
 
-export type characterUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.characterWhereUniqueInput
-  data: Prisma.XOR<Prisma.characterUpdateWithoutUserInput, Prisma.characterUncheckedUpdateWithoutUserInput>
+export type CharacterUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CharacterWhereUniqueInput
+  data: Prisma.XOR<Prisma.CharacterUpdateWithoutUserInput, Prisma.CharacterUncheckedUpdateWithoutUserInput>
 }
 
-export type characterUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.characterScalarWhereInput
-  data: Prisma.XOR<Prisma.characterUpdateManyMutationInput, Prisma.characterUncheckedUpdateManyWithoutUserInput>
+export type CharacterUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.CharacterScalarWhereInput
+  data: Prisma.XOR<Prisma.CharacterUpdateManyMutationInput, Prisma.CharacterUncheckedUpdateManyWithoutUserInput>
 }
 
-export type characterScalarWhereInput = {
-  AND?: Prisma.characterScalarWhereInput | Prisma.characterScalarWhereInput[]
-  OR?: Prisma.characterScalarWhereInput[]
-  NOT?: Prisma.characterScalarWhereInput | Prisma.characterScalarWhereInput[]
-  char_id?: Prisma.BigIntFilter<"character"> | bigint | number
-  char_name?: Prisma.StringFilter<"character"> | string
-  char_image?: Prisma.StringFilter<"character"> | string
-  char_message?: Prisma.StringFilter<"character"> | string
-  char_kind?: Prisma.StringNullableFilter<"character"> | string | null
-  char_color?: Prisma.StringFilter<"character"> | string
-  char_music?: Prisma.StringNullableFilter<"character"> | string | null
-  char_like?: Prisma.StringNullableFilter<"character"> | string | null
-  char_hate?: Prisma.StringNullableFilter<"character"> | string | null
-  char_mbti?: Prisma.StringNullableFilter<"character"> | string | null
-  char_birthplace?: Prisma.StringNullableFilter<"character"> | string | null
-  char_age?: Prisma.StringNullableFilter<"character"> | string | null
-  char_birthday?: Prisma.StringNullableFilter<"character"> | string | null
-  char_height?: Prisma.StringNullableFilter<"character"> | string | null
-  char_personality?: Prisma.StringNullableFilter<"character"> | string | null
-  char_tmi?: Prisma.JsonNullableFilter<"character">
-  char_public_mode?: Prisma.IntFilter<"character"> | number
-  ai_used?: Prisma.IntFilter<"character"> | number
-  char_public_link?: Prisma.BytesFilter<"character"> | runtime.Bytes
-  char_uploader_id?: Prisma.StringFilter<"character"> | string
-  create_dt?: Prisma.DateTimeFilter<"character"> | Date | string
-  update_dt?: Prisma.DateTimeNullableFilter<"character"> | Date | string | null
+export type CharacterScalarWhereInput = {
+  AND?: Prisma.CharacterScalarWhereInput | Prisma.CharacterScalarWhereInput[]
+  OR?: Prisma.CharacterScalarWhereInput[]
+  NOT?: Prisma.CharacterScalarWhereInput | Prisma.CharacterScalarWhereInput[]
+  charId?: Prisma.BigIntFilter<"Character"> | bigint | number
+  charName?: Prisma.StringFilter<"Character"> | string
+  charImage?: Prisma.StringFilter<"Character"> | string
+  charProfileLayout?: Prisma.StringFilter<"Character"> | string
+  charImageFrame?: Prisma.StringFilter<"Character"> | string
+  charMessage?: Prisma.StringFilter<"Character"> | string
+  charKind?: Prisma.StringNullableFilter<"Character"> | string | null
+  charColor?: Prisma.StringFilter<"Character"> | string
+  charMusic?: Prisma.StringNullableFilter<"Character"> | string | null
+  charLike?: Prisma.StringNullableFilter<"Character"> | string | null
+  charHate?: Prisma.StringNullableFilter<"Character"> | string | null
+  charMbti?: Prisma.StringNullableFilter<"Character"> | string | null
+  charBirthplace?: Prisma.StringNullableFilter<"Character"> | string | null
+  charAge?: Prisma.StringNullableFilter<"Character"> | string | null
+  charBirthday?: Prisma.StringNullableFilter<"Character"> | string | null
+  charHeight?: Prisma.StringNullableFilter<"Character"> | string | null
+  charPersonality?: Prisma.StringNullableFilter<"Character"> | string | null
+  charTmi?: Prisma.JsonNullableFilter<"Character">
+  charPublicMode?: Prisma.IntFilter<"Character"> | number
+  aiUsed?: Prisma.IntFilter<"Character"> | number
+  charPublicLink?: Prisma.BytesFilter<"Character"> | runtime.Bytes
+  charUploaderId?: Prisma.StringFilter<"Character"> | string
+  createdAt?: Prisma.DateTimeFilter<"Character"> | Date | string
+  updatedAt?: Prisma.DateTimeNullableFilter<"Character"> | Date | string | null
 }
 
-export type characterCreateManyUserInput = {
-  char_id?: bigint | number
-  char_name: string
-  char_image: string
-  char_message: string
-  char_kind?: string | null
-  char_color?: string
-  char_music?: string | null
-  char_like?: string | null
-  char_hate?: string | null
-  char_mbti?: string | null
-  char_birthplace?: string | null
-  char_age?: string | null
-  char_birthday?: string | null
-  char_height?: string | null
-  char_personality?: string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode: number
-  ai_used: number
-  char_public_link: runtime.Bytes
-  create_dt?: Date | string
-  update_dt?: Date | string | null
+export type CharacterCreateManyUserInput = {
+  charId?: bigint | number
+  charName: string
+  charImage: string
+  charProfileLayout: string
+  charImageFrame: string
+  charMessage: string
+  charKind?: string | null
+  charColor?: string
+  charMusic?: string | null
+  charLike?: string | null
+  charHate?: string | null
+  charMbti?: string | null
+  charBirthplace?: string | null
+  charAge?: string | null
+  charBirthday?: string | null
+  charHeight?: string | null
+  charPersonality?: string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: runtime.Bytes
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
 }
 
-export type characterUpdateWithoutUserInput = {
-  char_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  char_name?: Prisma.StringFieldUpdateOperationsInput | string
-  char_image?: Prisma.StringFieldUpdateOperationsInput | string
-  char_message?: Prisma.StringFieldUpdateOperationsInput | string
-  char_kind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_color?: Prisma.StringFieldUpdateOperationsInput | string
-  char_music?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_like?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_hate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_mbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_height?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode?: Prisma.IntFieldUpdateOperationsInput | number
-  ai_used?: Prisma.IntFieldUpdateOperationsInput | number
-  char_public_link?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  create_dt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  update_dt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+export type CharacterUpdateWithoutUserInput = {
+  charId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  charName?: Prisma.StringFieldUpdateOperationsInput | string
+  charImage?: Prisma.StringFieldUpdateOperationsInput | string
+  charProfileLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  charImageFrame?: Prisma.StringFieldUpdateOperationsInput | string
+  charMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  charKind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charColor?: Prisma.StringFieldUpdateOperationsInput | string
+  charMusic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charLike?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charMbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charAge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charPersonality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode?: Prisma.IntFieldUpdateOperationsInput | number
+  aiUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  charPublicLink?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type characterUncheckedUpdateWithoutUserInput = {
-  char_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  char_name?: Prisma.StringFieldUpdateOperationsInput | string
-  char_image?: Prisma.StringFieldUpdateOperationsInput | string
-  char_message?: Prisma.StringFieldUpdateOperationsInput | string
-  char_kind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_color?: Prisma.StringFieldUpdateOperationsInput | string
-  char_music?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_like?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_hate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_mbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_height?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode?: Prisma.IntFieldUpdateOperationsInput | number
-  ai_used?: Prisma.IntFieldUpdateOperationsInput | number
-  char_public_link?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  create_dt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  update_dt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+export type CharacterUncheckedUpdateWithoutUserInput = {
+  charId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  charName?: Prisma.StringFieldUpdateOperationsInput | string
+  charImage?: Prisma.StringFieldUpdateOperationsInput | string
+  charProfileLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  charImageFrame?: Prisma.StringFieldUpdateOperationsInput | string
+  charMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  charKind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charColor?: Prisma.StringFieldUpdateOperationsInput | string
+  charMusic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charLike?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charMbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charAge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charPersonality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode?: Prisma.IntFieldUpdateOperationsInput | number
+  aiUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  charPublicLink?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
-export type characterUncheckedUpdateManyWithoutUserInput = {
-  char_id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  char_name?: Prisma.StringFieldUpdateOperationsInput | string
-  char_image?: Prisma.StringFieldUpdateOperationsInput | string
-  char_message?: Prisma.StringFieldUpdateOperationsInput | string
-  char_kind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_color?: Prisma.StringFieldUpdateOperationsInput | string
-  char_music?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_like?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_hate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_mbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_age?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_birthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_height?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_personality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  char_tmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  char_public_mode?: Prisma.IntFieldUpdateOperationsInput | number
-  ai_used?: Prisma.IntFieldUpdateOperationsInput | number
-  char_public_link?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
-  create_dt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  update_dt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+export type CharacterUncheckedUpdateManyWithoutUserInput = {
+  charId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  charName?: Prisma.StringFieldUpdateOperationsInput | string
+  charImage?: Prisma.StringFieldUpdateOperationsInput | string
+  charProfileLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  charImageFrame?: Prisma.StringFieldUpdateOperationsInput | string
+  charMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  charKind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charColor?: Prisma.StringFieldUpdateOperationsInput | string
+  charMusic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charLike?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charMbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charAge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charPersonality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode?: Prisma.IntFieldUpdateOperationsInput | number
+  aiUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  charPublicLink?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
 
-export type characterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  char_id?: boolean
-  char_name?: boolean
-  char_image?: boolean
-  char_message?: boolean
-  char_kind?: boolean
-  char_color?: boolean
-  char_music?: boolean
-  char_like?: boolean
-  char_hate?: boolean
-  char_mbti?: boolean
-  char_birthplace?: boolean
-  char_age?: boolean
-  char_birthday?: boolean
-  char_height?: boolean
-  char_personality?: boolean
-  char_tmi?: boolean
-  char_public_mode?: boolean
-  ai_used?: boolean
-  char_public_link?: boolean
-  char_uploader_id?: boolean
-  create_dt?: boolean
-  update_dt?: boolean
+export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  charId?: boolean
+  charName?: boolean
+  charImage?: boolean
+  charProfileLayout?: boolean
+  charImageFrame?: boolean
+  charMessage?: boolean
+  charKind?: boolean
+  charColor?: boolean
+  charMusic?: boolean
+  charLike?: boolean
+  charHate?: boolean
+  charMbti?: boolean
+  charBirthplace?: boolean
+  charAge?: boolean
+  charBirthday?: boolean
+  charHeight?: boolean
+  charPersonality?: boolean
+  charTmi?: boolean
+  charPublicMode?: boolean
+  aiUsed?: boolean
+  charPublicLink?: boolean
+  charUploaderId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["character"]>
 
 
 
-export type characterSelectScalar = {
-  char_id?: boolean
-  char_name?: boolean
-  char_image?: boolean
-  char_message?: boolean
-  char_kind?: boolean
-  char_color?: boolean
-  char_music?: boolean
-  char_like?: boolean
-  char_hate?: boolean
-  char_mbti?: boolean
-  char_birthplace?: boolean
-  char_age?: boolean
-  char_birthday?: boolean
-  char_height?: boolean
-  char_personality?: boolean
-  char_tmi?: boolean
-  char_public_mode?: boolean
-  ai_used?: boolean
-  char_public_link?: boolean
-  char_uploader_id?: boolean
-  create_dt?: boolean
-  update_dt?: boolean
+export type CharacterSelectScalar = {
+  charId?: boolean
+  charName?: boolean
+  charImage?: boolean
+  charProfileLayout?: boolean
+  charImageFrame?: boolean
+  charMessage?: boolean
+  charKind?: boolean
+  charColor?: boolean
+  charMusic?: boolean
+  charLike?: boolean
+  charHate?: boolean
+  charMbti?: boolean
+  charBirthplace?: boolean
+  charAge?: boolean
+  charBirthday?: boolean
+  charHeight?: boolean
+  charPersonality?: boolean
+  charTmi?: boolean
+  charPublicMode?: boolean
+  aiUsed?: boolean
+  charPublicLink?: boolean
+  charUploaderId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type characterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"char_id" | "char_name" | "char_image" | "char_message" | "char_kind" | "char_color" | "char_music" | "char_like" | "char_hate" | "char_mbti" | "char_birthplace" | "char_age" | "char_birthday" | "char_height" | "char_personality" | "char_tmi" | "char_public_mode" | "ai_used" | "char_public_link" | "char_uploader_id" | "create_dt" | "update_dt", ExtArgs["result"]["character"]>
-export type characterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"charId" | "charName" | "charImage" | "charProfileLayout" | "charImageFrame" | "charMessage" | "charKind" | "charColor" | "charMusic" | "charLike" | "charHate" | "charMbti" | "charBirthplace" | "charAge" | "charBirthday" | "charHeight" | "charPersonality" | "charTmi" | "charPublicMode" | "aiUsed" | "charPublicLink" | "charUploaderId" | "createdAt" | "updatedAt", ExtArgs["result"]["character"]>
+export type CharacterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
-export type $characterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "character"
+export type $CharacterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "Character"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    char_id: bigint
-    char_name: string
-    char_image: string
-    char_message: string
-    char_kind: string | null
-    char_color: string
-    char_music: string | null
-    char_like: string | null
-    char_hate: string | null
-    char_mbti: string | null
-    char_birthplace: string | null
-    char_age: string | null
-    char_birthday: string | null
-    char_height: string | null
-    char_personality: string | null
-    char_tmi: runtime.JsonValue | null
-    char_public_mode: number
-    ai_used: number
-    char_public_link: runtime.Bytes
-    char_uploader_id: string
-    create_dt: Date
-    update_dt: Date | null
+    charId: bigint
+    charName: string
+    charImage: string
+    charProfileLayout: string
+    charImageFrame: string
+    charMessage: string
+    charKind: string | null
+    charColor: string
+    charMusic: string | null
+    charLike: string | null
+    charHate: string | null
+    charMbti: string | null
+    charBirthplace: string | null
+    charAge: string | null
+    charBirthday: string | null
+    charHeight: string | null
+    charPersonality: string | null
+    charTmi: runtime.JsonValue | null
+    charPublicMode: number
+    aiUsed: number
+    charPublicLink: runtime.Bytes
+    charUploaderId: string
+    createdAt: Date
+    updatedAt: Date | null
   }, ExtArgs["result"]["character"]>
   composites: {}
 }
 
-export type characterGetPayload<S extends boolean | null | undefined | characterDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$characterPayload, S>
+export type CharacterGetPayload<S extends boolean | null | undefined | CharacterDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$CharacterPayload, S>
 
-export type characterCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<characterFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type CharacterCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<CharacterFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: CharacterCountAggregateInputType | true
   }
 
-export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['character'], meta: { name: 'character' } }
+export interface CharacterDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Character'], meta: { name: 'Character' } }
   /**
    * Find zero or one Character that matches the filter.
-   * @param {characterFindUniqueArgs} args - Arguments to find a Character
+   * @param {CharacterFindUniqueArgs} args - Arguments to find a Character
    * @example
    * // Get one Character
    * const character = await prisma.character.findUnique({
@@ -1112,12 +1184,12 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findUnique<T extends characterFindUniqueArgs>(args: Prisma.SelectSubset<T, characterFindUniqueArgs<ExtArgs>>): Prisma.Prisma__characterClient<runtime.Types.Result.GetResult<Prisma.$characterPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends CharacterFindUniqueArgs>(args: Prisma.SelectSubset<T, CharacterFindUniqueArgs<ExtArgs>>): Prisma.Prisma__CharacterClient<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Character that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {characterFindUniqueOrThrowArgs} args - Arguments to find a Character
+   * @param {CharacterFindUniqueOrThrowArgs} args - Arguments to find a Character
    * @example
    * // Get one Character
    * const character = await prisma.character.findUniqueOrThrow({
@@ -1126,13 +1198,13 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findUniqueOrThrow<T extends characterFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, characterFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__characterClient<runtime.Types.Result.GetResult<Prisma.$characterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends CharacterFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, CharacterFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__CharacterClient<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Character that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {characterFindFirstArgs} args - Arguments to find a Character
+   * @param {CharacterFindFirstArgs} args - Arguments to find a Character
    * @example
    * // Get one Character
    * const character = await prisma.character.findFirst({
@@ -1141,14 +1213,14 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findFirst<T extends characterFindFirstArgs>(args?: Prisma.SelectSubset<T, characterFindFirstArgs<ExtArgs>>): Prisma.Prisma__characterClient<runtime.Types.Result.GetResult<Prisma.$characterPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends CharacterFindFirstArgs>(args?: Prisma.SelectSubset<T, CharacterFindFirstArgs<ExtArgs>>): Prisma.Prisma__CharacterClient<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Character that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {characterFindFirstOrThrowArgs} args - Arguments to find a Character
+   * @param {CharacterFindFirstOrThrowArgs} args - Arguments to find a Character
    * @example
    * // Get one Character
    * const character = await prisma.character.findFirstOrThrow({
@@ -1157,13 +1229,13 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findFirstOrThrow<T extends characterFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, characterFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__characterClient<runtime.Types.Result.GetResult<Prisma.$characterPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends CharacterFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, CharacterFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__CharacterClient<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Characters that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {characterFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {CharacterFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Characters
    * const characters = await prisma.character.findMany()
@@ -1171,15 +1243,15 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * // Get first 10 Characters
    * const characters = await prisma.character.findMany({ take: 10 })
    * 
-   * // Only select the `char_id`
-   * const characterWithChar_idOnly = await prisma.character.findMany({ select: { char_id: true } })
+   * // Only select the `charId`
+   * const characterWithCharIdOnly = await prisma.character.findMany({ select: { charId: true } })
    * 
    */
-  findMany<T extends characterFindManyArgs>(args?: Prisma.SelectSubset<T, characterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$characterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends CharacterFindManyArgs>(args?: Prisma.SelectSubset<T, CharacterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Character.
-   * @param {characterCreateArgs} args - Arguments to create a Character.
+   * @param {CharacterCreateArgs} args - Arguments to create a Character.
    * @example
    * // Create one Character
    * const Character = await prisma.character.create({
@@ -1189,11 +1261,11 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  create<T extends characterCreateArgs>(args: Prisma.SelectSubset<T, characterCreateArgs<ExtArgs>>): Prisma.Prisma__characterClient<runtime.Types.Result.GetResult<Prisma.$characterPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends CharacterCreateArgs>(args: Prisma.SelectSubset<T, CharacterCreateArgs<ExtArgs>>): Prisma.Prisma__CharacterClient<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Characters.
-   * @param {characterCreateManyArgs} args - Arguments to create many Characters.
+   * @param {CharacterCreateManyArgs} args - Arguments to create many Characters.
    * @example
    * // Create many Characters
    * const character = await prisma.character.createMany({
@@ -1203,11 +1275,11 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    *     
    */
-  createMany<T extends characterCreateManyArgs>(args?: Prisma.SelectSubset<T, characterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends CharacterCreateManyArgs>(args?: Prisma.SelectSubset<T, CharacterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Delete a Character.
-   * @param {characterDeleteArgs} args - Arguments to delete one Character.
+   * @param {CharacterDeleteArgs} args - Arguments to delete one Character.
    * @example
    * // Delete one Character
    * const Character = await prisma.character.delete({
@@ -1217,11 +1289,11 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  delete<T extends characterDeleteArgs>(args: Prisma.SelectSubset<T, characterDeleteArgs<ExtArgs>>): Prisma.Prisma__characterClient<runtime.Types.Result.GetResult<Prisma.$characterPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends CharacterDeleteArgs>(args: Prisma.SelectSubset<T, CharacterDeleteArgs<ExtArgs>>): Prisma.Prisma__CharacterClient<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Character.
-   * @param {characterUpdateArgs} args - Arguments to update one Character.
+   * @param {CharacterUpdateArgs} args - Arguments to update one Character.
    * @example
    * // Update one Character
    * const character = await prisma.character.update({
@@ -1234,11 +1306,11 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  update<T extends characterUpdateArgs>(args: Prisma.SelectSubset<T, characterUpdateArgs<ExtArgs>>): Prisma.Prisma__characterClient<runtime.Types.Result.GetResult<Prisma.$characterPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends CharacterUpdateArgs>(args: Prisma.SelectSubset<T, CharacterUpdateArgs<ExtArgs>>): Prisma.Prisma__CharacterClient<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Characters.
-   * @param {characterDeleteManyArgs} args - Arguments to filter Characters to delete.
+   * @param {CharacterDeleteManyArgs} args - Arguments to filter Characters to delete.
    * @example
    * // Delete a few Characters
    * const { count } = await prisma.character.deleteMany({
@@ -1248,13 +1320,13 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  deleteMany<T extends characterDeleteManyArgs>(args?: Prisma.SelectSubset<T, characterDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends CharacterDeleteManyArgs>(args?: Prisma.SelectSubset<T, CharacterDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Characters.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {characterUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {CharacterUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Characters
    * const character = await prisma.character.updateMany({
@@ -1267,11 +1339,11 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  updateMany<T extends characterUpdateManyArgs>(args: Prisma.SelectSubset<T, characterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends CharacterUpdateManyArgs>(args: Prisma.SelectSubset<T, CharacterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create or update one Character.
-   * @param {characterUpsertArgs} args - Arguments to update or create a Character.
+   * @param {CharacterUpsertArgs} args - Arguments to update or create a Character.
    * @example
    * // Update or create a Character
    * const character = await prisma.character.upsert({
@@ -1286,14 +1358,14 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  upsert<T extends characterUpsertArgs>(args: Prisma.SelectSubset<T, characterUpsertArgs<ExtArgs>>): Prisma.Prisma__characterClient<runtime.Types.Result.GetResult<Prisma.$characterPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends CharacterUpsertArgs>(args: Prisma.SelectSubset<T, CharacterUpsertArgs<ExtArgs>>): Prisma.Prisma__CharacterClient<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Characters.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {characterCountArgs} args - Arguments to filter Characters to count.
+   * @param {CharacterCountArgs} args - Arguments to filter Characters to count.
    * @example
    * // Count the number of Characters
    * const count = await prisma.character.count({
@@ -1302,8 +1374,8 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
   **/
-  count<T extends characterCountArgs>(
-    args?: Prisma.Subset<T, characterCountArgs>,
+  count<T extends CharacterCountArgs>(
+    args?: Prisma.Subset<T, CharacterCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -1342,7 +1414,7 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * Group by Character.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {characterGroupByArgs} args - Group by arguments.
+   * @param {CharacterGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -1357,14 +1429,14 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * 
   **/
   groupBy<
-    T extends characterGroupByArgs,
+    T extends CharacterGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: characterGroupByArgs['orderBy'] }
-      : { orderBy?: characterGroupByArgs['orderBy'] },
+      ? { orderBy: CharacterGroupByArgs['orderBy'] }
+      : { orderBy?: CharacterGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -1413,20 +1485,20 @@ export interface characterDelegate<ExtArgs extends runtime.Types.Extensions.Inte
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, characterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCharacterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, CharacterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCharacterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the character model
+ * Fields of the Character model
  */
-readonly fields: characterFieldRefs;
+readonly fields: CharacterFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for character.
+ * The delegate class that acts as a "Promise-like" for Character.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__characterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__CharacterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1455,392 +1527,394 @@ export interface Prisma__characterClient<T, Null = never, ExtArgs extends runtim
 
 
 /**
- * Fields of the character model
+ * Fields of the Character model
  */
-export interface characterFieldRefs {
-  readonly char_id: Prisma.FieldRef<"character", 'BigInt'>
-  readonly char_name: Prisma.FieldRef<"character", 'String'>
-  readonly char_image: Prisma.FieldRef<"character", 'String'>
-  readonly char_message: Prisma.FieldRef<"character", 'String'>
-  readonly char_kind: Prisma.FieldRef<"character", 'String'>
-  readonly char_color: Prisma.FieldRef<"character", 'String'>
-  readonly char_music: Prisma.FieldRef<"character", 'String'>
-  readonly char_like: Prisma.FieldRef<"character", 'String'>
-  readonly char_hate: Prisma.FieldRef<"character", 'String'>
-  readonly char_mbti: Prisma.FieldRef<"character", 'String'>
-  readonly char_birthplace: Prisma.FieldRef<"character", 'String'>
-  readonly char_age: Prisma.FieldRef<"character", 'String'>
-  readonly char_birthday: Prisma.FieldRef<"character", 'String'>
-  readonly char_height: Prisma.FieldRef<"character", 'String'>
-  readonly char_personality: Prisma.FieldRef<"character", 'String'>
-  readonly char_tmi: Prisma.FieldRef<"character", 'Json'>
-  readonly char_public_mode: Prisma.FieldRef<"character", 'Int'>
-  readonly ai_used: Prisma.FieldRef<"character", 'Int'>
-  readonly char_public_link: Prisma.FieldRef<"character", 'Bytes'>
-  readonly char_uploader_id: Prisma.FieldRef<"character", 'String'>
-  readonly create_dt: Prisma.FieldRef<"character", 'DateTime'>
-  readonly update_dt: Prisma.FieldRef<"character", 'DateTime'>
+export interface CharacterFieldRefs {
+  readonly charId: Prisma.FieldRef<"Character", 'BigInt'>
+  readonly charName: Prisma.FieldRef<"Character", 'String'>
+  readonly charImage: Prisma.FieldRef<"Character", 'String'>
+  readonly charProfileLayout: Prisma.FieldRef<"Character", 'String'>
+  readonly charImageFrame: Prisma.FieldRef<"Character", 'String'>
+  readonly charMessage: Prisma.FieldRef<"Character", 'String'>
+  readonly charKind: Prisma.FieldRef<"Character", 'String'>
+  readonly charColor: Prisma.FieldRef<"Character", 'String'>
+  readonly charMusic: Prisma.FieldRef<"Character", 'String'>
+  readonly charLike: Prisma.FieldRef<"Character", 'String'>
+  readonly charHate: Prisma.FieldRef<"Character", 'String'>
+  readonly charMbti: Prisma.FieldRef<"Character", 'String'>
+  readonly charBirthplace: Prisma.FieldRef<"Character", 'String'>
+  readonly charAge: Prisma.FieldRef<"Character", 'String'>
+  readonly charBirthday: Prisma.FieldRef<"Character", 'String'>
+  readonly charHeight: Prisma.FieldRef<"Character", 'String'>
+  readonly charPersonality: Prisma.FieldRef<"Character", 'String'>
+  readonly charTmi: Prisma.FieldRef<"Character", 'Json'>
+  readonly charPublicMode: Prisma.FieldRef<"Character", 'Int'>
+  readonly aiUsed: Prisma.FieldRef<"Character", 'Int'>
+  readonly charPublicLink: Prisma.FieldRef<"Character", 'Bytes'>
+  readonly charUploaderId: Prisma.FieldRef<"Character", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Character", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Character", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * character findUnique
+ * Character findUnique
  */
-export type characterFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
   /**
-   * Filter, which character to fetch.
+   * Filter, which Character to fetch.
    */
-  where: Prisma.characterWhereUniqueInput
+  where: Prisma.CharacterWhereUniqueInput
 }
 
 /**
- * character findUniqueOrThrow
+ * Character findUniqueOrThrow
  */
-export type characterFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
   /**
-   * Filter, which character to fetch.
+   * Filter, which Character to fetch.
    */
-  where: Prisma.characterWhereUniqueInput
+  where: Prisma.CharacterWhereUniqueInput
 }
 
 /**
- * character findFirst
+ * Character findFirst
  */
-export type characterFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
   /**
-   * Filter, which character to fetch.
+   * Filter, which Character to fetch.
    */
-  where?: Prisma.characterWhereInput
+  where?: Prisma.CharacterWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of characters to fetch.
+   * Determine the order of Characters to fetch.
    */
-  orderBy?: Prisma.characterOrderByWithRelationInput | Prisma.characterOrderByWithRelationInput[]
+  orderBy?: Prisma.CharacterOrderByWithRelationInput | Prisma.CharacterOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for characters.
+   * Sets the position for searching for Characters.
    */
-  cursor?: Prisma.characterWhereUniqueInput
+  cursor?: Prisma.CharacterWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` characters from the position of the cursor.
+   * Take `±n` Characters from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` characters.
+   * Skip the first `n` Characters.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of characters.
+   * Filter by unique combinations of Characters.
    */
   distinct?: Prisma.CharacterScalarFieldEnum | Prisma.CharacterScalarFieldEnum[]
 }
 
 /**
- * character findFirstOrThrow
+ * Character findFirstOrThrow
  */
-export type characterFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
   /**
-   * Filter, which character to fetch.
+   * Filter, which Character to fetch.
    */
-  where?: Prisma.characterWhereInput
+  where?: Prisma.CharacterWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of characters to fetch.
+   * Determine the order of Characters to fetch.
    */
-  orderBy?: Prisma.characterOrderByWithRelationInput | Prisma.characterOrderByWithRelationInput[]
+  orderBy?: Prisma.CharacterOrderByWithRelationInput | Prisma.CharacterOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for characters.
+   * Sets the position for searching for Characters.
    */
-  cursor?: Prisma.characterWhereUniqueInput
+  cursor?: Prisma.CharacterWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` characters from the position of the cursor.
+   * Take `±n` Characters from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` characters.
+   * Skip the first `n` Characters.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of characters.
+   * Filter by unique combinations of Characters.
    */
   distinct?: Prisma.CharacterScalarFieldEnum | Prisma.CharacterScalarFieldEnum[]
 }
 
 /**
- * character findMany
+ * Character findMany
  */
-export type characterFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
   /**
-   * Filter, which characters to fetch.
+   * Filter, which Characters to fetch.
    */
-  where?: Prisma.characterWhereInput
+  where?: Prisma.CharacterWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of characters to fetch.
+   * Determine the order of Characters to fetch.
    */
-  orderBy?: Prisma.characterOrderByWithRelationInput | Prisma.characterOrderByWithRelationInput[]
+  orderBy?: Prisma.CharacterOrderByWithRelationInput | Prisma.CharacterOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing characters.
+   * Sets the position for listing Characters.
    */
-  cursor?: Prisma.characterWhereUniqueInput
+  cursor?: Prisma.CharacterWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` characters from the position of the cursor.
+   * Take `±n` Characters from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` characters.
+   * Skip the first `n` Characters.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of characters.
+   * Filter by unique combinations of Characters.
    */
   distinct?: Prisma.CharacterScalarFieldEnum | Prisma.CharacterScalarFieldEnum[]
 }
 
 /**
- * character create
+ * Character create
  */
-export type characterCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
   /**
-   * The data needed to create a character.
+   * The data needed to create a Character.
    */
-  data: Prisma.XOR<Prisma.characterCreateInput, Prisma.characterUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.CharacterCreateInput, Prisma.CharacterUncheckedCreateInput>
 }
 
 /**
- * character createMany
+ * Character createMany
  */
-export type characterCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many characters.
+   * The data used to create many Characters.
    */
-  data: Prisma.characterCreateManyInput | Prisma.characterCreateManyInput[]
+  data: Prisma.CharacterCreateManyInput | Prisma.CharacterCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * character update
+ * Character update
  */
-export type characterUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
   /**
-   * The data needed to update a character.
+   * The data needed to update a Character.
    */
-  data: Prisma.XOR<Prisma.characterUpdateInput, Prisma.characterUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.CharacterUpdateInput, Prisma.CharacterUncheckedUpdateInput>
   /**
-   * Choose, which character to update.
+   * Choose, which Character to update.
    */
-  where: Prisma.characterWhereUniqueInput
+  where: Prisma.CharacterWhereUniqueInput
 }
 
 /**
- * character updateMany
+ * Character updateMany
  */
-export type characterUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update characters.
+   * The data used to update Characters.
    */
-  data: Prisma.XOR<Prisma.characterUpdateManyMutationInput, Prisma.characterUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.CharacterUpdateManyMutationInput, Prisma.CharacterUncheckedUpdateManyInput>
   /**
-   * Filter which characters to update
+   * Filter which Characters to update
    */
-  where?: Prisma.characterWhereInput
+  where?: Prisma.CharacterWhereInput
   /**
-   * Limit how many characters to update.
+   * Limit how many Characters to update.
    */
   limit?: number
 }
 
 /**
- * character upsert
+ * Character upsert
  */
-export type characterUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
   /**
-   * The filter to search for the character to update in case it exists.
+   * The filter to search for the Character to update in case it exists.
    */
-  where: Prisma.characterWhereUniqueInput
+  where: Prisma.CharacterWhereUniqueInput
   /**
-   * In case the character found by the `where` argument doesn't exist, create a new character with this data.
+   * In case the Character found by the `where` argument doesn't exist, create a new Character with this data.
    */
-  create: Prisma.XOR<Prisma.characterCreateInput, Prisma.characterUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.CharacterCreateInput, Prisma.CharacterUncheckedCreateInput>
   /**
-   * In case the character was found with the provided `where` argument, update it with this data.
+   * In case the Character was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.characterUpdateInput, Prisma.characterUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.CharacterUpdateInput, Prisma.CharacterUncheckedUpdateInput>
 }
 
 /**
- * character delete
+ * Character delete
  */
-export type characterDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
   /**
-   * Filter which character to delete.
+   * Filter which Character to delete.
    */
-  where: Prisma.characterWhereUniqueInput
+  where: Prisma.CharacterWhereUniqueInput
 }
 
 /**
- * character deleteMany
+ * Character deleteMany
  */
-export type characterDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which characters to delete
+   * Filter which Characters to delete
    */
-  where?: Prisma.characterWhereInput
+  where?: Prisma.CharacterWhereInput
   /**
-   * Limit how many characters to delete.
+   * Limit how many Characters to delete.
    */
   limit?: number
 }
 
 /**
- * character without action
+ * Character without action
  */
-export type characterDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type CharacterDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the character
+   * Select specific fields to fetch from the Character
    */
-  select?: Prisma.characterSelect<ExtArgs> | null
+  select?: Prisma.CharacterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the character
+   * Omit specific fields from the Character
    */
-  omit?: Prisma.characterOmit<ExtArgs> | null
+  omit?: Prisma.CharacterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.characterInclude<ExtArgs> | null
+  include?: Prisma.CharacterInclude<ExtArgs> | null
 }

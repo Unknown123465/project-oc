@@ -28,22 +28,12 @@ export type User = Prisma.UserModel
  */
 export type Account = Prisma.AccountModel
 /**
- * Model Session
- * 
- */
-export type Session = Prisma.SessionModel
-/**
  * Model VerificationToken
  * 
  */
 export type VerificationToken = Prisma.VerificationTokenModel
 /**
- * Model Authenticator
+ * Model Character
  * 
  */
-export type Authenticator = Prisma.AuthenticatorModel
-/**
- * Model character
- * 
- */
-export type character = Prisma.characterModel
+export type Character = Prisma.CharacterModel
