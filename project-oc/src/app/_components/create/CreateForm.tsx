@@ -1,5 +1,6 @@
 "use client";
 
+import sectionStyles from "./Section.module.css";
 import styles from "./CreateForm.module.css";
 import ImageUploadField from "./ImageUploadField";
 import CoreInfoSection from "./CoreInfoSection";
@@ -7,9 +8,10 @@ import ColorSection from "./ColorSection";
 import ChoiceSection from "./ChoiceSection";
 import {SubmitButton, NormalButton} from "@/components/ui/button";
 import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue} from "react-hook-form";
-import {CreateCharFormInputType} from "@/app/create/validator";
+import {createCharForm, type CreateCharFormInputType, type CreateCharFormType} from "@/app/create/validator";
 import {useId} from "react";
 import {useRouter} from "next/navigation";
+import createCharAction from "@/app/create/action";
 
 interface CreateFormProps {
 	control: Control<CreateCharFormInputType>;
@@ -28,15 +30,20 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 	const visibilityHeadingId = useId();
 
 	const onSubmit = async (data: CreateCharFormInputType) => {
-		//TODO: action.ts 구현 후 실제값을 반영 할 예정
-		const result = {
-			success: false,
-			message: "테스트",
-		};
+		const check = createCharForm.safeParse(data);
+
+		if (!check.success) {
+			setError("root", {
+				message: check.error.issues[0].message,
+			});
+
+			return;
+		}
+
+		const result = await createCharAction(check.data);
 
 		if (result.success) {
-			//TODO: action.ts 구현 후 알맞는 url로 교체 할 예정
-			router.replace("/");
+			router.replace(result.link);
 		} else {
 			setError("root", {
 				message: result.message,
@@ -78,6 +85,10 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 					{value: "2", title: "비공개", description: "본인만 프로필을 볼 수 있습니다."},
 				]}
 			/>
+
+			<div className={styles.root_error}>
+				<p className={sectionStyles.error_message}>{errors.root?.message}</p>
+			</div>
 
 			<div className={styles.actions}>
 				<SubmitButton styleType="attention" disabled={isSubmitting} style={{flex: 1}}>
