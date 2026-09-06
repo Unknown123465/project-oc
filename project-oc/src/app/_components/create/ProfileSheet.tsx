@@ -71,6 +71,8 @@ export default function ProfileSheet({control}: ProfileSheetProps) {
 
 				<div className={styles.inner}>
 					<div className={styles.identity}>
+						<p>Character profile</p>
+
 						<h2>{name}</h2>
 
 						<p>{message}</p>
