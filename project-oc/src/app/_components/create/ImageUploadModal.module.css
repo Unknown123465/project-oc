@@ -472,17 +472,18 @@
 
 .frame_sample {
 	width: 36px;
-	aspect-ratio: 4 / 3;
 	display: block;
 	background-color: color-mix(in srgb, var(--personal) 32%, var(--card-back));
 	border: 2px solid var(--title-text);
 }
 
 .frame_sample_square {
+	aspect-ratio: 4 / 3;
 	border-radius: 4px;
 }
 
 .frame_sample_circle {
+	aspect-ratio: 1;
 	border-radius: 50%;
 }
 
