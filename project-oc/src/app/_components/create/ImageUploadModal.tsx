@@ -3,7 +3,7 @@
 import {useEffect, useLayoutEffect, useId, useRef, useState, type ChangeEvent, type KeyboardEvent, type MouseEvent, type PointerEvent} from "react";
 import styles from "./ImageUploadModal.module.css";
 import {ActionButton} from "@/components/ui/button";
-import {IMAGE_ACCEPTED_TYPES, IMAGE_MAX_DIMENSION, IMAGE_MAX_FILE_SIZE, IMAGE_TYPES, IMAGE_TYPE_DEFINITIONS, type ImageFrame, type ImageType} from "@/app/create/imageEditor";
+import {IMAGE_ACCEPTED_TYPES, IMAGE_MAX_DIMENSION, IMAGE_MAX_FILE_SIZE, IMAGE_TYPES, IMAGE_TYPE_DEFINITIONS, ImageTypeDefinition, type ImageFrame, type ImageType} from "@/app/create/imageEditor";
 import imageCompression, {type Options} from "browser-image-compression";
 
 interface ImageUploadModalProps {
@@ -44,7 +44,12 @@ function initialCrop(width: number, height: number, ratio: number): Rect {
 		cropWidth = cropHeight * ratio;
 	}
 
-	return {x: (width - cropWidth) / 2, y: (height - cropHeight) / 2, width: cropWidth, height: cropHeight};
+	return {
+		x: (width - cropWidth) / 2,
+		y: (height - cropHeight) / 2,
+		width: cropWidth,
+		height: cropHeight,
+	};
 }
 
 function clamp(value: number, minimum: number, maximum: number): number {
@@ -65,7 +70,12 @@ function resizeCrop(base: Rect, handle: Handle, point: {x: number; y: number}, d
 	const width: number = clamp(desiredWidth, minimumWidth, maxWidth);
 	const height: number = width / ratio;
 
-	return {x: right ? anchorX : anchorX - width, y: bottom ? anchorY : anchorY - height, width, height};
+	return {
+		x: right ? anchorX : anchorX - width,
+		y: bottom ? anchorY : anchorY - height,
+		width,
+		height,
+	};
 }
 
 async function toBlob(canvas: HTMLCanvasElement, fileName: string, fileType: string, signal: AbortSignal): Promise<Blob> {
@@ -75,7 +85,7 @@ async function toBlob(canvas: HTMLCanvasElement, fileName: string, fileType: str
 		throw new Error("이미지를 만드는데 실패했어요. 다시 시도해 주세요.");
 	}
 
-	const originFile = new File([originBlob], fileName, {
+	const originFile: File = new File([originBlob], fileName, {
 		type: fileType,
 	});
 
@@ -88,7 +98,7 @@ async function toBlob(canvas: HTMLCanvasElement, fileName: string, fileType: str
 	};
 
 	/* signal이 끊겨서 난 실패라면 취소일 뿐 오류가 아니므로 원래 예외를 그대로
-	   올려 보낸다. 그 외에는 라이브러리·브라우저가 던지는 원문 메시지 대신
+	   올려 보낸다. 그 외에는 라이브러리, 브라우저가 던지는 원문 메시지 대신
 	   사용자에게 보여줄 한국어 메시지로 바꾼다. */
 	try {
 		return await imageCompression(originFile, options);
@@ -101,13 +111,12 @@ async function toBlob(canvas: HTMLCanvasElement, fileName: string, fileType: str
 	}
 }
 
-/* "1 : 세로값" 한 형식으로 통일해 유형별로 표기 관습이 갈리지 않게 한다.
-   소수 첫째 자리까지만 반올림하고, 정수면(정사각형의 1처럼) 그대로 보여
+/* 소수 첫째 자리까지만 반올림하고, 정수면(정사각형의 1처럼) 그대로 보여
    한눈에 비교되면서도 자릿수가 늘어져 혼란스럽지 않게 한다. */
-function formatRatio(ratio: number): string {
+function formatRatio(ratio: number, imageType: ImageType): string {
 	const heightPerWidth: number = Math.round((1 / ratio) * 10) / 10;
 
-	return `1 : ${heightPerWidth}`;
+	return imageType !== "v" ? `1 : ${heightPerWidth}` : `${heightPerWidth} : 1`;
 }
 
 export default function ImageUploadModal({open, onClose, onApply}: ImageUploadModalProps) {
@@ -135,7 +144,24 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 	const [displaySize, setDisplaySize] = useState<Size>({width: 0, height: 0});
 	const [crop, setCrop] = useState<Rect>({x: 0, y: 0, width: 0, height: 0});
 
-	const definition = IMAGE_TYPE_DEFINITIONS[imageType];
+	const definition: ImageTypeDefinition = IMAGE_TYPE_DEFINITIONS[imageType];
+
+	/* displaySize는 화면에 맞춰 축소해 그린 크기라, 실제 고른 영역의 픽셀 수를
+	   보여주려면 원본 배율(scale)만큼 되돌려야 한다. */
+	const cropPixelSize: Size =
+		sourceImage === null
+			? {width: 0, height: 0}
+			: {
+					width: Math.round(crop.width * (sourceImage.naturalWidth / displaySize.width)),
+					height: Math.round(crop.height * (sourceImage.naturalHeight / displaySize.height)),
+				};
+
+	const shade = {
+		top: {left: 0, top: 0, width: displaySize.width, height: Math.max(0, crop.y)},
+		bottom: {left: 0, top: crop.y + crop.height, width: displaySize.width, height: Math.max(0, displaySize.height - crop.y - crop.height)},
+		left: {left: 0, top: crop.y, width: Math.max(0, crop.x), height: crop.height},
+		right: {left: crop.x + crop.width, top: crop.y, width: Math.max(0, displaySize.width - crop.x - crop.width), height: crop.height},
+	};
 
 	useEffect(() => {
 		const dialog: HTMLDialogElement | null = dialogRef.current;
@@ -206,44 +232,44 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 	/* 취소·X·배경 클릭은 모두 dialog의 close()를 직접 불러 이 native 'close'
 	   이벤트로 모인다. 압축이 진행 중이었다면 여기서 끊어야 완료 처리가
 	   뒤늦게 이어지지 않는다. */
-	function handleDialogClose() {
+	const handleDialogClose = () => {
 		abort.current.abort();
 
 		onClose();
-	}
+	};
 
 	/* 열림/닫힘 상태는 부모가 들고 있다. 여기서는 항상 onClose로 알리기만 한다. */
-	function requestClose() {
+	const requestClose = () => {
 		dialogRef.current?.close();
-	}
+	};
 
 	/* ::backdrop 클릭은 dialog 자신을 target으로 만든다. 실제 내용 영역 밖을 눌렀을 때만 닫는다. */
-	function handleBackdropClick(event: MouseEvent<HTMLDialogElement>) {
+	const handleBackdropClick = (e: MouseEvent<HTMLDialogElement>) => {
 		const dialog: HTMLDialogElement | null = dialogRef.current;
 
-		if (dialog === null || event.target !== dialog) {
+		if (dialog === null || e.target !== dialog) {
 			return;
 		}
 
 		const rect: DOMRect = dialog.getBoundingClientRect();
-		const insideDialog: boolean = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+		const insideDialog: boolean = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
 
 		if (!insideDialog) {
 			dialog.close();
 		}
-	}
+	};
 
-	function handleTypeChange(nextType: ImageType) {
+	const handleTypeChange = (nextType: ImageType) => {
 		setImageType(nextType);
 
 		if (nextType !== "s") {
 			setFrame("square");
 		}
-	}
+	};
 
-	async function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
-		const input: HTMLInputElement = event.target;
-		const file: File | undefined = input.files?.[0];
+	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+		const inputTag: HTMLInputElement = e.target;
+		const file: File | undefined = inputTag.files?.[0];
 
 		try {
 			if (!file) {
@@ -251,13 +277,10 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 			}
 
 			if (!IMAGE_ACCEPTED_TYPES.includes(file.type as (typeof IMAGE_ACCEPTED_TYPES)[number])) {
-				input.value = "";
-
 				throw new Error("PNG, JPG, WEBP 이미지만 사용할 수 있어요.");
 			}
 
 			if (file.size > IMAGE_MAX_FILE_SIZE) {
-				input.value = "";
 				throw new Error("이미지 용량은 10MB 이하여야 해요.");
 			}
 
@@ -265,25 +288,25 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 			setIsReadingFile(true);
 
 			const objectUrl: string = URL.createObjectURL(file);
-			const image: HTMLImageElement = new Image();
+			const imgTag: HTMLImageElement = new Image();
 
 			const {promise, resolve, reject} = Promise.withResolvers<void>();
 
 			let waitTime: number = -1;
 
-			image.onload = () => {
+			imgTag.onload = () => {
 				window.clearTimeout(waitTime);
 
 				URL.revokeObjectURL(objectUrl);
 
-				if (image.naturalWidth > IMAGE_MAX_DIMENSION || image.naturalHeight > IMAGE_MAX_DIMENSION) {
+				if (imgTag.naturalWidth > IMAGE_MAX_DIMENSION || imgTag.naturalHeight > IMAGE_MAX_DIMENSION) {
 					reject(new Error(`이미지는 가로세로 ${IMAGE_MAX_DIMENSION}px 이하여야 해요.`));
 				} else {
 					resolve();
 				}
 			};
 
-			image.onerror = () => {
+			imgTag.onerror = () => {
 				window.clearTimeout(waitTime);
 
 				URL.revokeObjectURL(objectUrl);
@@ -297,25 +320,25 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 				reject(new Error("이미지 읽는 시간이 너무 오래 걸려요. 다시 시도 하거나 다른 파일을 선택해 주세요."));
 			}, 1000 * 5);
 
-			image.src = objectUrl;
+			imgTag.src = objectUrl;
 
 			await promise;
 
 			setFileName(file.name);
 			setFileType(file.type);
-			setSourceImage(image);
+			setSourceImage(imgTag);
 		} catch (err) {
 			if (err instanceof Error) {
 				setErrorMessage(err.message);
 			}
 		} finally {
-			input.value = "";
+			inputTag.value = "";
 
 			setIsReadingFile(false);
 		}
-	}
+	};
 
-	function handleReplace() {
+	const handleReplace = () => {
 		setSourceImage(null);
 		setFileName("");
 		setFileType("");
@@ -324,36 +347,45 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 		if (fileInputRef.current !== null) {
 			fileInputRef.current.value = "";
 		}
-	}
+	};
 
-	function editorPoint(event: PointerEvent<HTMLDivElement>): {x: number; y: number} {
+	const editorPoint = (e: PointerEvent<HTMLDivElement>): {x: number; y: number} => {
 		const rect: DOMRect = canvasWrapRef.current?.getBoundingClientRect() ?? new DOMRect();
 
-		return {x: clamp(event.clientX - rect.left, 0, displaySize.width), y: clamp(event.clientY - rect.top, 0, displaySize.height)};
-	}
+		return {
+			x: clamp(e.clientX - rect.left, 0, displaySize.width),
+			y: clamp(e.clientY - rect.top, 0, displaySize.height),
+		};
+	};
 
-	function handleSelectionPointerDown(event: PointerEvent<HTMLDivElement>) {
-		event.preventDefault();
+	const handleSelectionPointerDown = (e: PointerEvent<HTMLDivElement>) => {
+		e.preventDefault();
 
-		const target: HTMLElement = event.target as HTMLElement;
+		const target: HTMLElement = e.target as HTMLElement;
 		const handleAttribute: string | null | undefined = target.closest("[data-handle]")?.getAttribute("data-handle");
 		const handle: Handle | "move" = (handleAttribute as Handle | null) ?? "move";
-		const point: {x: number; y: number} = editorPoint(event);
+		const point: {x: number; y: number} = editorPoint(e);
 
-		dragStateRef.current = {handle, startX: point.x, startY: point.y, crop: {...crop}};
-		event.currentTarget.setPointerCapture(event.pointerId);
-	}
+		dragStateRef.current = {
+			handle,
+			startX: point.x,
+			startY: point.y,
+			crop: {...crop},
+		};
 
-	function handleSelectionPointerMove(event: PointerEvent<HTMLDivElement>) {
+		e.currentTarget.setPointerCapture(e.pointerId);
+	};
+
+	const handleSelectionPointerMove = (e: PointerEvent<HTMLDivElement>) => {
 		const drag: DragState | null = dragStateRef.current;
 
 		if (drag === null) {
 			return;
 		}
 
-		event.preventDefault();
+		e.preventDefault();
 
-		const point: {x: number; y: number} = editorPoint(event);
+		const point: {x: number; y: number} = editorPoint(e);
 
 		if (drag.handle === "move") {
 			setCrop({
@@ -364,31 +396,38 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 		} else {
 			setCrop(resizeCrop(drag.crop, drag.handle, point, displaySize, definition.ratio));
 		}
-	}
+	};
 
-	function handleSelectionPointerUp() {
+	const handleSelectionPointerUp = () => {
 		dragStateRef.current = null;
-	}
+	};
 
-	function handleSelectionKeyDown(event: KeyboardEvent<HTMLDivElement>) {
-		if (!event.key.startsWith("Arrow")) {
+	const handleSelectionKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+		if (!e.key.startsWith("Arrow")) {
 			return;
 		}
 
-		event.preventDefault();
+		e.preventDefault();
 
-		const amount: number = event.shiftKey ? 10 : 1;
-		const dx: number = event.key === "ArrowLeft" ? -amount : event.key === "ArrowRight" ? amount : 0;
-		const dy: number = event.key === "ArrowUp" ? -amount : event.key === "ArrowDown" ? amount : 0;
+		const amount: number = e.shiftKey ? 10 : 1;
+
+		let dx: number = 0;
+		let dy: number = 0;
+
+		dx = e.key === "ArrowLeft" ? -amount : dx;
+		dx = e.key === "ArrowRight" ? amount : dx;
+
+		dy = e.key === "ArrowUp" ? -amount : dy;
+		dy = e.key === "ArrowDown" ? amount : dy;
 
 		setCrop((previous) => ({
 			...previous,
 			x: clamp(previous.x + dx, 0, displaySize.width - previous.width),
 			y: clamp(previous.y + dy, 0, displaySize.height - previous.height),
 		}));
-	}
+	};
 
-	async function handleApply() {
+	const handleApply = async () => {
 		setErrorMessage("");
 		setIsApplying(true);
 
@@ -421,21 +460,23 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 
 			const blob: Blob = await toBlob(canvas, fileName, fileType, abort.current.signal);
 
-			onApply({image: blob, imageType, imageFrame: frame});
+			onApply({
+				image: blob,
+				imageType,
+				imageFrame: frame,
+			});
 		} catch (err) {
 			/* 압축 도중에 다이얼로그가 닫혀 취소된 경우라 사용자가 의도한
 			   동작이다. 오류로 보여줄 필요가 없다. */
 			if (abort.current.signal.aborted) {
 				return;
-			}
-
-			if (err instanceof Error) {
+			} else if (err instanceof Error) {
 				setErrorMessage(err.message);
 			}
 		} finally {
 			setIsApplying(false);
 		}
-	}
+	};
 
 	function renderTypeGrid(idPrefix: string, compact: boolean) {
 		return (
@@ -456,23 +497,6 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 			</div>
 		);
 	}
-
-	/* displaySize는 화면에 맞춰 축소해 그린 크기라, 실제 고른 영역의 픽셀 수를
-	   보여주려면 원본 배율(scale)만큼 되돌려야 한다. */
-	const cropPixelSize: Size =
-		sourceImage === null
-			? {width: 0, height: 0}
-			: {
-					width: Math.round(crop.width * (sourceImage.naturalWidth / displaySize.width)),
-					height: Math.round(crop.height * (sourceImage.naturalHeight / displaySize.height)),
-				};
-
-	const shade = {
-		top: {left: 0, top: 0, width: displaySize.width, height: Math.max(0, crop.y)},
-		bottom: {left: 0, top: crop.y + crop.height, width: displaySize.width, height: Math.max(0, displaySize.height - crop.y - crop.height)},
-		left: {left: 0, top: crop.y, width: Math.max(0, crop.x), height: crop.height},
-		right: {left: crop.x + crop.width, top: crop.y, width: Math.max(0, displaySize.width - crop.x - crop.width), height: crop.height},
-	};
 
 	return (
 		<dialog ref={dialogRef} className={styles.backdrop} aria-labelledby={titleId} onClose={handleDialogClose} onClick={handleBackdropClick}>
@@ -610,7 +634,7 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 
 									<dt>비율</dt>
 
-									<dd>{formatRatio(definition.ratio)}</dd>
+									<dd>{formatRatio(definition.ratio, imageType)}</dd>
 								</dl>
 							</aside>
 						</div>
