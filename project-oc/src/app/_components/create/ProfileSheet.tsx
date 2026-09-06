@@ -13,9 +13,9 @@ interface ProfileSheetProps {
 
 const LAYOUT_CLASS: Record<ProfileLayout, string> = {
 	"": "",
-	h: "",
-	v: styles.layout_vertical,
-	s: styles.layout_square,
+	h: styles.horizontal,
+	v: styles.vertical,
+	s: styles.square,
 };
 
 export default function ProfileSheet({control}: ProfileSheetProps) {
@@ -37,6 +37,10 @@ export default function ProfileSheet({control}: ProfileSheetProps) {
 		name: "charImage",
 		control,
 	});
+	const color = useWatch({
+		name: "charColor",
+		control,
+	});
 	const layout = useWatch({
 		name: "charProfileLayout",
 		control,
@@ -47,11 +51,7 @@ export default function ProfileSheet({control}: ProfileSheetProps) {
 	   Blob 자체를 의존성으로 삼아 이미지 하나당 URL 하나만 만들고,
 	   그 URL의 해제를 아래 effect가 짝지어 책임진다. */
 	const imageURL = useMemo(() => {
-		if (image instanceof Blob) {
-			return URL.createObjectURL(image);
-		} else {
-			return null;
-		}
+		return image instanceof Blob ? URL.createObjectURL(image) : null;
 	}, [image]);
 
 	useEffect(() => {
@@ -65,7 +65,9 @@ export default function ProfileSheet({control}: ProfileSheetProps) {
 	return (
 		<article className={`${styles.sheet} ${LAYOUT_CLASS[layout]}`}>
 			<div className={styles.hero_grid}>
-				<div className={styles.cover}>{imageURL !== null ? <img src={imageURL} alt="캐릭터 프로필 이미지" className={styles.cover_image} /> : null}</div>
+				<div className={`${styles.cover} ${LAYOUT_CLASS[layout]}`} style={{"--char-color": color}}>
+					{imageURL !== null ? <img src={imageURL} alt="캐릭터 프로필 이미지" className={styles.cover_image} /> : null}
+				</div>
 
 				<div className={styles.inner}>
 					<div className={styles.identity}>

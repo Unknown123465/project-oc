@@ -7,6 +7,14 @@ import {useEffect, useId, useMemo, useState} from "react";
 import {Control, FieldErrors, UseFormSetValue, useWatch} from "react-hook-form";
 import {CreateCharFormInputType} from "@/app/create/validator";
 import {IMAGE_FRAME_LABEL, IMAGE_TYPE_DEFINITIONS, type ImageFrame, type ImageType} from "@/app/create/imageEditor";
+import {ProfileLayout} from "./ProfileSheet";
+
+const LAYOUT_CLASS: Record<ProfileLayout, string> = {
+	"": "",
+	h: styles.horizontal,
+	v: styles.vertical,
+	s: styles.square,
+};
 
 interface ImageUploadFieldProps {
 	control: Control<CreateCharFormInputType>;
@@ -23,7 +31,7 @@ export default function ImageUploadField({control, errors, setValue}: ImageUploa
 		name: "charImage",
 		control,
 	});
-	const profileLayout = useWatch({
+	const layout = useWatch({
 		name: "charProfileLayout",
 		control,
 	});
@@ -59,7 +67,7 @@ export default function ImageUploadField({control, errors, setValue}: ImageUploa
 
 			<button type="button" className={styles.upload_zone} onClick={() => setIsModalOpen(true)}>
 				{imageURL !== null ? (
-					<img src={imageURL} alt="적용된 캐릭터 이미지" className={styles.upload_preview} />
+					<img src={imageURL} alt="적용된 캐릭터 이미지" className={`${styles.upload_preview} ${LAYOUT_CLASS[layout]}`} />
 				) : (
 					<span className={styles.upload_prompt}>
 						<b>캐릭터 이미지 추가</b>
@@ -69,9 +77,9 @@ export default function ImageUploadField({control, errors, setValue}: ImageUploa
 				)}
 			</button>
 
-			{imageURL !== null && profileLayout !== "" ? (
+			{imageURL !== null && layout !== "" ? (
 				<div className={styles.upload_meta}>
-					<span>{IMAGE_TYPE_DEFINITIONS[profileLayout].label}</span>
+					<span>{IMAGE_TYPE_DEFINITIONS[layout].label}</span>
 
 					{imageFrame !== "" ? <span>{IMAGE_FRAME_LABEL[imageFrame]}</span> : null}
 

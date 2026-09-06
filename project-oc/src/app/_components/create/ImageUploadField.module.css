@@ -20,9 +20,17 @@
 .upload_preview {
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
 	position: absolute;
 	inset: 0;
+
+	&.horizontal {
+		object-fit: cover;
+	}
+
+	&.vertical,
+	&.square {
+		object-fit: contain;
+	}
 }
 
 .upload_prompt {
