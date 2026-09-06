@@ -78,15 +78,15 @@ function resizeCrop(base: Rect, handle: Handle, point: {x: number; y: number}, d
 	};
 }
 
-async function toBlob(canvas: HTMLCanvasElement, fileName: string, fileType: string, signal: AbortSignal): Promise<Blob> {
-	const originBlob: Blob | null = await new Promise((res) => canvas.toBlob(res, fileType, 1));
+async function toBlob(canvas: HTMLCanvasElement, fileName: string, signal: AbortSignal): Promise<Blob> {
+	const originBlob: Blob | null = await new Promise((res) => canvas.toBlob(res, "image/png", 1));
 
 	if (originBlob === null) {
 		throw new Error("이미지를 만드는데 실패했어요. 다시 시도해 주세요.");
 	}
 
 	const originFile: File = new File([originBlob], fileName, {
-		type: fileType,
+		type: "image/png",
 	});
 
 	const options: Options = {
@@ -137,7 +137,6 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 	const [frame, setFrame] = useState<ImageFrame>("square");
 	const [sourceImage, setSourceImage] = useState<HTMLImageElement | null>(null);
 	const [fileName, setFileName] = useState<string>("");
-	const [fileType, setFileType] = useState<string>("");
 	const [isReadingFile, setIsReadingFile] = useState<boolean>(false);
 	const [isApplying, setIsApplying] = useState<boolean>(false);
 	const [errorMessage, setErrorMessage] = useState<string>("");
@@ -325,7 +324,6 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 			await promise;
 
 			setFileName(file.name);
-			setFileType(file.type);
 			setSourceImage(imgTag);
 		} catch (err) {
 			if (err instanceof Error) {
@@ -341,7 +339,6 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 	const handleReplace = () => {
 		setSourceImage(null);
 		setFileName("");
-		setFileType("");
 		setErrorMessage("");
 
 		if (fileInputRef.current !== null) {
@@ -458,7 +455,7 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 
 			context.drawImage(sourceImage, crop.x * scaleX, crop.y * scaleY, crop.width * scaleX, crop.height * scaleY, 0, 0, canvas.width, canvas.height);
 
-			const blob: Blob = await toBlob(canvas, fileName, fileType, abort.current.signal);
+			const blob: Blob = await toBlob(canvas, fileName, abort.current.signal);
 
 			onApply({
 				image: blob,
