@@ -80,38 +80,36 @@ export default async function createCharAction(data: CreateCharServerFormType): 
 		   아래 catch에서 두 경로를 모두 지운다. */
 		await copyCharImage(bucket, tempKey, key);
 
-		await db.$transaction(async (t) => {
-			let charTmi: string[] = check.data.charTmi.split("\n");
+		/* 빈 줄은 TMI가 아니다. 검증은 줄 수(5개)만 보므로 여기서 걸러 낸다. */
+		const charTmi: string[] = check.data.charTmi.split("\n").filter((tmi) => tmi.trim());
 
-			charTmi = charTmi.filter((tmi) => tmi.trim());
-
-			const publicLinkBin = uuidToBin(publicLink);
-
-			await t.character.create({
-				data: {
-					charName: check.data.charName,
-					charImage: charImageName,
-					charProfileLayout: check.data.charProfileLayout,
-					charImageFrame: check.data.charImageFrame,
-					charMessage: check.data.charMessage,
-					charKind: check.data.charKind || null,
-					charColor: check.data.charColor,
-					charMusic: check.data.charMusic || null,
-					charLike: check.data.charLike.trim() ? check.data.charLike : null,
-					charHate: check.data.charHate.trim() ? check.data.charHate : null,
-					charMbti: check.data.charMbti.trim() ? check.data.charMbti : null,
-					charBirthplace: check.data.charBirthplace.trim() ? check.data.charBirthplace : null,
-					charAge: check.data.charAge.trim() ? check.data.charAge : null,
-					charBirthday: check.data.charBirthday.trim() ? check.data.charBirthday : null,
-					charHeight: check.data.charHeight.trim() ? check.data.charHeight : null,
-					charPersonality: check.data.charPersonality.trim() ? check.data.charPersonality : null,
-					charTmi,
-					charPublicMode: parseInt(check.data.publicMode, 10),
-					aiUsed: parseInt(check.data.aiUsed, 10),
-					charPublicLink: publicLinkBin,
-					charUploaderId: user.id,
-				},
-			});
+		/* 쓰는 테이블이 character 하나뿐이라 트랜잭션으로 감싸지 않는다. 단일 INSERT는
+		   그 자체로 원자적이고, 묶어 봐야 함께 되돌릴 상대가 없다. 되돌려야 하는 건
+		   R2에 올라간 이미지인데 그건 DB 트랜잭션 밖이라 아래 catch에서 직접 지운다. */
+		await db.character.create({
+			data: {
+				charName: check.data.charName,
+				charImage: charImageName,
+				charProfileLayout: check.data.charProfileLayout,
+				charImageFrame: check.data.charImageFrame,
+				charMessage: check.data.charMessage,
+				charKind: check.data.charKind || null,
+				charColor: check.data.charColor,
+				charMusic: check.data.charMusic || null,
+				charLike: check.data.charLike.trim() ? check.data.charLike : null,
+				charHate: check.data.charHate.trim() ? check.data.charHate : null,
+				charMbti: check.data.charMbti.trim() ? check.data.charMbti : null,
+				charBirthplace: check.data.charBirthplace.trim() ? check.data.charBirthplace : null,
+				charAge: check.data.charAge.trim() ? check.data.charAge : null,
+				charBirthday: check.data.charBirthday.trim() ? check.data.charBirthday : null,
+				charHeight: check.data.charHeight.trim() ? check.data.charHeight : null,
+				charPersonality: check.data.charPersonality.trim() ? check.data.charPersonality : null,
+				charTmi,
+				charPublicMode: parseInt(check.data.publicMode, 10),
+				aiUsed: parseInt(check.data.aiUsed, 10),
+				charPublicLink: uuidToBin(publicLink),
+				charUploaderId: user.id,
+			},
 		});
 
 		/* 등록이 끝났으니 임시 사본은 쓸모가 없다. 지우지 못해도 수명 주기 규칙이
