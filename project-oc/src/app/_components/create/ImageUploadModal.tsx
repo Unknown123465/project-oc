@@ -3,8 +3,19 @@
 import {useEffect, useLayoutEffect, useId, useRef, useState, type ChangeEvent, type KeyboardEvent, type MouseEvent, type PointerEvent} from "react";
 import styles from "./ImageUploadModal.module.css";
 import {ActionButton} from "@/components/ui/button";
-import {IMAGE_ACCEPTED_TYPES, IMAGE_MAX_DIMENSION, IMAGE_MAX_FILE_SIZE, IMAGE_TYPES, IMAGE_TYPE_DEFINITIONS, IMAGE_UPLOAD_TYPE, ImageTypeDefinition, type ImageFrame, type ImageType} from "@/app/create/imageEditor";
+import {
+	IMAGE_ACCEPTED_TYPES,
+	IMAGE_MAX_DIMENSION,
+	IMAGE_MAX_FILE_SIZE,
+	IMAGE_TYPES,
+	IMAGE_TYPE_DEFINITIONS,
+	IMAGE_UPLOAD_TYPE,
+	ImageTypeDefinition,
+	type ImageFrame,
+	type ImageType,
+} from "@/app/create/imageEditor";
 import imageCompression, {type Options} from "browser-image-compression";
+import {useScrollLock} from "@/hooks/useScrollLock";
 
 interface ImageUploadModalProps {
 	open: boolean;
@@ -120,6 +131,8 @@ function formatRatio(ratio: number, imageType: ImageType): string {
 }
 
 export default function ImageUploadModal({open, onClose, onApply}: ImageUploadModalProps) {
+	useScrollLock(true);
+
 	const titleId = useId();
 	const cropHeadingId = useId();
 	const controlsHeadingId = useId();
