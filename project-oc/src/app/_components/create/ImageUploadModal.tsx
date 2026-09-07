@@ -3,7 +3,7 @@
 import {useEffect, useLayoutEffect, useId, useRef, useState, type ChangeEvent, type KeyboardEvent, type MouseEvent, type PointerEvent} from "react";
 import styles from "./ImageUploadModal.module.css";
 import {ActionButton} from "@/components/ui/button";
-import {IMAGE_ACCEPTED_TYPES, IMAGE_MAX_DIMENSION, IMAGE_MAX_FILE_SIZE, IMAGE_TYPES, IMAGE_TYPE_DEFINITIONS, ImageTypeDefinition, type ImageFrame, type ImageType} from "@/app/create/imageEditor";
+import {IMAGE_ACCEPTED_TYPES, IMAGE_MAX_DIMENSION, IMAGE_MAX_FILE_SIZE, IMAGE_TYPES, IMAGE_TYPE_DEFINITIONS, IMAGE_UPLOAD_TYPE, ImageTypeDefinition, type ImageFrame, type ImageType} from "@/app/create/imageEditor";
 import imageCompression, {type Options} from "browser-image-compression";
 
 interface ImageUploadModalProps {
@@ -79,14 +79,14 @@ function resizeCrop(base: Rect, handle: Handle, point: {x: number; y: number}, d
 }
 
 async function toBlob(canvas: HTMLCanvasElement, fileName: string, signal: AbortSignal): Promise<Blob> {
-	const originBlob: Blob | null = await new Promise((res) => canvas.toBlob(res, "image/png", 1));
+	const originBlob: Blob | null = await new Promise((res) => canvas.toBlob(res, IMAGE_UPLOAD_TYPE, 1));
 
 	if (originBlob === null) {
 		throw new Error("이미지를 만드는데 실패했어요. 다시 시도해 주세요.");
 	}
 
 	const originFile: File = new File([originBlob], fileName, {
-		type: "image/png",
+		type: IMAGE_UPLOAD_TYPE,
 	});
 
 	const options: Options = {

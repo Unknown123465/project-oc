@@ -30,6 +30,10 @@ export const IMAGE_FRAME_LABEL: Record<ImageFrame, string> = {
 /** 움짤은 크롭 결과가 정지 프레임 하나로 굳어 버려 받지 않는다. */
 export const IMAGE_ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp"] as const;
 
+/* 어떤 형식을 넣든 크롭 결과는 PNG로 굳는다. 업로드 서명과 업로드 후 검증이
+   모두 이 값을 기준으로 삼으므로 한 곳에서만 정한다. */
+export const IMAGE_UPLOAD_TYPE = "image/png";
+
 export const IMAGE_MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export const IMAGE_MAX_DIMENSION = 3000;
