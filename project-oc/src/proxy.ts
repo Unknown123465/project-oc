@@ -29,7 +29,10 @@ export function proxy(req: NextRequest) {
 		   unsafe-inline을 무시하는데, style="..." 속성에는 nonce를 붙일 방법이 없어
 		   style={{"--bg": hex}} 같은 값 전달이 통째로 막힌다. */
 		["style-src", SELF, UNSAFE_INLINE],
-		["img-src", SELF, "blob:", R2_PUBLIC_URL, R2_ENDPOINT],
+		/* browser-image-compression이 EXIF 방향 판독 등을 위해 FileReader로 읽은
+		   이미지를 data: URL로 <img>에 실어 메인 스레드에서 그린다. 빠지면 압축
+		   과정에서 이 부분만 조용히 막힌다. */
+		["img-src", SELF, "blob:", "data:", R2_PUBLIC_URL, R2_ENDPOINT],
 		["worker-src", SELF, "blob:"],
 		/* 이미지를 브라우저가 R2로 직접 PUT 한다. 이 줄이 없으면 default-src의
 		   'self'에 걸려 업로드가 조용히 실패한다. */
