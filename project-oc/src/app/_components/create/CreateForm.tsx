@@ -8,10 +8,12 @@ import ColorSection from "./ColorSection";
 import ChoiceSection from "./ChoiceSection";
 import {SubmitButton, NormalButton} from "@/components/ui/button";
 import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue} from "react-hook-form";
-import {createCharForm, type CreateCharFormInputType, type CreateCharFormType} from "@/app/create/validator";
+import {createCharForm, type CreateCharFormInputType} from "@/app/create/validator";
 import {useId} from "react";
 import {useRouter} from "next/navigation";
 import createCharAction from "@/app/create/action";
+import createUploadUrlAction from "@/app/create/uploadAction";
+import {IMAGE_UPLOAD_TYPE} from "@/app/create/imageEditor";
 
 interface CreateFormProps {
 	control: Control<CreateCharFormInputType>;
@@ -40,7 +42,52 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 			return;
 		}
 
-		const result = await createCharAction(check.data);
+		const {charImage, ...charData} = check.data;
+
+		/* refine이 Blob임을 보장하지만 nullable이 붙어 있어 타입은 좁혀지지 않는다. */
+		if (charImage === null) {
+			setError("root", {
+				message: "캐릭터 이미지를 업로드 해주세요.",
+			});
+
+			return;
+		}
+
+		/* 이미지는 서버를 거치지 않고 브라우저에서 R2로 곧장 올린다. 서버 액션 본문
+		   제한(1MB)과 Vercel 요청 본문 제한(4.5MB)에 걸리지 않게 하기 위함이고,
+		   서버 액션에는 업로드 결과 파일 이름만 넘어간다. */
+		const issued = await createUploadUrlAction({publicMode: charData.publicMode, size: charImage.size});
+
+		if (!issued.success) {
+			setError("root", {
+				message: issued.message,
+			});
+
+			return;
+		}
+
+		try {
+			const uploaded: Response = await fetch(issued.uploadUrl, {
+				method: "PUT",
+				body: charImage,
+				/* 서명에 박힌 값과 어긋나면 R2가 거부하므로 그대로 맞춰 보낸다. */
+				headers: {"Content-Type": IMAGE_UPLOAD_TYPE},
+			});
+
+			if (!uploaded.ok) {
+				throw new Error();
+			}
+		} catch {
+			setError("root", {
+				message: "이미지를 올리지 못했어요. 잠시 후 다시 시도해 주세요.",
+			});
+
+			return;
+		}
+
+		/* 이 시점부터 R2에는 파일이 올라가 있다. 등록이 실패하면 서버 액션이 그
+		   파일을 지우고 돌아오므로 여기서 따로 정리하지 않는다. */
+		const result = await createCharAction({...charData, charImageName: issued.imageName});
 
 		if (result.success) {
 			router.replace(result.link);
