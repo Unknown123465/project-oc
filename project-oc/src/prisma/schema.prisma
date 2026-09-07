@@ -2,8 +2,6 @@ datasource db {
   provider = "mysql"
 }
 
-
-
 generator client {
   provider = "prisma-client"
   output   = "./generated"
@@ -19,13 +17,12 @@ model User {
   // Credentials 가입자만 채워지는 bcrypt 해시. 소셜 가입자는 null로 남는다.
   password      String?         @db.VarChar(100)
   accounts      Account[]
-  sessions      Session[]
-  Authenticator Authenticator[]
- 
+  characters    Character[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model Account {
   id                       String  @id @default(cuid())
   userId                   String  @unique
@@ -41,46 +38,51 @@ model Account {
   session_state            String?
   refresh_token_expires_in Int?
   user                     User?   @relation(fields: [userId], references: [id])
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
- 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id])
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- 
-  @@index([userId])
-}
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@unique([identifier, token])
 }
- 
-model Authenticator {
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
- 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
-  @@id([userId, credentialID])
+
+model Character {
+  charId            BigInt  @id @default(autoincrement())
+  charName          String  @db.VarChar(20)
+  charImage         String  @db.VarChar(41)
+  charProfileLayout String  @db.Char(1)
+  charImageFrame    String  @db.Char(6)
+  charMessage       String  @db.VarChar(30)
+  charKind          String? @db.VarChar(10)
+  charColor         String  @default("#d3d3d3") @db.Char(7)
+  charMusic         String? @db.Text
+  charLike          String? @db.VarChar(100)
+  charHate          String? @db.VarChar(100)
+  charMbti          String? @db.Char(4)
+  charBirthplace    String? @db.VarChar(20)
+  charAge           String? @db.VarChar(20)
+  charBirthday      String? @db.VarChar(10)
+  charHeight        String? @db.VarChar(10)
+  charPersonality   String? @db.VarChar(100)
+  charTmi           Json?
+  charPublicMode    Int     @db.TinyInt
+  aiUsed            Int     @db.TinyInt
+  charPublicLink    Bytes   @unique(map: "idx_public_link") @db.Binary(16)
+  charUploaderId    String  @db.VarChar(191)
+  user              User    @relation(fields: [charUploaderId], references: [id])
+
+  createdAt DateTime  @default(now()) @db.DateTime(0)
+  updatedAt DateTime? @updatedAt @db.DateTime(0)
+
+  @@index([charUploaderId, createdAt(sort: Desc)], map: "idx_uploader_created")
+  @@index([charPublicMode, createdAt(sort: Desc)], map: "idx_public_mode_created")
+  @@map("character")
 }

@@ -78,7 +78,7 @@
 	--input-back: light-dark(#fffef9, #23231f);
 	--input-line: light-dark(#b7b8ae, #68685f);
 
-	--input-select-text: #29251a;
+	--input-select-text: light-dark(#29251a, #f1f0e8);
 	--input-select-back: light-dark(#fff4c2, #453c16);
 	--input-select-line: #e8b300;
 
@@ -101,6 +101,7 @@
 	--success: light-dark(#26724e, #73d4a5);
 
 	--error-text: light-dark(#bd3d3d, #ff8c88);
+	--success-text: light-dark(#00db0b, #73d4a5);
 
 	--shadow-1: 0 8px 24px light-dark(rgba(72, 67, 43, 0.08), rgba(0, 0, 0, 0.28));
 	--shadow-2: 0 18px 48px light-dark(rgba(72, 67, 43, 0.11), rgba(0, 0, 0, 0.2));
@@ -152,7 +153,8 @@ a {
 
 input:is([type="text"], [type="search"], [type="password"]),
 textarea,
-select {
+select,
+.custom-select {
 	transition:
 		background-color 0.18s ease,
 		border-color 0.18s ease,

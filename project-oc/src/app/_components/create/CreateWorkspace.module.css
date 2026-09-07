@@ -1,0 +1,51 @@
+.layout {
+	display: grid;
+	gap: 42px;
+	align-items: start;
+}
+
+@media (width >= 876px) {
+	.mobile_tabs {
+		display: none;
+	}
+
+	.layout {
+		grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+	}
+}
+
+@media (width < 876px) {
+	.mobile_tabs {
+		position: sticky;
+		top: var(--header-height);
+		z-index: 5;
+		margin: 0 0 24px;
+		padding: 4px;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 4px;
+		background-color: var(--card-dark-1);
+		border: 1px solid var(--card-dark-line);
+		border-radius: var(--radius-2);
+
+		& button {
+			min-height: 40px;
+			color: var(--muted);
+			font-size: 14px;
+			font-weight: 700;
+			background: transparent;
+			border: 0;
+			border-radius: var(--radius-1);
+			cursor: pointer;
+
+			&[aria-selected="true"] {
+				color: var(--button-submit-text);
+				background-color: var(--button-submit-back);
+			}
+		}
+	}
+
+	.layout {
+		display: block;
+	}
+}

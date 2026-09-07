@@ -8,6 +8,7 @@ import {useRouter} from "next/navigation";
 import styles from "./SignupForm.module.css";
 import {PasswordInput, TextInput} from "@/components/ui/input";
 import {SubmitButton} from "@/components/ui/button";
+import {describedBy} from "@/components/ui/aria";
 import {signupAction} from "@/app/signup/action";
 import {signupForm, type SignupFormType} from "@/app/signup/validator";
 
@@ -27,9 +28,6 @@ export default function SignupForm() {
 	};
 
 	const passwordHelpId = `${baseId}-password-help`;
-
-	/** 입력이 가리킬 설명 요소가 여럿일 때 aria-describedby 한 줄로 잇는다. */
-	const describedBy = (...ids: (string | false | undefined)[]) => ids.filter(Boolean).join(" ") || undefined;
 
 	const {
 		control,

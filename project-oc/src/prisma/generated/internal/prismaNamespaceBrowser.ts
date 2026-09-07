@@ -53,9 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Account: 'Account',
-  Session: 'Session',
   VerificationToken: 'VerificationToken',
-  Authenticator: 'Authenticator'
+  Character: 'Character'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -110,18 +109,6 @@ export const AccountScalarFieldEnum = {
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
 
 
-export const SessionScalarFieldEnum = {
-  id: 'id',
-  sessionToken: 'sessionToken',
-  userId: 'userId',
-  expires: 'expires',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
-
-
 export const VerificationTokenScalarFieldEnum = {
   identifier: 'identifier',
   token: 'token',
@@ -131,18 +118,34 @@ export const VerificationTokenScalarFieldEnum = {
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
 
 
-export const AuthenticatorScalarFieldEnum = {
-  credentialID: 'credentialID',
-  userId: 'userId',
-  providerAccountId: 'providerAccountId',
-  credentialPublicKey: 'credentialPublicKey',
-  counter: 'counter',
-  credentialDeviceType: 'credentialDeviceType',
-  credentialBackedUp: 'credentialBackedUp',
-  transports: 'transports'
+export const CharacterScalarFieldEnum = {
+  charId: 'charId',
+  charName: 'charName',
+  charImage: 'charImage',
+  charProfileLayout: 'charProfileLayout',
+  charImageFrame: 'charImageFrame',
+  charMessage: 'charMessage',
+  charKind: 'charKind',
+  charColor: 'charColor',
+  charMusic: 'charMusic',
+  charLike: 'charLike',
+  charHate: 'charHate',
+  charMbti: 'charMbti',
+  charBirthplace: 'charBirthplace',
+  charAge: 'charAge',
+  charBirthday: 'charBirthday',
+  charHeight: 'charHeight',
+  charPersonality: 'charPersonality',
+  charTmi: 'charTmi',
+  charPublicMode: 'charPublicMode',
+  aiUsed: 'aiUsed',
+  charPublicLink: 'charPublicLink',
+  charUploaderId: 'charUploaderId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type AuthenticatorScalarFieldEnum = (typeof AuthenticatorScalarFieldEnum)[keyof typeof AuthenticatorScalarFieldEnum]
+export type CharacterScalarFieldEnum = (typeof CharacterScalarFieldEnum)[keyof typeof CharacterScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -151,6 +154,14 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const NullsOrder = {
@@ -190,15 +201,6 @@ export const AccountOrderByRelevanceFieldEnum = {
 export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFieldEnum)[keyof typeof AccountOrderByRelevanceFieldEnum]
 
 
-export const SessionOrderByRelevanceFieldEnum = {
-  id: 'id',
-  sessionToken: 'sessionToken',
-  userId: 'userId'
-} as const
-
-export type SessionOrderByRelevanceFieldEnum = (typeof SessionOrderByRelevanceFieldEnum)[keyof typeof SessionOrderByRelevanceFieldEnum]
-
-
 export const VerificationTokenOrderByRelevanceFieldEnum = {
   identifier: 'identifier',
   token: 'token'
@@ -207,14 +209,42 @@ export const VerificationTokenOrderByRelevanceFieldEnum = {
 export type VerificationTokenOrderByRelevanceFieldEnum = (typeof VerificationTokenOrderByRelevanceFieldEnum)[keyof typeof VerificationTokenOrderByRelevanceFieldEnum]
 
 
-export const AuthenticatorOrderByRelevanceFieldEnum = {
-  credentialID: 'credentialID',
-  userId: 'userId',
-  providerAccountId: 'providerAccountId',
-  credentialPublicKey: 'credentialPublicKey',
-  credentialDeviceType: 'credentialDeviceType',
-  transports: 'transports'
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
 } as const
 
-export type AuthenticatorOrderByRelevanceFieldEnum = (typeof AuthenticatorOrderByRelevanceFieldEnum)[keyof typeof AuthenticatorOrderByRelevanceFieldEnum]
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const CharacterOrderByRelevanceFieldEnum = {
+  charName: 'charName',
+  charImage: 'charImage',
+  charProfileLayout: 'charProfileLayout',
+  charImageFrame: 'charImageFrame',
+  charMessage: 'charMessage',
+  charKind: 'charKind',
+  charColor: 'charColor',
+  charMusic: 'charMusic',
+  charLike: 'charLike',
+  charHate: 'charHate',
+  charMbti: 'charMbti',
+  charBirthplace: 'charBirthplace',
+  charAge: 'charAge',
+  charBirthday: 'charBirthday',
+  charHeight: 'charHeight',
+  charPersonality: 'charPersonality',
+  charUploaderId: 'charUploaderId'
+} as const
+
+export type CharacterOrderByRelevanceFieldEnum = (typeof CharacterOrderByRelevanceFieldEnum)[keyof typeof CharacterOrderByRelevanceFieldEnum]
 

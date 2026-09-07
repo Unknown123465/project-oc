@@ -1,0 +1,47 @@
+.warning {
+	margin: -6px 0 16px;
+	color: var(--error-text);
+	font-size: 13px;
+}
+
+.choice_list {
+	margin-bottom: 5px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.choice_card {
+	padding: 14px 16px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background-color: var(--card-dark-1);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-2);
+	cursor: pointer;
+
+	& input {
+		width: 18px;
+		height: 18px;
+		margin: 0;
+		accent-color: var(--personal-dark);
+	}
+
+	& b {
+		display: block;
+		color: var(--title-text);
+		font-size: 14.5px;
+		font-weight: 700;
+	}
+
+	& small {
+		color: var(--muted);
+		font-size: 12.5px;
+	}
+
+	&:has(input:checked) {
+		border-color: var(--personal-dark);
+		background-color: var(--personal-bright);
+	}
+}

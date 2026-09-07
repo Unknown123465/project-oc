@@ -1,0 +1,16 @@
+.preview {
+	position: sticky;
+	top: calc(var(--header-height) + 24px);
+	container-type: inline-size;
+}
+
+.label {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 12px;
+	color: var(--muted);
+	font-size: 13px;
+	font-weight: 700;
+}
