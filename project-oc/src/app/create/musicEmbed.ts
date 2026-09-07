@@ -58,10 +58,14 @@ export const MUSIC_EMBED_ORIGINS: readonly string[] = ["https://www.youtube.com"
 export const MUSIC_PROTOCOL_PATTERN: RegExp = /^https$/;
 
 /* z.url({hostname})에 넘길 정규식. 위 서비스 목록에서 만들어 두 판정이 갈라지지 않게 한다.
-   끝을 $로 잠그지 않으면 youtube.com.evil.com 같은 사칭 호스트가 통과한다. */
+   끝을 $로 잠그지 않으면 youtube.com.evil.com 같은 사칭 호스트가 통과한다.
+
+   역슬래시는 두 번 적는다. 정규식이 아니라 템플릿 문자열에 쓰는 것이라
+   "\."로 적으면 JS가 문자열 단계에서 역슬래시를 떼어 내 정규식에는 점 하나만
+   남고, 그 점은 "아무 글자 하나"가 되어 youtubeXcom 같은 호스트가 통과한다. */
 export const MUSIC_HOST_PATTERN: RegExp = new RegExp(
-	`^(www\.)?(${MUSIC_SERVICES.flatMap((service) => service.hosts)
-		.map((host) => host.replaceAll(".", "\."))
+	`^(www\\.)?(${MUSIC_SERVICES.flatMap((service) => service.hosts)
+		.map((host) => host.replaceAll(".", "\\."))
 		.join("|")})$`,
 	"i",
 );
