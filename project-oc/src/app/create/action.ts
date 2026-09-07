@@ -3,21 +3,12 @@
 import {auth} from "@/auth/auth";
 import {createCharServerForm, MAX_TEMPLATE_LIMIT, type CreateCharServerFormType} from "./validator";
 import db from "@/prisma/client";
+import {uuidToBin} from "@/prisma/uuid";
 import {v7 as uuidv7} from "uuid";
 import {charImageBucket, charImageKey, charImageTempKey, copyCharImage, headCharImage, removeCharImage} from "./r2";
 import {IMAGE_MAX_FILE_SIZE, IMAGE_UPLOAD_TYPE} from "./imageEditor";
 
 export type CreateCharActionResult = {success: true; link: string} | {success: false; message: string};
-
-function uuidToBin(uuid: string) {
-	const hex = uuid.replaceAll("-", "");
-	return Buffer.from(hex, "hex");
-}
-
-function binToUuid(buffer: Buffer) {
-	const hex = buffer.toString("hex");
-	return [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20, 32)].join("-");
-}
 
 export default async function createCharAction(data: CreateCharServerFormType): Promise<CreateCharActionResult> {
 	const authInfo = await auth();
