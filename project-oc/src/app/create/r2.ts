@@ -47,7 +47,7 @@ export function r2(): S3Client {
 }
 
 export function charImageBucket(publicMode: number): string {
-	return publicMode !== PUBLIC_MODE_PUBLIC ? readEnv("R2_PUBLIC_BUCKET") : readEnv("R2_PRIVATE_BUCKET");
+	return publicMode === PUBLIC_MODE_PUBLIC ? readEnv("R2_PUBLIC_BUCKET") : readEnv("R2_PRIVATE_BUCKET");
 }
 
 /* 키 앞에 업로더 id를 두어야 서명 URL을 받은 사람이 남의 오브젝트를 가리킬 수 없다.
