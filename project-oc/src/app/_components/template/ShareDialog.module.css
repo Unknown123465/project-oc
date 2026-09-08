@@ -1,0 +1,71 @@
+.backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 90;
+	display: none;
+	place-items: center;
+	padding: 24px;
+	background-color: rgba(20, 20, 18, 0.58);
+}
+
+.dialog {
+	width: min(100%, 520px);
+	max-height: min(820px, calc(100dvh - 48px));
+	overflow: auto;
+	padding: 26px;
+	background-color: var(--card-dark-1);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-3);
+	box-shadow: var(--shadow-2);
+}
+
+.head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 20px;
+
+	& h2 {
+		margin: 0;
+		color: var(--title-text);
+		font-size: 26px;
+		letter-spacing: -0.045em;
+	}
+
+	& p {
+		margin: 6px 0 0;
+		color: var(--muted);
+	}
+}
+
+.close {
+	width: 38px;
+	height: 38px;
+	flex: 0 0 auto;
+	color: var(--muted);
+	font-size: 18px;
+	background-color: var(--card-dark-2);
+	border: 0;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.body {
+	margin-top: 20px;
+}
+
+.copy {
+	width: 100%;
+	min-height: 46px;
+	color: var(--button-submit-text);
+	font-size: 15px;
+	font-weight: 750;
+	background-color: var(--button-submit-back);
+	border: 1px solid var(--button-submit-line);
+	border-radius: 10px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: var(--personal-dark);
+	}
+}

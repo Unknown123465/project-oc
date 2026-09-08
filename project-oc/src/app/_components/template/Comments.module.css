@@ -1,0 +1,112 @@
+.comments {
+	margin-top: 44px;
+	padding-top: 34px;
+	border-top: 1px solid var(--card-dark-line);
+}
+
+.comments h2 {
+	margin: 0;
+	color: var(--title-text);
+	font-size: 28px;
+	letter-spacing: -0.04em;
+
+	& span {
+		color: var(--muted);
+	}
+}
+
+.list {
+	display: grid;
+	gap: 12px;
+	margin-top: 20px;
+}
+
+.comment {
+	padding: 17px 0;
+	border-bottom: 1px solid var(--card-dark-line);
+}
+
+.head {
+	display: flex;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+.author {
+	color: var(--title-text);
+	font-weight: 780;
+}
+
+.time {
+	color: var(--muted);
+	font-size: 12px;
+}
+
+.comment p {
+	margin: 8px 0 0;
+	color: var(--muted);
+}
+
+.form {
+	margin-top: 26px;
+}
+
+.field {
+	display: grid;
+	gap: 8px;
+}
+
+.field_label {
+	color: var(--title-text);
+	font-size: 13.5px;
+	font-weight: 700;
+}
+
+.textarea {
+	width: 100%;
+	padding: 12px 15px;
+	color: var(--input-text);
+	font: inherit;
+	font-size: 15px;
+	line-height: 1.5;
+	background-color: var(--input-back);
+	border: 1px solid var(--input-line);
+	border-radius: 10px;
+	resize: vertical;
+
+	&::placeholder {
+		color: var(--muted);
+	}
+
+	&:focus {
+		outline: 0;
+		border-color: var(--input-select-line);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--personal) 45%, transparent);
+	}
+}
+
+.form_actions {
+	margin-top: 14px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.submit {
+	min-height: 46px;
+	padding: 0 24px;
+	color: var(--button-submit-text);
+	font-size: 15px;
+	font-weight: 750;
+	background-color: var(--button-submit-back);
+	border: 1px solid var(--button-submit-line);
+	border-radius: 10px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: var(--personal-dark);
+	}
+
+	&:active {
+		transform: scale(0.98);
+	}
+}
