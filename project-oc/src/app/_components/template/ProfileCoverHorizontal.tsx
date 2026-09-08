@@ -10,7 +10,7 @@ interface ProfileCoverHorizontalProps {
 export default function ProfileCoverHorizontal({imageSrc, alt, color}: ProfileCoverHorizontalProps) {
 	return (
 		<div className={styles.cover} style={{"--char-color": color}}>
-			<Image src={imageSrc} alt={alt} width={330} height={220} className={styles.image} />
+			<Image src={imageSrc} alt={alt} width={980} height={320} loading="lazy" className={styles.image} />
 		</div>
 	);
 }

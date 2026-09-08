@@ -35,6 +35,7 @@
 	border: 1px solid var(--button-normal-line);
 	border-radius: var(--radius-2);
 	cursor: pointer;
+	vertical-align: middle;
 
 	&:hover {
 		border-color: var(--button-normal-line-hover);
@@ -45,5 +46,8 @@
 		color: var(--button-submit-text);
 		background-color: var(--button-submit-back);
 		border-color: var(--button-submit-line);
+	}
+
+	& i {
 	}
 }

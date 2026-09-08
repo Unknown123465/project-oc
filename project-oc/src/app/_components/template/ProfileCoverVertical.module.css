@@ -5,9 +5,7 @@
 	place-items: center;
 	overflow: hidden;
 	border-radius: var(--radius-2);
-	background:
-		linear-gradient(135deg, color-mix(in srgb, var(--char-color) 28%, var(--card-dark-1)), transparent),
-		var(--card-dark-2);
+	background: linear-gradient(135deg, color-mix(in srgb, var(--char-color) 28%, var(--card-dark-1)), transparent), var(--card-dark-2);
 
 	&::after {
 		content: "";
@@ -24,9 +22,7 @@
 .image {
 	position: relative;
 	z-index: 1;
-	width: 92%;
 	height: auto;
-	max-height: 560px;
 	object-fit: contain;
 }
 

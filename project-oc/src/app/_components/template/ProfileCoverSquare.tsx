@@ -10,7 +10,7 @@ interface ProfileCoverSquareProps {
 export default function ProfileCoverSquare({imageSrc, alt, color}: ProfileCoverSquareProps) {
 	return (
 		<div className={styles.cover} style={{"--char-color": color}}>
-			<Image src={imageSrc} alt={alt} width={330} height={220} className={styles.image} />
+			<Image src={imageSrc} alt={alt} width={330} height={220} loading="lazy" className={styles.image} />
 		</div>
 	);
 }

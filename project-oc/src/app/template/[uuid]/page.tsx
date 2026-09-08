@@ -1,11 +1,14 @@
 import CharacterProfile, {type TemplateCharacter} from "@/app/_components/template/CharacterProfile";
+import {getCharacter} from "./getCharacter";
+import {notFound} from "next/navigation";
 
 /* uuid로 실제 캐릭터를 조회하는 로직은 아직 없다. 구조와 레이아웃을 확인하기 위해
    목업(profile-horizontal/vertical/square.html)과 같은 내용의 목데이터를 그대로 쓴다. */
 const MOCK_CHARACTER: TemplateCharacter = {
 	charName: "티아라",
 	charMessage: "오늘도 내일도, 반짝이는 마음으로 화이팅!",
-	charProfileLayout: "h",
+	charProfileLayout: "s",
+	charImageFrame: "square",
 	charImage: "/test char.png",
 	charColor: "#ffafbd",
 	charKind: "노바",
@@ -30,5 +33,11 @@ const MOCK_CHARACTER: TemplateCharacter = {
 export default async function TemplatePage({params}: PageProps<"/template/[uuid]">) {
 	const {uuid} = await params;
 
-	return <CharacterProfile uuid={uuid} character={MOCK_CHARACTER} />;
+	const character = await getCharacter(uuid);
+
+	if (character === null) {
+		notFound();
+	}
+
+	return <CharacterProfile uuid={uuid} character={character} />;
 }

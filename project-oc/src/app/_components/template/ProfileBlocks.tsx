@@ -49,15 +49,9 @@ export default function ProfileBlocks({character}: ProfileBlocksProps) {
 			{music !== null ? (
 				<section className={`${styles.block} ${styles.block_wide} ${styles.theme_song}`}>
 					<div className={styles.theme_song_head}>
-						<div>
-							<h3>테마곡</h3>
+						<h3>테마곡</h3>
 
-							<p>캐릭터의 분위기를 음악과 함께 감상해 보세요.</p>
-						</div>
-
-						<a href={music.href} target="_blank" rel="noreferrer" className={styles.text_link}>
-							YouTube에서 보기 ↗
-						</a>
+						<p>캐릭터의 분위기를 음악과 함께 감상해 보세요.</p>
 					</div>
 
 					<div className={styles.theme_song_frame}>

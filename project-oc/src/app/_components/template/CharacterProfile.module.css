@@ -23,6 +23,12 @@
 	align-items: start;
 }
 
+.ai_disclosure_wrap {
+	width: 100%;
+	max-width: 520px;
+	margin: 20px auto 0;
+}
+
 .ai_disclosure {
 	display: flex;
 	align-items: center;

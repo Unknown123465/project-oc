@@ -41,18 +41,20 @@ interface CharacterProfileProps {
 }
 
 export default function CharacterProfile({uuid, character}: CharacterProfileProps) {
-	const layout = character.charProfileLayout;
+	const layout: ProfileLayout = character.charProfileLayout;
 
-	const alt = `${character.charName} 캐릭터 전신 일러스트`;
+	const alt: string = `${character.charName} 캐릭터 일러스트`;
 
-	const cover =
-		layout === "h" ? (
-			<ProfileCoverHorizontal imageSrc={character.charImage} alt={alt} color={character.charColor} />
-		) : layout === "v" ? (
-			<ProfileCoverVertical imageSrc={character.charImage} alt={alt} color={character.charColor} />
-		) : (
-			<ProfileCoverSquare imageSrc={character.charImage} alt={alt} color={character.charColor} />
-		);
+	let cover;
+	let sheet;
+
+	const aiUsedFlag = character.aiUsed ? (
+		<p className={styles.ai_disclosure} role="note">
+			<strong>AI 이미지 안내</strong>
+
+			<span>AI를 사용한 이미지입니다.</span>
+		</p>
+	) : null;
 
 	const content = (
 		<>
@@ -64,48 +66,56 @@ export default function CharacterProfile({uuid, character}: CharacterProfileProp
 		</>
 	);
 
+	if (layout === "h") {
+		cover = <ProfileCoverHorizontal imageSrc={character.charImage} alt={alt} color={character.charColor} />;
+
+		sheet = (
+			<>
+				{cover}
+
+				<div className={styles.inner}>
+					{aiUsedFlag}
+
+					{content}
+				</div>
+			</>
+		);
+	} else if (layout === "v") {
+		cover = <ProfileCoverVertical imageSrc={character.charImage} alt={alt} color={character.charColor} />;
+
+		sheet = (
+			<div className={styles.inner}>
+				<div className={styles.hero_grid}>
+					{cover}
+
+					<div>
+						{aiUsedFlag}
+
+						{content}
+					</div>
+				</div>
+			</div>
+		);
+	} else {
+		cover = <ProfileCoverSquare imageSrc={character.charImage} alt={alt} color={character.charColor} />;
+
+		sheet = (
+			<div className={styles.inner}>
+				{cover}
+
+				<div className={styles.ai_disclosure_wrap}>{aiUsedFlag}</div>
+
+				{content}
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<main className={styles.main}>
 				<ProfileActions likeCount={character.likeCount} />
 
-				<article className={styles.sheet}>
-					{layout === "h" ? (
-						<>
-							{cover}
-
-							<div className={styles.inner}>{content}</div>
-						</>
-					) : null}
-
-					{layout === "v" ? (
-						<div className={styles.inner}>
-							<div className={styles.hero_grid}>
-								{cover}
-
-								<div>
-									{character.aiUsed ? (
-										<p className={styles.ai_disclosure} role="note">
-											<strong>AI 이미지 안내</strong>
-
-											<span>AI를 사용한 이미지입니다.</span>
-										</p>
-									) : null}
-
-									{content}
-								</div>
-							</div>
-						</div>
-					) : null}
-
-					{layout === "s" ? (
-						<div className={styles.inner}>
-							{cover}
-
-							{content}
-						</div>
-					) : null}
-				</article>
+				<article className={styles.sheet}>{sheet}</article>
 
 				<Comments />
 			</main>

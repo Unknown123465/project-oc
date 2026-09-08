@@ -14,7 +14,7 @@ export default function ProfileActions({likeCount}: ProfileActionsProps) {
 
 			<div className={styles.group}>
 				<button type="button" className={styles.pill} aria-pressed="false">
-					♥ <span>{likeCount}</span>
+					<i className="bi bi-heart"></i> <span>{likeCount}</span>
 				</button>
 
 				<button type="button" className={styles.pill}>
