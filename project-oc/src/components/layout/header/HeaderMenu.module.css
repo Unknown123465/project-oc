@@ -13,9 +13,16 @@
 		word-break: keep-all;
 		border-radius: var(--radius-2);
 
+		&.danger {
+			color: var(--danger);
+		}
+
 		&:hover {
 			background-color: var(--card-dark-2);
-			color: var(--title-text);
+
+			&:not(.danger) {
+				color: var(--title-text);
+			}
 		}
 	}
 
