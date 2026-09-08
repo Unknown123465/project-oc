@@ -11,11 +11,13 @@ import ShareDialog from "./ShareDialog";
 import type {IframeHeight} from "@/app/create/musicEmbed";
 
 export type ProfileLayout = "h" | "v" | "s";
+export type ImageFrame = "square" | "circle";
 
 export interface TemplateCharacter {
 	charName: string;
 	charMessage: string;
 	charProfileLayout: ProfileLayout;
+	charImageFrame: ImageFrame;
 	charImage: string;
 	charColor: string;
 	charKind: string | null;
