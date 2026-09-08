@@ -8,7 +8,7 @@ export default function GuestMenu() {
 		<div className={styles.menu}>
 			<Link href="/login">로그인</Link>
 
-			<Link href="/join">회원가압</Link>
+			<Link href="/signup">회원가입</Link>
 
 			<a href="/lincese" target="_blank" rel="noreferrer noopener">
 				오픈소스 라이선스
