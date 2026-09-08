@@ -23,6 +23,10 @@ export default function UserMenu() {
 				계정 설정
 			</Link>
 
+			<Link href="/logout" className={`${styles.text} ${styles.danger}`}>
+				로그아웃
+			</Link>
+
 			<ThemeSelect />
 		</div>
 	);

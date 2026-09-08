@@ -10,8 +10,11 @@ import {useForm} from "react-hook-form";
 import {loginForm, type LoginFormType} from "./validator";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
 
 export function LoginForm() {
+	const session = useSession();
+
 	const router = useRouter();
 
 	const formId = useId();
@@ -38,12 +41,14 @@ export function LoginForm() {
 			const result = await normalLoginAction(data);
 
 			if (result.success) {
+				session.update();
+
 				router.replace("/");
 			} else {
 				setError("root", {message: result.message});
 			}
 		},
-		[router, setError],
+		[router, session, setError],
 	);
 
 	const message: string | undefined = errors.userName?.message ?? errors.password?.message ?? errors.root?.message;

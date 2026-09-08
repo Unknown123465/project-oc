@@ -6,8 +6,11 @@ import styles from "./Header.module.css";
 import UserMenu from "./UserMenu";
 import Link from "next/link";
 import {useScrollLock} from "@/hooks/useScrollLock";
+import {useSession} from "next-auth/react";
 
 export default function Header() {
+	const session = useSession();
+
 	const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
 	const navRef = useRef<HTMLElement>(null);
@@ -58,6 +61,8 @@ export default function Header() {
 		}
 	}, [menuOpen]);
 
+	const isLogin: boolean = session.status === "authenticated" && session.data !== null && session.data !== undefined;
+
 	return (
 		<>
 			<header className={styles.header}>
@@ -73,7 +78,7 @@ export default function Header() {
 					</button>
 
 					<div className={styles.menu} hidden={!menuOpen}>
-						{true ? <UserMenu /> : <GuestMenu />}
+						{isLogin ? <UserMenu /> : <GuestMenu />}
 					</div>
 				</nav>
 			</header>

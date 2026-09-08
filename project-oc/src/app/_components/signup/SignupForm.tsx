@@ -11,8 +11,11 @@ import {SubmitButton} from "@/components/ui/button";
 import {describedBy} from "@/components/ui/aria";
 import {signupAction} from "@/app/signup/action";
 import {signupForm, type SignupFormType} from "@/app/signup/validator";
+import {useSession} from "next-auth/react";
 
 export default function SignupForm() {
+	const session = useSession();
+
 	const router = useRouter();
 
 	const baseId = useId();
@@ -50,6 +53,8 @@ export default function SignupForm() {
 			const result = await signupAction(data);
 
 			if (result.success) {
+				session.update();
+
 				/* 뒤로 가기로 방금 채운 폼에 돌아오지 않도록 replace로 넘긴다. */
 				router.replace("/signup/complete");
 			} else {
@@ -58,7 +63,7 @@ export default function SignupForm() {
 				setError("root", {message: result.message});
 			}
 		},
-		[router, setError],
+		[router, session, setError],
 	);
 
 	return (

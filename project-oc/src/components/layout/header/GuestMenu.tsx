@@ -18,7 +18,7 @@ export default function GuestMenu() {
 					로그인
 				</Link>
 
-				<Link href="/join" className={styles.yellow}>
+				<Link href="/signup" className={styles.yellow}>
 					회원가입
 				</Link>
 			</div>
