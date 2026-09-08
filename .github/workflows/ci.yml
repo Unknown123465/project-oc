@@ -56,5 +56,8 @@ jobs:
             - name: 린트
               run: npx eslint .
 
+            - name: 테스트
+              run: npm test
+
             - name: 빌드
               run: npm run build
