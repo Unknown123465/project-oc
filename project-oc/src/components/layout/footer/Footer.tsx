@@ -2,8 +2,11 @@ import Image from "next/image";
 import styles from "./Footer.module.css";
 import UserMenu from "./UserMenu";
 import GuestMenu from "./GuestMenu";
+import {auth} from "@/auth/auth";
 
-export default function Footer() {
+export default async function Footer() {
+	const authInfo = await auth();
+
 	const year: number = new Date().getFullYear();
 
 	return (
@@ -16,7 +19,7 @@ export default function Footer() {
 				</a>
 			</div>
 
-			{false ? <UserMenu /> : <GuestMenu />}
+			{authInfo !== null ? <UserMenu /> : <GuestMenu />}
 		</footer>
 	);
 }
