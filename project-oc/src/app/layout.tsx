@@ -3,6 +3,7 @@ import {headers} from "next/headers";
 import "./globals.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import localFont from "next/font/local";
+import Script from "next/script";
 import Header from "@/components/layout/header/Header";
 import Footer from "@/components/layout/footer/Footer";
 import {SessionProvider} from "next-auth/react";
@@ -27,17 +28,27 @@ export default async function RootLayout({children}: LayoutProps<"/">) {
 	return (
 		<html lang="ko" className={pretendard.className} suppressHydrationWarning>
 			<head>
-				<script
+				{/* 원시 <script> 태그는 최초 HTML에서만 실행되고, 클라이언트 쪽 전환(예: notFound()로
+				    화면이 바뀌는 이동)이 같은 트리를 다시 그릴 때는 React가 "이 스크립트는 클라이언트
+				    렌더링에서는 실행되지 않는다"는 경고를 낸다. next/script는 이 재실행 여부까지
+				    추적해 주므로 경고 없이 같은 자리에서 같은 일을 한다.
+
+				    <head> 밖(<body> 형제)에 두면 개발 서버가 "sync/defer 스크립트를 문서 순서를
+				    모른 채로는 못 그린다"며 <head>로 옮기라고 직접 안내한다 — beforeInteractive는
+				    순서가 보장돼야 하는 전략이라 위치가 명시적이어야 한다. */}
+				<Script
+					id="theme-init"
+					strategy="beforeInteractive"
 					nonce={nonce ?? undefined}
 					dangerouslySetInnerHTML={{
 						__html: `(function(){
-					try {
-						const value = localStorage.getItem("color-theme");
-						if(value === "dark" || value === "light") {
-							document.documentElement.dataset.theme = value;
-						}
-					} catch (e) {}
-					})()`,
+						try {
+							const value = localStorage.getItem("color-theme");
+							if(value === "dark" || value === "light") {
+								document.documentElement.dataset.theme = value;
+							}
+						} catch (e) {}
+						})()`,
 					}}
 				/>
 			</head>
