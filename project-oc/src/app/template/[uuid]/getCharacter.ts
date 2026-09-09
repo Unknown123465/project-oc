@@ -27,6 +27,7 @@ export interface CharacterView extends TemplateCharacter {
 	 *  판단하는 데 쓴다. 서명 주소를 og:image에 넣으면 크롤러가 나중에 다시 가져갈 때는
 	 *  이미 만료돼 있고, 비공개 이미지가 SNS 쪽 캐시에 남는다. */
 	imagePublic: boolean;
+	creator: string;
 }
 
 /** 수정·삭제 시 이 태그로 무효화한다. 문자열을 직접 쓰지 않게 여기서만 만든다. */
@@ -66,7 +67,13 @@ function toMusicView(raw: string | null): TemplateCharacter["charMusic"] {
    캐릭터가 같은 키를 공유해 남의 프로필이 나간다.
 
    쿠키·헤더는 이 안에서 읽을 수 없다(Next 문서 명시). 그래서 여기서는 공개 여부를
-   판단하지 않고, 판단에 필요한 charPublicMode와 charUploaderId를 같이 꺼내 온다. */
+   판단하지 않고, 판단에 필요한 charPublicMode와 charUploaderId를 같이 꺼내 온다.
+
+   include가 아니라 select인 이유가 하나 더 있다 — unstable_cache는 콜백 결과를
+   JSON으로 직렬화해 저장한다. include로 전체 컬럼을 가져오면 charId(BigInt)가
+   따라오는데 JSON.stringify는 BigInt를 못 다뤄 "Do not know how to serialize a
+   BigInt"로 요청 자체가 죽는다. 화면에 안 쓰는 charId를 select에서 아예 빼면
+   해결된다(createdAt 같은 나머지 미사용 컬럼도 같이 줄어든다). */
 function cachedCharacterRow(uuid: string) {
 	return unstable_cache(
 		async () => {
@@ -74,8 +81,6 @@ function cachedCharacterRow(uuid: string) {
 				where: {
 					charPublicLink: uuidToBin(uuid),
 				},
-				/* 화면에 쓰는 열만 고른다. charUploaderId가 행에 이미 있어 user를
-				   조인할 이유가 없다. */
 				select: {
 					charName: true,
 					charMessage: true,
@@ -97,6 +102,12 @@ function cachedCharacterRow(uuid: string) {
 					aiUsed: true,
 					charPublicMode: true,
 					charUploaderId: true,
+					user: {
+						select: {
+							username: true,
+							name: true,
+						},
+					},
 				},
 			});
 		},
@@ -157,5 +168,6 @@ export const getCharacter = cache(async (uuid: string): Promise<CharacterView | 
 		   숫자가 최대 10분 낡으므로, 캐시 밖에서 따로 세야 한다. */
 		likeCount: 0,
 		imagePublic,
+		creator: character.user.username || character.user.name || "알 수 없음",
 	};
 });
