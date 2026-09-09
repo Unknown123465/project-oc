@@ -4,7 +4,12 @@ import {r2Endpoint} from "./r2Endpoint";
 /* 공개(0)는 커스텀 도메인으로 누구나 읽을 수 있는 버킷에, 일부 공개(1)와
    비공개(2)는 서명된 URL로만 열리는 버킷에 넣는다. 버킷을 물리적으로 나눠 두면
    공개 설정을 잘못 만져도 비공개 이미지가 링크만으로 새어 나가지 않는다. */
-const PUBLIC_MODE_PUBLIC: number = 0;
+export const PUBLIC_MODE_PUBLIC: number = 0;
+
+/* 일부공개(1)는 링크를 아는 사람이면 누구나 열 수 있고, 비공개(2)만 올린 사람에게
+   묶인다. 두 값이 같은 프라이빗 버킷을 쓰기 때문에 저장 위치만으로는 갈리지 않고,
+   읽는 쪽에서 이 값을 보고 주인을 확인해야 실제로 구분된다. */
+export const PUBLIC_MODE_PRIVATE: number = 2;
 
 function readEnv(name: string): string {
 	const value: string | undefined = process.env[name];
@@ -48,6 +53,13 @@ export function r2(): S3Client {
 
 export function charImageBucket(publicMode: number): string {
 	return publicMode === PUBLIC_MODE_PUBLIC ? readEnv("R2_PUBLIC_BUCKET") : readEnv("R2_PRIVATE_BUCKET");
+}
+
+/* 공개 버킷은 커스텀 도메인이 붙어 있어 서명 없이 이 주소로 바로 열린다.
+   readEnv를 거치는 이유는, 주소를 문자열로 이어 붙이는 자리라 환경 변수가 비어도
+   "undefined/characters/..."라는 그럴듯한 주소가 조용히 만들어지기 때문이다. */
+export function publicCharImageURL(key: string): string {
+	return `${readEnv("R2_PUBLIC_URL")}/${key}`;
 }
 
 /* 키 앞에 업로더 id를 두어야 서명 URL을 받은 사람이 남의 오브젝트를 가리킬 수 없다.

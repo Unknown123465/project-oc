@@ -1,0 +1,55 @@
+.cover {
+	position: relative;
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+	background: linear-gradient(135deg, color-mix(in srgb, var(--char-color) 28%, var(--card-dark-1)), transparent), var(--card-dark-2);
+
+	&::after {
+		content: "";
+		position: absolute;
+		right: -40px;
+		bottom: -70px;
+		width: 220px;
+		height: 220px;
+		border: 1px solid color-mix(in srgb, var(--char-color) 70%, var(--card-dark-line));
+		border-radius: 50%;
+	}
+
+	&.horizontal {
+		min-height: 320px;
+
+		& .image {
+			max-height: 320px;
+		}
+	}
+
+	&.vertical {
+		min-height: 620px;
+		border-radius: var(--radius-2);
+
+		@media (width < 876px) {
+			min-height: 520px;
+		}
+	}
+
+	&.square {
+		width: 100%;
+		max-width: 520px;
+		aspect-ratio: 1;
+		margin: 0 auto;
+		border-radius: var(--radius-2);
+
+		& .image {
+			width: min(80%, 330px);
+			max-height: 220px;
+		}
+	}
+}
+
+.image {
+	position: relative;
+	z-index: 1;
+	height: auto;
+	object-fit: contain;
+}

@@ -17,6 +17,18 @@ const UUID_SEGMENTS: readonly number[] = [8, 4, 4, 4, 12];
    다른 UUID"를 정상으로 통과시킨다. 그래서 변환 전에 형식을 직접 확인한다. */
 const UUID_HEX_PATTERN: RegExp = /^[0-9a-f]{32}$/i;
 
+/* 주소창에서 받은 값을 그대로 uuidToBin에 넣으면 형식이 틀렸을 때 예외가 올라가
+   404가 아니라 500이 된다. 링크는 아무나 손으로 고쳐 볼 수 있는 값이라 "틀린 형식"은
+   장애가 아니라 없는 페이지로 다뤄야 한다. 그 판단을 던지지 않는 함수로 따로 낸다.
+
+   uuidToBin과 달리 하이픈 위치까지 본다. 읽기 경로는 링크가 곧 주소라, 하이픈만
+   뺀 32자리도 같이 통과시키면 같은 캐릭터가 서로 다른 주소 두 개로 열린다. */
+const UUID_PATTERN: RegExp = new RegExp(`^${UUID_SEGMENTS.map((length) => `[0-9a-f]{${length}}`).join("-")}$`, "i");
+
+export function isUuid(uuid: string): boolean {
+	return UUID_PATTERN.test(uuid);
+}
+
 /* Prisma의 Bytes는 Buffer가 아니라 Uint8Array다. Buffer로 주고받으면 Node 타입
    정의에 따라 ArrayBufferLike/ArrayBuffer 불일치가 나므로 처음부터 맞춰 둔다. */
 export function uuidToBin(uuid: string): Uint8Array<ArrayBuffer> {
