@@ -1,8 +1,6 @@
 import styles from "./CharacterProfile.module.css";
 import ProfileActions from "./ProfileActions";
-import ProfileCoverHorizontal from "./ProfileCoverHorizontal";
-import ProfileCoverVertical from "./ProfileCoverVertical";
-import ProfileCoverSquare from "./ProfileCoverSquare";
+import ProfileCover from "./ProfileCover";
 import ProfileIdentity from "./ProfileIdentity";
 import ProfileFacts from "./ProfileFacts";
 import ProfileBlocks from "./ProfileBlocks";
@@ -67,7 +65,7 @@ export default function CharacterProfile({uuid, character}: CharacterProfileProp
 	);
 
 	if (layout === "h") {
-		cover = <ProfileCoverHorizontal imageSrc={character.charImage} alt={alt} color={character.charColor} />;
+		cover = <ProfileCover layout={layout} imageSrc={character.charImage} alt={alt} color={character.charColor} />;
 
 		sheet = (
 			<>
@@ -81,7 +79,7 @@ export default function CharacterProfile({uuid, character}: CharacterProfileProp
 			</>
 		);
 	} else if (layout === "v") {
-		cover = <ProfileCoverVertical imageSrc={character.charImage} alt={alt} color={character.charColor} />;
+		cover = <ProfileCover layout={layout} imageSrc={character.charImage} alt={alt} color={character.charColor} />;
 
 		sheet = (
 			<div className={styles.inner}>
@@ -97,7 +95,7 @@ export default function CharacterProfile({uuid, character}: CharacterProfileProp
 			</div>
 		);
 	} else {
-		cover = <ProfileCoverSquare imageSrc={character.charImage} alt={alt} color={character.charColor} />;
+		cover = <ProfileCover layout={layout} imageSrc={character.charImage} alt={alt} color={character.charColor} />;
 
 		sheet = (
 			<div className={styles.inner}>
