@@ -131,7 +131,7 @@ function formatRatio(ratio: number, imageType: ImageType): string {
 }
 
 export default function ImageUploadModal({open, onClose, onApply}: ImageUploadModalProps) {
-	useScrollLock(true);
+	useScrollLock(open);
 
 	const titleId = useId();
 	const cropHeadingId = useId();
