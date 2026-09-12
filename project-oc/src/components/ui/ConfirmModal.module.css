@@ -1,0 +1,62 @@
+/* display는 [open]일 때만 지정한다. 여기서 무조건 grid를 주면 브라우저 기본
+   스타일인 dialog:not([open]){display:none}을 작성자 규칙이 덮어써 버려,
+   showModal을 부르기 전에도 문서 흐름 안에 그대로 보여 버린다. */
+.backdrop {
+	width: min(420px, calc(100vw - 32px));
+	padding: 24px;
+	margin: auto;
+	color: var(--title-text);
+	background-color: var(--card-back);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-3);
+	box-shadow: var(--shadow-2);
+
+	&::backdrop {
+		background-color: rgba(13, 12, 34, 0.55);
+	}
+}
+
+.backdrop[open] {
+	display: grid;
+	gap: 16px;
+}
+
+.title {
+	margin: 0;
+	color: var(--title-text);
+	font-size: 18px;
+	letter-spacing: -0.02em;
+	word-break: keep-all;
+}
+
+.description {
+	margin: 0;
+	color: var(--muted);
+	font-size: 13.5px;
+	line-height: 1.6;
+	word-break: keep-all;
+	white-space: pre-line;
+}
+
+.actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+
+	& > button {
+		width: auto;
+		padding: 0 16px;
+	}
+}
+
+@media (width < 480px) {
+	.backdrop {
+		width: calc(100vw - 32px);
+	}
+
+	.actions {
+		& > button {
+			flex: 1 1 0;
+		}
+	}
+}

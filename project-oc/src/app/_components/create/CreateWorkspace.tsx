@@ -24,6 +24,7 @@ export default function CreateWorkspace() {
 		handleSubmit,
 		setError,
 		setValue,
+		setValues,
 		formState: {errors, isSubmitting},
 	} = useForm<CreateCharFormInputType, unknown, CreateCharFormType>({
 		defaultValues: {
@@ -72,9 +73,7 @@ export default function CreateWorkspace() {
 			</div>
 
 			<div className={styles.layout}>
-				{showForm ? (
-					<CreateForm control={control} register={register} handleSubmit={handleSubmit} setError={setError} setValue={setValue} errors={errors} isSubmitting={isSubmitting} />
-				) : null}
+				{showForm ? <CreateForm control={control} register={register} handleSubmit={handleSubmit} setError={setError} setValue={setValue} setValues={setValues} errors={errors} isSubmitting={isSubmitting} /> : null}
 
 				{showPreview ? <LivePreview control={control} /> : null}
 			</div>

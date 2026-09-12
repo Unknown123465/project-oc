@@ -37,6 +37,13 @@ const nextConfig: NextConfig = {
 		lightningCssFeatures: {
 			exclude: ["light-dark"],
 		},
+		/* AI 프로필 초안의 참고 이미지가 FormData로 서버 액션에 실린다. 기본 1MB로는
+		   부족하고, Vercel 함수 본문 한도 4.5MB(유료 플랜도 동일)는 넘을 수 없으므로
+		   브라우저에서 1024px·0.8MB 안팎으로 축소한 뒤 보낸다. 2mb는 그 축소본과
+		   multipart 오버헤드(10~20KB)를 더한 값에 여유를 둔 것. */
+		serverActions: {
+			bodySizeLimit: "2mb",
+		},
 	},
 	images: {
 		remotePatterns,

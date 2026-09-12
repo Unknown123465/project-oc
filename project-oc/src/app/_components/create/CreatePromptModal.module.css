@@ -1,0 +1,483 @@
+/* display는 [open]일 때만 지정한다. 여기서 무조건 flex를 주면 브라우저 기본
+   스타일인 dialog:not([open]){display:none}을 작성자 규칙이 덮어써 버려,
+   showModal을 부르기 전에도 문서 흐름 안에 그대로 보여 버린다. */
+.backdrop {
+	width: min(640px, calc(100vw - 32px));
+	max-height: calc(100dvh - 40px);
+	padding: 0;
+	margin: auto;
+	color: var(--title-text);
+	background-color: var(--card-back);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-3);
+	box-shadow: var(--shadow-2);
+	overflow: hidden;
+
+	&::backdrop {
+		background-color: rgba(13, 12, 34, 0.55);
+	}
+}
+
+.backdrop[open] {
+	display: flex;
+	flex-direction: column;
+}
+
+.head {
+	flex: 0 0 auto;
+	padding: 22px 24px 18px;
+	display: flex;
+	align-items: start;
+	justify-content: space-between;
+	gap: 18px;
+	word-break: keep-all;
+	border-bottom: 1px solid var(--card-dark-line);
+
+	& h2 {
+		margin: 0;
+		color: var(--title-text);
+		font-size: 20px;
+		letter-spacing: -0.03em;
+	}
+
+	& p {
+		margin: 5px 0 0;
+		color: var(--muted);
+		font-size: 13px;
+	}
+}
+
+.close {
+	width: 36px;
+	height: 36px;
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--muted);
+	font-size: 15px;
+	background-color: var(--card-dark-2);
+	border: 0;
+	border-radius: var(--radius-1);
+	cursor: pointer;
+
+	&:hover {
+		color: var(--title-text);
+	}
+}
+
+.body {
+	flex: 1 1 auto;
+	overflow-y: auto;
+	padding: 24px;
+	display: grid;
+	gap: 22px;
+}
+
+.field {
+	display: grid;
+	gap: 8px;
+}
+
+.field_head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+
+	& .hidden_input {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+	}
+
+	& label {
+		color: var(--title-text);
+		font-size: 14px;
+		font-weight: 700;
+	}
+}
+
+.optional {
+	color: var(--muted);
+	font-weight: 400;
+}
+
+.counter {
+	flex: 0 0 auto;
+	color: var(--muted);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+
+.counter_over {
+	color: var(--error-text);
+	font-weight: 700;
+}
+
+.textarea {
+	width: 100%;
+	min-height: 160px;
+	max-height: 320px;
+	padding: 12px 15px;
+	color: var(--input-text);
+	font: inherit;
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 1.5;
+	background-color: var(--input-back);
+	border: 1px solid var(--input-line);
+	border-radius: 10px;
+	resize: vertical;
+
+	&::placeholder {
+		color: var(--muted);
+	}
+
+	&:focus {
+		outline: 0;
+		border-color: var(--input-select-line);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--personal) 45%, transparent);
+	}
+
+	&.invalid {
+		border-color: var(--error-text);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--error-text) 22%, transparent);
+	}
+}
+
+.help {
+	margin: 0;
+	color: var(--muted);
+	font-size: 12.5px;
+}
+
+.file_picker {
+	display: grid;
+	justify-items: center;
+	gap: 8px;
+	padding: 22px;
+	text-align: center;
+	background-color: var(--card-dark-2);
+	border: 1px dashed var(--card-dark-line);
+	border-radius: var(--radius-2);
+
+	& p {
+		margin: 0;
+		color: var(--muted);
+		font-size: 12px;
+	}
+}
+
+.attached {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 14px;
+	background-color: var(--card-dark-2);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-2);
+}
+
+.thumbnail {
+	width: 64px;
+	height: 64px;
+	flex: 0 0 auto;
+	object-fit: cover;
+	background-color: var(--card-dark-1);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-1);
+}
+
+.attached_info {
+	min-width: 0;
+	flex: 1 1 auto;
+	display: grid;
+	gap: 8px;
+}
+
+.file_name {
+	overflow: hidden;
+	color: var(--title-text);
+	font-size: 13px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.attached_actions {
+	display: flex;
+	gap: 8px;
+
+	& > button {
+		width: auto;
+		padding: 0 12px;
+	}
+}
+
+.notice {
+	margin: 0;
+	color: var(--muted);
+	font-size: 12px;
+}
+
+.hint {
+	margin: 0;
+	color: var(--muted);
+	font-size: 12px;
+}
+
+.error {
+	min-height: 18px;
+	margin: 0;
+	color: var(--error-text);
+	font-weight: 700;
+	font-size: 13px;
+}
+
+.actions {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 14px 24px;
+	border-top: 1px solid var(--card-dark-line);
+}
+
+.remaining {
+	color: var(--muted);
+	font-size: 12px;
+	word-break: keep-all;
+}
+
+.action_group {
+	flex: 0 0 auto;
+	display: flex;
+	gap: 10px;
+
+	& > button {
+		width: auto;
+		padding: 0 16px;
+	}
+}
+
+/* ───── 결과 화면 ───── */
+
+.result_card {
+	display: grid;
+	gap: 12px;
+	padding: 14px 16px;
+	background-color: var(--card-dark-2);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-2);
+}
+
+.result_head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 28px;
+
+	/* 되돌리기 버튼이 dirty일 때만 그려지므로, 카운터 혼자 남아도 오른쪽 끝에 붙게 */
+	& .counter {
+		margin-left: auto;
+	}
+}
+
+.result_check {
+	width: 18px;
+	height: 18px;
+	flex: 0 0 auto;
+	margin: 0;
+	accent-color: var(--personal);
+	cursor: pointer;
+
+	&:disabled {
+		cursor: not-allowed;
+	}
+}
+
+.result_label {
+	color: var(--title-text);
+	font-size: 14px;
+	font-weight: 700;
+}
+
+/* 되돌리기·카운터는 라벨 오른쪽 끝으로 민다 */
+.result_reset {
+	width: 28px;
+	height: 28px;
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--muted);
+	font-size: 14px;
+	background: none;
+	border: 0;
+	border-radius: var(--radius-1);
+	cursor: pointer;
+
+	&:hover {
+		color: var(--title-text);
+		background-color: var(--card-dark-2);
+	}
+
+	& + .counter {
+		margin-left: 0;
+	}
+}
+
+/* 사유는 최대 40자. 높이를 고정하지 않고 글이 길면 아래로 늘어나게 두되, 도형은
+   위에 붙여 두 줄·세 줄로 꺾여도 도형이 글 가운데로 떠다니지 않게 한다. */
+.layout_body {
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+}
+
+.layout_shape {
+	flex: 0 0 auto;
+	margin-top: 2px;
+	background-color: var(--card-dark-3);
+	border: 1px solid var(--card-dark-line);
+	border-radius: 4px;
+
+	&.shape_h {
+		width: 64px;
+		height: 22px;
+	}
+
+	&.shape_v {
+		width: 30px;
+		height: 58px;
+	}
+
+	&.shape_s {
+		width: 46px;
+		height: 46px;
+	}
+}
+
+/* min-width: 0이 없으면 flex 자식이 내용 너비만큼 버텨 카드 밖으로 삐져나간다.
+   keep-all로 어절 단위 줄바꿈을 우선하되, 띄어쓰기 없는 40자가 와도 anywhere가
+   글자 사이에서 끊어 준다. */
+.layout_text {
+	min-width: 0;
+	flex: 1 1 auto;
+	display: grid;
+	gap: 4px;
+	word-break: keep-all;
+	overflow-wrap: anywhere;
+}
+
+.layout_title {
+	margin: 0;
+	color: var(--title-text);
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.layout_reason {
+	margin: 0;
+	color: var(--muted);
+	font-size: 12.5px;
+}
+
+.layout_diff {
+	margin: 2px 0 0;
+	color: var(--personal-dark);
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.color_body {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+/* 흰색·검은색이 와도 원이 배경에 묻히지 않도록 테두리를 준다. 글자는 원 밖에. */
+.color_swatch {
+	width: 40px;
+	height: 40px;
+	flex: 0 0 auto;
+	border: 1px solid var(--card-dark-line);
+	border-radius: 50%;
+	box-shadow: inset 0 0 0 2px var(--card-back);
+}
+
+.color_text {
+	display: grid;
+	gap: 2px;
+	font-variant-numeric: tabular-nums;
+}
+
+.color_rgb {
+	color: var(--muted);
+	font-size: 12.5px;
+}
+
+.color_code {
+	color: var(--title-text);
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+}
+
+.result_grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px 14px;
+}
+
+.result_field {
+	min-width: 0;
+	display: grid;
+	gap: 6px;
+}
+
+.result_field_wide {
+	grid-column: 1 / -1;
+}
+
+.result_empty {
+	margin: 0;
+	padding: 10px 13px;
+	color: var(--muted);
+	font-size: 13px;
+	background-color: var(--card-dark-2);
+	border: 1px dashed var(--card-dark-line);
+	border-radius: 10px;
+}
+
+@media (width < 768px) {
+	.backdrop {
+		width: calc(100vw - 16px);
+		max-height: calc(100dvh - 16px);
+	}
+
+	.body {
+		padding: 18px;
+	}
+
+	.actions {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.remaining {
+		text-align: center;
+	}
+
+	.action_group {
+		& > button {
+			flex: 1 1 0;
+		}
+	}
+
+	.result_grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

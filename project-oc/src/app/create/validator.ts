@@ -69,3 +69,34 @@ export type CreateCharServerFormType = z.infer<typeof createCharServerForm>;
    "0" | "1"로 좁혀 버려서 defaultValues의 빈 문자열을 못 받는다.
    폼이 실제로 들고 있는 값(입력 중)은 이 input 타입, 제출 검증을 통과한 값만 출력 타입. */
 export type CreateCharFormInputType = z.input<typeof createCharForm>;
+
+export const createPromptForm = z.object({
+	charName: z.string().min(1, "캐릭터 이름을 입력해 주세요.").max(20, "캐릭터 이름을 20자 이하로 입력해 주세요."),
+	charImage: z.instanceof(Blob).nullable(),
+	charProfileLayout: z.enum(["h", "v", "s"], "이미지 유형을 선택해 주세요.").nullable(),
+	charImageFrame: z.enum(["square", "circle"], "이미지 프레임을 선택해 주세요.").nullable(),
+	charMessage: z.string().min(1, "한 줄 소개를 입력해 주세요.").max(30, "한 줄 소개를 30자 이하로 입력해 주세요.").nullable(),
+	charLike: z.string().max(100, "좋아하는 것을 100자 이하로 입력해 주세요.").nullable(),
+	charHate: z.string().max(100, "싫어하는 것을 100자 이하로 입력해 주세요.").nullable(),
+	charPersonality: z.string().max(100, "성격을 100자 이하로 입력해 주세요.").nullable(),
+	charTmi: z
+		.string()
+		.refine((data) => data.split("\n").length <= 5, "TMI는 최대 5개까지 입력 할 수 있어요.")
+		.refine((data) => data.split("\n").every((tmi) => tmi.length <= 30), "TMI는 각 최대 30자 이하로 입력할 수 있어요.")
+		.nullable(),
+	charKind: z.string().max(10, "종족을 10자 이하로 입력해 주세요.").nullable(),
+	charAge: z.string().max(20, "나이를 20자 이하로 입력해 주세요.").nullable(),
+	charBirthday: z.string().max(10, "생일을 10자 이하로 입력해 주세요.").nullable(),
+	charHeight: z.string().max(10, "키를 10자 이하로 입력해 주세요.").nullable(),
+	charBirthplace: z.string().max(20, "출생지를 20자 이하로 입력해 주세요.").nullable(),
+	charMbti: z.string().max(4, "MBTI를 4자 이하로 입력해 주세요.").nullable(),
+
+	charColor: z
+		.string()
+		.regex(/^#[0-9a-f]{6}$/i, "퍼스널 컬러가 올바르지 않아요. HEX로 입력해 주세요.")
+		.nullable(),
+});
+export const createPromptRequireForm = createPromptForm.required();
+
+export type CreatePromptFormType = z.infer<typeof createPromptForm>;
+export type CreatePromptFormRequireType = z.infer<typeof createPromptRequireForm>;
