@@ -7,7 +7,7 @@ import {ActionButton} from "@/components/ui/button";
 import {useScrollLock} from "@/hooks/useScrollLock";
 import {useBlockNavigation} from "@/hooks/useBlockNavigation";
 import {IMAGE_ACCEPTED_TYPES, IMAGE_MAX_DIMENSION, IMAGE_MAX_FILE_SIZE, IMAGE_TYPE_DEFINITIONS, type ImageType} from "@/app/create/imageEditor";
-import {useForm, UseFormSetValues} from "react-hook-form";
+import {useForm, useWatch, type Control, type UseFormSetValues} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {CreateCharFormInputType, createPromptForm, CreatePromptFormType, createPromptRequireForm} from "@/app/create/validator";
 import {PromptApplyValue} from "./ImageUploadField";
@@ -36,6 +36,7 @@ const CHAR_FIELD_KEY_LIST = [
 	"charMbti",
 ] as const;
 type CharFieldKey = (typeof CHAR_FIELD_KEY_LIST)[number];
+type CharFieldSelectKey = CharFieldKey | "charProfileLayout" | "charColor";
 
 interface DraftFieldDefinition {
 	key: CharFieldKey;
@@ -46,14 +47,14 @@ interface DraftFieldDefinition {
 }
 
 type CreateResultStringType = Record<CharFieldKey, string>;
-type CreateResultBlobType = {charImage: Blob};
+type CreateResultFileType = {charImage: File};
 
-type CreateResultType = Partial<CreateResultStringType & CreateResultBlobType>;
+type CreateResultType = Partial<CreateResultStringType & CreateResultFileType>;
 
 /* CoreInfoSection 순서 */
 const CORE_DRAFT_FIELDS: DraftFieldDefinition[] = [
 	{key: "charName", label: "이름", maxLength: 20, wide: false},
-	{key: "charMessage", label: "한 줄 소개", maxLength: 30, wide: true},
+	{key: "charMessage", label: "한 줄 소개", maxLength: 30, wide: false},
 	{key: "charLike", label: "좋아하는 것", maxLength: 100, wide: true},
 	{key: "charHate", label: "싫어하는 것", maxLength: 100, wide: true},
 	{key: "charPersonality", label: "성격", maxLength: 100, wide: true},
@@ -123,31 +124,129 @@ function formatHexAsRgb(hex: string): string {
 	return `R: ${r} G: ${g} B: ${b}`;
 }
 
+/* 카운터에 보일 숫자. TMI는 validator.ts의 refine과 같은 기준(줄 수)으로 센다.
+   값이 들어오기 전(defaultValues가 비어 있는 동안)은 undefined라 0으로. */
+function countDraftValue(field: DraftFieldDefinition, value: string | null | undefined): number {
+	if (!value) {
+		return 0;
+	}
+
+	return field.maxLines !== undefined ? value.split("\n").length : value.length;
+}
+
+interface DraftFieldProps {
+	field: DraftFieldDefinition;
+	result: DraftFieldResult;
+	control: Control<CreatePromptFormType>;
+	checked: boolean;
+	errorMessage?: string;
+	onCheckedChange: (key: CharFieldKey, checked: boolean) => void;
+	onReset: (key: CharFieldKey) => void;
+}
+
+/* 항목 하나를 컴포넌트로 떼어 둔 이유는 카운터다. 실시간 글자 수를 모달 본체에서
+   useWatch로 한 번에 받으면 한 글자 칠 때마다 모달 전체(12개 항목의 Textarea까지)가
+   다시 그려져 입력이 버벅인다. 여기서 자기 항목 하나만 구독하면 키 입력은 이 항목
+   안에서만 돈다 — ProfileSheet 등 미리보기가 control만 받아 각자 구독하는 것과 같은 방식.
+   compute로 숫자만 받아 두면 길이가 같은 붙여넣기 같은 경우엔 그마저도 건너뛴다. */
+function DraftField({field, result, control, checked, errorMessage, onCheckedChange, onReset}: DraftFieldProps) {
+	const baseId = useId();
+
+	const checkId: string = `${baseId}-check`;
+	const textId: string = `${baseId}-text`;
+
+	const count = useWatch({
+		name: field.key,
+		control,
+		compute(value) {
+			return countDraftValue(field, value);
+		},
+	});
+
+	const isEmpty: boolean = result.value === null;
+	const limit: number | undefined = field.maxLines ?? field.maxLength;
+	const isOver: boolean = limit !== undefined && count > limit;
+
+	return (
+		<div className={`${styles.result_field} ${field.wide ? styles.result_field_wide : ""}`}>
+			<div className={styles.result_head}>
+				<div className={styles.left}>
+					<input
+						type="checkbox"
+						id={checkId}
+						className={styles.result_check}
+						aria-label={`${field.label} 반영`}
+						disabled={isEmpty}
+						checked={!isEmpty && checked}
+						onChange={(e) => onCheckedChange(field.key, e.target.checked)}
+					/>
+
+					<label htmlFor={textId} className={styles.result_label}>
+						{field.label}
+					</label>
+				</div>
+
+				{!isEmpty ? (
+					<div className={styles.right}>
+						{/* TODO: 편집으로 값이 바뀌었을 때(dirty)만 보이게. 클릭 시 AI 제안값으로 되돌린다. */}
+						<button type="button" className={styles.result_reset} aria-label={`${field.label}을 AI 제안으로 되돌리기`} onClick={() => onReset(field.key)}>
+							<i className="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+						</button>
+
+						<span className={`${styles.counter} ${isOver ? styles.counter_over : ""}`}>
+							{field.maxLines !== undefined ? `${count} / ${field.maxLines}줄` : `${count} / ${field.maxLength}`}
+						</span>
+					</div>
+				) : null}
+			</div>
+
+			{!isEmpty ? (
+				<Textarea
+					id={textId}
+					name={field.key}
+					control={control}
+					label={field.label}
+					ariaLabelOnly
+					rows={field.wide ? 3 : 1}
+					maxLength={field.maxLength}
+					invalidStyle={checked}
+					padding="10px 13px"
+					style={{fontSize: 14, minHeight: 0, maxHeight: 200}}
+				/>
+			) : (
+				/* disabled textarea는 대비가 낮고 스크린리더가 건너뛴다 - 문구는 일반 텍스트로 */
+				<p id={textId} className={styles.result_empty}>
+					{EMPTY_FIELD_MESSAGE[result.reason ?? "missing"]}
+				</p>
+			)}
+
+			{!isEmpty ? <p className={sectionStyles.error_message}>{checked ? errorMessage : null}</p> : null}
+		</div>
+	);
+}
+
 export interface CreatePromptModalProps {
 	open: boolean;
-	onClose: () => void;
+	onClose: (data?: PromptApplyValue) => void;
 	remainingToday: number;
 	dailyLimit: number;
 	/** 생성 폼에서 이미 고른 이미지 유형. 추천과 다르면 결과 화면에 대비를 보여주고,
 	    반영 시 이미지를 다시 잘라야 한다는 확인 모달의 근거가 된다. */
 	currentLayout: ImageType | "";
 	setValuesByForm: UseFormSetValues<CreateCharFormInputType>;
-	imagePromptResultApply: (data: PromptApplyValue) => void;
 }
 
-export default function CreatePromptModal({open, onClose, remainingToday, dailyLimit, currentLayout, setValuesByForm, imagePromptResultApply}: CreatePromptModalProps) {
+export default function CreatePromptModal({open, onClose, remainingToday, dailyLimit, currentLayout, setValuesByForm}: CreatePromptModalProps) {
 	useScrollLock(open);
 
 	const titleId = useId();
 	const descriptionFieldId = useId();
 	const noticeId = useId();
-	const resultFieldIdBase = useId();
 
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const {
-		register,
 		handleSubmit,
 		control,
 		setValues,
@@ -166,6 +265,8 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
 	const [hasResult, setHasResult] = useState<boolean>(false);
+	const [promptResult, setPromptResult] = useState<DraftResult | null>(null);
+	const [selectedKey, setSelectedKey] = useState<CharFieldSelectKey[]>([]);
 
 	const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -200,6 +301,17 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 
 	const requestClose = () => {
 		dialogRef.current?.close();
+	};
+
+	/* native close 이벤트는 두 경로로 온다 — 사용자가 X·취소·Esc로 닫은 것과, 부모가
+	   open을 false로 내려 위 effect가 dialog.close()를 부른 것. 후자에서도 onClose()를
+	   올리면 부모는 "사용자가 닫았다"로 읽어 openedModal을 null로 덮어쓴다(반영 직후
+	   이미지 모달을 열었는데 바로 닫히던 원인). 부모가 아직 열려 있다고 아는 동안의
+	   close만 사용자 조작이다. ImageUploadModal의 handleDialogClose와 같은 규칙. */
+	const handleDialogClose = () => {
+		if (open) {
+			onClose();
+		}
 	};
 
 	/* TODO: 결과가 떠 있을 때의 닫기. ConfirmModal("초안이 사라져요") → 예 →
@@ -320,55 +432,22 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 	/* 핵심·선택 항목 두 묶음 사이에 퍼스널 컬러 카드가 끼어들어야 해서(폼 순서)
 	   map 콜백을 하나로 뽑아 둔다. */
 	const renderDraftField = (field: DraftFieldDefinition) => {
-		const result: DraftFieldResult = SAMPLE_RESULT.fields[field.key];
-		const isEmpty: boolean = result.value === null;
-		const checkId: string = `${resultFieldIdBase}-${field.key}-check`;
-		const textId: string = `${resultFieldIdBase}-${field.key}-text`;
-
-		return (
-			<div key={field.key} className={`${styles.result_field} ${field.wide ? styles.result_field_wide : ""}`}>
-				<div className={styles.result_head}>
-					<input type="checkbox" id={checkId} className={styles.result_check} aria-label={`${field.label} 반영`} defaultChecked={!isEmpty} disabled={isEmpty} />
-
-					<label htmlFor={textId} className={styles.result_label}>
-						{field.label}
-					</label>
-
-					{!isEmpty ? (
-						<>
-							{/* TODO: 편집으로 값이 바뀌었을 때(dirty)만 보이게. 클릭 시 AI 제안값으로 되돌린다. */}
-							<button type="button" className={styles.result_reset} aria-label={`${field.label}을 AI 제안으로 되돌리기`} onClick={() => {}}>
-								<i className="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
-							</button>
-
-							{/* TODO: 현재 값 기준으로 계산. 초과 시 counter_over·invalid를 켠다. */}
-							<span className={styles.counter}>
-								{field.maxLines !== undefined ? `${result.value?.split("\n").length ?? 0} / ${field.maxLines}줄` : `${result.value?.length ?? 0} / ${field.maxLength}`}
-							</span>
-						</>
-					) : null}
-				</div>
-
-				{!isEmpty ? (
-					<Textarea
-						id={textId}
-						name={field.key}
-						control={control}
-						label={field.label}
-						ariaLabelOnly
-						rows={field.wide ? 3 : 1}
-						maxLength={field.maxLength}
-						padding="10px 13px"
-						style={{fontSize: 14, minHeight: 0, maxHeight: 200}}
-					/>
-				) : (
-					/* disabled textarea는 대비가 낮고 스크린리더가 건너뛴다 — 문구는 일반 텍스트로 */
-					<p id={textId} className={styles.result_empty}>
-						{EMPTY_FIELD_MESSAGE[result.reason ?? "missing"]}
-					</p>
-				)}
-			</div>
-		);
+		if (promptResult !== null) {
+			return (
+				<DraftField
+					key={field.key}
+					field={field}
+					result={promptResult.fields[field.key]}
+					control={control}
+					checked={selectedKey.includes(field.key)}
+					errorMessage={errors[field.key]?.message}
+					onCheckedChange={selectedKeyChange}
+					onReset={resultValueReset}
+				/>
+			);
+		} else {
+			return null;
+		}
 	};
 
 	const requestSubmit = async () => {
@@ -387,6 +466,26 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 			await new Promise((res) => setTimeout(res, 1000));
 
 			setHasResult(true);
+
+			//TODO: 실제 반영값으로 변걍 할 예정
+			setSelectedKey(["charProfileLayout", "charColor", "charName", "charMessage", "charLike", "charHate", "charPersonality", "charTmi", "charKind", "charAge", "charBirthplace"]);
+
+			/* null도 createPromptForm엔 유효한 값이라 거를 필요가 없다 — 오히려 거르면
+			   그 필드가 undefined로 남아 nullable() 검증에 걸려 handleSubmit이 조용히
+			   실패한다(resultSubmit이 아예 호출되지 않음). 체크박스·Textarea 쪽 화면은
+			   promptResult.fields[key].value로 판단하므로 null을 넣어도 안 그려진다.
+			   charProfileLayout·charColor·charImageFrame·charImage는 CHAR_FIELD_KEY_LIST에
+			   없어 같은 이유로 따로 채워야 한다. */
+			const fieldEntries = CHAR_FIELD_KEY_LIST.map((key) => [key, SAMPLE_RESULT.fields[key].value] as const);
+
+			setPromptResult(SAMPLE_RESULT);
+			setValues({
+				...Object.fromEntries(fieldEntries),
+				charProfileLayout: SAMPLE_RESULT.layout?.type ?? null,
+				charImageFrame: null,
+				charColor: SAMPLE_RESULT.color,
+				charImage: null,
+			});
 		} catch (err) {
 			if (err instanceof Error) {
 				setErrorMessage(err.message);
@@ -396,12 +495,30 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 		}
 	};
 
+	const selectedKeyChange = (name: CharFieldSelectKey, checked: boolean) => {
+		const index: number = selectedKey.indexOf(name);
+
+		if (checked && index === -1) {
+			setSelectedKey((prev) => prev.concat(name));
+		} else if (!checked && index > -1) {
+			setSelectedKey((prev) => prev.toSpliced(index, 1));
+		}
+	};
+
+	const resultValueReset = (name: CharFieldKey) => {
+		if (typeof promptResult?.fields[name].value === "string") {
+			setValues({
+				[name]: promptResult.fields[name].value,
+			});
+		}
+	};
+
 	const resultSubmit = (data: CreatePromptFormType) => {
 		try {
 			const check = createPromptRequireForm.safeParse(data);
 
 			if (!check.success) {
-				throw check.error.issues[0].message;
+				throw new Error(check.error.issues[0].message);
 			}
 
 			const resultData = check.data;
@@ -410,25 +527,21 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 			for (const key of CHAR_FIELD_KEY_LIST) {
 				const value = resultData[key];
 
-				if (value !== null) {
+				if (value !== null && selectedKey.includes(key)) {
 					resultObject[key] = value;
 				}
 			}
 
-			if (imageFile !== null) {
-				resultObject.charImage = imageFile;
-			}
-
 			setValuesByForm(resultObject);
 
-			if (imageFile === null || SAMPLE_RESULT.layout === null) {
+			if (imageFile === null || !promptResult?.layout) {
 				onClose();
 			} else {
-				imagePromptResultApply({
+				onClose({
 					file: imageFile,
-					layout: SAMPLE_RESULT.layout.type,
-					fx: SAMPLE_RESULT.layout.fx,
-					fy: SAMPLE_RESULT.layout.fy,
+					layout: promptResult.layout.type,
+					fx: promptResult.layout.fx,
+					fy: promptResult.layout.fy,
 				});
 			}
 		} catch (err) {
@@ -443,7 +556,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 	};
 
 	return (
-		<dialog ref={dialogRef} className={styles.backdrop} aria-labelledby={titleId} onClose={onClose} onCancel={handleDialogCancel} onClick={handleBackdropClick}>
+		<dialog ref={dialogRef} className={styles.backdrop} aria-labelledby={titleId} onClose={handleDialogClose} onCancel={handleDialogCancel} onClick={handleBackdropClick}>
 			{!hasResult ? (
 				<>
 					<div className={styles.head}>
@@ -540,6 +653,8 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 								취소
 							</ActionButton>
 
+							{promptResult !== null ? <ActionButton onClick={() => setHasResult(true)}>이전 결과 보기</ActionButton> : null}
+
 							<ActionButton styleType="attention" disabled={isSubmitting} onClick={requestSubmit}>
 								{isSubmitting ? "만드는 중" : "프로필 초안 생성"}
 							</ActionButton>
@@ -564,25 +679,33 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 						{/* /create 폼 순서 그대로: 이미지 유형 → 핵심 정보 → 퍼스널 컬러 → 선택 항목.
 						    이미지 유형·퍼스널 컬러는 참고 이미지를 첨부했을 때만 온다. null이면 카드 자체를 그리지 않는다. */}
 						<div className={styles.result_grid}>
-							{SAMPLE_RESULT.layout !== null ? (
+							{promptResult !== null && promptResult.layout !== null ? (
 								<section className={`${styles.result_card} ${styles.result_field_wide}`} aria-label="이미지 유형 추천">
 									<div className={styles.result_head}>
-										<input type="checkbox" className={styles.result_check} aria-label="이미지 유형 추천 반영" defaultChecked />
+										<div className={styles.left}>
+											<input
+												type="checkbox"
+												className={styles.result_check}
+												aria-label="이미지 유형 추천 반영"
+												checked={selectedKey.includes("charProfileLayout")}
+												onChange={(e) => selectedKeyChange("charProfileLayout", e.target.checked)}
+											/>
 
-										<span className={styles.result_label}>이미지 유형</span>
+											<span className={styles.result_label}>이미지 유형</span>
+										</div>
 									</div>
 
 									<div className={styles.layout_body}>
-										<span className={`${styles.layout_shape} ${styles[`shape_${SAMPLE_RESULT.layout.type}`]}`} aria-hidden="true"></span>
+										<span className={`${styles.layout_shape} ${styles[`shape_${promptResult.layout.type}`]}`} aria-hidden="true"></span>
 
 										<div className={styles.layout_text}>
-											<p className={styles.layout_title}>{IMAGE_TYPE_DEFINITIONS[SAMPLE_RESULT.layout.type].label}을 추천해요</p>
+											<p className={styles.layout_title}>{IMAGE_TYPE_DEFINITIONS[promptResult.layout.type].label}을 추천해요</p>
 
-											<p className={styles.layout_reason}>{SAMPLE_RESULT.layout.reason}</p>
+											<p className={styles.layout_reason}>{promptResult.layout.reason}</p>
 
-											{currentLayout !== "" && currentLayout !== SAMPLE_RESULT.layout.type ? (
+											{currentLayout !== "" && currentLayout !== promptResult.layout.type ? (
 												<p className={styles.layout_diff}>
-													현재 {IMAGE_TYPE_DEFINITIONS[currentLayout].label} → {IMAGE_TYPE_DEFINITIONS[SAMPLE_RESULT.layout.type].label}. 반영하면 이미지를 다시 잘라요.
+													현재 {IMAGE_TYPE_DEFINITIONS[currentLayout].label} → {IMAGE_TYPE_DEFINITIONS[promptResult.layout.type].label}. 반영하면 이미지를 다시 잘라요.
 												</p>
 											) : null}
 										</div>
@@ -590,22 +713,30 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 								</section>
 							) : null}
 
-							{SAMPLE_RESULT.color !== null ? (
+							{promptResult !== null && promptResult.color !== null ? (
 								<section className={`${styles.result_card} ${styles.result_field_wide}`} aria-label="퍼스널 컬러 추천">
 									<div className={styles.result_head}>
-										<input type="checkbox" className={styles.result_check} aria-label="퍼스널 컬러 추천 반영" defaultChecked />
+										<div className={styles.left}>
+											<input
+												type="checkbox"
+												className={styles.result_check}
+												aria-label="퍼스널 컬러 추천 반영"
+												checked={selectedKey.includes("charColor")}
+												onChange={(e) => selectedKeyChange("charColor", e.target.checked)}
+											/>
 
-										<span className={styles.result_label}>퍼스널 컬러</span>
+											<span className={styles.result_label}>퍼스널 컬러</span>
+										</div>
 									</div>
 
 									<div className={styles.color_body}>
 										{/* 색은 응답마다 달라 CSS 모듈에 못 박을 수 없다 — 인라인이 정당한 유일한 자리 */}
-										<span className={styles.color_swatch} style={{backgroundColor: SAMPLE_RESULT.color}} aria-hidden="true"></span>
+										<span className={styles.color_swatch} style={{backgroundColor: promptResult.color}} aria-hidden="true"></span>
 
 										<div className={styles.color_text}>
-											<span className={styles.color_rgb}>{formatHexAsRgb(SAMPLE_RESULT.color)}</span>
+											<span className={styles.color_rgb}>{formatHexAsRgb(promptResult.color)}</span>
 
-											<span className={styles.color_code}>{SAMPLE_RESULT.color.toUpperCase()}</span>
+											<span className={styles.color_code}>{promptResult.color.toUpperCase()}</span>
 										</div>
 									</div>
 								</section>
@@ -624,6 +755,8 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 						<span className={styles.remaining}>9개 항목 선택됨</span>
 
 						<div className={styles.action_group}>
+							<ActionButton onClick={() => setHasResult(false)}>재시도</ActionButton>
+
 							<ActionButton onClick={requestCloseResult}>취소</ActionButton>
 
 							<ActionButton styleType="attention" onClick={handleSubmit(resultSubmit)}>

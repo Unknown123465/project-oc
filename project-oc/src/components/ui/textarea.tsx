@@ -76,7 +76,7 @@ export function Textarea<K extends FieldValues>({
 				aria-invalid={fieldState.invalid}
 				aria-describedby={describedBy}
 				aria-required={required}
-				style={{height, padding, borderRadius}}
+				style={{height, padding, borderRadius, maxHeight: style?.maxHeight}}
 				placeholder={placeholder}
 			/>
 		</div>

@@ -264,6 +264,23 @@
 
 /* ───── 결과 화면 ───── */
 
+.result_grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px 14px;
+}
+
+.result_field {
+	min-width: 0;
+	display: grid;
+	grid-template-rows: 28px min-content auto;
+	gap: 2px;
+}
+
+.result_field_wide {
+	grid-column: 1 / -1;
+}
+
 .result_card {
 	display: grid;
 	gap: 12px;
@@ -274,14 +291,24 @@
 }
 
 .result_head {
+	height: 100%;
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
 	gap: 8px;
-	min-height: 28px;
 
-	/* 되돌리기 버튼이 dirty일 때만 그려지므로, 카운터 혼자 남아도 오른쪽 끝에 붙게 */
-	& .counter {
-		margin-left: auto;
+	& .left,
+	& .right {
+		display: flex;
+		align-items: center;
+	}
+
+	& .left {
+		gap: 8px;
+	}
+
+	& .right {
+		gap: 3px;
 	}
 }
 
@@ -426,22 +453,6 @@
 	letter-spacing: 0.02em;
 }
 
-.result_grid {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 18px 14px;
-}
-
-.result_field {
-	min-width: 0;
-	display: grid;
-	gap: 6px;
-}
-
-.result_field_wide {
-	grid-column: 1 / -1;
-}
-
 .result_empty {
 	margin: 0;
 	padding: 10px 13px;
@@ -471,10 +482,8 @@
 		text-align: center;
 	}
 
-	.action_group {
-		& > button {
-			flex: 1 1 0;
-		}
+	.action_group > button {
+		flex: 1 1 0;
 	}
 
 	.result_grid {
