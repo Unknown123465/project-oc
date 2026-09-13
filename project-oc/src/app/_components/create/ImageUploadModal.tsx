@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useLayoutEffect, useId, useRef, useState, type ChangeEvent, type KeyboardEvent, type MouseEvent, type PointerEvent} from "react";
+import {useEffect, useImperativeHandle, useLayoutEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent, type Ref} from "react";
 import styles from "./ImageUploadModal.module.css";
 import {ActionButton} from "@/components/ui/button";
 import {
@@ -16,11 +16,21 @@ import {
 } from "@/app/create/imageEditor";
 import imageCompression, {type Options} from "browser-image-compression";
 import {useScrollLock} from "@/hooks/useScrollLock";
+import type {PromptApplyValue} from "./ImageUploadField";
+
+/* AI 초안의 참고 이미지를 이 편집기에 곧장 싣는 입구. 부모가 "반영" 클릭 시점에
+   한 번 부르는 명령이라 prop+effect로 흘리지 않고 ref로 연다 — prop으로 넘기면
+   effect 안에서 setState를 불러야 하고(React Compiler가 막는 패턴), 같은 파일을
+   두 번 반영했을 때 값이 같아 effect가 안 도는 문제도 생긴다. */
+export interface ImageUploadModalHandle {
+	loadFile: (value: PromptApplyValue) => void;
+}
 
 interface ImageUploadModalProps {
 	open: boolean;
 	onClose: () => void;
 	onApply: (result: {image: Blob; imageType: ImageType; imageFrame: ImageFrame}) => void;
+	ref?: Ref<ImageUploadModalHandle>;
 }
 
 interface Rect {
@@ -44,6 +54,12 @@ interface DragState {
 	crop: Rect;
 }
 
+interface FileUploadSub {
+	imageType: ImageType;
+	fx: number;
+	fy: number;
+}
+
 /* 목업(목업/gpt/assets/app.js)의 initialCrop과 같은 규칙: 유형 비율에 맞춰
    화면에 보이는 이미지의 82% 안쪽에 크롭 영역을 가운데 정렬해 둔다. */
 function initialCrop(width: number, height: number, ratio: number): Rect {
@@ -58,6 +74,26 @@ function initialCrop(width: number, height: number, ratio: number): Rect {
 	return {
 		x: (width - cropWidth) / 2,
 		y: (height - cropHeight) / 2,
+		width: cropWidth,
+		height: cropHeight,
+	};
+}
+
+/* AI 초안의 fx·fy(원본 이미지 기준 0~1 중심점)를 받아, initialCrop과 같은 크기
+   규칙(화면의 82%)으로 그 점을 가운데 둔 크롭을 만든다. width·height는 여기서도
+   displaySize(화면 좌표) 기준 — crop 상태가 항상 화면 좌표인 것과 맞춘다. */
+function focusedCrop(width: number, height: number, ratio: number, fx: number, fy: number): Rect {
+	let cropWidth: number = width * 0.82;
+	let cropHeight: number = cropWidth / ratio;
+
+	if (cropHeight > height * 0.82) {
+		cropHeight = height * 0.82;
+		cropWidth = cropHeight * ratio;
+	}
+
+	return {
+		x: clamp(fx * width - cropWidth / 2, 0, width - cropWidth),
+		y: clamp(fy * height - cropHeight / 2, 0, height - cropHeight),
 		width: cropWidth,
 		height: cropHeight,
 	};
@@ -106,13 +142,19 @@ async function toBlob(canvas: HTMLCanvasElement, fileName: string, signal: Abort
 		maxWidthOrHeight: 3000,
 		initialQuality: 1,
 		signal,
+		fileType: IMAGE_UPLOAD_TYPE,
 	};
 
 	/* signal이 끊겨서 난 실패라면 취소일 뿐 오류가 아니므로 원래 예외를 그대로
 	   올려 보낸다. 그 외에는 라이브러리, 브라우저가 던지는 원문 메시지 대신
 	   사용자에게 보여줄 한국어 메시지로 바꾼다. */
 	try {
-		return await imageCompression(originFile, options);
+		const compressedBlob = await imageCompression(originFile, options);
+		const compressedFile = new File([compressedBlob], fileName, {
+			type: IMAGE_UPLOAD_TYPE,
+		});
+
+		return compressedFile;
 	} catch (err) {
 		if (signal.aborted) {
 			throw err;
@@ -130,7 +172,7 @@ function formatRatio(ratio: number, imageType: ImageType): string {
 	return imageType !== "v" ? `1 : ${heightPerWidth}` : `${heightPerWidth} : 1`;
 }
 
-export default function ImageUploadModal({open, onClose, onApply}: ImageUploadModalProps) {
+export default function ImageUploadModal({open, onClose, onApply, ref}: ImageUploadModalProps) {
 	useScrollLock(open);
 
 	const titleId = useId();
@@ -145,6 +187,10 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 	const dragStateRef = useRef<DragState | null>(null);
 
 	const abort = useRef<AbortController>(new AbortController());
+	/* fileUpload(sub 경로)가 남겨 둔 "이 초점으로 크롭해 달라" 요청. crop·displaySize
+	   계산은 아래 useLayoutEffect 한 곳에서만 하므로, fileUpload는 여기 적어 두고
+	   effect가 소비한 뒤 비운다 — 그래야 effect가 나중에 다시 돌며 덮어쓰지 않는다. */
+	const pendingFocusRef = useRef<{fx: number; fy: number} | null>(null);
 
 	const [imageType, setImageType] = useState<ImageType>("h");
 	const [frame, setFrame] = useState<ImageFrame>("square");
@@ -206,9 +252,18 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 		const scale: number = Math.min(availableWidth / sourceImage.naturalWidth, availableHeight / sourceImage.naturalHeight, 1.5);
 		const width: number = Math.max(1, Math.round(sourceImage.naturalWidth * scale));
 		const height: number = Math.max(1, Math.round(sourceImage.naturalHeight * scale));
+		const ratio: number = IMAGE_TYPE_DEFINITIONS[imageType].ratio;
+		const focus: {fx: number; fy: number} | null = pendingFocusRef.current;
 
 		setDisplaySize({width, height});
-		setCrop(initialCrop(width, height, IMAGE_TYPE_DEFINITIONS[imageType].ratio));
+
+		if (focus !== null) {
+			pendingFocusRef.current = null;
+
+			setCrop(focusedCrop(width, height, ratio, focus.fx, focus.fy));
+		} else {
+			setCrop(initialCrop(width, height, ratio));
+		}
 	}, [sourceImage, imageType]);
 
 	/* 이미지를 캔버스에 한 번 그려 두고, 크롭 영역만 그 위에서 움직인다. */
@@ -245,9 +300,11 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 	   이벤트로 모인다. 압축이 진행 중이었다면 여기서 끊어야 완료 처리가
 	   뒤늦게 이어지지 않는다. */
 	const handleDialogClose = () => {
-		abort.current.abort();
+		if (open || dialogRef.current?.open) {
+			abort.current.abort();
 
-		onClose();
+			onClose();
+		}
 	};
 
 	/* 열림/닫힘 상태는 부모가 들고 있다. 여기서는 항상 onClose로 알리기만 한다. */
@@ -279,10 +336,7 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 		}
 	};
 
-	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-		const inputTag: HTMLInputElement = e.target;
-		const file: File | undefined = inputTag.files?.[0];
-
+	const fileUpload = async (file: File | undefined, sub?: FileUploadSub) => {
 		try {
 			if (!file) {
 				throw new Error("파일을 첨부해 주세요.");
@@ -338,16 +392,35 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 
 			setFileName(file.name);
 			setSourceImage(imgTag);
+
+			if (sub) {
+				pendingFocusRef.current = {fx: sub.fx, fy: sub.fy};
+
+				setImageType(sub.imageType);
+				setFrame("square");
+			}
 		} catch (err) {
 			if (err instanceof Error) {
 				setErrorMessage(err.message);
 			}
 		} finally {
-			inputTag.value = "";
+			if (fileInputRef.current !== null) {
+				fileInputRef.current.value = "";
+			}
 
 			setIsReadingFile(false);
 		}
 	};
+
+	useImperativeHandle(ref, () => ({
+		loadFile(value: PromptApplyValue) {
+			fileUpload(value.file, {
+				imageType: value.layout,
+				fx: value.fx,
+				fy: value.fy,
+			});
+		},
+	}));
 
 	const handleReplace = () => {
 		setSourceImage(null);
@@ -534,7 +607,7 @@ export default function ImageUploadModal({open, onClose, onApply}: ImageUploadMo
 						</fieldset>
 
 						<div className={styles.file_picker}>
-							<input ref={fileInputRef} type="file" accept={IMAGE_ACCEPTED_TYPES.join(",")} className={styles.hidden_input} onChange={handleFileChange} />
+							<input ref={fileInputRef} type="file" accept={IMAGE_ACCEPTED_TYPES.join(",")} className={styles.hidden_input} onChange={(e) => fileUpload(e.target.files?.[0])} />
 
 							<ActionButton styleType="attention" disabled={isReadingFile} onClick={() => fileInputRef.current?.click()}>
 								{isReadingFile ? "이미지 읽는 중" : "이미지 선택"}

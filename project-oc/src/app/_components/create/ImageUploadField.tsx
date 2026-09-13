@@ -2,9 +2,9 @@
 
 import sectionStyles from "./Section.module.css";
 import styles from "./ImageUploadField.module.css";
-import ImageUploadModal from "./ImageUploadModal";
+import ImageUploadModal, {type ImageUploadModalHandle} from "./ImageUploadModal";
 import CreatePromptModal from "./CreatePromptModal";
-import {useEffect, useId, useMemo, useState} from "react";
+import {useEffect, useId, useMemo, useRef, useState} from "react";
 import {Control, FieldErrors, UseFormSetValue, UseFormSetValues, useWatch} from "react-hook-form";
 import {CreateCharFormInputType} from "@/app/create/validator";
 import {IMAGE_FRAME_LABEL, IMAGE_TYPE_DEFINITIONS, type ImageFrame, type ImageType} from "@/app/create/imageEditor";
@@ -19,7 +19,7 @@ const LAYOUT_CLASS: Record<ProfileLayout, string> = {
 };
 
 export interface PromptApplyValue {
-	file: Blob;
+	file: File;
 	layout: Exclude<ProfileLayout, "">;
 	fx: number;
 	fy: number;
@@ -37,7 +37,7 @@ export default function ImageUploadField({control, errors, setValue, setValues}:
 
 	const [openedModal, setOpenedModal] = useState<"image" | "prompt" | null>(null);
 
-	const [promptApplyValue, setPromptApplyValue] = useState<Partial<PromptApplyValue>>({});
+	const imageModalRef = useRef<ImageUploadModalHandle>(null);
 
 	const image = useWatch({
 		name: "charImage",
@@ -53,7 +53,7 @@ export default function ImageUploadField({control, errors, setValue, setValues}:
 	});
 
 	const imageURL = useMemo(() => {
-		return image instanceof Blob ? URL.createObjectURL(image) : null;
+		return image instanceof File ? URL.createObjectURL(image) : null;
 	}, [image]);
 
 	useEffect(() => {
@@ -71,9 +71,16 @@ export default function ImageUploadField({control, errors, setValue, setValues}:
 		setOpenedModal(null);
 	};
 
-	const imagePromptResultApply = (data: Pick<PromptApplyValue, keyof PromptApplyValue>) => {
-		setPromptApplyValue(data);
-		setOpenedModal("image");
+	/* 초안 모달이 닫힐 때 불린다. 레이아웃 추천을 반영한 경우에만 data가 오고, 그때는
+	   참고 이미지를 이미지 편집기에 바로 실어 이어서 자르게 한다. 편집기 dialog는
+	   항상 마운트돼 있어 open 전에 loadFile을 불러도 된다. */
+	const imagePromptResultApply = (data?: PromptApplyValue) => {
+		if (data) {
+			setOpenedModal("image");
+			imageModalRef.current?.loadFile(data);
+		} else {
+			setOpenedModal(null);
+		}
 	};
 
 	return (
@@ -113,17 +120,9 @@ export default function ImageUploadField({control, errors, setValue, setValues}:
 
 			<p className={sectionStyles.error_message}>{errors.charImage?.message}</p>
 
-			<ImageUploadModal open={openedModal === "image"} onClose={() => setOpenedModal(null)} onApply={handleApply} />
+			<ImageUploadModal ref={imageModalRef} open={openedModal === "image"} onClose={() => setOpenedModal(null)} onApply={handleApply} />
 
-			<CreatePromptModal
-				open={openedModal === "prompt"}
-				onClose={() => setOpenedModal(null)}
-				remainingToday={10}
-				dailyLimit={10}
-				currentLayout={layout}
-				setValuesByForm={setValues}
-				imagePromptResultApply={imagePromptResultApply}
-			/>
+			<CreatePromptModal open={openedModal === "prompt"} onClose={imagePromptResultApply} remainingToday={10} dailyLimit={10} currentLayout={layout} setValuesByForm={setValues} />
 		</section>
 	);
 }
