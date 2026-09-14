@@ -1,7 +1,7 @@
 import db from "@/prisma/client";
 /* 날짜 경계와 남은 횟수 계산은 DB를 타지 않는 순수 규칙이라 validator.ts에 둔다.
    여기는 그 규칙을 DB에 적용하는 자리다. */
-import {AI_DRAFT_DAILY_CALL_LIMIT, AI_DRAFT_DAILY_LIMIT, AI_DRAFT_MIN_CALL_INTERVAL_SECONDS, type AiHistoryActionType, getKstToday, remainingFrom} from "./validator";
+import {AI_DRAFT_DAILY_CALL_LIMIT, AI_DRAFT_DAILY_LIMIT, AI_DRAFT_MIN_CALL_INTERVAL_SECONDS, type AiHistoryRefundReasonType, getKstToday, remainingFrom} from "./validator";
 
 /** 오늘 남은 AI 초안 횟수. 로그인하지 않았거나 사용자를 못 찾으면 0으로 본다. */
 export async function getAiDraftRemaining(userId?: string): Promise<number> {
@@ -117,13 +117,14 @@ async function diagnoseClaimFailure(userId: string, callableAfter: Date): Promis
 	return {reason: "exhausted", remaining};
 }
 
-/* 결과를 못 준 요청의 횟수를 돌려준다. action에 왜 돌려줬는지가 남아 나중에
-   "왜 내 횟수가 줄었냐"는 문의에 답할 수 있다.
+/* 결과를 못 준 요청의 횟수를 돌려준다. reason에 왜 돌려줬는지가 남아 나중에
+   "왜 내 횟수가 줄었냐"는 문의에 답할 수 있다. action은 항상 "refund"로 고정 —
+   "무엇을 했나"와 "왜 했나"를 컬럼으로 나눴으니 여기서 둘을 합칠 필요가 없다.
 
    돌려주는 값이 number | undefined인 건 실패를 구분하기 위해서다. 환불이 깨졌는데
    예외를 올리면 원래의 실패 사유가 묻히고 Next.js 기본 오류 화면이 뜬다. 사용자에게
    보여 줄 응답은 이미 정해져 있으므로 여기서는 로그만 남기고 삼킨다. */
-export async function refundAiDraft(userId: string, action: AiHistoryActionType): Promise<number | undefined> {
+export async function refundAiDraft(userId: string, reason: AiHistoryRefundReasonType): Promise<number | undefined> {
 	const today: Date = getKstToday();
 
 	try {
@@ -135,7 +136,7 @@ export async function refundAiDraft(userId: string, action: AiHistoryActionType)
 				data: {aiDraftUsedCount: {decrement: 1}},
 			});
 
-			await tx.aiHistory.create({data: {userId, action}});
+			await tx.aiHistory.create({data: {userId, action: "refund", reason}});
 
 			const user = await tx.user.findUnique({
 				where: {id: userId},
@@ -145,7 +146,7 @@ export async function refundAiDraft(userId: string, action: AiHistoryActionType)
 			return user === null ? AI_DRAFT_DAILY_LIMIT : remainingFrom(user.aiDraftUsedOn, user.aiDraftUsedCount);
 		});
 	} catch (err) {
-		console.error("[refundAiDraft] 환불 실패", userId, action, err);
+		console.error("[refundAiDraft] 환불 실패", userId, reason, err);
 
 		return undefined;
 	}

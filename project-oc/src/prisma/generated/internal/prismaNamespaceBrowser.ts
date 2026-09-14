@@ -118,6 +118,7 @@ export const AiHistoryScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   action: 'action',
+  reason: 'reason',
   createdDt: 'createdDt'
 } as const
 
@@ -218,7 +219,8 @@ export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFi
 
 export const AiHistoryOrderByRelevanceFieldEnum = {
   userId: 'userId',
-  action: 'action'
+  action: 'action',
+  reason: 'reason'
 } as const
 
 export type AiHistoryOrderByRelevanceFieldEnum = (typeof AiHistoryOrderByRelevanceFieldEnum)[keyof typeof AiHistoryOrderByRelevanceFieldEnum]

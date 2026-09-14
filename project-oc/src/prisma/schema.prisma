@@ -27,12 +27,12 @@ model User {
   // 자정 초기화를 크론으로 돌리지 않으려고 "언제의 사용량인지"를 같이 들고 있는다.
   // aiDraftUsedOn은 한국 시간 기준 날짜(자정 경계)이고, 요청이 올 때 오늘 날짜와
   // 다르면 그 자리에서 0부터 다시 센다. 서버가 UTC로 돌아도 경계가 흔들리지 않는다.
-  aiDraftUsedOn    DateTime? @db.Date
-  aiDraftUsedCount Int       @default(0) @db.TinyInt
+  aiDraftUsedOn     DateTime? @db.Date
+  aiDraftUsedCount  Int       @default(0) @db.TinyInt
   // 실제로 AI를 부른 횟수. aiDraftUsedCount와 달리 환불해도 줄지 않는다.
   // 이게 없으면 하루 한도가 호출 수를 못 묶는다 — 실패하면 횟수를 돌려주므로,
   // 안전 필터에 걸리는 입력을 반복하면 차감과 환불이 무한히 돌면서 호출만 계속 나간다.
-  aiDraftCallCount Int       @default(0) @db.TinyInt
+  aiDraftCallCount  Int       @default(0) @db.TinyInt
   // 마지막 호출 시각. 짧은 간격으로 몰아치는 요청을 막는 데만 쓴다.
   aiDraftLastCallAt DateTime?
 
@@ -75,13 +75,18 @@ model Account {
 // updatedDt를 두지 않는 건 의도다. 이미 일어난 일의 기록이라 나중에 고칠 일이 없고,
 // 고쳐야 한다면 그건 새 행(환불)으로 남아야 한다.
 model AiHistory {
-  id     BigInt @id @default(autoincrement())
-  userId String @db.VarChar(191)
+  id     BigInt  @id @default(autoincrement())
+  userId String  @db.VarChar(191)
+  // "use" 또는 "refund"만 들어간다. 세부 사유는 reason에 따로 담아, action만 보고도
+  // 무슨 일이 있었는지(썼다/돌려줬다)가 하이픈 없이 바로 읽히게 한다.
   // 넣을 수 있는 값은 validator.ts의 AI_HISTORY_ACTION_LIST가 정한다. DB ENUM이 아니라
   // 문자열이라 DB는 아무 값이나 받는다 — 기록을 남기는 쪽에서 반드시 그 목록으로 검사할 것.
-  // 가장 긴 값이 "refund-finish-reason-unspecified"(32자)라 길이가 32다.
-  action String @db.VarChar(32)
-  user   User   @relation(fields: [userId], references: [id])
+  action String  @db.VarChar(6)
+  // action이 "refund"일 때만 값이 있다("use"는 null). Gemini의 finishReason을 케밥
+  // 소문자로 옮기거나("safety", "max-tokens") 서버 쪽 사유("server-error", "blocked")다.
+  // 가장 긴 값이 "finish-reason-unspecified"(25자)라 길이가 25다.
+  reason String? @db.VarChar(25)
+  user   User    @relation(fields: [userId], references: [id])
 
   createdDt DateTime @default(now()) @db.DateTime(0)
 

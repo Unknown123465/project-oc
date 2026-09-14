@@ -176,45 +176,54 @@ export function remainingFrom(usedOn: Date | null, usedCount: number): number {
 	return Math.max(0, AI_DRAFT_DAILY_LIMIT - usedCount);
 }
 
-/* aihistory.action에 넣을 수 있는 값. 컬럼이 CHAR라 DB는 아무 문자열이나 받으므로
-   허용 목록은 여기가 유일한 방어선이다 — 기록을 남기기 전에 반드시 이걸로 검사할 것.
-
-   refund-* 뒤쪽은 Gemini가 돌려준 finishReason을 케밥 소문자로 옮긴 것이다.
-   STOP은 성공이라 환불 대상이 아니어서 목록에 없다. */
-export const AI_HISTORY_ACTION_LIST = [
-	"use",
-	/* AI를 못 불렀거나(429·5xx) 응답을 해석하지 못한 경우 */
-	"refund-server-error",
-	/* 보낸 설명이 통째로 거부된 경우(promptFeedback.blockReason) */
-	"refund-blocked",
-	/* 만들다가 중간에 멈춘 경우(candidates[0].finishReason) */
-	"refund-finish-reason-unspecified",
-	"refund-max-tokens",
-	"refund-safety",
-	"refund-recitation",
-	"refund-language",
-	"refund-other",
-	"refund-blocklist",
-	"refund-prohibited-content",
-	"refund-spii",
-	"refund-malformed-function-call",
-] as const;
+/* aihistory.action에 넣을 수 있는 값. "무엇을 했나"만 담고 하이픈을 쓰지 않는다 —
+   세부 사유는 아래 AI_HISTORY_REFUND_REASON_LIST로 별도 컬럼에 담는다. 컬럼이 CHAR라
+   DB는 아무 문자열이나 받으므로 허용 목록은 여기가 유일한 방어선이다. */
+export const AI_HISTORY_ACTION_LIST = ["use", "refund"] as const;
 
 export const aiHistoryAction = z.enum(AI_HISTORY_ACTION_LIST);
 
 export type AiHistoryActionType = z.infer<typeof aiHistoryAction>;
 
-/** aihistory.action 컬럼의 길이. 가장 긴 값("refund-finish-reason-unspecified")에 맞췄다. */
-export const AI_HISTORY_ACTION_MAX_LENGTH = 32;
+/** aihistory.action 컬럼의 길이. 가장 긴 값("refund")에 맞췄다. */
+export const AI_HISTORY_ACTION_MAX_LENGTH = 6;
 
-/* Gemini의 finishReason("MAX_TOKENS")을 action 값("refund-max-tokens")으로 옮긴다.
-   목록에 없는 값이 오면 refund-other로 떨어뜨린다 — 구글이 새 finishReason을 추가했다고
-   해서 환불 기록이 실패하면 안 된다. 기록을 못 남기는 것보다 뭉뚱그려 남기는 게 낫다. */
-export function toRefundAction(finishReason: string): AiHistoryActionType {
-	const candidate: string = `refund-${finishReason.toLowerCase().replaceAll("_", "-")}`;
-	const check = aiHistoryAction.safeParse(candidate);
+/* aihistory.reason에 넣을 수 있는 값. action이 "refund"일 때만 채운다("use"는 null).
+   Gemini가 돌려준 finishReason을 케밥 소문자로 옮긴 것이 대부분이고, server-error·blocked
+   둘만 서버 쪽 사유다. STOP은 성공이라 환불 대상이 아니어서 목록에 없다. */
+export const AI_HISTORY_REFUND_REASON_LIST = [
+	/* AI를 못 불렀거나(429·5xx) 응답을 해석하지 못한 경우 */
+	"server-error",
+	/* 보낸 설명이 통째로 거부된 경우(promptFeedback.blockReason) */
+	"blocked",
+	/* 만들다가 중간에 멈춘 경우(candidates[0].finishReason) */
+	"finish-reason-unspecified",
+	"max-tokens",
+	"safety",
+	"recitation",
+	"language",
+	"other",
+	"blocklist",
+	"prohibited-content",
+	"spii",
+	"malformed-function-call",
+] as const;
 
-	return check.success ? check.data : "refund-other";
+export const aiHistoryRefundReason = z.enum(AI_HISTORY_REFUND_REASON_LIST);
+
+export type AiHistoryRefundReasonType = z.infer<typeof aiHistoryRefundReason>;
+
+/** aihistory.reason 컬럼의 길이. 가장 긴 값("finish-reason-unspecified")에 맞췄다. */
+export const AI_HISTORY_REFUND_REASON_MAX_LENGTH = 25;
+
+/* Gemini의 finishReason("MAX_TOKENS")을 reason 값("max-tokens")으로 옮긴다. 목록에
+   없는 값이 오면 other로 떨어뜨린다 — 구글이 새 finishReason을 추가했다고 해서 환불
+   기록이 실패하면 안 된다. 기록을 못 남기는 것보다 뭉뚱그려 남기는 게 낫다. */
+export function toRefundReason(finishReason: string): AiHistoryRefundReasonType {
+	const candidate: string = finishReason.toLowerCase().replaceAll("_", "-");
+	const check = aiHistoryRefundReason.safeParse(candidate);
+
+	return check.success ? check.data : "other";
 }
 
 /* 서버 액션은 폼 컴포넌트를 거치지 않고도 호출할 수 있는 공개 진입점이다. 브라우저에서

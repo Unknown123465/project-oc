@@ -8,7 +8,7 @@ import {
 	createPromptResultForm,
 	getKstToday,
 	remainingFrom,
-	toRefundAction,
+	toRefundReason,
 } from "./validator";
 import {FinishReason} from "@google/genai";
 
@@ -152,29 +152,29 @@ describe("참고 이미지나 설명이 없으면 통째로 null", () => {
 	});
 });
 
-/* 환불 사유는 aihistory.action에 그대로 들어간다. 컬럼이 VARCHAR라 DB가 값을 검사하지
-   않으므로, 여기서 목록 밖 값이 새면 그대로 저장된다. */
-describe("toRefundAction", () => {
+/* 환불 사유는 aihistory.reason에 그대로 들어간다(action은 항상 "refund"). 컬럼이
+   VARCHAR라 DB가 값을 검사하지 않으므로, 여기서 목록 밖 값이 새면 그대로 저장된다. */
+describe("toRefundReason", () => {
 	it.each([
-		[FinishReason.SAFETY, "refund-safety"],
-		[FinishReason.MAX_TOKENS, "refund-max-tokens"],
-		[FinishReason.PROHIBITED_CONTENT, "refund-prohibited-content"],
-		[FinishReason.MALFORMED_FUNCTION_CALL, "refund-malformed-function-call"],
-		[FinishReason.FINISH_REASON_UNSPECIFIED, "refund-finish-reason-unspecified"],
+		[FinishReason.SAFETY, "safety"],
+		[FinishReason.MAX_TOKENS, "max-tokens"],
+		[FinishReason.PROHIBITED_CONTENT, "prohibited-content"],
+		[FinishReason.MALFORMED_FUNCTION_CALL, "malformed-function-call"],
+		[FinishReason.FINISH_REASON_UNSPECIFIED, "finish-reason-unspecified"],
 	])("%s은 %s가 된다", (finishReason, expected) => {
-		expect(toRefundAction(finishReason)).toBe(expected);
+		expect(toRefundReason(finishReason)).toBe(expected);
 	});
 
 	/* 구글이 새 finishReason을 추가했다고 환불 기록이 실패하면 안 된다. 기록을 못 남기는
 	   것보다 뭉뚱그려 남기는 편이 낫다. */
-	it("모르는 값은 refund-other로 떨어뜨린다", () => {
-		expect(toRefundAction("SOMETHING_NEW_FROM_GOOGLE")).toBe("refund-other");
+	it("모르는 값은 other로 떨어뜨린다", () => {
+		expect(toRefundReason("SOMETHING_NEW_FROM_GOOGLE")).toBe("other");
 	});
 
 	/* 이미지 생성용 사유는 목록에 없다. 지금 호출 형태에서는 나올 수 없지만,
 	   나오더라도 기록은 남아야 한다. */
 	it("목록에 없는 이미지용 사유도 삼킨다", () => {
-		expect(toRefundAction(FinishReason.IMAGE_SAFETY)).toBe("refund-other");
+		expect(toRefundReason(FinishReason.IMAGE_SAFETY)).toBe("other");
 	});
 });
 

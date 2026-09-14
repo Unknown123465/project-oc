@@ -7,12 +7,12 @@ import {
 	AI_DRAFT_CALL_LIMIT_MESSAGE,
 	AI_DRAFT_EXHAUSTED_MESSAGE,
 	AI_DRAFT_TOO_FAST_MESSAGE,
-	type AiHistoryActionType,
+	type AiHistoryRefundReasonType,
 	createPromptActionForm,
 	CreatePromptActionFormType,
 	CreatePromptResultFormType,
 	createPromptResultForm,
-	toRefundAction,
+	toRefundReason,
 } from "./validator";
 import {PROMPT_SAMPLE_RESULT} from "./promptSample";
 import {auth} from "@/auth/auth";
@@ -232,11 +232,11 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 	/* 결과를 못 준 채 끝나는 자리마다 같은 일을 한다 — 횟수를 돌려주고, 왜 돌려줬는지
 	   기록하고, 돌려준 뒤의 남은 수를 응답에 실어 화면을 맞춘다. 여섯 군데에 같은 코드를
 	   늘어놓으면 나중에 한 곳만 고쳐지므로 여기 한 번만 적는다. */
-	const failWithRefund = async (action: AiHistoryActionType, message: string): Promise<ActionResult> => {
+	const failWithRefund = async (reason: AiHistoryRefundReasonType, message: string): Promise<ActionResult> => {
 		return {
 			success: false,
 			message,
-			remainingToday: await refundAiDraft(userId, action),
+			remainingToday: await refundAiDraft(userId, reason),
 		};
 	};
 
@@ -259,7 +259,7 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 		if (aiResponse.promptFeedback?.blockReason !== undefined) {
 			console.error("[createPromptAction] 입력 차단", aiResponse.promptFeedback.blockReason, aiResponse.promptFeedback.blockReasonMessage);
 
-			return await failWithRefund("refund-blocked", BLOCKED_MESSAGE);
+			return await failWithRefund("blocked", BLOCKED_MESSAGE);
 		}
 
 		const finishReason: FinishReason | undefined = aiResponse.candidates?.[0]?.finishReason;
@@ -269,7 +269,7 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 
 			/* MAX_TOKENS는 성격이 다르다 — 내용이 막힌 게 아니라 JSON이 중간에 잘린 것이라
 			   같은 설명으로 다시 부르면 성공할 수도 있다. 그래서 재시도 문구 쪽으로 보낸다. */
-			return await failWithRefund(toRefundAction(finishReason), BLOCKED_FINISH_REASONS.includes(finishReason) ? BLOCKED_MESSAGE : RETRY_MESSAGE);
+			return await failWithRefund(toRefundReason(finishReason), BLOCKED_FINISH_REASONS.includes(finishReason) ? BLOCKED_MESSAGE : RETRY_MESSAGE);
 		}
 
 		if (aiResponse.text) {
@@ -289,12 +289,12 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 			   기다리면 풀리는 상태라 문구를 나눈다. 개발 중이라면 위 console.error에 찍힌
 			   RESOURCE_EXHAUSTED를 보고 결제를 확인해야 한다. */
 			return await failWithRefund(
-				"refund-server-error",
+				"server-error",
 				err.status === 429 ? "지금은 요청이 밀려 있어요. 잠시 뒤에 다시 시도해 주세요." : "AI 모델 서버에 오류가 발생했어요. 잠시 후 다시 시도해 주세요.",
 			);
 		}
 
-		return await failWithRefund("refund-server-error", RETRY_MESSAGE);
+		return await failWithRefund("server-error", RETRY_MESSAGE);
 	}
 
 	const responseCheck = createPromptResultForm.safeParse(responseJSON);
@@ -304,7 +304,7 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 		   어느 항목이 틀렸는지는 남겨야 한다. 값 자체는 찍지 않는다. */
 		console.error("[createPromptAction] 응답 형식 불일치", responseCheck.error.issues);
 
-		return await failWithRefund("refund-server-error", RETRY_MESSAGE);
+		return await failWithRefund("server-error", RETRY_MESSAGE);
 	}
 
 	const {layout, color, fields} = responseCheck.data;
@@ -315,7 +315,7 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 	if ((profileText && !fields) || (image && (!layout || !color))) {
 		console.error("[createPromptAction] 보낸 입력과 응답이 맞지 않음");
 
-		return await failWithRefund("refund-server-error", RETRY_MESSAGE);
+		return await failWithRefund("server-error", RETRY_MESSAGE);
 	}
 
 	return {
