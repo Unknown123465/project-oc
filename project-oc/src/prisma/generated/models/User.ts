@@ -28,10 +28,12 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   aiDraftUsedCount: number | null
+  aiDraftCallCount: number | null
 }
 
 export type UserSumAggregateOutputType = {
   aiDraftUsedCount: number | null
+  aiDraftCallCount: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -44,6 +46,8 @@ export type UserMinAggregateOutputType = {
   password: string | null
   aiDraftUsedOn: Date | null
   aiDraftUsedCount: number | null
+  aiDraftCallCount: number | null
+  aiDraftLastCallAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +62,8 @@ export type UserMaxAggregateOutputType = {
   password: string | null
   aiDraftUsedOn: Date | null
   aiDraftUsedCount: number | null
+  aiDraftCallCount: number | null
+  aiDraftLastCallAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +78,8 @@ export type UserCountAggregateOutputType = {
   password: number
   aiDraftUsedOn: number
   aiDraftUsedCount: number
+  aiDraftCallCount: number
+  aiDraftLastCallAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -80,10 +88,12 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   aiDraftUsedCount?: true
+  aiDraftCallCount?: true
 }
 
 export type UserSumAggregateInputType = {
   aiDraftUsedCount?: true
+  aiDraftCallCount?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -96,6 +106,8 @@ export type UserMinAggregateInputType = {
   password?: true
   aiDraftUsedOn?: true
   aiDraftUsedCount?: true
+  aiDraftCallCount?: true
+  aiDraftLastCallAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -110,6 +122,8 @@ export type UserMaxAggregateInputType = {
   password?: true
   aiDraftUsedOn?: true
   aiDraftUsedCount?: true
+  aiDraftCallCount?: true
+  aiDraftLastCallAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +138,8 @@ export type UserCountAggregateInputType = {
   password?: true
   aiDraftUsedOn?: true
   aiDraftUsedCount?: true
+  aiDraftCallCount?: true
+  aiDraftLastCallAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -225,6 +241,8 @@ export type UserGroupByOutputType = {
   password: string | null
   aiDraftUsedOn: Date | null
   aiDraftUsedCount: number
+  aiDraftCallCount: number
+  aiDraftLastCallAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -262,6 +280,8 @@ export type UserWhereInput = {
   password?: Prisma.StringNullableFilter<"User"> | string | null
   aiDraftUsedOn?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   aiDraftUsedCount?: Prisma.IntFilter<"User"> | number
+  aiDraftCallCount?: Prisma.IntFilter<"User"> | number
+  aiDraftLastCallAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -279,6 +299,8 @@ export type UserOrderByWithRelationInput = {
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   aiDraftUsedOn?: Prisma.SortOrderInput | Prisma.SortOrder
   aiDraftUsedCount?: Prisma.SortOrder
+  aiDraftCallCount?: Prisma.SortOrder
+  aiDraftLastCallAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
@@ -300,6 +322,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   password?: Prisma.StringNullableFilter<"User"> | string | null
   aiDraftUsedOn?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   aiDraftUsedCount?: Prisma.IntFilter<"User"> | number
+  aiDraftCallCount?: Prisma.IntFilter<"User"> | number
+  aiDraftLastCallAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -317,6 +341,8 @@ export type UserOrderByWithAggregationInput = {
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   aiDraftUsedOn?: Prisma.SortOrderInput | Prisma.SortOrder
   aiDraftUsedCount?: Prisma.SortOrder
+  aiDraftCallCount?: Prisma.SortOrder
+  aiDraftLastCallAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -339,6 +365,8 @@ export type UserScalarWhereWithAggregatesInput = {
   password?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   aiDraftUsedOn?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   aiDraftUsedCount?: Prisma.IntWithAggregatesFilter<"User"> | number
+  aiDraftCallCount?: Prisma.IntWithAggregatesFilter<"User"> | number
+  aiDraftLastCallAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -353,6 +381,8 @@ export type UserCreateInput = {
   password?: string | null
   aiDraftUsedOn?: Date | string | null
   aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -370,6 +400,8 @@ export type UserUncheckedCreateInput = {
   password?: string | null
   aiDraftUsedOn?: Date | string | null
   aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -387,6 +419,8 @@ export type UserUpdateInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -404,6 +438,8 @@ export type UserUncheckedUpdateInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -421,6 +457,8 @@ export type UserCreateManyInput = {
   password?: string | null
   aiDraftUsedOn?: Date | string | null
   aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -435,6 +473,8 @@ export type UserUpdateManyMutationInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -449,6 +489,8 @@ export type UserUncheckedUpdateManyInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -469,12 +511,15 @@ export type UserCountOrderByAggregateInput = {
   password?: Prisma.SortOrder
   aiDraftUsedOn?: Prisma.SortOrder
   aiDraftUsedCount?: Prisma.SortOrder
+  aiDraftCallCount?: Prisma.SortOrder
+  aiDraftLastCallAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   aiDraftUsedCount?: Prisma.SortOrder
+  aiDraftCallCount?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -487,6 +532,8 @@ export type UserMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   aiDraftUsedOn?: Prisma.SortOrder
   aiDraftUsedCount?: Prisma.SortOrder
+  aiDraftCallCount?: Prisma.SortOrder
+  aiDraftLastCallAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -501,12 +548,15 @@ export type UserMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   aiDraftUsedOn?: Prisma.SortOrder
   aiDraftUsedCount?: Prisma.SortOrder
+  aiDraftCallCount?: Prisma.SortOrder
+  aiDraftLastCallAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   aiDraftUsedCount?: Prisma.SortOrder
+  aiDraftCallCount?: Prisma.SortOrder
 }
 
 export type UserNullableScalarRelationFilter = {
@@ -597,6 +647,8 @@ export type UserCreateWithoutAccountsInput = {
   password?: string | null
   aiDraftUsedOn?: Date | string | null
   aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
@@ -613,6 +665,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   password?: string | null
   aiDraftUsedOn?: Date | string | null
   aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
@@ -645,6 +699,8 @@ export type UserUpdateWithoutAccountsInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
@@ -661,6 +717,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
@@ -677,6 +735,8 @@ export type UserCreateWithoutAiHistoriesInput = {
   password?: string | null
   aiDraftUsedOn?: Date | string | null
   aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -693,6 +753,8 @@ export type UserUncheckedCreateWithoutAiHistoriesInput = {
   password?: string | null
   aiDraftUsedOn?: Date | string | null
   aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -725,6 +787,8 @@ export type UserUpdateWithoutAiHistoriesInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -741,6 +805,8 @@ export type UserUncheckedUpdateWithoutAiHistoriesInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -757,6 +823,8 @@ export type UserCreateWithoutCharactersInput = {
   password?: string | null
   aiDraftUsedOn?: Date | string | null
   aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -773,6 +841,8 @@ export type UserUncheckedCreateWithoutCharactersInput = {
   password?: string | null
   aiDraftUsedOn?: Date | string | null
   aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -805,6 +875,8 @@ export type UserUpdateWithoutCharactersInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -821,6 +893,8 @@ export type UserUncheckedUpdateWithoutCharactersInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -886,6 +960,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   password?: boolean
   aiDraftUsedOn?: boolean
   aiDraftUsedCount?: boolean
+  aiDraftCallCount?: boolean
+  aiDraftLastCallAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -906,11 +982,13 @@ export type UserSelectScalar = {
   password?: boolean
   aiDraftUsedOn?: boolean
   aiDraftUsedCount?: boolean
+  aiDraftCallCount?: boolean
+  aiDraftLastCallAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "username" | "email" | "emailVerified" | "image" | "password" | "aiDraftUsedOn" | "aiDraftUsedCount" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "username" | "email" | "emailVerified" | "image" | "password" | "aiDraftUsedOn" | "aiDraftUsedCount" | "aiDraftCallCount" | "aiDraftLastCallAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   characters?: boolean | Prisma.User$charactersArgs<ExtArgs>
@@ -935,6 +1013,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     password: string | null
     aiDraftUsedOn: Date | null
     aiDraftUsedCount: number
+    aiDraftCallCount: number
+    aiDraftLastCallAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1318,6 +1398,8 @@ export interface UserFieldRefs {
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly aiDraftUsedOn: Prisma.FieldRef<"User", 'DateTime'>
   readonly aiDraftUsedCount: Prisma.FieldRef<"User", 'Int'>
+  readonly aiDraftCallCount: Prisma.FieldRef<"User", 'Int'>
+  readonly aiDraftLastCallAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

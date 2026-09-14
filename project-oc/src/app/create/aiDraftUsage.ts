@@ -1,28 +1,7 @@
 import db from "@/prisma/client";
-import {AI_DRAFT_DAILY_LIMIT, type AiHistoryActionType} from "./validator";
-
-/* 초기화 기준은 한국 시간 자정이다. 서버가 어느 지역에서 돌든 경계가 같아야 해서
-   시스템 시간대를 쓰지 않고 고정 오프셋으로 계산한다. 한국은 서머타임이 없어
-   +9가 연중 고정이라 이 단순한 방식이 성립한다. */
-const KST_OFFSET_MILLIS: number = 9 * 60 * 60 * 1000;
-
-/* 한국 시간 기준 "오늘". aiDraftUsedOn은 @db.Date라 시각을 버리고 날짜만 담으므로
-   UTC 자정에 맞춘 Date를 넣어야 의도한 날짜가 그대로 저장된다. */
-function getKstToday(): Date {
-	const kstNow: Date = new Date(Date.now() + KST_OFFSET_MILLIS);
-
-	return new Date(Date.UTC(kstNow.getUTCFullYear(), kstNow.getUTCMonth(), kstNow.getUTCDate()));
-}
-
-/* 마지막으로 쓴 날이 오늘이 아니면 자정을 넘긴 것이라, 아직 한 번도 안 쓴 날로 본다.
-   크론으로 0시에 전체를 밀지 않아도 되는 이유가 이 한 줄이다. */
-function remainingFrom(usedOn: Date | null, usedCount: number): number {
-	if (usedOn === null || usedOn.getTime() !== getKstToday().getTime()) {
-		return AI_DRAFT_DAILY_LIMIT;
-	}
-
-	return Math.max(0, AI_DRAFT_DAILY_LIMIT - usedCount);
-}
+/* 날짜 경계와 남은 횟수 계산은 DB를 타지 않는 순수 규칙이라 validator.ts에 둔다.
+   여기는 그 규칙을 DB에 적용하는 자리다. */
+import {AI_DRAFT_DAILY_CALL_LIMIT, AI_DRAFT_DAILY_LIMIT, AI_DRAFT_MIN_CALL_INTERVAL_SECONDS, type AiHistoryActionType, getKstToday, remainingFrom} from "./validator";
 
 /** 오늘 남은 AI 초안 횟수. 로그인하지 않았거나 사용자를 못 찾으면 0으로 본다. */
 export async function getAiDraftRemaining(userId?: string): Promise<number> {
@@ -43,34 +22,54 @@ export async function getAiDraftRemaining(userId?: string): Promise<number> {
 	return remainingFrom(user.aiDraftUsedOn, user.aiDraftUsedCount);
 }
 
+/** 왜 확보하지 못했는지. 사용자에게 보여 줄 문구가 각각 다르다. */
+export type ClaimRejection = "unknown-user" | "exhausted" | "call-limit" | "too-fast";
+
+export type ClaimResult = {ok: true; remaining: number} | {ok: false; reason: ClaimRejection; remaining: number};
+
 /* 한 번 쓸 권리를 확보한다. AI를 부르기 전에 먼저 차감하는 이유는, 호출이 오래 걸리는
    동안 같은 사용자가 다시 눌러 상한을 넘기는 걸 막기 위해서다. 실패하면 환불한다.
 
-   읽고 나서 쓰면(findUnique → update) 동시에 들어온 두 요청이 같은 값을 읽어
-   한 번 쓸 횟수로 두 번 쓸 수 있다. "상한 미만일 때만 1 올린다"를 한 문장으로 보내
-   DB가 판정하게 하고, 실제로 바뀐 행 수로 성공 여부를 읽는다. */
-export async function claimAiDraft(userId: string): Promise<{ok: boolean; remaining: number}> {
+   읽고 나서 쓰면(findUnique → update) 동시에 들어온 두 요청이 같은 값을 읽어 한 번 쓸
+   횟수로 두 번 쓸 수 있다. 세 관문을 모두 where에 넣어 한 문장으로 보내고, 실제로 바뀐
+   행 수로 성공 여부를 읽는다 — 판정과 기록 사이에 틈이 없어야 동시 요청이 통과하지 못한다.
+
+   어느 관문에 걸렸는지는 실패했을 때만 따로 읽는다. 성공 경로에 조회를 하나 더 붙이지
+   않으려는 것이고, 실패는 드물어 한 번 더 읽어도 괜찮다. */
+export async function claimAiDraft(userId: string): Promise<ClaimResult> {
 	const today: Date = getKstToday();
+	const now: Date = new Date();
+	const callableAfter: Date = new Date(now.getTime() - AI_DRAFT_MIN_CALL_INTERVAL_SECONDS * 1000);
 
 	const claimed: boolean = await db.$transaction(async (tx) => {
 		/* 날짜가 바뀌었으면 오늘치로 되돌린다. where에 "오늘이 아님"을 넣어 두면 이미
 		   오늘로 세고 있는 행은 건드리지 않아, 동시 요청이 서로의 사용량을 지우지 않는다.
-		   aiDraftUsedOn이 null인 신규 사용자는 not 비교에 걸리지 않아 따로 적어 준다. */
+		   aiDraftUsedOn이 null인 신규 사용자는 not 비교에 걸리지 않아 따로 적어 준다.
+		   호출 수도 같이 초기화한다 — 두 값의 기준일이 같아야 한다. */
 		await tx.user.updateMany({
 			where: {
 				id: userId,
 				OR: [{aiDraftUsedOn: null}, {aiDraftUsedOn: {not: today}}],
 			},
-			data: {aiDraftUsedOn: today, aiDraftUsedCount: 0},
+			data: {aiDraftUsedOn: today, aiDraftUsedCount: 0, aiDraftCallCount: 0},
 		});
 
 		const updated = await tx.user.updateMany({
 			where: {
 				id: userId,
 				aiDraftUsedOn: today,
+				/* 화면에 보이는 한도. 실패하면 환불되어 다시 올라간다. */
 				aiDraftUsedCount: {lt: AI_DRAFT_DAILY_LIMIT},
+				/* 실제 호출 상한. 환불해도 줄지 않아 차감-환불 반복을 끊는다. */
+				aiDraftCallCount: {lt: AI_DRAFT_DAILY_CALL_LIMIT},
+				/* 직전 호출과의 간격. null이면 오늘 처음이라 그냥 통과시킨다. */
+				OR: [{aiDraftLastCallAt: null}, {aiDraftLastCallAt: {lte: callableAfter}}],
 			},
-			data: {aiDraftUsedCount: {increment: 1}},
+			data: {
+				aiDraftUsedCount: {increment: 1},
+				aiDraftCallCount: {increment: 1},
+				aiDraftLastCallAt: now,
+			},
 		});
 
 		if (updated.count === 0) {
@@ -82,7 +81,40 @@ export async function claimAiDraft(userId: string): Promise<{ok: boolean; remain
 		return true;
 	});
 
-	return {ok: claimed, remaining: await getAiDraftRemaining(userId)};
+	if (claimed) {
+		return {ok: true, remaining: await getAiDraftRemaining(userId)};
+	}
+
+	return {ok: false, ...(await diagnoseClaimFailure(userId, callableAfter))};
+}
+
+/* 확보에 실패한 뒤 원인을 가린다. 위 updateMany의 where를 그대로 되짚는 순서라,
+   관문을 고칠 때 여기도 같이 고쳐야 한다. */
+async function diagnoseClaimFailure(userId: string, callableAfter: Date): Promise<{reason: ClaimRejection; remaining: number}> {
+	const user = await db.user.findUnique({
+		where: {id: userId},
+		select: {aiDraftUsedOn: true, aiDraftUsedCount: true, aiDraftCallCount: true, aiDraftLastCallAt: true},
+	});
+
+	/* 세션은 JWT라 사용자가 지워져도 토큰은 한동안 유효하다. 그 경우를 "다 썼다"로
+	   보여 주면 내일 다시 오라는 안내가 영영 맞지 않는다. */
+	if (user === null) {
+		return {reason: "unknown-user", remaining: 0};
+	}
+
+	const remaining: number = remainingFrom(user.aiDraftUsedOn, user.aiDraftUsedCount);
+
+	if (user.aiDraftCallCount >= AI_DRAFT_DAILY_CALL_LIMIT) {
+		return {reason: "call-limit", remaining: 0};
+	}
+
+	if (user.aiDraftLastCallAt !== null && user.aiDraftLastCallAt > callableAfter) {
+		return {reason: "too-fast", remaining};
+	}
+
+	/* 위 둘이 아니면 남은 횟수를 다 쓴 것이다. 진단을 읽는 사이에 다른 요청이 마지막
+	   한 번을 가져갔을 수도 있는데, 그때도 사용자에게는 같은 안내가 맞다. */
+	return {reason: "exhausted", remaining};
 }
 
 /* 결과를 못 준 요청의 횟수를 돌려준다. action에 왜 돌려줬는지가 남아 나중에

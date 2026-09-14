@@ -800,6 +800,8 @@ export const UserScalarFieldEnum = {
   password: 'password',
   aiDraftUsedOn: 'aiDraftUsedOn',
   aiDraftUsedCount: 'aiDraftUsedCount',
+  aiDraftCallCount: 'aiDraftCallCount',
+  aiDraftLastCallAt: 'aiDraftLastCallAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

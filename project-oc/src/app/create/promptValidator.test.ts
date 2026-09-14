@@ -1,5 +1,15 @@
 import {describe, expect, it} from "vitest";
-import {AI_DRAFT_DAILY_LIMIT, CHAR_MAX_LENGTH, CHAR_TMI_MAX_LINE_LENGTH, CHAR_TMI_MAX_LINES, createPromptResultForm, toRefundAction} from "./validator";
+import {
+	AI_DRAFT_DAILY_CALL_LIMIT,
+	AI_DRAFT_DAILY_LIMIT,
+	CHAR_MAX_LENGTH,
+	CHAR_TMI_MAX_LINE_LENGTH,
+	CHAR_TMI_MAX_LINES,
+	createPromptResultForm,
+	getKstToday,
+	remainingFrom,
+	toRefundAction,
+} from "./validator";
 import {FinishReason} from "@google/genai";
 
 /* AI 응답 스키마는 사람이 채운 폼이 아니라 모델이 만든 JSON을 받는 자리다. 그래서
@@ -169,9 +179,52 @@ describe("toRefundAction", () => {
 });
 
 describe("하루 한도", () => {
-	/* aiDraftUsedCount는 TinyInt다. 상한이 127을 넘으면 저장이 깨진다. */
-	it("TinyInt 범위 안이다", () => {
-		expect(AI_DRAFT_DAILY_LIMIT).toBeGreaterThan(0);
-		expect(AI_DRAFT_DAILY_LIMIT).toBeLessThanOrEqual(127);
+	/* aiDraftUsedCount·aiDraftCallCount는 둘 다 TinyInt다. 상한이 127을 넘으면
+	   증가시키다가 저장이 깨진다. */
+	it.each([
+		["AI_DRAFT_DAILY_LIMIT", AI_DRAFT_DAILY_LIMIT],
+		["AI_DRAFT_DAILY_CALL_LIMIT", AI_DRAFT_DAILY_CALL_LIMIT],
+	])("%s는 TinyInt 범위 안이다", (_name, value) => {
+		expect(value).toBeGreaterThan(0);
+		expect(value).toBeLessThanOrEqual(127);
+	});
+
+	/* 호출 상한이 화면 한도보다 낮으면, 정상적으로 10회를 쓰려는 사용자가 먼저
+	   호출 상한에 막힌다. 환불 여유를 위해 반드시 더 커야 한다. */
+	it("호출 상한이 화면 한도보다 크다", () => {
+		expect(AI_DRAFT_DAILY_CALL_LIMIT).toBeGreaterThan(AI_DRAFT_DAILY_LIMIT);
+	});
+});
+
+/* 자정 초기화의 핵심 판정. 크론을 두지 않는 대신 "마지막으로 쓴 날이 오늘인가"로
+   가르는데, 이게 틀리면 한도가 영영 안 풀리거나(영구 차단) 매 요청마다 풀린다(무제한). */
+describe("remainingFrom", () => {
+	it("한 번도 안 썼으면 상한 그대로", () => {
+		expect(remainingFrom(null, 0)).toBe(AI_DRAFT_DAILY_LIMIT);
+	});
+
+	it("오늘 쓴 만큼 뺀다", () => {
+		expect(remainingFrom(getKstToday(), 3)).toBe(AI_DRAFT_DAILY_LIMIT - 3);
+	});
+
+	it("어제 기록이면 오늘치는 그대로다 - 자정이 지나면 저절로 풀린다", () => {
+		const yesterday = new Date(getKstToday().getTime() - 24 * 60 * 60 * 1000);
+
+		expect(remainingFrom(yesterday, AI_DRAFT_DAILY_LIMIT)).toBe(AI_DRAFT_DAILY_LIMIT);
+	});
+
+	it("어긋난 값이 들어와도 음수는 안 나온다", () => {
+		expect(remainingFrom(getKstToday(), AI_DRAFT_DAILY_LIMIT + 5)).toBe(0);
+	});
+
+	/* @db.Date 컬럼에 넣을 값이라 시각이 남아 있으면 안 된다. 시각이 섞이면
+	   getTime() 비교가 매번 어긋나 초기화가 무한히 일어난다. */
+	it("KST 오늘은 UTC 자정에 맞춰진 날짜다", () => {
+		const today = getKstToday();
+
+		expect(today.getUTCHours()).toBe(0);
+		expect(today.getUTCMinutes()).toBe(0);
+		expect(today.getUTCSeconds()).toBe(0);
+		expect(today.getUTCMilliseconds()).toBe(0);
 	});
 });

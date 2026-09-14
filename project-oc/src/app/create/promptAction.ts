@@ -4,7 +4,9 @@ import {GoogleGenAI, type ContentListUnion, ApiError, FinishReason} from "@googl
 import z from "zod";
 
 import {
+	AI_DRAFT_CALL_LIMIT_MESSAGE,
 	AI_DRAFT_EXHAUSTED_MESSAGE,
+	AI_DRAFT_TOO_FAST_MESSAGE,
 	type AiHistoryActionType,
 	createPromptActionForm,
 	CreatePromptActionFormType,
@@ -14,7 +16,7 @@ import {
 } from "./validator";
 import {PROMPT_SAMPLE_RESULT} from "./promptSample";
 import {auth} from "@/auth/auth";
-import {claimAiDraft, refundAiDraft} from "./aiDraftUsage";
+import {type ClaimRejection, claimAiDraft, refundAiDraft} from "./aiDraftUsage";
 
 const GOOGLE_AI_MODEL = "gemini-3.1-flash-lite" as const;
 
@@ -40,7 +42,6 @@ const SYSTEM_PROMPT = `당신은 창작 캐릭터(자캐) 프로필 작성을 �
 
 [프로필 항목의 성격]
 - 프로필 항목은 설정을 한 구절로 적는 칸이지 장면을 묘사하는 칸이 아닙니다. 설명에 있는 설정을 짧게 옮기되, 설명에 없는 묘사나 장면을 덧붙여 부풀리지 마세요. 이건 수위와 무관하게 모든 항목에 적용됩니다.
-- 캐릭터가 미성년자이거나 나이를 알 수 없는데 어려 보이면, 성적인 내용은 어느 항목에도 넣지 않습니다. 설명에 그런 내용이 있어도 마찬가지이며, 이 규칙에는 예외가 없습니다.
 
 [항목 규칙] 글자 수를 넘기면 결과 전체가 버려집니다.
 - charName: 이름. 20자 이내.
@@ -127,6 +128,16 @@ const BLOCKED_MESSAGE = "이 설명은 AI가 다룰 수 없어요. 내용을 고
 
 const RETRY_MESSAGE = "분석 중 오류가 발생했어요. 다시 시도해 주세요." as const;
 
+/* 사용 거절 사유별 안내. 어느 관문에 걸렸는지를 그대로 알려 주지는 않되, 사용자가
+   다음에 뭘 할 수 있는지는 갈라 준다 — 기다리면 되는지, 내일 와야 하는지, 다시
+   로그인해야 하는지. */
+const CLAIM_REJECTION_MESSAGE: Record<ClaimRejection, string> = {
+	"unknown-user": "로그인 정보를 찾을 수 없어요. 다시 로그인해 주세요.",
+	exhausted: AI_DRAFT_EXHAUSTED_MESSAGE,
+	"call-limit": AI_DRAFT_CALL_LIMIT_MESSAGE,
+	"too-fast": AI_DRAFT_TOO_FAST_MESSAGE,
+};
+
 export default async function createPromptAction(data: CreatePromptActionFormType): Promise<ActionResult> {
 	/* 로그인 확인이 가장 먼저다. 아래로 내리면 비로그인 요청도 이미지 디코딩(최대 10MB)까지
 	   다 마친 뒤에야 거절당한다 — 공개 진입점에서 그건 그대로 공격 표면이 된다. */
@@ -178,10 +189,16 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 	const claim = await claimAiDraft(userId);
 
 	if (!claim.ok) {
+		/* 걸린 관문에 따라 다음에 할 수 있는 일이 다르다. 전부 "다 썼어요"로 뭉치면
+		   잠깐 기다리면 되는 사용자가 내일까지 기다린다. */
+		if (claim.reason !== "exhausted") {
+			console.warn("[createPromptAction] 사용 거절", userId, claim.reason);
+		}
+
 		return {
 			success: false,
-			message: AI_DRAFT_EXHAUSTED_MESSAGE,
-			remainingToday: 0,
+			message: CLAIM_REJECTION_MESSAGE[claim.reason],
+			remainingToday: claim.remaining,
 		};
 	}
 
@@ -271,7 +288,10 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 			/* 429는 쿼터·레이트리밋(개발 중에는 크레딧 소진)이다. 서버가 고장 난 게 아니라
 			   기다리면 풀리는 상태라 문구를 나눈다. 개발 중이라면 위 console.error에 찍힌
 			   RESOURCE_EXHAUSTED를 보고 결제를 확인해야 한다. */
-			return await failWithRefund("refund-server-error", err.status === 429 ? "지금은 요청이 밀려 있어요. 잠시 뒤에 다시 시도해 주세요." : "AI 모델 서버에 오류가 발생했어요. 잠시 후 다시 시도해 주세요.");
+			return await failWithRefund(
+				"refund-server-error",
+				err.status === 429 ? "지금은 요청이 밀려 있어요. 잠시 뒤에 다시 시도해 주세요." : "AI 모델 서버에 오류가 발생했어요. 잠시 후 다시 시도해 주세요.",
+			);
 		}
 
 		return await failWithRefund("refund-server-error", RETRY_MESSAGE);

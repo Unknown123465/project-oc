@@ -27,9 +27,16 @@ model User {
   // 자정 초기화를 크론으로 돌리지 않으려고 "언제의 사용량인지"를 같이 들고 있는다.
   // aiDraftUsedOn은 한국 시간 기준 날짜(자정 경계)이고, 요청이 올 때 오늘 날짜와
   // 다르면 그 자리에서 0부터 다시 센다. 서버가 UTC로 돌아도 경계가 흔들리지 않는다.
-  aiDraftUsedOn    DateTime?   @db.Date
-  aiDraftUsedCount Int         @default(0) @db.TinyInt
-  aiHistories      AiHistory[]
+  aiDraftUsedOn    DateTime? @db.Date
+  aiDraftUsedCount Int       @default(0) @db.TinyInt
+  // 실제로 AI를 부른 횟수. aiDraftUsedCount와 달리 환불해도 줄지 않는다.
+  // 이게 없으면 하루 한도가 호출 수를 못 묶는다 — 실패하면 횟수를 돌려주므로,
+  // 안전 필터에 걸리는 입력을 반복하면 차감과 환불이 무한히 돌면서 호출만 계속 나간다.
+  aiDraftCallCount Int       @default(0) @db.TinyInt
+  // 마지막 호출 시각. 짧은 간격으로 몰아치는 요청을 막는 데만 쓴다.
+  aiDraftLastCallAt DateTime?
+
+  aiHistories AiHistory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

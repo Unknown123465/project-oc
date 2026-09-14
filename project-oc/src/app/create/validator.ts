@@ -137,6 +137,45 @@ export const AI_DRAFT_LOW_REMAINING = 3;
    들여오게 되고, 그 모듈은 다시 서버 액션을 들여와 순환 참조가 된다. */
 export const AI_DRAFT_EXHAUSTED_MESSAGE = "오늘 쓸 수 있는 횟수를 모두 사용했어요. 내일 다시 시도해 주세요.";
 
+/* 하루에 실제로 AI를 부를 수 있는 최대 횟수. 화면에 보이는 한도(AI_DRAFT_DAILY_LIMIT)와
+   따로 두는 이유는 환불 때문이다 — 실패한 요청은 횟수를 돌려주므로, 안전 필터에 걸리는
+   입력을 반복하면 차감과 환불이 무한히 돌면서 호출만 계속 나간다. 이 상한은 환불해도
+   줄지 않아 그 고리를 끊는다.
+
+   정상적으로 쓰면 닿지 않는 수여야 한다. 10회를 다 쓰고 그중 몇 번이 실패해 다시
+   시도하는 정도는 지나갈 수 있게 상한의 세 배로 둔다. */
+export const AI_DRAFT_DAILY_CALL_LIMIT = AI_DRAFT_DAILY_LIMIT * 3;
+
+/** 연속 호출 사이에 두어야 하는 최소 간격(초). 몰아치는 요청만 막는 값이다. */
+export const AI_DRAFT_MIN_CALL_INTERVAL_SECONDS = 3;
+
+/* 한도에 걸렸을 때의 안내. 셋을 나누는 기준은 "사용자가 다음에 뭘 할 수 있는가"다. */
+export const AI_DRAFT_CALL_LIMIT_MESSAGE = "오늘은 더 이상 초안을 만들 수 없어요. 내일 다시 시도해 주세요.";
+export const AI_DRAFT_TOO_FAST_MESSAGE = "조금 전에 만든 요청이 있어요. 잠시 뒤에 다시 시도해 주세요.";
+
+/* 초기화 기준은 한국 시간 자정이다. 서버가 어느 지역에서 돌든 경계가 같아야 해서
+   시스템 시간대를 쓰지 않고 고정 오프셋으로 계산한다. 한국은 서머타임이 없어
+   +9가 연중 고정이라 이 단순한 방식이 성립한다. */
+const KST_OFFSET_MILLIS: number = 9 * 60 * 60 * 1000;
+
+/* 한국 시간 기준 "오늘". aiDraftUsedOn은 @db.Date라 시각을 버리고 날짜만 담으므로
+   UTC 자정에 맞춘 Date를 넣어야 의도한 날짜가 그대로 저장된다. */
+export function getKstToday(): Date {
+	const kstNow: Date = new Date(Date.now() + KST_OFFSET_MILLIS);
+
+	return new Date(Date.UTC(kstNow.getUTCFullYear(), kstNow.getUTCMonth(), kstNow.getUTCDate()));
+}
+
+/* 마지막으로 쓴 날이 오늘이 아니면 자정을 넘긴 것이라, 아직 한 번도 안 쓴 날로 본다.
+   크론으로 0시에 전체를 밀지 않아도 되는 이유가 이 한 줄이다. */
+export function remainingFrom(usedOn: Date | null, usedCount: number): number {
+	if (usedOn === null || usedOn.getTime() !== getKstToday().getTime()) {
+		return AI_DRAFT_DAILY_LIMIT;
+	}
+
+	return Math.max(0, AI_DRAFT_DAILY_LIMIT - usedCount);
+}
+
 /* aihistory.action에 넣을 수 있는 값. 컬럼이 CHAR라 DB는 아무 문자열이나 받으므로
    허용 목록은 여기가 유일한 방어선이다 — 기록을 남기기 전에 반드시 이걸로 검사할 것.
 
