@@ -69,7 +69,7 @@ function toMusicView(raw: string | null): TemplateCharacter["charMusic"] {
    쿠키·헤더는 이 안에서 읽을 수 없다(Next 문서 명시). 그래서 여기서는 공개 여부를
    판단하지 않고, 판단에 필요한 charPublicMode와 charUploaderId를 같이 꺼내 온다.
 
-   include가 아니라 select인 이유가 하나 더 있다 — unstable_cache는 콜백 결과를
+   include가 아니라 select인 이유가 하나 더 있다 - unstable_cache는 콜백 결과를
    JSON으로 직렬화해 저장한다. include로 전체 컬럼을 가져오면 charId(BigInt)가
    따라오는데 JSON.stringify는 BigInt를 못 다뤄 "Do not know how to serialize a
    BigInt"로 요청 자체가 죽는다. 화면에 안 쓰는 charId를 select에서 아예 빼면

@@ -24,7 +24,7 @@ interface TextareaProps<K extends FieldValues> extends UseControllerProps<K> {
 	maxLength?: number;
 }
 
-/* 안내 문구와 검증 오류는 이 파일에서 그리지 않는다. TextInput과 동일한 원칙 —
+/* 안내 문구와 검증 오류는 이 파일에서 그리지 않는다. TextInput과 동일한 원칙 -
    무엇을 어디에 어떤 순서로 낼지는 폼마다 다르므로 호출하는 쪽이 아래에 직접 렌더하고,
    그 요소의 id를 describedBy로 넘겨 textarea와 연결한다. */
 

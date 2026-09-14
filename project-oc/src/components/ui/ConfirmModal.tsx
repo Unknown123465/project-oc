@@ -17,7 +17,7 @@ export interface ConfirmModalProps {
 }
 
 /* 파괴적인 동작(예: 레이아웃 변경 시 기존 크롭 초기화)을 확인받는 범용 모달.
-   버튼 문구는 호출하는 쪽이 상황에 맞게 정한다 — "예/아니오" 같은 라벨은
+   버튼 문구는 호출하는 쪽이 상황에 맞게 정한다 - "예/아니오" 같은 라벨은
    무엇에 대한 확인인지 다시 읽어야 알 수 있어 쓰지 않는다. */
 export default function ConfirmModal({open, title, description, confirmLabel, cancelLabel, onConfirm, onCancel}: ConfirmModalProps) {
 	useScrollLock(open);
@@ -40,7 +40,7 @@ export default function ConfirmModal({open, title, description, confirmLabel, ca
 
 			/* ActionButton이 ref를 넘겨주지 않아(autoFocus prop도 없음) 컴포넌트로는
 			   초기 초점을 지정할 수 없다. 취소 버튼이 actions 안 첫 번째 button이라는
-			   구조를 이용해 DOM에서 직접 찾아 초점을 준다 — 파괴적 확인이라 기본
+			   구조를 이용해 DOM에서 직접 찾아 초점을 준다 - 파괴적 확인이라 기본
 			   선택은 항상 취소 쪽이어야 한다. */
 			dialog.querySelector<HTMLButtonElement>(`.${styles.actions} button`)?.focus();
 		} else if (!open && dialog.open) {
@@ -75,14 +75,7 @@ export default function ConfirmModal({open, title, description, confirmLabel, ca
 	};
 
 	return (
-		<dialog
-			ref={dialogRef}
-			className={styles.backdrop}
-			role="alertdialog"
-			aria-labelledby={titleId}
-			aria-describedby={descriptionId}
-			onClose={handleDialogClose}
-			onClick={handleBackdropClick}>
+		<dialog ref={dialogRef} className={styles.backdrop} role="alertdialog" aria-labelledby={titleId} aria-describedby={descriptionId} onClose={handleDialogClose} onClick={handleBackdropClick}>
 			<h2 id={titleId} className={styles.title}>
 				{title}
 			</h2>

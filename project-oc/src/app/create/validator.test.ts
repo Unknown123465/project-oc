@@ -35,7 +35,7 @@ function serverFormFixture(override: Record<string, unknown> = {}) {
 }
 
 describe("글자 수 제한", () => {
-	/* 컬럼 길이와 어긋나면 INSERT가 터진다. 제한은 공백 "포함"이다 — 목업의
+	/* 컬럼 길이와 어긋나면 INSERT가 터진다. 제한은 공백 "포함"이다 - 목업의
 	   공백 제외 계산(data-nonspace-max)을 따라가면 안 되는 지점. */
 	it.each([
 		["charName", 20],
