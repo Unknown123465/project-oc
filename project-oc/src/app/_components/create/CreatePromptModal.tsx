@@ -9,17 +9,28 @@ import {useBlockNavigation} from "@/hooks/useBlockNavigation";
 import {IMAGE_ACCEPTED_TYPES, IMAGE_MAX_DIMENSION, IMAGE_MAX_FILE_SIZE, IMAGE_TYPE_DEFINITIONS, type ImageType} from "@/app/create/imageEditor";
 import {useForm, useWatch, type Control, type UseFormSetValues} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {CreateCharFormInputType, createPromptForm, CreatePromptFormType, createPromptRequireForm} from "@/app/create/validator";
+import {
+	AI_DRAFT_DAILY_LIMIT,
+	AI_DRAFT_EXHAUSTED_MESSAGE,
+	AI_DRAFT_LOW_REMAINING,
+	CHAR_MAX_LENGTH,
+	CHAR_TMI_MAX_LINES,
+	CreateCharFormInputType,
+	createPromptForm,
+	CreatePromptFormType,
+	createPromptRequireForm,
+	type CreatePromptResultFieldType,
+	CreatePromptResultFormType,
+	PROMPT_DESCRIPTION_MAX_LENGTH,
+} from "@/app/create/validator";
 import {PromptApplyValue} from "./ImageUploadField";
 import {Textarea} from "@/components/ui/textarea";
-
-const AI_DRAFT_DESCRIPTION_MAX_LENGTH = 1000;
+import createPromptAction from "@/app/create/promptAction";
 
 /* 결과 화면에 늘어놓을 프로필 항목(테마곡 제외). 순서는 /create 폼의 위→아래
-   순서를 그대로 따른다 — 이미지 → 핵심 정보 → 퍼스널 컬러 → 선택 항목.
-   wide는 2열 그리드에서 한 줄을 통째로 차지할지 — 100자짜리는 2열에 넣으면
-   한 칸이 200px도 안 돼 읽기 어렵다(생성 폼도 같은 이유로 상하 배치).
-   TODO: maxLength 리터럴은 validator.ts와 중복 — 상수로 분리되면 그쪽을 참조할 것. */
+   순서를 그대로 따른다 - 이미지 → 핵심 정보 → 퍼스널 컬러 → 선택 항목.
+   wide는 2열 그리드에서 한 줄을 통째로 차지할지 - 100자짜리는 2열에 넣으면
+   한 칸이 200px도 안 돼 읽기 어렵다(생성 폼도 같은 이유로 상하 배치). */
 
 const CHAR_FIELD_KEY_LIST = [
 	"charName",
@@ -47,67 +58,34 @@ interface DraftFieldDefinition {
 }
 
 type CreateResultStringType = Record<CharFieldKey, string>;
-type CreateResultFileType = {charImage: File};
+type CreateResultColorType = {charColor: string};
 
-type CreateResultType = Partial<CreateResultStringType & CreateResultFileType>;
+type CreateResultType = Partial<CreateResultStringType & CreateResultColorType>;
 
 /* CoreInfoSection 순서 */
 const CORE_DRAFT_FIELDS: DraftFieldDefinition[] = [
-	{key: "charName", label: "이름", maxLength: 20, wide: false},
-	{key: "charMessage", label: "한 줄 소개", maxLength: 30, wide: false},
-	{key: "charLike", label: "좋아하는 것", maxLength: 100, wide: true},
-	{key: "charHate", label: "싫어하는 것", maxLength: 100, wide: true},
-	{key: "charPersonality", label: "성격", maxLength: 100, wide: true},
-	{key: "charTmi", label: "TMI", maxLines: 5, wide: true},
+	{key: "charName", label: "이름", maxLength: CHAR_MAX_LENGTH.charName, wide: false},
+	{key: "charMessage", label: "한 줄 소개", maxLength: CHAR_MAX_LENGTH.charMessage, wide: false},
+	{key: "charLike", label: "좋아하는 것", maxLength: CHAR_MAX_LENGTH.charLike, wide: true},
+	{key: "charHate", label: "싫어하는 것", maxLength: CHAR_MAX_LENGTH.charHate, wide: true},
+	{key: "charPersonality", label: "성격", maxLength: CHAR_MAX_LENGTH.charPersonality, wide: true},
+	{key: "charTmi", label: "TMI", maxLines: CHAR_TMI_MAX_LINES, wide: true},
 ];
 
 /* OptionalFieldsDetails 순서 */
 const OPTIONAL_DRAFT_FIELDS: DraftFieldDefinition[] = [
-	{key: "charKind", label: "종족", maxLength: 10, wide: false},
-	{key: "charAge", label: "나이", maxLength: 20, wide: false},
-	{key: "charBirthday", label: "생일", maxLength: 10, wide: false},
-	{key: "charHeight", label: "키", maxLength: 10, wide: false},
-	{key: "charBirthplace", label: "출생지", maxLength: 20, wide: false},
-	{key: "charMbti", label: "MBTI", maxLength: 4, wide: false},
+	{key: "charKind", label: "종족", maxLength: CHAR_MAX_LENGTH.charKind, wide: false},
+	{key: "charAge", label: "나이", maxLength: CHAR_MAX_LENGTH.charAge, wide: false},
+	{key: "charBirthday", label: "생일", maxLength: CHAR_MAX_LENGTH.charBirthday, wide: false},
+	{key: "charHeight", label: "키", maxLength: CHAR_MAX_LENGTH.charHeight, wide: false},
+	{key: "charBirthplace", label: "출생지", maxLength: CHAR_MAX_LENGTH.charBirthplace, wide: false},
+	{key: "charMbti", label: "MBTI", maxLength: CHAR_MAX_LENGTH.charMbti, wide: false},
 ];
 
 /* value가 null이면 제안 없음. reason이 "unverified"면 제안은 있었지만 설명에서
-   근거를 못 찾아 버린 경우 — 사용자에게 두 상황을 다른 문구로 보여준다. */
-interface DraftFieldResult {
-	value: string | null;
-	reason?: "unverified";
-}
-
-interface DraftResult {
-	layout: {type: ImageType; reason: string; fx: number; fy: number} | null;
-	color: string | null;
-	fields: Record<CharFieldKey, DraftFieldResult>;
-}
-
-/* TODO: 레이아웃 확인용 임시 표본. 서버 액션 응답 타입이 정해지면 지우고 state로 교체할 것. */
-const SAMPLE_RESULT: DraftResult = {
-	layout: {
-		type: "s",
-		reason: "기".repeat(39) + "모",
-		fx: 0.4,
-		fy: 0.6,
-	},
-	color: "#7C5CFF",
-	fields: {
-		charName: {value: "세라핀"},
-		charMessage: {value: "단 것 앞에서는 무너지는 은발의 검사."},
-		charLike: {value: "단 것, 고양이"},
-		charHate: {value: "비 오는 날"},
-		charPersonality: {value: "말수가 적고 무뚝뚝하지만 정이 많다."},
-		charTmi: {value: "고양이 이름은 콩이\n비 오는 날엔 집 밖으로 안 나간다"},
-		charKind: {value: "반요"},
-		charAge: {value: "열아홉"},
-		charBirthday: {value: null},
-		charHeight: {value: null},
-		charBirthplace: {value: null, reason: "unverified"},
-		charMbti: {value: null},
-	},
-};
+   근거를 못 찾아 버린 경우 - 사용자에게 두 상황을 다른 문구로 보여준다.
+   응답 스키마에서 파생시켜 둔다. 따로 선언하면 스키마가 바뀌어도 여기만 옛 모양으로 남는다. */
+type DraftFieldResult = CreatePromptResultFieldType;
 
 const EMPTY_FIELD_MESSAGE: Record<NonNullable<DraftFieldResult["reason"]> | "missing", string> = {
 	missing: "제안이 없어요.",
@@ -122,6 +100,38 @@ function formatHexAsRgb(hex: string): string {
 	const b: number = parseInt(hex.slice(5, 7), 16);
 
 	return `R: ${r} G: ${g} B: ${b}`;
+}
+
+/* 응답 하나를 폼 값 한 벌로 옮긴다.
+
+   모든 항목을 빠짐없이 채우는 게 핵심이다. null은 createPromptForm에 유효한 값이라
+   거를 필요가 없고, 오히려 거르면 그 필드가 undefined로 남아 nullable() 검증에 걸려
+   handleSubmit이 조용히 실패한다(resultSubmit이 아예 호출되지 않음). 화면은
+   promptResult.fields[key].value로 판단하므로 null을 넣어도 안 그려진다.
+   charProfileLayout·charColor·charImageFrame·charImage는 CHAR_FIELD_KEY_LIST에 없어
+   같은 이유로 따로 채운다.
+
+   fields는 참고 이미지만 보낸 요청이면 통째로 null이다. 그때도 항목들은 undefined가
+   아니라 null이어야 하므로 ?? null로 받는다. */
+function toFormValues(result: CreatePromptResultFormType) {
+	const fieldEntries = CHAR_FIELD_KEY_LIST.map((key) => [key, result.fields?.[key].value ?? null] as const);
+
+	const key: CharFieldSelectKey[] = fieldEntries.filter((entries) => entries[1] !== null).map((entries) => entries[0]);
+
+	if (result.color !== null) {
+		key.push("charColor");
+	}
+
+	return {
+		fields: {
+			...Object.fromEntries(fieldEntries),
+			charProfileLayout: result.layout?.type ?? null,
+			charImageFrame: null,
+			charColor: result.color,
+			charImage: null,
+		},
+		key,
+	};
 }
 
 /* 카운터에 보일 숫자. TMI는 validator.ts의 refine과 같은 기준(줄 수)으로 센다.
@@ -147,7 +157,7 @@ interface DraftFieldProps {
 /* 항목 하나를 컴포넌트로 떼어 둔 이유는 카운터다. 실시간 글자 수를 모달 본체에서
    useWatch로 한 번에 받으면 한 글자 칠 때마다 모달 전체(12개 항목의 Textarea까지)가
    다시 그려져 입력이 버벅인다. 여기서 자기 항목 하나만 구독하면 키 입력은 이 항목
-   안에서만 돈다 — ProfileSheet 등 미리보기가 control만 받아 각자 구독하는 것과 같은 방식.
+   안에서만 돈다 - ProfileSheet 등 미리보기가 control만 받아 각자 구독하는 것과 같은 방식.
    compute로 숫자만 받아 두면 길이가 같은 붙여넣기 같은 경우엔 그마저도 건너뛴다. */
 function DraftField({field, result, control, checked, errorMessage, onCheckedChange, onReset}: DraftFieldProps) {
 	const baseId = useId();
@@ -228,15 +238,15 @@ function DraftField({field, result, control, checked, errorMessage, onCheckedCha
 export interface CreatePromptModalProps {
 	open: boolean;
 	onClose: (data?: PromptApplyValue) => void;
+	/** 페이지를 열었을 때 서버가 알려준 오늘 남은 횟수. 이후 셈은 모달이 이어 간다. */
 	remainingToday: number;
-	dailyLimit: number;
 	/** 생성 폼에서 이미 고른 이미지 유형. 추천과 다르면 결과 화면에 대비를 보여주고,
 	    반영 시 이미지를 다시 잘라야 한다는 확인 모달의 근거가 된다. */
 	currentLayout: ImageType | "";
 	setValuesByForm: UseFormSetValues<CreateCharFormInputType>;
 }
 
-export default function CreatePromptModal({open, onClose, remainingToday, dailyLimit, currentLayout, setValuesByForm}: CreatePromptModalProps) {
+export default function CreatePromptModal({open, onClose, remainingToday, currentLayout, setValuesByForm}: CreatePromptModalProps) {
 	useScrollLock(open);
 
 	const titleId = useId();
@@ -265,10 +275,22 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
 	const [hasResult, setHasResult] = useState<boolean>(false);
-	const [promptResult, setPromptResult] = useState<DraftResult | null>(null);
+	const [promptResult, setPromptResult] = useState<CreatePromptResultFormType | null>(null);
 	const [selectedKey, setSelectedKey] = useState<CharFieldSelectKey[]>([]);
 
-	const [errorMessage, setErrorMessage] = useState<string>("");
+	/* 서버 값에서 출발해 요청이 성공할 때마다 줄인다. 이 dialog는 열림 여부와 상관없이
+	   항상 마운트돼 있어 닫았다 열어도 값이 유지된다. 페이지를 새로 열면 서버 값이 다시
+	   기준이 되므로, 다른 탭에서 쓴 횟수도 그때 맞춰진다. */
+	const [remaining, setRemaining] = useState<number>(remainingToday);
+
+	const isExhausted: boolean = remaining <= 0;
+	const isLowRemaining: boolean = remaining <= AI_DRAFT_LOW_REMAINING;
+
+	/* 오류가 없을 때 안내 자리에 둘 기본 문구. 횟수를 다 쓴 뒤에는 빈 문자열이 아니라
+	   소진 안내가 기본값이 된다 — "오류 지우기"가 이 상태까지 지우면 안 된다. */
+	const idleMessage: string = isExhausted ? AI_DRAFT_EXHAUSTED_MESSAGE : "";
+
+	const [errorMessage, setErrorMessage] = useState<string>(remainingToday <= 0 ? AI_DRAFT_EXHAUSTED_MESSAGE : "");
 
 	/* 결과는 하루 10회 중 1회를 쓴 산물이라 뒤로가기 한 번에 날아가면 안 된다. */
 	useBlockNavigation(open && hasResult);
@@ -283,11 +305,13 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 		if (open && !dialog.open) {
 			dialog.showModal();
 		} else if (!open && dialog.open) {
-			setErrorMessage("");
+			setErrorMessage(idleMessage);
 
 			dialog.close();
 		}
-	}, [open]);
+		/* idleMessage는 남은 횟수가 줄 때만 바뀐다. 그때 이 effect가 다시 돌아도
+		   dialog의 열림 상태가 그대로면 두 분기 모두 걸리지 않아 하는 일이 없다. */
+	}, [open, idleMessage]);
 
 	useEffect(() => {
 		if (imageURL !== null) {
@@ -297,13 +321,17 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 		}
 	}, [imageURL]);
 
-	const isOverLimit: boolean = promptDescription.length > AI_DRAFT_DESCRIPTION_MAX_LENGTH;
+	const isOverLimit: boolean = promptDescription.length > PROMPT_DESCRIPTION_MAX_LENGTH;
+
+	/* 입력 안내와 오류는 같은 자리를 쓴다. 소진 상태에서는 errorMessage가 항상 채워져
+	   있으므로 안내가 그 자리를 뺏지 않도록 여기서 함께 판단한다. */
+	const showInputHint: boolean = !isExhausted && (promptDescription.trim().length > 0 || imageFile !== null) && !errorMessage;
 
 	const requestClose = () => {
 		dialogRef.current?.close();
 	};
 
-	/* native close 이벤트는 두 경로로 온다 — 사용자가 X·취소·Esc로 닫은 것과, 부모가
+	/* native close 이벤트는 두 경로로 온다 - 사용자가 X·취소·Esc로 닫은 것과, 부모가
 	   open을 false로 내려 위 effect가 dialog.close()를 부른 것. 후자에서도 onClose()를
 	   올리면 부모는 "사용자가 닫았다"로 읽어 openedModal을 null로 덮어쓴다(반영 직후
 	   이미지 모달을 열었는데 바로 닫히던 원인). 부모가 아직 열려 있다고 아는 동안의
@@ -322,7 +350,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 
 	/* Esc는 dialog의 cancel 이벤트로 온다. 결과 화면에서는 막고 확인 모달로 돌린다.
 	   단, Chrome은 사용자 조작 없이 연달아 누른 두 번째 Esc는 preventDefault를
-	   무시하고 닫아 버린다(close watcher 규칙) — 그래서 뒤로가기와 마찬가지로
+	   무시하고 닫아 버린다(close watcher 규칙) - 그래서 뒤로가기와 마찬가지로
 	   100% 방어는 아니고, 확인 모달이 1차 방어선이다. */
 	const handleDialogCancel = (e: SyntheticEvent<HTMLDialogElement>) => {
 		if (!hasResult) {
@@ -351,7 +379,13 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 	};
 
 	const promptDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-		setPromptDescription(e.target.value);
+		const {value} = e.target;
+
+		setPromptDescription(value);
+
+		if (value.trim() && errorMessage) {
+			setErrorMessage(idleMessage);
+		}
 	};
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -367,7 +401,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 				throw new Error("이미지 용량은 10MB 이하여야 해요.");
 			}
 
-			setErrorMessage("");
+			setErrorMessage(idleMessage);
 			setIsReadingFile(true);
 
 			const objectUrl: string = URL.createObjectURL(file);
@@ -409,6 +443,10 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 
 			setImageFile(file);
 			setImageURL(objectUrl);
+
+			if (errorMessage) {
+				setErrorMessage(idleMessage);
+			}
 		} catch (err) {
 			if (err instanceof Error) {
 				setErrorMessage(err.message);
@@ -422,7 +460,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 
 	const handleCancel = () => {
 		setImageFile(null);
-		setErrorMessage("");
+		setErrorMessage(idleMessage);
 
 		if (fileInputRef.current !== null) {
 			fileInputRef.current.value = "";
@@ -432,7 +470,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 	/* 핵심·선택 항목 두 묶음 사이에 퍼스널 컬러 카드가 끼어들어야 해서(폼 순서)
 	   map 콜백을 하나로 뽑아 둔다. */
 	const renderDraftField = (field: DraftFieldDefinition) => {
-		if (promptResult !== null) {
+		if (promptResult !== null && promptResult.fields !== null) {
 			return (
 				<DraftField
 					key={field.key}
@@ -452,40 +490,48 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 
 	const requestSubmit = async () => {
 		try {
-			if (!promptDescription.trim() && imageFile === null) {
+			/* 버튼도 막아 두지만 여기서 한 번 더 본다 — 화면의 셈은 서버보다 늦을 수 있고,
+			   막힌 버튼은 우회할 수 있다. 실제 차단은 서버 몫이고 이건 헛걸음을 줄이는 쪽이다. */
+			if (isExhausted) {
+				throw new Error(AI_DRAFT_EXHAUSTED_MESSAGE);
+			} else if (!promptDescription.trim() && imageFile === null) {
 				throw new Error("캐릭터 설명 또는 참고 이미지를 첨부해 주세요.");
 			} else if (isOverLimit) {
-				throw new Error(`캐릭터 설명을 ${AI_DRAFT_DESCRIPTION_MAX_LENGTH}자 이하로 입력해 주세요.`);
+				throw new Error(`캐릭터 설명을 ${PROMPT_DESCRIPTION_MAX_LENGTH}자 이하로 입력해 주세요.`);
 			}
 
-			setErrorMessage("");
+			setErrorMessage(idleMessage);
 			setIsSubmitting(true);
 
-			//TODO: 캐릭터 설명 및 이미지 전송 로직 구현 예정
+			const result = await createPromptAction({
+				profile: promptDescription.trim(),
+				image: imageFile ?? undefined,
+			});
 
-			await new Promise((res) => setTimeout(res, 1000));
+			if (!result.success) {
+				setRemaining((prev) => (typeof result.remainingToday === "number" ? result.remainingToday : prev));
+
+				throw new Error(result.message);
+			}
+
+			const formValues = toFormValues(result.result);
+
+			/* 한 번 썼으니 하나 줄인다. 서버가 남은 횟수를 알려주면 그 값이 우선이다 —
+			   다른 탭에서 쓴 횟수까지 반영된 수는 서버만 안다. */
+			const nextRemaining: number = result.remainingToday ?? Math.max(0, remaining - 1);
+
+			setRemaining(nextRemaining);
+
+			/* 방금 마지막 한 번을 썼다면 지금 알려 둔다. 결과 화면에서 "재시도"로 돌아왔을 때
+			   빈 입력창만 보고 다시 누르는 일을 막는다. */
+			if (nextRemaining <= 0) {
+				setErrorMessage(AI_DRAFT_EXHAUSTED_MESSAGE);
+			}
 
 			setHasResult(true);
-
-			//TODO: 실제 반영값으로 변걍 할 예정
-			setSelectedKey(["charProfileLayout", "charColor", "charName", "charMessage", "charLike", "charHate", "charPersonality", "charTmi", "charKind", "charAge", "charBirthplace"]);
-
-			/* null도 createPromptForm엔 유효한 값이라 거를 필요가 없다 — 오히려 거르면
-			   그 필드가 undefined로 남아 nullable() 검증에 걸려 handleSubmit이 조용히
-			   실패한다(resultSubmit이 아예 호출되지 않음). 체크박스·Textarea 쪽 화면은
-			   promptResult.fields[key].value로 판단하므로 null을 넣어도 안 그려진다.
-			   charProfileLayout·charColor·charImageFrame·charImage는 CHAR_FIELD_KEY_LIST에
-			   없어 같은 이유로 따로 채워야 한다. */
-			const fieldEntries = CHAR_FIELD_KEY_LIST.map((key) => [key, SAMPLE_RESULT.fields[key].value] as const);
-
-			setPromptResult(SAMPLE_RESULT);
-			setValues({
-				...Object.fromEntries(fieldEntries),
-				charProfileLayout: SAMPLE_RESULT.layout?.type ?? null,
-				charImageFrame: null,
-				charColor: SAMPLE_RESULT.color,
-				charImage: null,
-			});
+			setPromptResult(result.result);
+			setValues(formValues.fields);
+			setSelectedKey(formValues.key);
 		} catch (err) {
 			if (err instanceof Error) {
 				setErrorMessage(err.message);
@@ -506,7 +552,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 	};
 
 	const resultValueReset = (name: CharFieldKey) => {
-		if (typeof promptResult?.fields[name].value === "string") {
+		if (typeof promptResult?.fields?.[name].value === "string") {
 			setValues({
 				[name]: promptResult.fields[name].value,
 			});
@@ -532,9 +578,13 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 				}
 			}
 
+			if (selectedKey.includes("charColor") && resultData.charColor !== null) {
+				resultObject.charColor = resultData.charColor;
+			}
+
 			setValuesByForm(resultObject);
 
-			if (imageFile === null || !promptResult?.layout) {
+			if (imageFile === null || !promptResult?.layout || !selectedKey.includes("charProfileLayout")) {
 				onClose();
 			} else {
 				onClose({
@@ -574,10 +624,12 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 					<div className={styles.body}>
 						<div className={styles.field}>
 							<div className={styles.field_head}>
-								<label htmlFor={descriptionFieldId}>캐릭터 설명</label>
+								<label htmlFor={descriptionFieldId}>
+									캐릭터 설명 <span className={styles.optional}>(선택)</span>
+								</label>
 
 								<span className={`${styles.counter} ${isOverLimit ? styles.counter_over : ""}`}>
-									{promptDescription.length} / {AI_DRAFT_DESCRIPTION_MAX_LENGTH}
+									{promptDescription.length} / {PROMPT_DESCRIPTION_MAX_LENGTH}
 								</span>
 							</div>
 
@@ -634,7 +686,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 							<strong>입력한 설명과 이미지는 초안을 만드는 데만 쓰이며, AI 학습에 사용되지 않습니다.</strong>
 						</p>
 
-						{promptDescription.trim().length === 0 && imageFile === null ? (
+						{showInputHint ? (
 							<p className={styles.hint}>캐릭터 설명 또는 참고 이미지를 첨부해 주세요.</p>
 						) : (
 							<p role="alert" className={styles.error}>
@@ -644,8 +696,9 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 					</div>
 
 					<div className={styles.actions}>
-						<span className={styles.remaining}>
-							오늘 {remainingToday}/{dailyLimit}회 남음 · 매일 자정 초기화
+						{/* 얼마 안 남았을 때만 눈에 띄게 바뀐다. 늘 강조돼 있으면 아무것도 강조되지 않는다. */}
+						<span className={`${styles.remaining} ${isLowRemaining ? styles.remaining_low : ""}`}>
+							오늘 {remaining}/{AI_DRAFT_DAILY_LIMIT}회 남음 · 매일 자정(한국 시간) 초기화
 						</span>
 
 						<div className={styles.action_group}>
@@ -655,7 +708,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 
 							{promptResult !== null ? <ActionButton onClick={() => setHasResult(true)}>이전 결과 보기</ActionButton> : null}
 
-							<ActionButton styleType="attention" disabled={isSubmitting} onClick={requestSubmit}>
+							<ActionButton styleType="attention" disabled={isSubmitting || isExhausted} onClick={requestSubmit}>
 								{isSubmitting ? "만드는 중" : "프로필 초안 생성"}
 							</ActionButton>
 						</div>
@@ -665,7 +718,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 				<>
 					<div className={styles.head}>
 						<div>
-							<h2 id={titleId}>AI 프로필 초안</h2>
+							<h2 id={titleId}>AI 프로필 초안 결과</h2>
 
 							<p>내용을 고쳐 쓸 수 있어요. 체크한 항목만 프로필에 들어가요.</p>
 						</div>
@@ -730,7 +783,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, dailyL
 									</div>
 
 									<div className={styles.color_body}>
-										{/* 색은 응답마다 달라 CSS 모듈에 못 박을 수 없다 — 인라인이 정당한 유일한 자리 */}
+										{/* 색은 응답마다 달라 CSS 모듈에 못 박을 수 없다 - 인라인이 정당한 유일한 자리 */}
 										<span className={styles.color_swatch} style={{backgroundColor: promptResult.color}} aria-hidden="true"></span>
 
 										<div className={styles.color_text}>

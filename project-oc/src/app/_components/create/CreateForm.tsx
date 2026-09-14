@@ -24,9 +24,11 @@ interface CreateFormProps {
 	setValues: UseFormSetValues<CreateCharFormInputType>;
 	errors: FieldErrors<CreateCharFormInputType>;
 	isSubmitting: boolean;
+	/** 오늘 남은 AI 초안 횟수. ImageUploadField를 거쳐 초안 모달이 쓴다. */
+	aiDraftRemaining: number;
 }
 
-export default function CreateForm({control, register, handleSubmit, setError, setValue, setValues, errors, isSubmitting}: CreateFormProps) {
+export default function CreateForm({control, register, handleSubmit, setError, setValue, setValues, errors, isSubmitting, aiDraftRemaining}: CreateFormProps) {
 	const router = useRouter();
 
 	const aiHeadingId = useId();
@@ -101,7 +103,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 
 	return (
 		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-			<ImageUploadField control={control} errors={errors} setValue={setValue} setValues={setValues} />
+			<ImageUploadField control={control} errors={errors} setValue={setValue} setValues={setValues} aiDraftRemaining={aiDraftRemaining} />
 
 			<CoreInfoSection control={control} errors={errors} />
 

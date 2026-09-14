@@ -30,9 +30,11 @@ interface ImageUploadFieldProps {
 	errors: FieldErrors<CreateCharFormInputType>;
 	setValue: UseFormSetValue<CreateCharFormInputType>;
 	setValues: UseFormSetValues<CreateCharFormInputType>;
+	/** 서버가 알려준 오늘 남은 AI 초안 횟수. 모달이 여기서 출발해 스스로 줄인다. */
+	aiDraftRemaining: number;
 }
 
-export default function ImageUploadField({control, errors, setValue, setValues}: ImageUploadFieldProps) {
+export default function ImageUploadField({control, errors, setValue, setValues, aiDraftRemaining}: ImageUploadFieldProps) {
 	const titleId = useId();
 
 	const [openedModal, setOpenedModal] = useState<"image" | "prompt" | null>(null);
@@ -122,7 +124,7 @@ export default function ImageUploadField({control, errors, setValue, setValues}:
 
 			<ImageUploadModal ref={imageModalRef} open={openedModal === "image"} onClose={() => setOpenedModal(null)} onApply={handleApply} />
 
-			<CreatePromptModal open={openedModal === "prompt"} onClose={imagePromptResultApply} remainingToday={10} dailyLimit={10} currentLayout={layout} setValuesByForm={setValues} />
+			<CreatePromptModal open={openedModal === "prompt"} onClose={imagePromptResultApply} remainingToday={aiDraftRemaining} currentLayout={layout} setValuesByForm={setValues} />
 		</section>
 	);
 }
