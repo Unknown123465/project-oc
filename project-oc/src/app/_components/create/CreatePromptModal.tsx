@@ -113,7 +113,7 @@ function formatHexAsRgb(hex: string): string {
 
    fields는 참고 이미지만 보낸 요청이면 통째로 null이다. 그때도 항목들은 undefined가
    아니라 null이어야 하므로 ?? null로 받는다. */
-function toFormValues(result: CreatePromptResultFormType) {
+function toFormValues(result: CreatePromptResultFormType, imageFile: File | null) {
 	const fieldEntries = CHAR_FIELD_KEY_LIST.map((key) => [key, result.fields?.[key].value ?? null] as const);
 
 	const key: CharFieldSelectKey[] = fieldEntries.filter((entries) => entries[1] !== null).map((entries) => entries[0]);
@@ -128,7 +128,7 @@ function toFormValues(result: CreatePromptResultFormType) {
 			charProfileLayout: result.layout?.type ?? null,
 			charImageFrame: null,
 			charColor: result.color,
-			charImage: null,
+			charImage: imageFile,
 		},
 		key,
 	};
@@ -514,7 +514,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 				throw new Error(result.message);
 			}
 
-			const formValues = toFormValues(result.result);
+			const formValues = toFormValues(result.result, imageFile);
 
 			/* 한 번 썼으니 하나 줄인다. 서버가 남은 횟수를 알려주면 그 값이 우선이다 —
 			   다른 탭에서 쓴 횟수까지 반영된 수는 서버만 안다. */

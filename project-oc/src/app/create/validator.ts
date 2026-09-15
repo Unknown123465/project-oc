@@ -97,7 +97,7 @@ export type CreateCharFormInputType = z.input<typeof createCharForm>;
    다른 건 이미지 관련 세 개뿐이다: 여기서는 "선택 안 함"이 빈 문자열이 아니라 null이고,
    charImage는 아직 자르기 전이라 필수가 아니다. */
 export const createPromptForm = z.object({
-	charName: createCharForm.shape.charName,
+	charName: createCharForm.shape.charName.nullable(),
 	charImage: z.instanceof(Blob).nullable(),
 	charProfileLayout: z.enum(["h", "v", "s"], "이미지 유형을 선택해 주세요.").nullable(),
 	charImageFrame: z.enum(["square", "circle"], "이미지 프레임을 선택해 주세요.").nullable(),
@@ -112,7 +112,6 @@ export const createPromptForm = z.object({
 	charHeight: createCharForm.shape.charHeight.nullable(),
 	charBirthplace: createCharForm.shape.charBirthplace.nullable(),
 	charMbti: createCharForm.shape.charMbti.nullable(),
-
 	charColor: z
 		.string()
 		.regex(/^#[0-9a-f]{6}$/i, "퍼스널 컬러가 올바르지 않아요. HEX로 입력해 주세요.")
@@ -303,7 +302,9 @@ export const createPromptResultForm = z.object({
 			type: z.enum(["h", "v", "s"]).describe('프로필 카드에 어울리는 이미지 유형. "h"=가로로 긴 구도, "v"=세로로 긴 전신, "s"=정사각형(얼굴 위주).'),
 			/* 고르는 주체는 사용자다. 모델이 "선택했습니다"로 끝맺으면 화면의 "○○을 추천해요"
 			   제목과 어긋나고, 이미 정해진 일처럼 읽힌다. 어미를 문구로 못박아 둔다. */
-			reason: clippedText(LAYOUT_REASON_MAX_LENGTH).describe(`그 유형을 왜 추천하는지. ${LAYOUT_REASON_MAX_LENGTH}자 이내 한 문장이며 "~추천합니다"로 끝맺는다. "선택했습니다", "정했습니다"처럼 이미 결정된 것처럼 쓰지 않는다.`),
+			reason: clippedText(LAYOUT_REASON_MAX_LENGTH).describe(
+				`그 유형을 왜 추천하는지. ${LAYOUT_REASON_MAX_LENGTH}자 이내 한 문장이며 "~추천합니다"로 끝맺는다. "선택했습니다", "정했습니다"처럼 이미 결정된 것처럼 쓰지 않는다.`,
+			),
 			fx: ratio("잘라도 반드시 남아야 하는 지점(보통 얼굴 중심)의 가로 위치. 이미지 왼쪽 끝이 0, 오른쪽 끝이 1."),
 			fy: ratio("같은 지점의 세로 위치. 이미지 위쪽 끝이 0, 아래쪽 끝이 1."),
 		})
