@@ -325,7 +325,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 
 	/* 입력 안내와 오류는 같은 자리를 쓴다. 소진 상태에서는 errorMessage가 항상 채워져
 	   있으므로 안내가 그 자리를 뺏지 않도록 여기서 함께 판단한다. */
-	const showInputHint: boolean = !isExhausted && (promptDescription.trim().length > 0 || imageFile !== null) && !errorMessage;
+	const showInputHint: boolean = !isExhausted && promptDescription.trim().length === 0 && imageFile === null && !errorMessage;
 
 	const requestClose = () => {
 		dialogRef.current?.close();
