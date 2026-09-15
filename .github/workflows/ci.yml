@@ -59,5 +59,12 @@ jobs:
             - name: 테스트
               run: npm test
 
+            # src/prisma/generated는 git에 커밋되어 있다. 스키마만 고치고 재생성을
+            # 깜빡하면 배포된 클라이언트가 실제 테이블과 어긋나므로 여기서 막는다.
+            - name: Prisma 클라이언트 최신 여부
+              run: |
+                  npx prisma generate
+                  test -z "$(git status --porcelain)"
+
             - name: 빌드
               run: npm run build
