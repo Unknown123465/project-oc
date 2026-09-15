@@ -59,5 +59,20 @@ jobs:
             - name: 테스트
               run: npm test
 
+            # src/prisma/generated는 git에 커밋되어 있다. 스키마만 고치고 재생성을
+            # 깜빡하면 배포된 클라이언트가 실제 테이블과 어긋나므로 여기서 막는다.
+            # 검사 범위를 생성 폴더로 좁힌 이유는 앞 단계(typegen·빌드)가 남기는 파일을
+            # 이 단계의 실패로 오해하지 않기 위해서다. --porcelain이라 새 파일도 잡힌다.
+            - name: Prisma 클라이언트 최신 여부
+              run: |
+                  npx prisma generate
+                  changed=$(git status --porcelain -- src/prisma/generated)
+                  if [ -n "$changed" ]; then
+                      echo "생성물이 스키마와 어긋납니다. prisma generate 후 커밋하세요."
+                      echo "$changed"
+                      git diff -- src/prisma/generated
+                      exit 1
+                  fi
+
             - name: 빌드
               run: npm run build

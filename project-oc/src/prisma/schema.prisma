@@ -8,16 +8,35 @@ generator client {
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String?
-  username      String?         @unique
-  email         String?         @unique
+  username      String?     @unique
+  email         String?     @unique
   emailVerified DateTime?
   image         String?
   // Credentials 가입자만 채워지는 bcrypt 해시. 소셜 가입자는 null로 남는다.
-  password      String?         @db.VarChar(100)
+  password      String?     @db.VarChar(100)
   accounts      Account[]
   characters    Character[]
+
+  // AI 프로필 초안 하루 사용량. Account가 아니라 User에 두는 이유는 Auth.js의 모델
+  // 구분이다 — Account는 "한 사람이 연결한 로그인 수단 하나"라서 구글·네이버를 함께
+  // 연결하면 한 사람에게 행이 여러 개 생긴다. 거기에 한도를 두면 계정을 더 연결하는
+  // 것만으로 한도가 늘어난다. 사람 한 명을 가리키는 건 User다.
+  //
+  // 자정 초기화를 크론으로 돌리지 않으려고 "언제의 사용량인지"를 같이 들고 있는다.
+  // aiDraftUsedOn은 한국 시간 기준 날짜(자정 경계)이고, 요청이 올 때 오늘 날짜와
+  // 다르면 그 자리에서 0부터 다시 센다. 서버가 UTC로 돌아도 경계가 흔들리지 않는다.
+  aiDraftUsedOn     DateTime? @db.Date
+  aiDraftUsedCount  Int       @default(0) @db.TinyInt
+  // 실제로 AI를 부른 횟수. aiDraftUsedCount와 달리 환불해도 줄지 않는다.
+  // 이게 없으면 하루 한도가 호출 수를 못 묶는다 — 실패하면 횟수를 돌려주므로,
+  // 안전 필터에 걸리는 입력을 반복하면 차감과 환불이 무한히 돌면서 호출만 계속 나간다.
+  aiDraftCallCount  Int       @default(0) @db.TinyInt
+  // 마지막 호출 시각. 짧은 간격으로 몰아치는 요청을 막는 데만 쓴다.
+  aiDraftLastCallAt DateTime?
+
+  aiHistories AiHistory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -44,6 +63,36 @@ model Account {
 
   @@unique([provider, providerAccountId])
   @@index([userId])
+}
+
+// AI 프로필 초안을 한 번 쓸 때마다 남기는 기록. User의 aiDraftUsedCount는 "지금 몇 번
+// 남았나"를 빨리 읽으려고 둔 요약값이고, 그 숫자가 왜 그렇게 됐는지는 이 표에만 남는다.
+//
+// 차감과 환불을 모두 적는 이유는 환불이 실제로 일어나기 때문이다 — AI 호출이 실패하면
+// 사용자가 결과를 못 받았으므로 횟수를 돌려줘야 하는데, 기록이 없으면 나중에
+// "왜 내 횟수가 줄었냐"는 문의에 답할 수가 없다.
+//
+// updatedDt를 두지 않는 건 의도다. 이미 일어난 일의 기록이라 나중에 고칠 일이 없고,
+// 고쳐야 한다면 그건 새 행(환불)으로 남아야 한다.
+model AiHistory {
+  id     BigInt  @id @default(autoincrement())
+  userId String  @db.VarChar(191)
+  // "use" 또는 "refund"만 들어간다. 세부 사유는 reason에 따로 담아, action만 보고도
+  // 무슨 일이 있었는지(썼다/돌려줬다)가 하이픈 없이 바로 읽히게 한다.
+  // 넣을 수 있는 값은 validator.ts의 AI_HISTORY_ACTION_LIST가 정한다. DB ENUM이 아니라
+  // 문자열이라 DB는 아무 값이나 받는다 — 기록을 남기는 쪽에서 반드시 그 목록으로 검사할 것.
+  action String  @db.VarChar(6)
+  // action이 "refund"일 때만 값이 있다("use"는 null). Gemini의 finishReason을 케밥
+  // 소문자로 옮기거나("safety", "max-tokens") 서버 쪽 사유("server-error", "blocked")다.
+  // 가장 긴 값이 "finish-reason-unspecified"(25자)라 길이가 25다.
+  reason String? @db.VarChar(25)
+  user   User    @relation(fields: [userId], references: [id])
+
+  createdDt DateTime @default(now()) @db.DateTime(0)
+
+  // "이 사용자가 오늘 무엇을 했나"가 거의 유일한 조회 형태다. 최신순으로 읽는다.
+  @@index([userId, createdDt(sort: Desc)], map: "idx_ai_history_user_created")
+  @@map("aihistory")
 }
 
 model VerificationToken {

@@ -17,13 +17,19 @@ const MOBILE_QUERY = "(width < 876px)";
 /* CreateForm(입력)과 LivePreview(실시간 미리보기)가 같은 form 인스턴스를 봐야 해서
    두 컴포넌트의 공통 조상인 이곳에서 useForm을 만든다. page.tsx에 두면 페이지가
    클라이언트 컴포넌트가 되어 로그인 가드용 await auth()와 metadata를 쓸 수 없다. */
-export default function CreateWorkspace() {
+interface CreateWorkspaceProps {
+	/** 서버가 알려준 오늘 남은 AI 초안 횟수. 초안 모달까지 그대로 내려간다. */
+	aiDraftRemaining: number;
+}
+
+export default function CreateWorkspace({aiDraftRemaining}: CreateWorkspaceProps) {
 	const {
 		control,
 		register,
 		handleSubmit,
 		setError,
 		setValue,
+		setValues,
 		formState: {errors, isSubmitting},
 	} = useForm<CreateCharFormInputType, unknown, CreateCharFormType>({
 		defaultValues: {
@@ -73,7 +79,17 @@ export default function CreateWorkspace() {
 
 			<div className={styles.layout}>
 				{showForm ? (
-					<CreateForm control={control} register={register} handleSubmit={handleSubmit} setError={setError} setValue={setValue} errors={errors} isSubmitting={isSubmitting} />
+					<CreateForm
+						control={control}
+						register={register}
+						handleSubmit={handleSubmit}
+						setError={setError}
+						setValue={setValue}
+						setValues={setValues}
+						errors={errors}
+						isSubmitting={isSubmitting}
+						aiDraftRemaining={aiDraftRemaining}
+					/>
 				) : null}
 
 				{showPreview ? <LivePreview control={control} /> : null}

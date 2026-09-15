@@ -7,7 +7,7 @@ import CoreInfoSection from "./CoreInfoSection";
 import ColorSection from "./ColorSection";
 import ChoiceSection from "./ChoiceSection";
 import {SubmitButton, NormalButton} from "@/components/ui/button";
-import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue} from "react-hook-form";
+import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue, UseFormSetValues} from "react-hook-form";
 import {createCharForm, type CreateCharFormInputType} from "@/app/create/validator";
 import {useId} from "react";
 import {useRouter} from "next/navigation";
@@ -21,11 +21,14 @@ interface CreateFormProps {
 	handleSubmit: UseFormHandleSubmit<CreateCharFormInputType>;
 	setError: UseFormSetError<CreateCharFormInputType>;
 	setValue: UseFormSetValue<CreateCharFormInputType>;
+	setValues: UseFormSetValues<CreateCharFormInputType>;
 	errors: FieldErrors<CreateCharFormInputType>;
 	isSubmitting: boolean;
+	/** 오늘 남은 AI 초안 횟수. ImageUploadField를 거쳐 초안 모달이 쓴다. */
+	aiDraftRemaining: number;
 }
 
-export default function CreateForm({control, register, handleSubmit, setError, setValue, errors, isSubmitting}: CreateFormProps) {
+export default function CreateForm({control, register, handleSubmit, setError, setValue, setValues, errors, isSubmitting, aiDraftRemaining}: CreateFormProps) {
 	const router = useRouter();
 
 	const aiHeadingId = useId();
@@ -100,7 +103,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 
 	return (
 		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-			<ImageUploadField control={control} errors={errors} setValue={setValue} />
+			<ImageUploadField control={control} errors={errors} setValue={setValue} setValues={setValues} aiDraftRemaining={aiDraftRemaining} />
 
 			<CoreInfoSection control={control} errors={errors} />
 

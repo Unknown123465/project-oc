@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Account: 'Account',
+  AiHistory: 'AiHistory',
   VerificationToken: 'VerificationToken',
   Character: 'Character'
 } as const
@@ -81,6 +82,10 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   password: 'password',
+  aiDraftUsedOn: 'aiDraftUsedOn',
+  aiDraftUsedCount: 'aiDraftUsedCount',
+  aiDraftCallCount: 'aiDraftCallCount',
+  aiDraftLastCallAt: 'aiDraftLastCallAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -107,6 +112,17 @@ export const AccountScalarFieldEnum = {
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const AiHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  reason: 'reason',
+  createdDt: 'createdDt'
+} as const
+
+export type AiHistoryScalarFieldEnum = (typeof AiHistoryScalarFieldEnum)[keyof typeof AiHistoryScalarFieldEnum]
 
 
 export const VerificationTokenScalarFieldEnum = {
@@ -199,6 +215,15 @@ export const AccountOrderByRelevanceFieldEnum = {
 } as const
 
 export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFieldEnum)[keyof typeof AccountOrderByRelevanceFieldEnum]
+
+
+export const AiHistoryOrderByRelevanceFieldEnum = {
+  userId: 'userId',
+  action: 'action',
+  reason: 'reason'
+} as const
+
+export type AiHistoryOrderByRelevanceFieldEnum = (typeof AiHistoryOrderByRelevanceFieldEnum)[keyof typeof AiHistoryOrderByRelevanceFieldEnum]
 
 
 export const VerificationTokenOrderByRelevanceFieldEnum = {

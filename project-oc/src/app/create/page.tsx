@@ -2,6 +2,7 @@ import styles from "./page.module.css";
 import CreateWorkspace from "../_components/create/CreateWorkspace";
 import {auth} from "@/auth/auth";
 import {redirect} from "next/navigation";
+import {getAiDraftRemaining} from "./aiDraftUsage";
 
 export default async function Create() {
 	const authInfo = await auth();
@@ -9,6 +10,9 @@ export default async function Create() {
 	if (authInfo === null) {
 		return redirect("/", "replace");
 	}
+
+	/* 화면은 이 값에서 출발하고, 이후로는 서버 액션이 돌려주는 수로 맞춘다. */
+	const aiDraftRemaining: number = await getAiDraftRemaining(authInfo.user?.id);
 
 	return (
 		<main className={styles.main}>
@@ -18,7 +22,7 @@ export default async function Create() {
 				<p className={styles.subtitle}>핵심 정보부터 작성하세요. 오른쪽 프로필은 입력하는 즉시 완성됩니다.</p>
 			</section>
 
-			<CreateWorkspace />
+			<CreateWorkspace aiDraftRemaining={aiDraftRemaining} />
 		</main>
 	);
 }

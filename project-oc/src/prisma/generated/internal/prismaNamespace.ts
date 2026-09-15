@@ -399,6 +399,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Account: 'Account',
+  AiHistory: 'AiHistory',
   VerificationToken: 'VerificationToken',
   Character: 'Character'
 } as const
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "verificationToken" | "character"
+    modelProps: "user" | "account" | "aiHistory" | "verificationToken" | "character"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -549,6 +550,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AccountCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AccountCountAggregateOutputType> | number
+        }
+      }
+    }
+    AiHistory: {
+      payload: Prisma.$AiHistoryPayload<ExtArgs>
+      fields: Prisma.AiHistoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiHistoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiHistoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiHistoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiHistoryPayload>
+        }
+        findFirst: {
+          args: Prisma.AiHistoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiHistoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiHistoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiHistoryPayload>
+        }
+        findMany: {
+          args: Prisma.AiHistoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiHistoryPayload>[]
+        }
+        create: {
+          args: Prisma.AiHistoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiHistoryPayload>
+        }
+        createMany: {
+          args: Prisma.AiHistoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.AiHistoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiHistoryPayload>
+        }
+        update: {
+          args: Prisma.AiHistoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiHistoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.AiHistoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiHistoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.AiHistoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiHistoryPayload>
+        }
+        aggregate: {
+          args: Prisma.AiHistoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiHistory>
+        }
+        groupBy: {
+          args: Prisma.AiHistoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiHistoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiHistoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiHistoryCountAggregateOutputType> | number
         }
       }
     }
@@ -731,6 +798,10 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   password: 'password',
+  aiDraftUsedOn: 'aiDraftUsedOn',
+  aiDraftUsedCount: 'aiDraftUsedCount',
+  aiDraftCallCount: 'aiDraftCallCount',
+  aiDraftLastCallAt: 'aiDraftLastCallAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -757,6 +828,17 @@ export const AccountScalarFieldEnum = {
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const AiHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  reason: 'reason',
+  createdDt: 'createdDt'
+} as const
+
+export type AiHistoryScalarFieldEnum = (typeof AiHistoryScalarFieldEnum)[keyof typeof AiHistoryScalarFieldEnum]
 
 
 export const VerificationTokenScalarFieldEnum = {
@@ -849,6 +931,15 @@ export const AccountOrderByRelevanceFieldEnum = {
 } as const
 
 export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFieldEnum)[keyof typeof AccountOrderByRelevanceFieldEnum]
+
+
+export const AiHistoryOrderByRelevanceFieldEnum = {
+  userId: 'userId',
+  action: 'action',
+  reason: 'reason'
+} as const
+
+export type AiHistoryOrderByRelevanceFieldEnum = (typeof AiHistoryOrderByRelevanceFieldEnum)[keyof typeof AiHistoryOrderByRelevanceFieldEnum]
 
 
 export const VerificationTokenOrderByRelevanceFieldEnum = {
@@ -1113,6 +1204,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   account?: Prisma.AccountOmit
+  aiHistory?: Prisma.AiHistoryOmit
   verificationToken?: Prisma.VerificationTokenOmit
   character?: Prisma.CharacterOmit
 }

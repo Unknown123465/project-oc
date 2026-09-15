@@ -28,6 +28,11 @@ export type User = Prisma.UserModel
  */
 export type Account = Prisma.AccountModel
 /**
+ * Model AiHistory
+ * 
+ */
+export type AiHistory = Prisma.AiHistoryModel
+/**
  * Model VerificationToken
  * 
  */
