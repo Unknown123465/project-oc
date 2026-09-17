@@ -22,7 +22,7 @@ export async function getAiDraftEnabled(): Promise<boolean> {
 
 		const aiDraftEnabled: boolean | undefined = await globalConfig.get(AI_DRAFT_ENABLED);
 
-		return aiDraftEnabled === true || aiDraftEnabled === undefined;
+		return aiDraftEnabled === true;
 	} catch (err) {
 		console.warn("[globalConfig] AI_DRAFT_ENABLED 읽기 실패 - 켜짐으로 처리합니다.", err);
 
