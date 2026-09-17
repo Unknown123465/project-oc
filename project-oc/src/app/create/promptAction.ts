@@ -5,6 +5,7 @@ import z from "zod";
 
 import {
 	AI_DRAFT_CALL_LIMIT_MESSAGE,
+	AI_DRAFT_DISABLED_MESSAGE,
 	AI_DRAFT_EXHAUSTED_MESSAGE,
 	AI_DRAFT_TOO_FAST_MESSAGE,
 	type AiHistoryRefundReasonType,
@@ -17,6 +18,7 @@ import {
 import {PROMPT_SAMPLE_RESULT} from "./promptSample";
 import {auth} from "@/auth/auth";
 import {type ClaimRejection, claimAiDraft, refundAiDraft} from "./aiDraftUsage";
+import {getAiDraftEnabled} from "./globalConfig";
 
 const GOOGLE_AI_MODEL = "gemini-3.1-flash-lite" as const;
 
@@ -187,6 +189,15 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 				color: image ? PROMPT_SAMPLE_RESULT.color : null,
 				fields: profileText ? PROMPT_SAMPLE_RESULT.fields : null,
 			},
+		};
+	}
+
+	const aiDraftEnabled: boolean = await getAiDraftEnabled();
+
+	if (!aiDraftEnabled) {
+		return {
+			success: false,
+			message: AI_DRAFT_DISABLED_MESSAGE,
 		};
 	}
 

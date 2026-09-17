@@ -20,9 +20,10 @@ const MOBILE_QUERY = "(width < 876px)";
 interface CreateWorkspaceProps {
 	/** 서버가 알려준 오늘 남은 AI 초안 횟수. 초안 모달까지 그대로 내려간다. */
 	aiDraftRemaining: number;
+	aiDraftEnabled: boolean;
 }
 
-export default function CreateWorkspace({aiDraftRemaining}: CreateWorkspaceProps) {
+export default function CreateWorkspace({aiDraftRemaining, aiDraftEnabled}: CreateWorkspaceProps) {
 	const {
 		control,
 		register,
@@ -89,6 +90,7 @@ export default function CreateWorkspace({aiDraftRemaining}: CreateWorkspaceProps
 						errors={errors}
 						isSubmitting={isSubmitting}
 						aiDraftRemaining={aiDraftRemaining}
+						aiDraftEnabled={aiDraftEnabled}
 					/>
 				) : null}
 

@@ -152,6 +152,10 @@ export const AI_DRAFT_MIN_CALL_INTERVAL_SECONDS = 3;
 export const AI_DRAFT_CALL_LIMIT_MESSAGE = "오늘은 더 이상 초안을 만들 수 없어요. 내일 다시 시도해 주세요.";
 export const AI_DRAFT_TOO_FAST_MESSAGE = "조금 전에 만든 요청이 있어요. 잠시 뒤에 다시 시도해 주세요.";
 
+/* 운영자가 킬 스위치로 껐을 때의 안내. 페이지의 비활성 버튼 옆과 서버 액션 거절
+   응답이 같은 문구를 써야 해서 EXHAUSTED_MESSAGE와 같은 이유로 여기 둔다. */
+export const AI_DRAFT_DISABLED_MESSAGE = "AI 초안 기능을 잠시 멈춰 두었어요. 프로필은 직접 입력해서 만들 수 있어요.";
+
 /* 초기화 기준은 한국 시간 자정이다. 서버가 어느 지역에서 돌든 경계가 같아야 해서
    시스템 시간대를 쓰지 않고 고정 오프셋으로 계산한다. 한국은 서머타임이 없어
    +9가 연중 고정이라 이 단순한 방식이 성립한다. */
