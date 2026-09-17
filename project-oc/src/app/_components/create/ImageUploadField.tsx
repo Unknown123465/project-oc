@@ -6,7 +6,7 @@ import ImageUploadModal, {type ImageUploadModalHandle} from "./ImageUploadModal"
 import CreatePromptModal from "./CreatePromptModal";
 import {useEffect, useId, useMemo, useRef, useState} from "react";
 import {Control, FieldErrors, UseFormSetValue, UseFormSetValues, useWatch} from "react-hook-form";
-import {CreateCharFormInputType} from "@/app/create/validator";
+import {AI_DRAFT_DISABLED_MESSAGE, CreateCharFormInputType} from "@/app/create/validator";
 import {IMAGE_FRAME_LABEL, IMAGE_TYPE_DEFINITIONS, type ImageFrame, type ImageType} from "@/app/create/imageEditor";
 import {ProfileLayout} from "./ProfileSheet";
 import {ActionButton} from "@/components/ui/button";
@@ -32,9 +32,10 @@ interface ImageUploadFieldProps {
 	setValues: UseFormSetValues<CreateCharFormInputType>;
 	/** 서버가 알려준 오늘 남은 AI 초안 횟수. 모달이 여기서 출발해 스스로 줄인다. */
 	aiDraftRemaining: number;
+	aiDraftEnabled: boolean;
 }
 
-export default function ImageUploadField({control, errors, setValue, setValues, aiDraftRemaining}: ImageUploadFieldProps) {
+export default function ImageUploadField({control, errors, setValue, setValues, aiDraftRemaining, aiDraftEnabled}: ImageUploadFieldProps) {
 	const titleId = useId();
 
 	const [openedModal, setOpenedModal] = useState<"image" | "prompt" | null>(null);
@@ -103,10 +104,12 @@ export default function ImageUploadField({control, errors, setValue, setValues, 
 				)}
 			</button>
 
-			<ActionButton styleType="attention" className={styles.ai_draft_button} disabled={openedModal !== null} onClick={() => setOpenedModal("prompt")}>
+			<ActionButton styleType="attention" className={styles.ai_draft_button} disabled={openedModal !== null || !aiDraftEnabled} onClick={() => setOpenedModal("prompt")}>
 				<i className="bi bi-stars" aria-hidden="true"></i>
 				AI로 프로필 초안 만들기
 			</ActionButton>
+
+			{!aiDraftEnabled ? <p className={styles.ai_draft_notice}>{AI_DRAFT_DISABLED_MESSAGE}</p> : null}
 
 			{imageURL !== null && layout !== "" ? (
 				<div className={styles.upload_meta}>

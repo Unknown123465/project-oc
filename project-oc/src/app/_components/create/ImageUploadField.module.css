@@ -59,6 +59,13 @@
 	}
 }
 
+.ai_draft_notice {
+	margin: 8px 0 0;
+	color: var(--muted);
+	font-size: 13px;
+	word-break: keep-all;
+}
+
 .upload_meta {
 	margin-top: 12px;
 	display: flex;
