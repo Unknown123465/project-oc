@@ -15,7 +15,6 @@ import {
 	createPromptResultForm,
 	toRefundReason,
 } from "./validator";
-import {PROMPT_SAMPLE_RESULT} from "./promptSample";
 import {auth} from "@/auth/auth";
 import {type ClaimRejection, claimAiDraft, refundAiDraft} from "./aiDraftUsage";
 import {getAiDraftEnabled} from "./globalConfig";
@@ -118,15 +117,6 @@ const PROMPT_RESULT_JSON_SCHEMA: unknown = z.toJSONSchema(createPromptResultForm
 	reused: "inline",
 });
 
-/* 실제 요청을 보내지 않고 표본 응답을 돌려주는 임시 스위치. 크레딧이 없거나 키가 없는
-   동안에도 결과 화면 배선을 이어서 만들려고 둔다.
-
-   조건이 둘인 이유는 안전장치다 - 운영 빌드에 플래그가 잘못 실려도 NODE_ENV가 막는다.
-   이름에 NEXT_PUBLIC_을 붙이지 않아 클라이언트 번들에도 들어가지 않는다.
-
-   TODO: 실제 응답으로 검증이 끝나면 이 상수와 아래 분기, promptSample.ts를 함께 지운다. */
-const USE_SAMPLE_RESULT: boolean = process.env.NODE_ENV !== "production" && process.env.AI_DRAFT_USE_SAMPLE === "1";
-
 /* 모델 자체의 안전 필터에 걸린 종료 사유. 시스템 프롬프트로는 못 넘는 선이라
    "설명을 고쳐 달라"고 안내하는 것 외에 서버가 할 수 있는 일이 없다. */
 const BLOCKED_FINISH_REASONS: readonly FinishReason[] = [FinishReason.SAFETY, FinishReason.PROHIBITED_CONTENT, FinishReason.BLOCKLIST, FinishReason.SPII];
@@ -173,24 +163,6 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 	const {profile, image} = check.data;
 
 	const profileText: string = profile?.trim() ?? "";
-
-	/* 표본도 실제 응답과 같은 규칙을 지킨다 - 설명을 안 보냈으면 fields가, 이미지를 안
-	   보냈으면 layout·color가 null이다. 그래야 화면의 null 처리까지 같이 검증된다.
-	   지연을 한 번 주는 건 "만드는 중" 상태가 눈에 보이게 하려는 것이다. */
-	if (USE_SAMPLE_RESULT) {
-		console.warn("[createPromptAction] AI_DRAFT_USE_SAMPLE=1 - 실제 요청 없이 표본 응답을 돌려줍니다.");
-
-		await new Promise((res) => setTimeout(res, 1000));
-
-		return {
-			success: true,
-			result: {
-				layout: image ? PROMPT_SAMPLE_RESULT.layout : null,
-				color: image ? PROMPT_SAMPLE_RESULT.color : null,
-				fields: profileText ? PROMPT_SAMPLE_RESULT.fields : null,
-			},
-		};
-	}
 
 	const aiDraftEnabled: boolean = await getAiDraftEnabled();
 
