@@ -91,8 +91,7 @@ type ActionResult =
 			result: CreatePromptResultFormType;
 			/* 차감하고 남은 오늘 사용 횟수. 화면은 이 값이 오면 그걸 쓰고, 없으면 자기가
 			   하나 줄여서 버틴다. 여러 탭을 띄워 두면 화면의 셈이 어긋나므로 결국 서버가
-			   말해 주는 쪽이 맞다.
-			   TODO: 서버 차감 로직에서 채울 것. 지금은 화면이 자체 계산으로 동작한다. */
+			   말해 주는 쪽이 맞다. */
 			remainingToday?: number;
 	  }
 	| {
