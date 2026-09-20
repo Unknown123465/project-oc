@@ -11,6 +11,7 @@ import {
 	toRefundReason,
 } from "./validator";
 import {FinishReason} from "@google/genai";
+import {resultFixture} from "./promptResult.fixture";
 
 /* AI 응답 스키마는 사람이 채운 폼이 아니라 모델이 만든 JSON을 받는 자리다. 그래서
    "틀리면 거부"가 아니라 "고칠 수 있으면 고쳐서 받는다"로 동작한다 — 응답 하나가
@@ -18,29 +19,6 @@ import {FinishReason} from "@google/genai";
 
    여기서 확인하는 건 그 "고쳐 받는" 동작이다. 화면에서는 눈에 잘 안 띄고(값이 조금
    달라질 뿐 오류가 나지 않는다) 모델 응답은 매번 달라 수동으로 재현하기 어렵다. */
-
-/** 스키마가 요구하는 최소 형태. 확인할 항목만 덮어써서 쓴다. */
-function resultFixture(override: Record<string, unknown> = {}) {
-	return {
-		layout: {type: "s", reason: "정사각형을 추천합니다", fx: 0.5, fy: 0.5},
-		color: "#7c5cff",
-		fields: {
-			charName: {value: "세라핀"},
-			charMessage: {value: "한 줄 소개"},
-			charLike: {value: null},
-			charHate: {value: null},
-			charPersonality: {value: null},
-			charTmi: {value: null},
-			charKind: {value: null},
-			charAge: {value: null},
-			charBirthday: {value: null},
-			charHeight: {value: null},
-			charBirthplace: {value: null},
-			charMbti: {value: null},
-		},
-		...override,
-	};
-}
 
 function parseResult(override: Record<string, unknown> = {}) {
 	const check = createPromptResultForm.safeParse(resultFixture(override));
