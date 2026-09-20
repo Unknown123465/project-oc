@@ -315,7 +315,7 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 		responseCheck.data.layout = null;
 	}
 
-	if (!image && !responseCheck.data.color) {
+	if (!image && responseCheck.data.color) {
 		console.warn("[createPromptAction] 프로필 이미지가 없음에도 aiResponse에 color가 채워짐");
 
 		responseCheck.data.color = null;
