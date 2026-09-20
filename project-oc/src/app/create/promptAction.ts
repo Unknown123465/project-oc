@@ -91,8 +91,7 @@ type ActionResult =
 			result: CreatePromptResultFormType;
 			/* 차감하고 남은 오늘 사용 횟수. 화면은 이 값이 오면 그걸 쓰고, 없으면 자기가
 			   하나 줄여서 버틴다. 여러 탭을 띄워 두면 화면의 셈이 어긋나므로 결국 서버가
-			   말해 주는 쪽이 맞다.
-			   TODO: 서버 차감 로직에서 채울 것. 지금은 화면이 자체 계산으로 동작한다. */
+			   말해 주는 쪽이 맞다. */
 			remainingToday?: number;
 	  }
 	| {
@@ -292,6 +291,34 @@ export default async function createPromptAction(data: CreatePromptActionFormTyp
 		console.error("[createPromptAction] 응답 형식 불일치", responseCheck.error.issues);
 
 		return await failWithRefund("server-error", RETRY_MESSAGE);
+	}
+
+	/* 캐릭터 설명 또는 캐릭터 이미지를 안 넣었는데 그 입력에 딸린 항목(설명: fields,
+	   이미지: layout, color)이 aiResponse로 들어오면 해당 key를 null로 할당한다.
+	   재할당하지 않으면 사용자 화면에서 해당 요소가 출력되고, 클라이언트 컴포넌트는
+	   이 서버 액션에서 반환하는 값을 그대로 적용하니 서버 액션에서 막는다. 프롬프트에
+	   설명이 없으면 null로 반환하라고 지시했는데, 모델이 지시를 지키지 않은 사례가
+	   있었다. 지시로는 못 막으니 여기서 막는다.
+
+	   사용자가 보낸 입력에 대한 결과는 정상이므로 오류로 보지 않는다. console.warn은
+	   모델이 지시를 얼마나 자주 어기는지 세기 위한 것이다. 프라이버시를 위해 사용자
+	   설명이 로그에 찍히지 않아야 하므로 입력값은 로그에 출력하지 않는다. */
+	if (!profileText && responseCheck.data.fields) {
+		console.warn("[createPromptAction] 프로필 설명이 없음에도 aiResponse에 fields가 채워짐");
+
+		responseCheck.data.fields = null;
+	}
+
+	if (!image && responseCheck.data.layout) {
+		console.warn("[createPromptAction] 프로필 이미지가 없음에도 aiResponse에 layout이 채워짐");
+
+		responseCheck.data.layout = null;
+	}
+
+	if (!image && responseCheck.data.color) {
+		console.warn("[createPromptAction] 프로필 이미지가 없음에도 aiResponse에 color가 채워짐");
+
+		responseCheck.data.color = null;
 	}
 
 	const {layout, color, fields} = responseCheck.data;

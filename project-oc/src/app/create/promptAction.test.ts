@@ -1,5 +1,7 @@
 import {afterEach, beforeEach, describe, expect, it, vi} from "vitest";
+import {FinishReason} from "@google/genai";
 import {AI_DRAFT_DISABLED_MESSAGE, AI_DRAFT_EXHAUSTED_MESSAGE} from "./validator";
+import {resultFixture} from "./promptResult.fixture";
 
 /* 킬 스위치가 서버 액션의 어느 자리에 있는지를 고정한다. 로그인·입력 검증 뒤,
    횟수 차감 앞. 차감 뒤로 밀리면 꺼진 동안 눌러 본 사용자의 하루 횟수가 줄어든다. */
@@ -76,5 +78,110 @@ describe("킬 스위치 관문", () => {
 
 		expect(result).toMatchObject({success: false});
 		expect(mocks.getAiDraftEnabled).not.toHaveBeenCalled();
+	});
+});
+
+/* 이슈 #41. 보내지 않은 입력에 대한 응답 항목은 서버가 버려야 한다 — 프롬프트에
+   "설명이 없으면 fields는 null" 지시가 있어도 모델이 어겼고(이미지만 보냈는데 종족
+   "곰"), 화면은 서버가 준 값을 그대로 그리므로 여기가 마지막 방어선이다.
+
+   버리는 것은 오류가 아니다. 사용자가 보낸 쪽의 결과는 정상이라 성공 응답이고 횟수도
+   그대로 차감된다. 그래서 refundAiDraft가 불리지 않는 것까지 같이 본다. */
+describe("보내지 않은 입력에 대한 응답 항목은 버린다", () => {
+	const REMAINING: number = 9;
+	const IMAGE: File = new File([new Uint8Array([0x89, 0x50, 0x4e, 0x47])], "frosty.png", {type: "image/png"});
+
+	/* 모델이 세 항목을 전부 채워 돌려준 응답. 어떤 입력을 보냈든 같은 응답을 주게 해서,
+	   무엇이 남고 무엇이 버려지는지가 입력 조합만으로 갈리게 한다. */
+	function respondWithEverything() {
+		mocks.generateContent.mockResolvedValue({
+			text: JSON.stringify(resultFixture()),
+			candidates: [{finishReason: FinishReason.STOP}],
+		});
+	}
+
+	beforeEach(() => {
+		mocks.getAiDraftEnabled.mockResolvedValue(true);
+		mocks.claimAiDraft.mockResolvedValue({ok: true, remaining: REMAINING});
+		respondWithEverything();
+	});
+
+	it("설명만 보내면 layout과 color를 null로 바꾸고 fields는 남긴다", async () => {
+		const {default: createPromptAction} = await import("./promptAction");
+		const result = await createPromptAction({profile: "곰 캐릭터 프로스티"});
+
+		expect(result.success).toBe(true);
+
+		if (!result.success) {
+			return;
+		}
+
+		expect(result.result.layout).toBeNull();
+		expect(result.result.color).toBeNull();
+		expect(result.result.fields?.charName.value).toBe("세라핀");
+	});
+
+	it("이미지만 보내면 fields를 null로 바꾸고 layout과 color는 남긴다", async () => {
+		const {default: createPromptAction} = await import("./promptAction");
+		const result = await createPromptAction({image: IMAGE});
+
+		expect(result.success).toBe(true);
+
+		if (!result.success) {
+			return;
+		}
+
+		expect(result.result.fields).toBeNull();
+		expect(result.result.layout?.type).toBe("s");
+		expect(result.result.color).toBe("#7c5cff");
+	});
+
+	/* 공백뿐인 설명은 contents에 실리지 않으므로 "설명 없음"과 같아야 한다.
+	   profile 유무로 판정하면 이 경우가 새어 나간다. */
+	it("공백만 있는 설명은 설명이 없는 것으로 보고 fields를 버린다", async () => {
+		const {default: createPromptAction} = await import("./promptAction");
+		const result = await createPromptAction({profile: "   ", image: IMAGE});
+
+		expect(result.success).toBe(true);
+
+		if (!result.success) {
+			return;
+		}
+
+		expect(result.result.fields).toBeNull();
+		expect(result.result.layout).not.toBeNull();
+	});
+
+	it("둘 다 보내면 아무것도 버리지 않는다", async () => {
+		const {default: createPromptAction} = await import("./promptAction");
+		const result = await createPromptAction({profile: "곰 캐릭터 프로스티", image: IMAGE});
+
+		expect(result.success).toBe(true);
+
+		if (!result.success) {
+			return;
+		}
+
+		expect(result.result.fields).not.toBeNull();
+		expect(result.result.layout).not.toBeNull();
+		expect(result.result.color).not.toBeNull();
+	});
+
+	it("버리는 것은 오류가 아니다 — 환불하지 않고 차감된 남은 횟수를 그대로 돌려준다", async () => {
+		const {default: createPromptAction} = await import("./promptAction");
+		const result = await createPromptAction({image: IMAGE});
+
+		expect(result).toMatchObject({success: true, remainingToday: REMAINING});
+		expect(mocks.refundAiDraft).not.toHaveBeenCalled();
+	});
+
+	/* 조용히 버리면 모델이 지시를 얼마나 자주 어기는지 알 길이 없다. 값은 찍지 않고
+	   어느 항목을 버렸는지만 남긴다 — 사용자 설명이 로그에 실리면 안 된다. */
+	it("버린 항목마다 경고를 한 줄 남긴다", async () => {
+		const {default: createPromptAction} = await import("./promptAction");
+
+		await createPromptAction({profile: "곰 캐릭터 프로스티"});
+
+		expect(console.warn).toHaveBeenCalledTimes(2);
 	});
 });
