@@ -163,8 +163,7 @@ const adapter: Adapter = {
 export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
 	adapter,
 	providers,
-	debug: true,
-	secret: process.env.BETTER_AUTH_SECRET,
+	secret: process.env.AUTH_SECRET,
 	/* adapter가 있으면 기본값이 database이지만 Credentials는 그 전략을 쓸 수 없다.
 	   Auth.js는 credentials 로그인을 처리할 때 전략과 무관하게 세션 쿠키에 JWT를 굽는데,
 	   database 전략의 세션 조회는 그 쿠키 값을 Session.sessionToken으로 찾으므로
