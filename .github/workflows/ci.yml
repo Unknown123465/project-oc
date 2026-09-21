@@ -25,7 +25,6 @@ jobs:
             DATABASE_PASSWORD: ci
             DATABASE_URL: mysql://ci:ci@localhost:3306/ci
             AUTH_SECRET: ci-placeholder-value-not-a-real-secret
-            BETTER_AUTH_SECRET: ci-placeholder-value-not-a-real-secret
             GOOGLE_CLIENT_ID: ci-placeholder
             GOOGLE_CLIENT_SECRET: ci-placeholder
             NAVER_CLIENT_ID: ci-placeholder
