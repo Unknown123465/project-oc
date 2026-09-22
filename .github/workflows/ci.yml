@@ -34,6 +34,28 @@ jobs:
             TWITTER_CLIENT_ID: ci-placeholder
             TWITTER_CLIENT_SECRET: ci-placeholder
 
+        # DB 테스트용 일회용 MySQL. job과 함께 뜨고 끝나면 버려진다.
+        # 접속 정보는 위 env(ci:ci@localhost:3306/ci)와 같아야 하고, 버전은 운영 DB(8.0.46)와 맞춘다.
+        services:
+            mysql:
+                image: mysql:8.0.46
+                env:
+                    MYSQL_ROOT_PASSWORD: ci
+                    MYSQL_DATABASE: ci
+                    MYSQL_USER: ci
+                    MYSQL_PASSWORD: ci
+                # job은 컨테이너 밖(러너)에서 돌기 때문에 포트를 열어야 localhost로 닿는다.
+                ports:
+                    - 3306:3306
+                # 컨테이너가 떠도 mysqld는 몇 초 뒤에야 연결을 받는다. 준비될 때까지 steps를 막는다.
+                # -h 127.0.0.1로 TCP를 강제하는 이유: 이미지가 초기화 중에 띄우는 임시 서버는
+                # 소켓만 열어서, 소켓으로 ping하면 초기화가 안 끝났는데 살아 있다고 답한다.
+                options: >-
+                    --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+                    --health-interval=5s
+                    --health-timeout=5s
+                    --health-retries=10
+
         steps:
             - uses: actions/checkout@v7
 
