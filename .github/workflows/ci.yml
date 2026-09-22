@@ -98,7 +98,7 @@ jobs:
                   npx prisma generate
                   changed=$(git status --porcelain -- src/prisma/generated)
                   if [ -n "$changed" ]; then
-                      echo "생성물이 스키마와 어긋납니다. prisma generate 후 커밋하세요."
+                      echo "생성 요소가 스키마와 어긋납니다. prisma generate 후 커밋하세요."
                       echo "$changed"
                       git diff -- src/prisma/generated
                       exit 1
