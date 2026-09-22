@@ -185,3 +185,56 @@ describe("보내지 않은 입력에 대한 응답 항목은 버린다", () => {
 		expect(console.warn).toHaveBeenCalledTimes(2);
 	});
 });
+
+/* 이슈 #45. 차감은 AI를 부르기 전에 일어나므로, 결과를 못 주고 끝나는 모든 경로는 환불로
+   되돌려야 한다. 위 describe는 "환불하지 않는다"만 보고 있어 반대쪽이 비어 있었다.
+   실패 경로는 셋으로 갈린다 - 호출 자체가 던짐, 응답이 거부됨, 응답이 스키마와 어긋남.
+   환불이 실제로 DB를 되돌리는지는 aiDraftUsage.db.test.ts가 보고, 여기서는 "한 번 불렸고
+   그 반환값이 응답에 실리는지"만 본다. */
+describe("결과를 못 준 요청은 환불한다", () => {
+	const REFUNDED_REMAINING: number = 10;
+
+	beforeEach(() => {
+		mocks.getAiDraftEnabled.mockResolvedValue(true);
+		mocks.claimAiDraft.mockResolvedValue({ok: true, remaining: 9});
+		mocks.refundAiDraft.mockResolvedValue(REFUNDED_REMAINING);
+
+		vi.spyOn(console, "error").mockImplementation(() => {});
+	});
+
+	it("AI 호출이 던지면 server-error로 한 번 환불하고 돌려받은 남은 횟수를 응답에 싣는다", async () => {
+		mocks.generateContent.mockRejectedValue(new Error("network down"));
+
+		const {default: createPromptAction} = await import("./promptAction");
+		const result = await createPromptAction(INPUT);
+
+		expect(result).toMatchObject({success: false, remainingToday: REFUNDED_REMAINING});
+		expect(mocks.refundAiDraft).toHaveBeenCalledTimes(1);
+		expect(mocks.refundAiDraft).toHaveBeenCalledWith(USER_ID, "server-error");
+	});
+
+	it("입력이 차단되면 blocked로 한 번 환불한다", async () => {
+		mocks.generateContent.mockResolvedValue({promptFeedback: {blockReason: "PROHIBITED_CONTENT"}});
+
+		const {default: createPromptAction} = await import("./promptAction");
+		const result = await createPromptAction(INPUT);
+
+		expect(result).toMatchObject({success: false, remainingToday: REFUNDED_REMAINING});
+		expect(mocks.refundAiDraft).toHaveBeenCalledTimes(1);
+		expect(mocks.refundAiDraft).toHaveBeenCalledWith(USER_ID, "blocked");
+	});
+
+	it("응답이 스키마와 어긋나면 server-error로 한 번 환불한다", async () => {
+		mocks.generateContent.mockResolvedValue({
+			text: JSON.stringify({fields: "not-an-object"}),
+			candidates: [{finishReason: FinishReason.STOP}],
+		});
+
+		const {default: createPromptAction} = await import("./promptAction");
+		const result = await createPromptAction(INPUT);
+
+		expect(result).toMatchObject({success: false, remainingToday: REFUNDED_REMAINING});
+		expect(mocks.refundAiDraft).toHaveBeenCalledTimes(1);
+		expect(mocks.refundAiDraft).toHaveBeenCalledWith(USER_ID, "server-error");
+	});
+});
