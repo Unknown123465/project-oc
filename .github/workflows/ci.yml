@@ -23,6 +23,8 @@ jobs:
             DATABASE_USER: ci
             DATABASE_NAME: ci
             DATABASE_PASSWORD: ci
+            # DB 테스트는 이 이름이 없으면 돌지 않는다(src/test/dbSetup.ts). CI의 DB는 일회용이라 같은 이름.
+            DATABASE_TEST_NAME: ci
             DATABASE_URL: mysql://ci:ci@localhost:3306/ci
             AUTH_SECRET: ci-placeholder-value-not-a-real-secret
             GOOGLE_CLIENT_ID: ci-placeholder

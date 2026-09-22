@@ -8,8 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "npm run test:fn && npm run test:db",
+    "test:fn": "vitest run --project fn",
+    "test:db": "vitest run --project db",
+    "test:watch": "vitest --project fn",
     "db:generate": "prisma generate",
     "db:push": "prisma db push"
   },
