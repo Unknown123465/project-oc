@@ -77,6 +77,13 @@ jobs:
             - name: 린트
               run: npx eslint .
 
+            # 서비스 컨테이너의 DB는 비어 있다. DB 테스트가 붙기 전에 테이블을 만들어야 한다.
+            # 접속 정보는 prisma.config.ts가 DATABASE_URL에서 읽는다.
+            # Prisma 7부터 db push는 prisma generate를 같이 돌리지 않는다(--skip-generate도 사라짐).
+            # 그래서 이 단계는 DB만 건드리고, 클라이언트 최신 여부는 아래 단계가 그대로 판정한다.
+            - name: 테스트 DB 스키마 적용
+              run: npx prisma db push
+
             - name: 테스트
               run: npm test
 
