@@ -23,6 +23,8 @@ jobs:
             DATABASE_USER: ci
             DATABASE_NAME: ci
             DATABASE_PASSWORD: ci
+            # DB 테스트는 이 이름이 없으면 돌지 않는다(src/test/dbSetup.ts). CI의 DB는 일회용이라 같은 이름.
+            DATABASE_TEST_NAME: ci
             DATABASE_URL: mysql://ci:ci@localhost:3306/ci
             AUTH_SECRET: ci-placeholder-value-not-a-real-secret
             GOOGLE_CLIENT_ID: ci-placeholder
@@ -33,6 +35,28 @@ jobs:
             KAKAO_CLIENT_SECRET: ci-placeholder
             TWITTER_CLIENT_ID: ci-placeholder
             TWITTER_CLIENT_SECRET: ci-placeholder
+
+        # DB 테스트용 일회용 MySQL. job과 함께 뜨고 끝나면 버려진다.
+        # 접속 정보는 위 env(ci:ci@localhost:3306/ci)와 같아야 하고, 버전은 운영 DB(8.0.46)와 맞춘다.
+        services:
+            mysql:
+                image: mysql:8.0.46
+                env:
+                    MYSQL_ROOT_PASSWORD: ci
+                    MYSQL_DATABASE: ci
+                    MYSQL_USER: ci
+                    MYSQL_PASSWORD: ci
+                # job은 컨테이너 밖(러너)에서 돌기 때문에 포트를 열어야 localhost로 닿는다.
+                ports:
+                    - 3306:3306
+                # 컨테이너가 떠도 mysqld는 몇 초 뒤에야 연결을 받는다. 준비될 때까지 steps를 막는다.
+                # -h 127.0.0.1로 TCP를 강제하는 이유: 이미지가 초기화 중에 띄우는 임시 서버는
+                # 소켓만 열어서, 소켓으로 ping하면 초기화가 안 끝났는데 살아 있다고 답한다.
+                options: >-
+                    --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+                    --health-interval=5s
+                    --health-timeout=5s
+                    --health-retries=10
 
         steps:
             - uses: actions/checkout@v7
@@ -55,6 +79,13 @@ jobs:
             - name: 린트
               run: npx eslint .
 
+            # 서비스 컨테이너의 DB는 비어 있다. DB 테스트가 붙기 전에 테이블을 만들어야 한다.
+            # 접속 정보는 prisma.config.ts가 DATABASE_URL에서 읽는다.
+            # Prisma 7부터 db push는 prisma generate를 같이 돌리지 않는다(--skip-generate도 사라짐).
+            # 그래서 이 단계는 DB만 건드리고, 클라이언트 최신 여부는 아래 단계가 그대로 판정한다.
+            - name: 테스트 DB 스키마 적용
+              run: npx prisma db push
+
             - name: 테스트
               run: npm test
 
@@ -67,7 +98,7 @@ jobs:
                   npx prisma generate
                   changed=$(git status --porcelain -- src/prisma/generated)
                   if [ -n "$changed" ]; then
-                      echo "생성물이 스키마와 어긋납니다. prisma generate 후 커밋하세요."
+                      echo "생성 요소가 스키마와 어긋납니다. prisma generate 후 커밋하세요."
                       echo "$changed"
                       git diff -- src/prisma/generated
                       exit 1
