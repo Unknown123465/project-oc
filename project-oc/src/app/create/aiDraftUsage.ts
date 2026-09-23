@@ -61,7 +61,7 @@ export async function claimAiDraft(userId: string): Promise<ClaimResult> {
 				/* 화면에 보이는 한도. 실패하면 환불되어 다시 올라간다. */
 				aiDraftUsedCount: {lt: AI_DRAFT_DAILY_LIMIT},
 				/* 실제 호출 상한. 환불해도 줄지 않아 차감-환불 반복을 끊는다. */
-				aiDraftCallCount: {lte: AI_DRAFT_DAILY_CALL_LIMIT},
+				aiDraftCallCount: {lt: AI_DRAFT_DAILY_CALL_LIMIT},
 				/* 직전 호출과의 간격. null이면 오늘 처음이라 그냥 통과시킨다. */
 				OR: [{aiDraftLastCallAt: null}, {aiDraftLastCallAt: {lte: callableAfter}}],
 			},
