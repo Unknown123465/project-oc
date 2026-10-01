@@ -29,7 +29,7 @@
     "bootstrap-icons": "^1.13.1",
     "browser-image-compression": "^2.0.2",
     "dotenv": "^17.4.2",
-    "next": "16.3.0",
+    "next": "~16.3.8",
     "next-auth": "^5.0.0-beta.32",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -43,10 +43,13 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.3.0",
+    "eslint-config-next": "~16.3.8",
     "prettier": "^3.9.6",
     "prisma": "^7.9.1",
     "typescript": "^5",
     "vitest": "^5.0.0"
+  },
+  "overrides": {
+    "mariadb": "3.4.7"
   }
 }
