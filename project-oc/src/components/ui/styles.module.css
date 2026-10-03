@@ -18,8 +18,7 @@
 	height: 46px;
 	position: relative;
 
-	& input,
-	& select {
+	& input {
 		width: 100%;
 		height: 100%;
 		padding: 0 15px;
@@ -57,22 +56,6 @@
 			border-color: var(--error-text);
 			box-shadow: 0 0 0 3px color-mix(in srgb, var(--error-text) 22%, transparent);
 		}
-	}
-
-	& select {
-		appearance: none;
-		padding-right: 38px;
-		cursor: pointer;
-	}
-
-	& .chevron {
-		position: absolute;
-		top: 50%;
-		right: 15px;
-		color: var(--muted);
-		font-size: 11px;
-		transform: translateY(-50%);
-		pointer-events: none;
 	}
 
 	& .eye {
