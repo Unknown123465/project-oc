@@ -3,22 +3,12 @@ import type {Control, FieldErrors} from "react-hook-form";
 import styles from "./OptionalFieldsDetails.module.css";
 import sectionStyles from "./Section.module.css";
 import {TextInput} from "@/components/ui/input";
-import {Select} from "@/components/ui/select";
-import type {CreateCharFormInputType} from "@/app/create/validator";
+import {CHAR_MAX_LENGTH, type CreateCharFormInputType} from "@/app/create/validator";
 
 interface OptionalFieldsDetailsProps {
 	control: Control<CreateCharFormInputType>;
 	errors: FieldErrors<CreateCharFormInputType>;
 }
-
-const KIND_OPTIONS = [
-	{value: "인간", label: "인간"},
-	{value: "엘프", label: "엘프"},
-	{value: "천사", label: "천사"},
-	{value: "악마", label: "악마"},
-	{value: "수인", label: "수인"},
-	{value: "노바", label: "노바"},
-];
 
 export default function OptionalFieldsDetails({control, errors}: OptionalFieldsDetailsProps) {
 	const baseId = useId();
@@ -41,12 +31,12 @@ export default function OptionalFieldsDetails({control, errors}: OptionalFieldsD
 
 			<div className={styles.optional_fields_body}>
 				<div className={styles.field}>
-					<Select
+					<TextInput
 						name="charKind"
 						control={control}
 						label="종족"
-						options={KIND_OPTIONS}
-						placeholder="선택하지 않음"
+						maxLength={CHAR_MAX_LENGTH.charKind}
+						placeholder="예: 인간"
 						describedBy={errors.charKind ? errorId.charKind : undefined}
 					/>
 
