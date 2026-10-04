@@ -93,7 +93,7 @@ export default async function createCharAction(data: CreateCharServerFormType): 
 				charProfileLayout: check.data.charProfileLayout,
 				charImageFrame: check.data.charImageFrame,
 				charMessage: check.data.charMessage,
-				charKind: check.data.charKind || null,
+				charKind: check.data.charKind.trim() ? check.data.charKind : null,
 				charColor: check.data.charColor,
 				charMusic: check.data.charMusic || null,
 				charLike: check.data.charLike.trim() ? check.data.charLike : null,
