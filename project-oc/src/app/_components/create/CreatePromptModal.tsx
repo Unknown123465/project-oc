@@ -13,6 +13,7 @@ import {
 	AI_DRAFT_DAILY_LIMIT,
 	AI_DRAFT_EXHAUSTED_MESSAGE,
 	AI_DRAFT_LOW_REMAINING,
+	ALL_CHAR_MAX_LENGTH,
 	CHAR_MAX_LENGTH,
 	CHAR_TMI_MAX_LINES,
 	CreateCharFormInputType,
@@ -21,6 +22,7 @@ import {
 	createPromptRequireForm,
 	type CreatePromptResultFieldType,
 	CreatePromptResultFormType,
+	parseValue,
 	PROMPT_DESCRIPTION_MAX_LENGTH,
 } from "@/app/create/validator";
 import {PromptApplyValue} from "./ImageUploadField";
@@ -134,14 +136,24 @@ function toFormValues(result: CreatePromptResultFormType, imageFile: File | null
 	};
 }
 
-/* 카운터에 보일 숫자. TMI는 validator.ts의 refine과 같은 기준(줄 수)으로 센다.
-   값이 들어오기 전(defaultValues가 비어 있는 동안)은 undefined라 0으로. */
+/* 카운터에 보일 숫자. maxLines 여부를 통해 TMI인지 판별할 수 있다. parseValue로 Zod 스키마와 같은 기준으로 세고,
+   값이 들어오기 전(defaultValues가 비어 있는 동안)이나 비었으면 0을 반환하는데
+   1000자를 초과하면 0을 반환하는데, parseValue는 1000자를 넘으면 null을 돌려주고 <Textarea>에 maxLength를 적용해서 1000자 넘는 값이 실제로 들어오지 않기 때문에 0을 반환한다.
+   카운트는 공백을 지운 뒤 세므로, 공백을 입력해도 숫자가 오르지 않는다. */
 function countDraftValue(field: DraftFieldDefinition, value: string | null | undefined): number {
 	if (!value) {
 		return 0;
 	}
 
-	return field.maxLines !== undefined ? value.split("\n").length : value.length;
+	const fieldType = field.maxLines === undefined ? "default" : "tmi";
+
+	const parse: string | null = parseValue(fieldType, value, null);
+
+	if (parse === null) {
+		return 0;
+	}
+
+	return fieldType === "default" ? parse.length : parse.split("\n").length;
 }
 
 interface DraftFieldProps {
@@ -218,7 +230,7 @@ function DraftField({field, result, control, checked, errorMessage, onCheckedCha
 					label={field.label}
 					ariaLabelOnly
 					rows={field.wide ? 3 : 1}
-					maxLength={field.maxLength}
+					maxLength={field.maxLength ?? ALL_CHAR_MAX_LENGTH}
 					invalidStyle={checked}
 					padding="10px 13px"
 					style={{fontSize: 14, minHeight: 0, maxHeight: 200}}
