@@ -50,6 +50,28 @@ function genStringSchema(name: "default" | "tmi") {
 	}
 }
 
+const stringSchema = genStringSchema("default");
+const tmiStringSchema = genStringSchema("tmi");
+
+/* 스키마를 통해 변환된 값을 반환한다. 실시간 미리보기는 반환된 값을 출력하고 AI 프로필 초안 카운터가 반환한 값의 길이를 세기 위해 만들었다.
+   만약 검증에 실패하거나 변환값이 비어있으면 empty 매개변수를 반환한다.
+   이 함수는 공백 제거와 1000자 상한만 적용하고, 칸별 검사(CHAR_MAX_LENGTH 상한, URL 검사)는 하지 않는다. */
+export function parseValue(mode: "default" | "tmi", value: string, empty: string | null): string | null {
+	let check;
+
+	if (mode === "default") {
+		check = stringSchema.safeParse(value);
+	} else {
+		check = tmiStringSchema.safeParse(value);
+	}
+
+	if (check.success) {
+		return check.data || empty;
+	} else {
+		return empty;
+	}
+}
+
 export const createCharForm = z.object({
 	charName: genStringSchema("default").pipe(z.string().min(1, "캐릭터 이름을 입력해 주세요.").max(CHAR_MAX_LENGTH.charName, `캐릭터 이름을 ${CHAR_MAX_LENGTH.charName}자 이하로 입력해 주세요.`)),
 	charImage: z

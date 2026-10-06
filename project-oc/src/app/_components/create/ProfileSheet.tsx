@@ -2,7 +2,7 @@ import styles from "./ProfileSheet.module.css";
 import ProfileFacts from "./ProfileFacts";
 import ProfileBlocks from "./ProfileBlocks";
 import {useWatch, type Control} from "react-hook-form";
-import {CreateCharFormInputType} from "@/app/create/validator";
+import {CreateCharFormInputType, parseValue} from "@/app/create/validator";
 import {useEffect, useMemo} from "react";
 
 export type ProfileLayout = CreateCharFormInputType["charProfileLayout"];
@@ -23,14 +23,14 @@ export default function ProfileSheet({control}: ProfileSheetProps) {
 		name: "charName",
 		control,
 		compute(data) {
-			return data || "캐릭터 이름";
+			return parseValue("default", data, "캐릭터 이름");
 		},
 	});
 	const message = useWatch({
 		name: "charMessage",
 		control,
 		compute(data) {
-			return data || "이 캐릭터를 한 문장으로 소개해 주세요.";
+			return parseValue("default", data, "이 캐릭터를 한 문장으로 소개해 주세요.");
 		},
 	});
 	const image = useWatch({

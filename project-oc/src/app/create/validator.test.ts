@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {createCharForm, createCharServerForm, uploadTicket, MAX_TEMPLATE_LIMIT, createPromptForm, ALL_CHAR_MAX_LENGTH} from "./validator";
+import {createCharForm, createCharServerForm, uploadTicket, MAX_TEMPLATE_LIMIT, createPromptForm, ALL_CHAR_MAX_LENGTH, parseValue} from "./validator";
 import {IMAGE_MAX_FILE_SIZE} from "./imageEditor";
 
 /* 이 스키마는 브라우저의 폼 검증과 서버 액션의 재검증을 동시에 맡는다. 즉 여기가
@@ -90,6 +90,56 @@ describe("공백 체크", () => {
 			const inputChars: string = transparentChars + url + transparentChars;
 
 			expect(schema.safeParse(inputChars).success).toBe(false);
+		});
+	});
+
+	describe("parseValue 매개변수 'default' mode 반환 및 입력 문자에 공백 없음", () => {
+		it.each([
+			["일반 공백", "실패", "테스트1", "테스트1", " ".repeat(10)],
+			["특수 공백", " ", "테스트1", "테스트1", "\u115f\u1160\u3164"],
+			["ZWJ", null, "테스트2", "테스트2", "\u200d"],
+			["변형 선택자", null, null, "", "\ufe0f\ufe0f"],
+		] as const)("%s을(를) 문자 좌우에 넣고, empty를 '%s'(으)로 넣으면 '%s'이(가) 반환되어야 한다", (_, empty, result, value, blank) => {
+			const inputValue: string = blank + value + blank;
+
+			expect(parseValue("default", inputValue, empty)).toBe(result);
+		});
+	});
+
+	describe("parseValue 매개변수 'default' mode 반환 및 입력 문자에 공백 있음", () => {
+		it.each([
+			["개행", "일반 공백", "테스트1", "테스트1\n\n", " ".repeat(10)],
+			["가운데 빈 줄", "특수 공백", "테스트1 테스트2(개행)(개행)테스트3", "테스트1 테스트2\n\n테스트3     ", "\u115f\u1160\u3164"],
+			["공백과 개행", "ZWJ", "테스트2", "\n\n   테스트2", "\u200d"],
+		] as const)("문자에 %s을(를) 넣고, 문자 좌우에 %s을(를) 넣으면 '%s'이(가) 반환되어야 한다", (_, _2, result, value, blank) => {
+			const inputValue: string = blank + value + blank;
+			const resultValue: string = result.replaceAll("(개행)", "\n");
+
+			expect(parseValue("default", inputValue, null)).toBe(resultValue);
+		});
+	});
+
+	describe("parseValue 매개변수 'tmi' mode 반환", () => {
+		it.each([
+			["일반 공백 + 빈 줄", null, "테스트1", ["테스트1", "", " ".repeat(10)]],
+			["특수 공백", "", "테스트1(개행)테스트2", ["\u115f", "\u1160\u1160", "테스트1", "\u3164", "테스트2"]],
+			["일반 공백 + ZWJ", null, null, ["\u200d", " ".repeat(10), "\u200d"]],
+			["변형 선택자", "테스트1", "테스트1(개행)테스트2", ["테스트1", "\ufe0f", "\ufe0f", "테스트2", "\ufe0f"]],
+		] as const)("%s 조합을 value에 넣고, empty에 '%s'을(를) 넣었다면 '%s'이(가) 반환되어야 한다", (_, empty, result, value) => {
+			const inputValue: string = value.join("\n");
+			const resultValue: string | null = result !== null ? result.replaceAll("(개행)", "\n") : result;
+
+			expect(parseValue("tmi", inputValue, empty)).toBe(resultValue);
+		});
+	});
+
+	describe.each(["default", "tmi"] as const)(`parseValue 매개변수 '%s' mode ${ALL_CHAR_MAX_LENGTH}자 초과 시, empty 매개변수 반환`, (mode) => {
+		it.each([
+			["일반 공백", "초과됨", " ".repeat(ALL_CHAR_MAX_LENGTH + 1) + "테스트1"],
+			["특수 공백", null, "\u115f".repeat(ALL_CHAR_MAX_LENGTH / 2 - 1) + "테스트1\n테스트2" + "\u1160".repeat(ALL_CHAR_MAX_LENGTH / 2 - 1)],
+			["ZWJ + 변형 선택자", "초과된 테스트", "\u200d\ufe0f".repeat(ALL_CHAR_MAX_LENGTH - 1) + "테스트1\n"],
+		] as const)(`%s 조합으로 ${ALL_CHAR_MAX_LENGTH}자를 넘기면 empty 값인 '%s'이(가) 반환되어야 한다`, (_, empty, value) => {
+			expect(parseValue(mode, value, empty)).toBe(empty);
 		});
 	});
 
