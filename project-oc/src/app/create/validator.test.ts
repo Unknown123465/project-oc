@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {createCharForm, createCharServerForm, uploadTicket, MAX_TEMPLATE_LIMIT} from "./validator";
+import {createCharForm, createCharServerForm, uploadTicket, MAX_TEMPLATE_LIMIT, createPromptForm, ALL_CHAR_MAX_LENGTH} from "./validator";
 import {IMAGE_MAX_FILE_SIZE} from "./imageEditor";
 
 /* 이 스키마는 브라우저의 폼 검증과 서버 액션의 재검증을 동시에 맡는다. 즉 여기가
@@ -7,6 +7,7 @@ import {IMAGE_MAX_FILE_SIZE} from "./imageEditor";
    확인하고, 잘 되는 경우를 나열하지는 않는다. */
 
 const field = createCharForm.shape;
+const promptField = createPromptForm.shape;
 
 /** 서버 검증기가 요구하는 최소 형태. 필드 하나씩 덮어써서 쓴다. */
 function serverFormFixture(override: Record<string, unknown> = {}) {
@@ -57,7 +58,275 @@ describe("글자 수 제한", () => {
 	});
 
 	it("공백도 한 글자로 센다", () => {
-		expect(field.charLike.safeParse(" ".repeat(101)).success).toBe(false);
+		expect(field.charLike.safeParse(" ".repeat(5) + "테스트" + " ".repeat(101) + "1" + " ".repeat(5)).success).toBe(false);
+	});
+});
+
+describe("공백 체크", () => {
+	const requireFieldNameList = ["charName", "charMessage"] as const;
+	const optionalFieldNameList = ["charLike", "charHate", "charPersonality", "charKind", "charAge", "charBirthday", "charHeight", "charBirthplace", "charMbti"] as const;
+	const fieldNameList = [...requireFieldNameList, ...optionalFieldNameList, "charTmi"] as const;
+
+	describe.each(fieldNameList)("요소 %s 최대 상한 테스트", (name) => {
+		it(`모든 요소는 ${ALL_CHAR_MAX_LENGTH}자를 초과하면 통과되지 말아야 한다`, () => {
+			const schema = field[name];
+
+			const transparentChars: string = " ".repeat(ALL_CHAR_MAX_LENGTH / 2 - 1);
+			const normalChars: string = "가".repeat(4);
+
+			const inputChars: string = transparentChars + normalChars + transparentChars;
+
+			expect(schema.safeParse(inputChars).success).toBe(false);
+		});
+	});
+
+	describe("요소 charMusic 최대 상한 테스트", () => {
+		it(`테마곡은 ${ALL_CHAR_MAX_LENGTH}자를 초과하면 통과되지 말아야 한다`, () => {
+			const schema = field.charMusic;
+
+			const transparentChars: string = " ".repeat(ALL_CHAR_MAX_LENGTH / 2 - 1);
+			const url: string = "https://soundcloud.com/artist/track";
+
+			const inputChars: string = transparentChars + url + transparentChars;
+
+			expect(schema.safeParse(inputChars).success).toBe(false);
+		});
+	});
+
+	describe.each(requireFieldNameList)("필수 요소 %s", (name) => {
+		it("일반 공백 입력 시 통과되지 말아야 한다", () => {
+			const schema = field[name];
+
+			expect(schema.safeParse(" ".repeat(15)).success).toBe(false);
+		});
+
+		it("일반 공백 입력 시 createPromptForm에서 통과되지 말아야 한다", () => {
+			const schema = promptField[name];
+
+			expect(schema.safeParse(" ".repeat(15)).success).toBe(false);
+		});
+
+		it("보이지 않는 문자 20개, 일반 글자 15개를 입력해도 통과되어야 하며, 일반 문자만 반환해야 한다", () => {
+			const schema = field[name];
+
+			const transparentChars: string = "\u200b".repeat(10);
+			const normalChars: string = "가".repeat(15);
+
+			const inputChars: string = transparentChars + normalChars + transparentChars;
+
+			const check = schema.safeParse(inputChars);
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe(normalChars);
+		});
+
+		it.each([
+			["일반 공백", " ".repeat(4)],
+			["특수 공백", "\u115f\u1160\u3164"],
+			["ZWJ", "\u200d"],
+			["변형 선택자", "\ufe0f"],
+		])("서버에 %s만 넣을 시 필수 요소는 통과되지 말아야 한다", (_, value) => {
+			const requireOverrideForm = serverFormFixture({
+				[name]: value,
+			});
+
+			expect(createCharServerForm.safeParse(requireOverrideForm).success).toBe(false);
+		});
+
+		it.each([
+			["좌측", "   테스트"],
+			["우측", "테스트    "],
+			["양측", "   테스트   "],
+		])("%s에 일반 공백과 문자를 섞으면 통과되어야 한다", (_, value) => {
+			const schema = field[name];
+
+			const check = schema.safeParse(value);
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe("테스트");
+		});
+
+		it.each([
+			["일반 공백", "테스   트"],
+			["특수 공백", "테\u115f\u1160\u3164스트"],
+			["ZWJ", "테\u200d\u200d스트"],
+			["변형 선택자", "테스\ufe0f\ufe0f트"],
+		])("%s을(를) 중간에 입력해도 지워지지 않는다", (_, value) => {
+			expect(field[name].safeParse(value).data).toBe(value);
+		});
+
+		it.each([
+			["연속 특수 공백", "\u200b\u200c\u2060\u115f\u1160\u3164\uffa0\ufe0f"],
+			["오직 ZWJ만", "\u200d"],
+			["3연속 ZWJ를", "\u200d\u200d\u200d"],
+			["오직 변형 선택자만", "\ufe0f"],
+			["3연속 변형 선택자를", "\ufe0f\ufe0f\ufe0f"],
+			["ZWJ와 변형 선택자를 섞은 채", "\ufe0f\u200d"],
+		])("%s 입력하면 통과되지 말아야 한다", (_, value) => {
+			expect(field[name].safeParse(value).success).toBe(false);
+		});
+
+		it("ZWJ 좌우에 이모지가 있으면 통과되어야 한다", () => {
+			const check = field[name].safeParse("👨\u200D🚀");
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe("👨‍🚀");
+		});
+
+		it.each([
+			["ZWJ + 특수 공백 + ZWJ", "\u200d\u200c\u200d"],
+			["ZWJ + 특수 공백", "\u200d\u2060"],
+			["특수 공백 + ZWJ", "\u3164\u200d"],
+			["ZWJ + 일반 공백 + ZWJ", "\u200d  \u200d"],
+			["ZWJ + 일반 공백", "\u200d "],
+			["일반 공백 + ZWJ", "  \u200d"],
+			["일반 공백 + ZWJ + 일반 공백", " \u200d "],
+			["특수 공백 + ZWJ + 특수 공백", "\u200c\u200d\u200c"],
+			["변형 선택자 + ZWJ + 변형 선택자", "\ufe0f\u200d\ufe0f"],
+			["변형 선택자 + 일반 공백 + 변형 선택자", "\ufe0f   \ufe0f"],
+			["변형 선택자 + 특수 공백 + 변형 선택자", "\ufe0f\u3164\ufe0f"],
+		])("%s 조합은 통과되지 말아야 한다", (_, value) => {
+			expect(field[name].safeParse(value).success).toBe(false);
+		});
+
+		it.each([
+			["이모지", "🚀"],
+			["일반 글자", "가"],
+		])("ZWJ + %s + ZWJ 조합이면 통과되어야 하고, '%s'만 반환해야 한다", (_, value) => {
+			const check = field[name].safeParse(`\u200d${value}\u200d`);
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe(value);
+		});
+
+		it.each([
+			["ZWJ + 이모지", "\u200d👨"],
+			["이모지 + ZWJ", "👨\u200d"],
+		])("%s 조합으로 입력해도 통과는 하되, 이모지만 반환해야 한다", (_, value) => {
+			const check = field[name].safeParse(value);
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe("👨");
+		});
+
+		it("텍스트 뒤에 변형 선택자가 있으면 통과되어야 한다", () => {
+			const check = field[name].safeParse("♥\ufe0f");
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe("♥️");
+		});
+
+		it.each([
+			["🏳\ufe0f\u200d🌈", "🏳️‍🌈"],
+			["❤\ufe0f\u200d🔥", "❤️‍🔥"],
+		])("이모지 + 변형 선택자 + ZWJ + 이모지 조합을 할 때 변형 선택자, ZWJ가 지워지지 말아야 하며, 하나의 이모지로 합쳐진 것과 같아야 한다", (union, result) => {
+			expect(field[name].safeParse(union).data).toBe(result);
+		});
+	});
+
+	describe.each(optionalFieldNameList)("선택 요소 %s", (name) => {
+		it("보이지 않는 문자 10개, 일반 문자 4개를 입력해도 통과되어야 하며, 일반 문자만 반환해야 한다", () => {
+			const schema = field[name];
+
+			const transparentChars: string = "\u200b".repeat(5);
+			const normalChars: string = "A".repeat(4);
+
+			const inputChars: string = transparentChars + normalChars + transparentChars;
+
+			const check = schema.safeParse(inputChars);
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe(normalChars);
+		});
+
+		it("일반 공백 입력 시 통과되고 빈 문자열로 반환되어야 한다", () => {
+			const schema = field[name];
+
+			const check = schema.safeParse(" ".repeat(4));
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe("");
+		});
+
+		it.each([
+			["일반 공백", " ".repeat(4)],
+			["특수 공백", "\u115f\u1160\u3164"],
+			["ZWJ", "\u200d"],
+			["변형 선택자", "\ufe0f"],
+		])("서버에 %s만 넣을 시 통과하되, 빈 문자열로 반환되어야 한다", (_, value) => {
+			const optionalOverrideForm = serverFormFixture({
+				[name]: value,
+			});
+
+			const optionalCheck = createCharServerForm.safeParse(optionalOverrideForm);
+
+			expect(optionalCheck.success).toBe(true);
+			expect(optionalCheck.data?.[name]).toBe("");
+		});
+	});
+
+	describe("TMI", () => {
+		it("항목 5개에 빈 줄이 섞여도 통과되어야 한다", () => {
+			const tmiList: string[] = ["", "테스트1", "테스트2", "", "테스트3", "테스트4", "테스트5", ""];
+
+			expect(field.charTmi.safeParse(tmiList.join("\n")).data).toBe("테스트1\n테스트2\n테스트3\n테스트4\n테스트5");
+		});
+
+		it.each([
+			["줄 좌우 일반 공백", ["    테스트1", "테스트2    ", "     테스트3      "]],
+			["줄 좌우 특수 공백, ZWJ", ["\u200b\u200c\u2060\u115f테스트1", "\u200d\u200d테스트2", "\u200b테스트3\u115f\u1160"]],
+		])("%s(으)로 넣으면 지워져야 한다", (_, value) => {
+			expect(field.charTmi.safeParse(value.join("\n")).data).toBe("테스트1\n테스트2\n테스트3");
+		});
+
+		it("한 줄을 보이지 않는 문자 20개, 일반 글자 20개로 입력해도 통과되어야 하며, 일반 문자만 반환해야 한다", () => {
+			const transparentChars: string = "\u200b".repeat(10);
+			const normalChars: string = "가".repeat(20);
+
+			const inputChars: string = transparentChars + normalChars + transparentChars;
+
+			const check = field.charTmi.safeParse(inputChars);
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe(normalChars);
+		});
+
+		it.each([
+			["일반 공백", [" ".repeat(7), "   테스트   ", " ".repeat(10)]],
+			["특수 공백", ["\u200b", "\u200b\u200b테스트\u200b\u200b", "\u200b"]],
+			["ZWJ", ["\u200d", "\u200d\u200d테스트\u200d", "\u200d"]],
+			["일반 공백 + 특수 공백 + ZWJ", ["\u200d", "\u200b테스트", " ".repeat(5)]],
+		])("각 줄에 %s 조합으로 입력 시 해당 줄의 공백을 지움. 만약 지웠는데 빈 줄이면 해당 줄은 삭제", (_, value) => {
+			const check = field.charTmi.safeParse(value.join("\n"));
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe("테스트");
+		});
+	});
+
+	describe("테마곡", () => {
+		it.each([
+			["특수 공백", "https://youtu.be/dQw4w9WgXcQ", "\u200b\u200c\u2060\u115f"],
+			["일반 공백 + 특수 공백", "https://open.spotify.com/track/abc", "\u2060\u115f" + " ".repeat(5)],
+		])("URL 좌우에 %s을 입력하면 통과되어야 하며, 해당 공백을 지우고 입력한 URL만 반환해야 한다", (_, url, blank) => {
+			const value: string = blank + url + blank;
+
+			const check = field.charMusic.safeParse(value);
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe(url);
+		});
+
+		it.each([
+			["일반 공백", " ".repeat(10)],
+			["특수 공백", "\u200b\u200c\u2060\u115f"],
+			["일반 공백 + 특수 공백", "\u2060\u115f" + " ".repeat(5)],
+		])("%s만 입력하면 통과되어야 하고, 빈 문자열을 반환해야 한다", (_, value) => {
+			const check = field.charMusic.safeParse(value);
+
+			expect(check.success).toBe(true);
+			expect(check.data).toBe("");
+		});
 	});
 });
 

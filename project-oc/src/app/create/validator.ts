@@ -22,41 +22,67 @@ export const CHAR_MAX_LENGTH = {
 	charMbti: 4,
 	charMusic: 255,
 } as const;
+/* ReDoS 방지용 모든 문자열 형식 최대 상한 */
+export const ALL_CHAR_MAX_LENGTH = 1000;
 
 /** TMI는 글자 수가 아니라 줄 수로 센다 - 한 줄이 항목 하나다. */
 export const CHAR_TMI_MAX_LINES = 5;
 export const CHAR_TMI_MAX_LINE_LENGTH = 30;
 
+/** 입력한 문자열 좌우에 일반, 특수 공백, ZWJ, 변형 선택자(좌측 한정)를 잘라 공백으로만 제출하는 걸 막는다. */
+const blankRegex: RegExp = /^[\u200b-\u200d\u2060\u115f-\u1160\u3164\uffa0\ufe0f\s]+|[\u200b-\u200d\u2060\u115f-\u1160\u3164\uffa0\s]+$/g;
+
+function genStringSchema(name: "default" | "tmi") {
+	/* 공백을 수만 자 넣어서 ReDoS를 일으키는 걸 방지하기 위해 transform 전 max로 상한을 잡는다. 이때, 상한은 모든 요소 중 가장 상한이 높은 것을 기준으로 잡아 여유롭게 1000자로 지정했다. */
+	const schema = z.string().max(ALL_CHAR_MAX_LENGTH, `${ALL_CHAR_MAX_LENGTH}자 이하로 입력해 주세요.`);
+
+	if (name === "default") {
+		return schema.transform((value) => value.replaceAll(blankRegex, ""));
+	} else {
+		return schema.transform((value) => {
+			let tmiList: string[] = value.split("\n");
+
+			tmiList = tmiList.map((tmi) => tmi.replaceAll(blankRegex, ""));
+			tmiList = tmiList.filter((tmi) => tmi.length > 0);
+
+			return tmiList.join("\n");
+		});
+	}
+}
+
 export const createCharForm = z.object({
-	charName: z.string().min(1, "캐릭터 이름을 입력해 주세요.").max(CHAR_MAX_LENGTH.charName, `캐릭터 이름을 ${CHAR_MAX_LENGTH.charName}자 이하로 입력해 주세요.`),
+	charName: genStringSchema("default").pipe(z.string().min(1, "캐릭터 이름을 입력해 주세요.").max(CHAR_MAX_LENGTH.charName, `캐릭터 이름을 ${CHAR_MAX_LENGTH.charName}자 이하로 입력해 주세요.`)),
 	charImage: z
 		.instanceof(Blob)
 		.nullable()
 		.refine((data) => data instanceof Blob, "캐릭터 이미지를 업로드 해주세요."),
 	charProfileLayout: z.enum(["h", "v", "s", ""], "이미지 유형을 선택해 주세요.").refine((data) => data === "h" || data === "v" || data === "s", "이미지 유형을 선택해 주세요."),
 	charImageFrame: z.enum(["square", "circle", ""], "이미지 프레임을 선택해 주세요.").refine((data) => data === "square" || data === "circle", "이미지 프레임을 선택해 주세요."),
-	charMessage: z.string().min(1, "한 줄 소개를 입력해 주세요.").max(CHAR_MAX_LENGTH.charMessage, `한 줄 소개를 ${CHAR_MAX_LENGTH.charMessage}자 이하로 입력해 주세요.`),
-	charLike: z.string().max(CHAR_MAX_LENGTH.charLike, `좋아하는 것을 ${CHAR_MAX_LENGTH.charLike}자 이하로 입력해 주세요.`),
-	charHate: z.string().max(CHAR_MAX_LENGTH.charHate, `싫어하는 것을 ${CHAR_MAX_LENGTH.charHate}자 이하로 입력해 주세요.`),
-	charPersonality: z.string().max(CHAR_MAX_LENGTH.charPersonality, `성격을 ${CHAR_MAX_LENGTH.charPersonality}자 이하로 입력해 주세요.`),
-	charTmi: z
-		.string()
+	charMessage: genStringSchema("default").pipe(
+		z.string().min(1, "한 줄 소개를 입력해 주세요.").max(CHAR_MAX_LENGTH.charMessage, `한 줄 소개를 ${CHAR_MAX_LENGTH.charMessage}자 이하로 입력해 주세요.`),
+	),
+	charLike: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charLike, `좋아하는 것을 ${CHAR_MAX_LENGTH.charLike}자 이하로 입력해 주세요.`)),
+	charHate: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charHate, `싫어하는 것을 ${CHAR_MAX_LENGTH.charHate}자 이하로 입력해 주세요.`)),
+	charPersonality: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charPersonality, `성격을 ${CHAR_MAX_LENGTH.charPersonality}자 이하로 입력해 주세요.`)),
+	charTmi: genStringSchema("tmi")
 		.refine((data) => data.split("\n").length <= CHAR_TMI_MAX_LINES, `TMI는 최대 ${CHAR_TMI_MAX_LINES}개까지 입력 할 수 있어요.`)
 		.refine((data) => data.split("\n").every((tmi) => tmi.length <= CHAR_TMI_MAX_LINE_LENGTH), `TMI는 각 최대 ${CHAR_TMI_MAX_LINE_LENGTH}자 이하로 입력할 수 있어요.`),
-	charKind: z.string().max(CHAR_MAX_LENGTH.charKind, `종족을 ${CHAR_MAX_LENGTH.charKind}자 이하로 입력해 주세요.`),
-	charAge: z.string().max(CHAR_MAX_LENGTH.charAge, `나이를 ${CHAR_MAX_LENGTH.charAge}자 이하로 입력해 주세요.`),
-	charBirthday: z.string().max(CHAR_MAX_LENGTH.charBirthday, `생일을 ${CHAR_MAX_LENGTH.charBirthday}자 이하로 입력해 주세요.`),
-	charHeight: z.string().max(CHAR_MAX_LENGTH.charHeight, `키를 ${CHAR_MAX_LENGTH.charHeight}자 이하로 입력해 주세요.`),
-	charBirthplace: z.string().max(CHAR_MAX_LENGTH.charBirthplace, `출생지를 ${CHAR_MAX_LENGTH.charBirthplace}자 이하로 입력해 주세요.`),
-	charMbti: z.string().max(CHAR_MAX_LENGTH.charMbti, `MBTI를 ${CHAR_MAX_LENGTH.charMbti}자 이하로 입력해 주세요.`),
-	charMusic: z
-		.url({
-			protocol: MUSIC_PROTOCOL_PATTERN,
-			hostname: MUSIC_HOST_PATTERN,
-			message: "링크가 유효하지 않아요.",
-		})
-		.max(CHAR_MAX_LENGTH.charMusic, `테마곡 주소가 너무 길어요. ${CHAR_MAX_LENGTH.charMusic}자 이하로 입력해 주세요.`)
-		.or(z.string().refine((data) => data === "")),
+	charKind: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charKind, `종족을 ${CHAR_MAX_LENGTH.charKind}자 이하로 입력해 주세요.`)),
+	charAge: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charAge, `나이를 ${CHAR_MAX_LENGTH.charAge}자 이하로 입력해 주세요.`)),
+	charBirthday: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charBirthday, `생일을 ${CHAR_MAX_LENGTH.charBirthday}자 이하로 입력해 주세요.`)),
+	charHeight: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charHeight, `키를 ${CHAR_MAX_LENGTH.charHeight}자 이하로 입력해 주세요.`)),
+	charBirthplace: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charBirthplace, `출생지를 ${CHAR_MAX_LENGTH.charBirthplace}자 이하로 입력해 주세요.`)),
+	charMbti: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charMbti, `MBTI를 ${CHAR_MAX_LENGTH.charMbti}자 이하로 입력해 주세요.`)),
+	charMusic: genStringSchema("default").pipe(
+		z
+			.url({
+				protocol: MUSIC_PROTOCOL_PATTERN,
+				hostname: MUSIC_HOST_PATTERN,
+				message: "링크가 유효하지 않아요.",
+			})
+			.max(CHAR_MAX_LENGTH.charMusic, `테마곡 주소가 너무 길어요. ${CHAR_MAX_LENGTH.charMusic}자 이하로 입력해 주세요.`)
+			.or(z.string().refine((data) => data === "")),
+	),
 	charColor: z
 		.string()
 		.length(7, "퍼스널 컬러를 입력해 주세요.")
