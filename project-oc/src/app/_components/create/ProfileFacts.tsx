@@ -1,6 +1,6 @@
 import {useWatch, type Control} from "react-hook-form";
 import styles from "./ProfileFacts.module.css";
-import {CreateCharFormInputType} from "@/app/create/validator";
+import {CreateCharFormInputType, parseValue} from "@/app/create/validator";
 
 interface ProfileFactsProps {
 	control: Control<CreateCharFormInputType>;
@@ -13,7 +13,7 @@ export default function ProfileFacts({control}: ProfileFactsProps) {
 		compute(data) {
 			return {
 				label: "종족",
-				value: data || null,
+				value: parseValue("default", data, null),
 			};
 		},
 	});
@@ -23,7 +23,7 @@ export default function ProfileFacts({control}: ProfileFactsProps) {
 		compute(data) {
 			return {
 				label: "나이",
-				value: data || null,
+				value: parseValue("default", data, null),
 			};
 		},
 	});
@@ -33,7 +33,7 @@ export default function ProfileFacts({control}: ProfileFactsProps) {
 		compute(data) {
 			return {
 				label: "생일",
-				value: data || null,
+				value: parseValue("default", data, null),
 			};
 		},
 	});
@@ -43,7 +43,7 @@ export default function ProfileFacts({control}: ProfileFactsProps) {
 		compute(data) {
 			return {
 				label: "키",
-				value: data || null,
+				value: parseValue("default", data, null),
 			};
 		},
 	});
@@ -53,7 +53,7 @@ export default function ProfileFacts({control}: ProfileFactsProps) {
 		compute(data) {
 			return {
 				label: "MBTI",
-				value: data || null,
+				value: parseValue("default", data, null),
 			};
 		},
 	});
@@ -63,7 +63,7 @@ export default function ProfileFacts({control}: ProfileFactsProps) {
 		compute(data) {
 			return {
 				label: "출신",
-				value: data || null,
+				value: parseValue("default", data, null),
 			};
 		},
 	});

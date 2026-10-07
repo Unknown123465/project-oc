@@ -7,7 +7,7 @@ import styles from "./CoreInfoSection.module.css";
 import {TextInput} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {describedBy} from "@/components/ui/aria";
-import type {CreateCharFormInputType} from "@/app/create/validator";
+import {ALL_CHAR_MAX_LENGTH, type CreateCharFormInputType} from "@/app/create/validator";
 
 interface CoreInfoSectionProps {
 	control: Control<CreateCharFormInputType>;
@@ -170,6 +170,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 						name="charTmi"
 						control={control}
 						label="TMI"
+						maxLength={ALL_CHAR_MAX_LENGTH}
 						placeholder="한 줄에 하나씩, 최대 5개까지 입력하세요"
 						describedBy={describedBy(helpId.charTmi, errors.charTmi && errorId.charTmi)}
 					/>

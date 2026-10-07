@@ -1,6 +1,6 @@
 import {useWatch, type Control} from "react-hook-form";
 import styles from "./ProfileBlocks.module.css";
-import {CreateCharFormInputType} from "@/app/create/validator";
+import {CreateCharFormInputType, parseValue} from "@/app/create/validator";
 import {toMusicEmbed, type IframeHeight} from "@/app/create/musicEmbed";
 import z from "zod";
 
@@ -36,38 +36,37 @@ export default function ProfileBlocks({control}: ProfileBlocksProps) {
 		name: "charLike",
 		control,
 		compute(data) {
-			return data.trim() || null;
+			return parseValue("default", data, null);
 		},
 	});
 	const hate = useWatch({
 		name: "charHate",
 		control,
 		compute(data) {
-			return data.trim() || null;
+			return parseValue("default", data, null);
 		},
 	});
 	const personality = useWatch({
 		name: "charPersonality",
 		control,
 		compute(data) {
-			return data.trim() || null;
+			return parseValue("default", data, null);
 		},
 	});
 	const tmi = useWatch({
 		name: "charTmi",
 		control,
 		compute(data) {
-			return data
-				.split("\n")
-				.filter((line) => line.trim())
-				.slice(0, TMI_MAX);
+			const value: string | null = parseValue("tmi", data, null);
+
+			return value ? value.split("\n").slice(0, TMI_MAX) : [];
 		},
 	});
 	const music = useWatch({
 		name: "charMusic",
 		control,
 		compute(data) {
-			return data.trim();
+			return parseValue("default", data, null) ?? "";
 		},
 	});
 
