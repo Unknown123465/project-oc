@@ -126,6 +126,7 @@ export default function OptionalFieldsDetails({control, errors}: OptionalFieldsD
 						control={control}
 						validStyle
 						label="테마곡 링크"
+						maxLength={CHAR_MAX_LENGTH.charMusic}
 						placeholder="유튜브 또는 스포티파이, 사운드클라우드 링크"
 						describedBy={errors.charMusic ? errorId.charMusic : undefined}
 					/>
