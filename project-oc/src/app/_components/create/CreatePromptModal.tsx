@@ -19,7 +19,6 @@ import {
 	CreateCharFormInputType,
 	createPromptForm,
 	CreatePromptFormType,
-	createPromptRequireForm,
 	type CreatePromptResultFieldType,
 	CreatePromptResultFormType,
 	parseValue,
@@ -28,6 +27,7 @@ import {
 import {PromptApplyValue} from "./ImageUploadField";
 import {Textarea} from "@/components/ui/textarea";
 import createPromptAction from "@/app/create/promptAction";
+import z from "zod";
 
 /* 결과 화면에 늘어놓을 프로필 항목(테마곡 제외). 순서는 /create 폼의 위→아래
    순서를 그대로 따른다 - 이미지 → 핵심 정보 → 퍼스널 컬러 → 선택 항목.
@@ -50,6 +50,8 @@ const CHAR_FIELD_KEY_LIST = [
 ] as const;
 type CharFieldKey = (typeof CHAR_FIELD_KEY_LIST)[number];
 type CharFieldSelectKey = CharFieldKey | "charProfileLayout" | "charColor";
+
+type ZodResolverMask = z.util.Mask<keyof CreatePromptFormType>;
 
 interface DraftFieldDefinition {
 	key: CharFieldKey;
@@ -105,17 +107,12 @@ function formatHexAsRgb(hex: string): string {
 }
 
 /* 응답 하나를 폼 값 한 벌로 옮긴다.
-
-   모든 항목을 빠짐없이 채우는 게 핵심이다. null은 createPromptForm에 유효한 값이라
-   거를 필요가 없고, 오히려 거르면 그 필드가 undefined로 남아 nullable() 검증에 걸려
-   handleSubmit이 조용히 실패한다(resultSubmit이 아예 호출되지 않음). 화면은
-   promptResult.fields[key].value로 판단하므로 null을 넣어도 안 그려진다.
-   charProfileLayout·charColor·charImageFrame·charImage는 CHAR_FIELD_KEY_LIST에 없어
-   같은 이유로 따로 채운다.
-
+   화면은 promptResult.fields[key].value로 판단하므로 null을 넣어도 안 그려진다.
+   charProfileLayout, charColor는 CHAR_FIELD_KEY_LIST에 없어 따로 채운다. 채우지 않으면 요소를 체크한 채 제출 시도 시 handleSubmit에서 막힌다.
+   응답에 있는 요소 중 null은 createPromptForm에 유효한 값이라 거를 필요가 없다.
    fields는 참고 이미지만 보낸 요청이면 통째로 null이다. 그때도 항목들은 undefined가
-   아니라 null이어야 하므로 ?? null로 받는다. */
-function toFormValues(result: CreatePromptResultFormType, imageFile: File | null) {
+   아니라 null이어야 하므로 ?? null로 받는다. 하단 filter가 value가 null인지 확인하니 undefined를 유지하면 filter가 제 역할을 할 수 없다. */
+function toFormValues(result: CreatePromptResultFormType) {
 	const fieldEntries = CHAR_FIELD_KEY_LIST.map((key) => [key, result.fields?.[key].value ?? null] as const);
 
 	const key: CharFieldSelectKey[] = fieldEntries.filter((entries) => entries[1] !== null).map((entries) => entries[0]);
@@ -128,9 +125,7 @@ function toFormValues(result: CreatePromptResultFormType, imageFile: File | null
 		fields: {
 			...Object.fromEntries(fieldEntries),
 			charProfileLayout: result.layout?.type ?? null,
-			charImageFrame: null,
 			charColor: result.color,
-			charImage: imageFile,
 		},
 		key,
 	};
@@ -268,18 +263,6 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	const {
-		handleSubmit,
-		control,
-		setValues,
-		setError,
-		formState: {errors},
-	} = useForm({
-		defaultValues: {},
-		resolver: zodResolver(createPromptForm),
-		mode: "onChange",
-	});
-
 	const [promptDescription, setPromptDescription] = useState<string>("");
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const [imageURL, setImageURL] = useState<string | null>(null);
@@ -289,6 +272,17 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 	const [hasResult, setHasResult] = useState<boolean>(false);
 	const [promptResult, setPromptResult] = useState<CreatePromptResultFormType | null>(null);
 	const [selectedKey, setSelectedKey] = useState<CharFieldSelectKey[]>([]);
+
+	const {
+		handleSubmit,
+		control,
+		setValues,
+		formState: {errors},
+	} = useForm({
+		defaultValues: {},
+		resolver: zodResolver(createPromptForm.pick(selectedKey.reduce<ZodResolverMask>((prev, current) => ({...prev, [current]: true}), {}))),
+		mode: "onChange",
+	});
 
 	/* 서버 값에서 출발해 요청이 성공할 때마다 줄인다. 이 dialog는 열림 여부와 상관없이
 	   항상 마운트돼 있어 닫았다 열어도 값이 유지된다. 페이지를 새로 열면 서버 값이 다시
@@ -526,7 +520,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 				throw new Error(result.message);
 			}
 
-			const formValues = toFormValues(result.result, imageFile);
+			const formValues = toFormValues(result.result);
 
 			/* 한 번 썼으니 하나 줄인다. 서버가 남은 횟수를 알려주면 그 값이 우선이다 —
 			   다른 탭에서 쓴 횟수까지 반영된 수는 서버만 안다. */
@@ -571,49 +565,35 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 		}
 	};
 
-	const resultSubmit = (data: CreatePromptFormType) => {
-		try {
-			const check = createPromptRequireForm.safeParse(data);
+	const resultSubmit = (data: Partial<CreatePromptFormType>) => {
+		const resultObject: CreateResultType = {};
 
-			if (!check.success) {
-				throw new Error(check.error.issues[0].message);
+		for (const key of CHAR_FIELD_KEY_LIST) {
+			const value = data[key];
+
+			/* value 타입이 string, null만 있지 않고 undefined도 나올 수 있다. selectedKey 원소에 없는 요소는 Zod 스키마에서 제외되고 모든 요소가 data 매개변수에 있다고 할 수 없어서 존재하지 않는 요소에 접근하면 undefined가 반환되기 때문이다.
+			value?.trim()으로 nullish 여부를 확인할 수 있으나, 공백 또는 빈 문자열이 반영이 안 되기 때문에 typeof로 string 타입 여부만 확인해서 반영한다.
+			*/
+			if (typeof value === "string" && selectedKey.includes(key)) {
+				resultObject[key] = value;
 			}
+		}
 
-			const resultData = check.data;
-			const resultObject: CreateResultType = {};
+		if (typeof data.charColor === "string" && selectedKey.includes("charColor")) {
+			resultObject.charColor = data.charColor;
+		}
 
-			for (const key of CHAR_FIELD_KEY_LIST) {
-				const value = resultData[key];
+		setValuesByForm(resultObject);
 
-				if (value !== null && selectedKey.includes(key)) {
-					resultObject[key] = value;
-				}
-			}
-
-			if (selectedKey.includes("charColor") && resultData.charColor !== null) {
-				resultObject.charColor = resultData.charColor;
-			}
-
-			setValuesByForm(resultObject);
-
-			if (imageFile === null || !promptResult?.layout || !selectedKey.includes("charProfileLayout")) {
-				onClose();
-			} else {
-				onClose({
-					file: imageFile,
-					layout: promptResult.layout.type,
-					fx: promptResult.layout.fx,
-					fy: promptResult.layout.fy,
-				});
-			}
-		} catch (err) {
-			if (err instanceof Error) {
-				setError("root", {
-					message: err.message,
-				});
-			}
-		} finally {
-			setIsSubmitting(false);
+		if (imageFile === null || !promptResult?.layout || !selectedKey.includes("charProfileLayout")) {
+			onClose();
+		} else {
+			onClose({
+				file: imageFile,
+				layout: promptResult.layout.type,
+				fx: promptResult.layout.fx,
+				fy: promptResult.layout.fy,
+			});
 		}
 	};
 
@@ -773,6 +753,8 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 													현재 {IMAGE_TYPE_DEFINITIONS[currentLayout].label} → {IMAGE_TYPE_DEFINITIONS[promptResult.layout.type].label}. 반영하면 이미지를 다시 잘라요.
 												</p>
 											) : null}
+
+											{errors.charProfileLayout?.message ? <p className={sectionStyles.error_message}>{errors.charProfileLayout.message}</p> : null}
 										</div>
 									</div>
 								</section>
@@ -802,6 +784,8 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 											<span className={styles.color_rgb}>{formatHexAsRgb(promptResult.color)}</span>
 
 											<span className={styles.color_code}>{promptResult.color.toUpperCase()}</span>
+
+											{errors.charColor?.message ? <p className={sectionStyles.error_message}>{errors.charColor.message}</p> : null}
 										</div>
 									</div>
 								</section>
@@ -812,8 +796,6 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 							{OPTIONAL_DRAFT_FIELDS.map(renderDraftField)}
 						</div>
 					</div>
-
-					<p className={sectionStyles.error_message}>{errors.root?.message}</p>
 
 					<div className={styles.actions}>
 						{/* TODO: 체크된 개수로 갱신. 0개면 반영 버튼 disabled */}
