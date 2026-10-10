@@ -165,10 +165,8 @@ export const createPromptForm = z.object({
 		.regex(/^#[0-9a-f]{6}$/i, "퍼스널 컬러가 올바르지 않아요. HEX로 입력해 주세요.")
 		.nullable(),
 });
-export const createPromptRequireForm = createPromptForm.required();
 
 export type CreatePromptFormType = z.infer<typeof createPromptForm>;
-export type CreatePromptFormRequireType = z.infer<typeof createPromptRequireForm>;
 
 /** AI 초안에 쓰는 캐릭터 설명의 상한. 모달의 카운터도 이 값을 본다. */
 export const PROMPT_DESCRIPTION_MAX_LENGTH = 1000;
