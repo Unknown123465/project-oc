@@ -326,8 +326,9 @@ function ratio(description: string) {
 	return z.preprocess((value) => (typeof value === "number" ? Math.min(1, Math.max(0, value)) : value), z.number().min(0).max(1)).describe(description);
 }
 
+export const LAYOUT_REASON_MAX_LENGTH = 40;
+
 /** 모델은 "#FFF", "#AABBCC " 같은 표기도 곧잘 내놓는다. 여기서 6자리 소문자로 맞춘다. */
-const LAYOUT_REASON_MAX_LENGTH = 40;
 
 const draftColor = z
 	.preprocess(

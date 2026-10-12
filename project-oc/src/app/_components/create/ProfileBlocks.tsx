@@ -1,15 +1,12 @@
 import {useWatch, type Control} from "react-hook-form";
 import styles from "./ProfileBlocks.module.css";
-import {CreateCharFormInputType, parseValue} from "@/app/create/validator";
+import {CreateCharFormInputType, parseValue, CHAR_TMI_MAX_LINES} from "@/app/create/validator";
 import {toMusicEmbed, type IframeHeight} from "@/app/create/musicEmbed";
 import z from "zod";
 
 interface ProfileBlocksProps {
 	control: Control<CreateCharFormInputType>;
 }
-
-/* 미리보기에 보여 줄 TMI 개수. validator.ts의 상한과 같은 값이어야 한다. */
-const TMI_MAX = 5;
 
 const MUSIC_URL = z.httpUrl("링크가 유효하지 않아요.");
 
@@ -59,7 +56,7 @@ export default function ProfileBlocks({control}: ProfileBlocksProps) {
 		compute(data) {
 			const value: string | null = parseValue("tmi", data, null);
 
-			return value ? value.split("\n").slice(0, TMI_MAX) : [];
+			return value ? value.split("\n").slice(0, CHAR_TMI_MAX_LINES) : [];
 		},
 	});
 	const music = useWatch({

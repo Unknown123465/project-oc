@@ -14,6 +14,10 @@ import {
 	CreatePromptResultFormType,
 	createPromptResultForm,
 	toRefundReason,
+	CHAR_MAX_LENGTH,
+	CHAR_TMI_MAX_LINES,
+	CHAR_TMI_MAX_LINE_LENGTH,
+	LAYOUT_REASON_MAX_LENGTH,
 } from "./validator";
 import {auth} from "@/auth/auth";
 import {type ClaimRejection, claimAiDraft, refundAiDraft} from "./aiDraftUsage";
@@ -45,23 +49,23 @@ const SYSTEM_PROMPT = `당신은 창작 캐릭터(자캐) 프로필 작성을 �
 - 프로필 항목은 설정을 한 구절로 적는 칸이지 장면을 묘사하는 칸이 아닙니다. 설명에 있는 설정을 짧게 옮기되, 설명에 없는 묘사나 장면을 덧붙여 부풀리지 마세요. 이건 수위와 무관하게 모든 항목에 적용됩니다.
 
 [항목 규칙] 글자 수를 넘기면 결과 전체가 버려집니다.
-- charName: 이름. 20자 이내.
-- charMessage: 한 줄 소개. 30자 이내. 캐릭터를 한 문장으로 압축합니다.
-- charLike / charHate / charPersonality: 좋아하는 것 / 싫어하는 것 / 성격. 각 100자 이내.
-- charTmi: 다른 항목에 들어가지 않는 나머지 설정을 모으는 칸입니다. 출신과 과거에 있었던 일, 다른 인물과의 관계, 처지, 버릇, 재주 등 무엇이든 넣습니다. 사소한 것만 골라 담는 칸이 아니며, 설명의 중심이 되는 사건이나 배경이 여기 말고 갈 곳이 없으면 반드시 여기에 넣으세요. 한 줄에 하나씩 줄바꿈(\\n)으로 구분. 최대 5줄, 각 줄 30자 이내.
+- charName: 이름. ${CHAR_MAX_LENGTH.charName}자 이내.
+- charMessage: 한 줄 소개. ${CHAR_MAX_LENGTH.charMessage}자 이내. 캐릭터를 한 문장으로 압축합니다.
+- charLike / charHate / charPersonality: 좋아하는 것 / 싫어하는 것 / 성격. 각 ${CHAR_MAX_LENGTH.charLike}자 이내.
+- charTmi: 다른 항목에 들어가지 않는 나머지 설정을 모으는 칸입니다. 출신과 과거에 있었던 일, 다른 인물과의 관계, 처지, 버릇, 재주 등 무엇이든 넣습니다. 사소한 것만 골라 담는 칸이 아니며, 설명의 중심이 되는 사건이나 배경이 여기 말고 갈 곳이 없으면 반드시 여기에 넣으세요. 한 줄에 하나씩 줄바꿈(\\n)으로 구분. 최대 ${CHAR_TMI_MAX_LINES}줄, 각 줄 ${CHAR_TMI_MAX_LINE_LENGTH}자 이내.
   - 각 줄은 "~한다", "~좋아한다", "~없다"처럼 동사·형용사를 평서형으로 끝맺습니다. "~함", "~있음", "~좋아함"처럼 명사형(개조식)으로 끝내지 마세요.
-  - 단, 평서형으로 쓰면 30자를 넘는 줄은 그 줄만 "~함", "~있음"처럼 명사형으로 줄여 씁니다. 글자 수 제한이 말투보다 우선입니다.
+  - 단, 평서형으로 쓰면 ${CHAR_TMI_MAX_LINE_LENGTH}자를 넘는 줄은 그 줄만 "~함", "~있음"처럼 명사형으로 줄여 씁니다. 글자 수 제한이 말투보다 우선입니다.
   - 줄 끝에 마침표(.)를 붙이지 마세요.
-- charKind: 종족. 10자 이내(인간, 반요, 안드로이드 등).
-- charAge: 나이. 20자 이내. 설명에 쓰인 표기를 그대로 씁니다("열아홉", "19세").
-- charBirthday: 생일. 10자 이내("3월 14일").
-- charHeight: 키. 10자 이내("172cm").
-- charBirthplace: 출생지. 20자 이내.
-- charMbti: 4자 이내 대문자("INTJ"). 설명에 직접 적혀 있을 때만 채웁니다.
+- charKind: 종족. ${CHAR_MAX_LENGTH.charKind}자 이내(인간, 반요, 안드로이드 등).
+- charAge: 나이. ${CHAR_MAX_LENGTH.charAge}자 이내. 설명에 쓰인 표기를 그대로 씁니다("열아홉", "19세").
+- charBirthday: 생일. ${CHAR_MAX_LENGTH.charBirthday}자 이내("3월 14일").
+- charHeight: 키. ${CHAR_MAX_LENGTH.charHeight}자 이내("172cm").
+- charBirthplace: 출생지. ${CHAR_MAX_LENGTH.charBirthplace}자 이내.
+- charMbti: ${CHAR_MAX_LENGTH.charMbti}자 이내 대문자("INTJ"). 설명에 직접 적혀 있을 때만 채웁니다.
 
 [참고 이미지가 있을 때]
 - layout.type: 프로필 카드에 어울리는 이미지 유형. "h"=가로로 긴 구도, "v"=세로로 긴 전신, "s"=정사각형(얼굴 위주).
-- layout.reason: 그 유형을 왜 추천하는지. 40자 이내 한 문장이며 "~추천합니다"로 끝맺습니다. 예: "캐릭터 전신이 잘 나오도록 세로 구도를 추천합니다." 고르는 사람은 사용자이므로 "선택했습니다", "정했습니다", "골랐습니다"처럼 당신이 결정한 것처럼 쓰지 마세요.
+- layout.reason: 그 유형을 왜 추천하는지. ${LAYOUT_REASON_MAX_LENGTH}자 이내 한 문장이며 "~추천합니다"로 끝맺습니다. 예: "캐릭터 전신이 잘 나오도록 세로 구도를 추천합니다." 고르는 사람은 사용자이므로 "선택했습니다", "정했습니다", "골랐습니다"처럼 당신이 결정한 것처럼 쓰지 마세요.
 - layout.fx, layout.fy: 이미지를 잘라도 반드시 남아야 하는 지점(보통 얼굴 중심)의 위치. 이미지 왼쪽 위가 (0, 0), 오른쪽 아래가 (1, 1)인 비율입니다.
 - color: 캐릭터를 대표하는 색 하나를 "#rrggbb" 형식으로. 배경색이 아니라 머리카락·눈·의상처럼 캐릭터 본인의 색에서 고르세요.
 
