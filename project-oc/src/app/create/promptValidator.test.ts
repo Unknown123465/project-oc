@@ -30,6 +30,18 @@ function parseResult(override: Record<string, unknown> = {}) {
 	return check.data;
 }
 
+/* CHAR_MAX_LENGTH에 charLike, charHate, charPersonality가 분리되어 있지만, 시스템 프롬프트는 charLike를 기준으로 하나로 통일했다.
+   셋 중 하나라도 달라지면 시스템 프롬프트와 일치하지 않게 되어 글자 수가 초과되어 잘리거나 너무 짧게 나와 품질이 떨어질 수 있다.
+*/
+describe("글자 수 제한", () => {
+	it("charLike, charHate, charPersonality의 글자 수 제한이 일치해야 한다", () => {
+		const {charLike, charHate, charPersonality} = CHAR_MAX_LENGTH;
+
+		expect(charHate, "charLike와 charHate 글자 수가 일치하지 않음").toBe(charLike);
+		expect(charPersonality, "charLike와 charPersonality 글자 수가 일치하지 않음").toBe(charLike);
+	});
+});
+
 describe("길이를 넘긴 값은 버리지 않고 자른다", () => {
 	it.each([
 		["charName", CHAR_MAX_LENGTH.charName],

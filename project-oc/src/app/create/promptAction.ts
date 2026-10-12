@@ -25,8 +25,9 @@ import {getAiDraftEnabled} from "./globalConfig";
 
 const GOOGLE_AI_MODEL = "gemini-3.1-flash-lite" as const;
 
-/* 사용자 설명 "앞"에 붙는 지침. 항목별 글자 수는 createPromptResultForm과 같은 값을
-   적어 둔다 - 스키마는 넘친 응답을 버리기만 하므로, 넘기지 말라는 말은 여기서 해야 한다. */
+/* 사용자 설명 "앞"에 붙는 지침. 항목별 글자 수는 createPromptResultForm과 같은 상수로
+   적는다 - 스키마는 넘친 응답을 자르기만 하므로, 넘기지 말라는 말은 여기서 해야 한다.
+   charLike, charHate, charPersonality 글자 수 제한은 charLike로 통일했다. 셋 중 하나 이상을 따로 바꿔야 한다면, 프롬프트도 수정해야 한다. */
 const SYSTEM_PROMPT = `당신은 창작 캐릭터(자캐) 프로필 작성을 돕는 도우미입니다.
 사용자가 자유롭게 쓴 캐릭터 설명과, 있다면 참고 이미지를 읽고 프로필 항목별 초안을 만듭니다.
 
