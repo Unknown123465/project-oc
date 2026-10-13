@@ -7,7 +7,7 @@ import styles from "./CoreInfoSection.module.css";
 import {TextInput} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {describedBy} from "@/components/ui/aria";
-import {ALL_CHAR_MAX_LENGTH, type CreateCharFormInputType} from "@/app/create/validator";
+import {ALL_CHAR_MAX_LENGTH, CHAR_MAX_LENGTH, type CreateCharFormInputType} from "@/app/create/validator";
 
 interface CoreInfoSectionProps {
 	control: Control<CreateCharFormInputType>;
@@ -56,7 +56,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 						control={control}
 						label="이름"
 						required
-						maxLength={20}
+						maxLength={CHAR_MAX_LENGTH.charName}
 						placeholder="캐릭터 이름을 입력하세요"
 						describedBy={describedBy(helpId.charName, errors.charName && errorId.charName)}
 					/>
@@ -79,7 +79,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 						control={control}
 						label="한 줄 소개"
 						required
-						maxLength={30}
+						maxLength={CHAR_MAX_LENGTH.charMessage}
 						placeholder="이 캐릭터를 한 문장으로 소개해 주세요"
 						describedBy={describedBy(helpId.charMessage, errors.charMessage && errorId.charMessage)}
 					/>
@@ -102,7 +102,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 						control={control}
 						label="좋아하는 것"
 						rows={3}
-						maxLength={100}
+						maxLength={CHAR_MAX_LENGTH.charLike}
 						placeholder="무대 위에 서는 것"
 						describedBy={describedBy(helpId.charLike, errors.charLike && errorId.charLike)}
 					/>
@@ -125,7 +125,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 						control={control}
 						label="싫어하는 것"
 						rows={3}
-						maxLength={100}
+						maxLength={CHAR_MAX_LENGTH.charHate}
 						placeholder="포기하는 것"
 						describedBy={describedBy(helpId.charHate, errors.charHate && errorId.charHate)}
 					/>
@@ -148,7 +148,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 						control={control}
 						label="성격"
 						rows={4}
-						maxLength={100}
+						maxLength={CHAR_MAX_LENGTH.charPersonality}
 						placeholder="밝고 긍정적이며 꾸준히 노력하는 성격입니다."
 						describedBy={describedBy(helpId.charPersonality, errors.charPersonality && errorId.charPersonality)}
 					/>

@@ -50,7 +50,7 @@ export default function OptionalFieldsDetails({control, errors}: OptionalFieldsD
 						name="charAge"
 						control={control}
 						label="나이"
-						maxLength={20}
+						maxLength={CHAR_MAX_LENGTH.charAge}
 						placeholder="예: 19세"
 						describedBy={errors.charAge ? errorId.charAge : undefined}
 					/>
@@ -65,7 +65,7 @@ export default function OptionalFieldsDetails({control, errors}: OptionalFieldsD
 						name="charBirthday"
 						control={control}
 						label="생일"
-						maxLength={10}
+						maxLength={CHAR_MAX_LENGTH.charBirthday}
 						placeholder="예: 2월 7일"
 						describedBy={errors.charBirthday ? errorId.charBirthday : undefined}
 					/>
@@ -80,7 +80,7 @@ export default function OptionalFieldsDetails({control, errors}: OptionalFieldsD
 						name="charHeight"
 						control={control}
 						label="키"
-						maxLength={10}
+						maxLength={CHAR_MAX_LENGTH.charHeight}
 						placeholder="예: 162cm"
 						describedBy={errors.charHeight ? errorId.charHeight : undefined}
 					/>
@@ -95,7 +95,7 @@ export default function OptionalFieldsDetails({control, errors}: OptionalFieldsD
 						name="charBirthplace"
 						control={control}
 						label="출신"
-						maxLength={20}
+						maxLength={CHAR_MAX_LENGTH.charBirthplace}
 						placeholder="예: 서울"
 						describedBy={errors.charBirthplace ? errorId.charBirthplace : undefined}
 					/>
@@ -110,7 +110,7 @@ export default function OptionalFieldsDetails({control, errors}: OptionalFieldsD
 						name="charMbti"
 						control={control}
 						label="MBTI"
-						maxLength={4}
+						maxLength={CHAR_MAX_LENGTH.charMbti}
 						placeholder="예: ENFP"
 						describedBy={errors.charMbti ? errorId.charMbti : undefined}
 					/>

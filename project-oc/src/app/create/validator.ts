@@ -7,7 +7,8 @@ export const MAX_TEMPLATE_LIMIT = 10;
 
 /* 항목별 글자 수 상한. 같은 숫자를 생성 폼·AI 초안 폼·AI 응답 스키마·화면 카운터가
    각자 리터럴로 들고 있어서 한 곳만 고치면 나머지가 조용히 어긋났다. 문구에도
-   같은 상수를 끼워 넣어 숫자와 안내 문장이 따로 놀지 않게 한다. */
+   같은 상수를 끼워 넣어 숫자와 안내 문장이 따로 놀지 않게 한다.
+   charLike, charHate, charPersonality는 서로 일치해야 한다. 하나라도 일치하지 않으면 테스트에서 실패한다. */
 export const CHAR_MAX_LENGTH = {
 	charName: 20,
 	charMessage: 30,
@@ -326,8 +327,9 @@ function ratio(description: string) {
 	return z.preprocess((value) => (typeof value === "number" ? Math.min(1, Math.max(0, value)) : value), z.number().min(0).max(1)).describe(description);
 }
 
+export const LAYOUT_REASON_MAX_LENGTH = 40;
+
 /** 모델은 "#FFF", "#AABBCC " 같은 표기도 곧잘 내놓는다. 여기서 6자리 소문자로 맞춘다. */
-const LAYOUT_REASON_MAX_LENGTH = 40;
 
 const draftColor = z
 	.preprocess(
