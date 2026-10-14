@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useId, useRef, useState, type ChangeEvent, type MouseEvent, type SyntheticEvent} from "react";
+import {useEffect, useId, useRef, useState, type ChangeEvent, type MouseEvent} from "react";
 import styles from "./CreatePromptModal.module.css";
 import sectionStyles from "./Section.module.css";
 import {ActionButton} from "@/components/ui/button";
@@ -28,6 +28,7 @@ import {PromptApplyValue} from "./ImageUploadField";
 import {Textarea} from "@/components/ui/textarea";
 import createPromptAction from "@/app/create/promptAction";
 import z from "zod";
+import useConfirm from "@/hooks/useConfirm";
 
 /* 결과 화면에 늘어놓을 프로필 항목(테마곡 제외). 순서는 /create 폼의 위→아래
    순서를 그대로 따른다 - 이미지 → 핵심 정보 → 퍼스널 컬러 → 선택 항목.
@@ -116,6 +117,10 @@ function toFormValues(result: CreatePromptResultFormType) {
 	const fieldEntries = CHAR_FIELD_KEY_LIST.map((key) => [key, result.fields?.[key].value ?? null] as const);
 
 	const key: CharFieldSelectKey[] = fieldEntries.filter((entries) => entries[1] !== null).map((entries) => entries[0]);
+
+	if (result.layout !== null) {
+		key.push("charProfileLayout");
+	}
 
 	if (result.color !== null) {
 		key.push("charColor");
@@ -247,14 +252,15 @@ export interface CreatePromptModalProps {
 	onClose: (data?: PromptApplyValue) => void;
 	/** 페이지를 열었을 때 서버가 알려준 오늘 남은 횟수. 이후 셈은 모달이 이어 간다. */
 	remainingToday: number;
-	/** 생성 폼에서 이미 고른 이미지 유형. 추천과 다르면 결과 화면에 대비를 보여주고,
-	    반영 시 이미지를 다시 잘라야 한다는 확인 모달의 근거가 된다. */
+	/** 생성 폼에서 이미 고른 이미지 유형. */
 	currentLayout: ImageType | "";
 	setValuesByForm: UseFormSetValues<CreateCharFormInputType>;
 }
 
 export default function CreatePromptModal({open, onClose, remainingToday, currentLayout, setValuesByForm}: CreatePromptModalProps) {
 	useScrollLock(open);
+
+	const {start, component} = useConfirm({confirmLabel: "바꾸고 반영", cancelLabel: "취소", blockHooks: false});
 
 	const titleId = useId();
 	const descriptionFieldId = useId();
@@ -295,6 +301,12 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 	/* 오류가 없을 때 안내 자리에 둘 기본 문구. 횟수를 다 쓴 뒤에는 빈 문자열이 아니라
 	   소진 안내가 기본값이 된다 — "오류 지우기"가 이 상태까지 지우면 안 된다. */
 	const idleMessage: string = isExhausted ? AI_DRAFT_EXHAUSTED_MESSAGE : "";
+
+	let enabledCount: number = 0;
+
+	enabledCount += promptResult?.layout ? 1 : 0;
+	enabledCount += promptResult?.color ? 1 : 0;
+	enabledCount += promptResult?.fields ? Object.values(promptResult.fields).filter((field) => field.value !== null).length : 0;
 
 	const [errorMessage, setErrorMessage] = useState<string>(remainingToday <= 0 ? AI_DRAFT_EXHAUSTED_MESSAGE : "");
 
@@ -346,25 +358,6 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 		if (open) {
 			onClose();
 		}
-	};
-
-	/* TODO: 결과가 떠 있을 때의 닫기. ConfirmModal("초안이 사라져요") → 예 →
-	   setHasResult(false) 후 close. 지금은 뼈대라 바로 닫는다. */
-	const requestCloseResult = () => {
-		requestClose();
-	};
-
-	/* Esc는 dialog의 cancel 이벤트로 온다. 결과 화면에서는 막고 확인 모달로 돌린다.
-	   단, Chrome은 사용자 조작 없이 연달아 누른 두 번째 Esc는 preventDefault를
-	   무시하고 닫아 버린다(close watcher 규칙) - 그래서 뒤로가기와 마찬가지로
-	   100% 방어는 아니고, 확인 모달이 1차 방어선이다. */
-	const handleDialogCancel = (e: SyntheticEvent<HTMLDialogElement>) => {
-		if (!hasResult) {
-			return;
-		}
-
-		e.preventDefault();
-		requestCloseResult();
 	};
 
 	/* ::backdrop 클릭은 dialog 자신을 target으로 만든다. 실제 내용 영역 밖을 눌렀을 때만 닫는다.
@@ -565,8 +558,16 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 		}
 	};
 
-	const resultSubmit = (data: Partial<CreatePromptFormType>) => {
+	const resultSubmit = async (data: Partial<CreatePromptFormType>) => {
 		const resultObject: CreateResultType = {};
+
+		if (imageFile !== null && currentLayout && selectedKey.includes("charProfileLayout")) {
+			const confirmResult: boolean = await start("등록한 이미지를 바꿀까요?", "반영하면 지금 등록된 이미지와 이미지 유형이 참고 이미지로 바뀌고, 이미지 영역을 다시 잘라야 해요.");
+
+			if (!confirmResult) {
+				return;
+			}
+		}
 
 		for (const key of CHAR_FIELD_KEY_LIST) {
 			const value = data[key];
@@ -598,221 +599,225 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 	};
 
 	return (
-		<dialog ref={dialogRef} className={styles.backdrop} aria-labelledby={titleId} onClose={handleDialogClose} onCancel={handleDialogCancel} onClick={handleBackdropClick}>
-			{!hasResult ? (
-				<>
-					<div className={styles.head}>
-						<div>
-							<h2 id={titleId}>AI 프로필 초안</h2>
+		<>
+			{component}
+			<dialog ref={dialogRef} className={styles.backdrop} aria-labelledby={titleId} onClose={handleDialogClose} onClick={handleBackdropClick}>
+				{!hasResult ? (
+					<>
+						<div className={styles.head}>
+							<div>
+								<h2 id={titleId}>AI 프로필 초안</h2>
 
-							<p>캐릭터를 자유롭게 적으면 항목별로 나눠 드려요. 반영할지는 직접 고르세요.</p>
-						</div>
-
-						<button type="button" className={styles.close} aria-label="AI 프로필 초안 닫기" onClick={requestClose}>
-							<i className="bi bi-x-lg" aria-hidden="true"></i>
-						</button>
-					</div>
-
-					<div className={styles.body}>
-						<div className={styles.field}>
-							<div className={styles.field_head}>
-								<label htmlFor={descriptionFieldId}>
-									캐릭터 설명 <span className={styles.optional}>(선택)</span>
-								</label>
-
-								<span className={`${styles.counter} ${isOverLimit ? styles.counter_over : ""}`}>
-									{promptDescription.length} / {PROMPT_DESCRIPTION_MAX_LENGTH}
-								</span>
+								<p>캐릭터를 자유롭게 적으면 항목별로 나눠 드려요. 반영할지는 직접 고르세요.</p>
 							</div>
 
-							<textarea
-								id={descriptionFieldId}
-								className={`${styles.textarea} ${isOverLimit ? styles.invalid : ""}`}
-								value={promptDescription}
-								onChange={promptDescriptionChange}
-								placeholder={"은발에 붉은 눈, 열아홉 살. 말수가 적지만 단 것 앞에서는 무너진다.\n고양이를 키우고, 비 오는 날을 싫어한다..."}
-								aria-describedby={noticeId}
-								aria-invalid={isOverLimit}
-								autoFocus
-							/>
+							<button type="button" className={styles.close} aria-label="AI 프로필 초안 닫기" onClick={requestClose}>
+								<i className="bi bi-x-lg" aria-hidden="true"></i>
+							</button>
 						</div>
 
-						<div className={styles.field}>
-							<div className={styles.field_head}>
-								<input type="file" className={styles.hidden_input} ref={fileInputRef} accept={IMAGE_ACCEPTED_TYPES.join(",")} onChange={handleFileChange} />
+						<div className={styles.body}>
+							<div className={styles.field}>
+								<div className={styles.field_head}>
+									<label htmlFor={descriptionFieldId}>
+										캐릭터 설명 <span className={styles.optional}>(선택)</span>
+									</label>
 
-								<label>
-									참고 이미지 <span className={styles.optional}>(선택)</span>
-								</label>
-							</div>
-
-							<p className={styles.help}>이미지 유형과 색 추천에만 쓰여요. 프로필 이미지는 따로 등록해요.</p>
-
-							{imageFile === null || imageURL === null ? (
-								<div className={styles.file_picker}>
-									<ActionButton styleType="attention" onClick={() => fileInputRef.current?.click()}>
-										{isReadingFile ? "이미지 읽는 중" : "이미지 첨부"}
-									</ActionButton>
-
-									<p>PNG, JPG, WEBP / 최대 10MB 및 3000x3000px 이하</p>
+									<span className={`${styles.counter} ${isOverLimit ? styles.counter_over : ""}`}>
+										{promptDescription.length} / {PROMPT_DESCRIPTION_MAX_LENGTH}
+									</span>
 								</div>
-							) : (
-								<div className={styles.attached}>
-									{/* eslint-disable-next-line @next/next/no-img-element -- 첨부 미리보기는 blob: objectURL이라 next/image 최적화 대상이 아님 */}
-									<img src={imageURL} alt={imageFile.name} className={styles.thumbnail} />
 
-									<div className={styles.attached_info}>
-										<span className={styles.file_name}>{imageFile.name}</span>
+								<textarea
+									id={descriptionFieldId}
+									className={`${styles.textarea} ${isOverLimit ? styles.invalid : ""}`}
+									value={promptDescription}
+									onChange={promptDescriptionChange}
+									placeholder={"은발에 붉은 눈, 열아홉 살. 말수가 적지만 단 것 앞에서는 무너진다.\n고양이를 키우고, 비 오는 날을 싫어한다..."}
+									aria-describedby={noticeId}
+									aria-invalid={isOverLimit}
+									autoFocus
+								/>
+							</div>
 
-										<div className={styles.attached_actions}>
-											<ActionButton onClick={() => fileInputRef.current?.click()}>변경</ActionButton>
+							<div className={styles.field}>
+								<div className={styles.field_head}>
+									<input type="file" className={styles.hidden_input} ref={fileInputRef} accept={IMAGE_ACCEPTED_TYPES.join(",")} onChange={handleFileChange} />
 
-											<ActionButton onClick={handleCancel}>제거</ActionButton>
+									<label>
+										참고 이미지 <span className={styles.optional}>(선택)</span>
+									</label>
+								</div>
+
+								<p className={styles.help}>이미지 유형과 색 추천에만 쓰여요. 프로필 이미지는 따로 등록해요.</p>
+
+								{imageFile === null || imageURL === null ? (
+									<div className={styles.file_picker}>
+										<ActionButton styleType="attention" onClick={() => fileInputRef.current?.click()}>
+											{isReadingFile ? "이미지 읽는 중" : "이미지 첨부"}
+										</ActionButton>
+
+										<p>PNG, JPG, WEBP / 최대 10MB 및 3000x3000px 이하</p>
+									</div>
+								) : (
+									<div className={styles.attached}>
+										{/* eslint-disable-next-line @next/next/no-img-element -- 첨부 미리보기는 blob: objectURL이라 next/image 최적화 대상이 아님 */}
+										<img src={imageURL} alt={imageFile.name} className={styles.thumbnail} />
+
+										<div className={styles.attached_info}>
+											<span className={styles.file_name}>{imageFile.name}</span>
+
+											<div className={styles.attached_actions}>
+												<ActionButton onClick={() => fileInputRef.current?.click()}>변경</ActionButton>
+
+												<ActionButton onClick={handleCancel}>제거</ActionButton>
+											</div>
 										</div>
 									</div>
-								</div>
+								)}
+							</div>
+
+							<p id={noticeId} className={styles.notice}>
+								<strong>입력한 설명과 이미지는 초안을 만드는 데만 쓰이며, AI 학습에 사용되지 않습니다.</strong>
+							</p>
+
+							{showInputHint ? (
+								<p className={styles.hint}>캐릭터 설명 또는 참고 이미지를 첨부해 주세요.</p>
+							) : (
+								<p role="alert" className={styles.error}>
+									{errorMessage}
+								</p>
 							)}
 						</div>
 
-						<p id={noticeId} className={styles.notice}>
-							<strong>입력한 설명과 이미지는 초안을 만드는 데만 쓰이며, AI 학습에 사용되지 않습니다.</strong>
-						</p>
+						<div className={styles.actions}>
+							{/* 얼마 안 남았을 때만 눈에 띄게 바뀐다. 늘 강조돼 있으면 아무것도 강조되지 않는다. */}
+							<span className={`${styles.remaining} ${isLowRemaining ? styles.remaining_low : ""}`}>
+								오늘 {remaining}/{AI_DRAFT_DAILY_LIMIT}회 남음 · 매일 자정(한국 시간) 초기화
+							</span>
 
-						{showInputHint ? (
-							<p className={styles.hint}>캐릭터 설명 또는 참고 이미지를 첨부해 주세요.</p>
-						) : (
-							<p role="alert" className={styles.error}>
-								{errorMessage}
-							</p>
-						)}
-					</div>
+							<div className={styles.action_group}>
+								<ActionButton onClick={requestClose} disabled={isSubmitting}>
+									취소
+								</ActionButton>
 
-					<div className={styles.actions}>
-						{/* 얼마 안 남았을 때만 눈에 띄게 바뀐다. 늘 강조돼 있으면 아무것도 강조되지 않는다. */}
-						<span className={`${styles.remaining} ${isLowRemaining ? styles.remaining_low : ""}`}>
-							오늘 {remaining}/{AI_DRAFT_DAILY_LIMIT}회 남음 · 매일 자정(한국 시간) 초기화
-						</span>
+								{promptResult !== null ? <ActionButton onClick={() => setHasResult(true)}>이전 결과 보기</ActionButton> : null}
 
-						<div className={styles.action_group}>
-							<ActionButton onClick={requestClose} disabled={isSubmitting}>
-								취소
-							</ActionButton>
-
-							{promptResult !== null ? <ActionButton onClick={() => setHasResult(true)}>이전 결과 보기</ActionButton> : null}
-
-							<ActionButton styleType="attention" disabled={isSubmitting || isExhausted} onClick={requestSubmit}>
-								{isSubmitting ? "만드는 중" : "프로필 초안 생성"}
-							</ActionButton>
+								<ActionButton styleType="attention" disabled={isSubmitting || isExhausted} onClick={requestSubmit}>
+									{isSubmitting ? "만드는 중" : "프로필 초안 생성"}
+								</ActionButton>
+							</div>
 						</div>
-					</div>
-				</>
-			) : (
-				<>
-					<div className={styles.head}>
-						<div>
-							<h2 id={titleId}>AI 프로필 초안 결과</h2>
+					</>
+				) : (
+					<>
+						<div className={styles.head}>
+							<div>
+								<h2 id={titleId}>AI 프로필 초안 결과</h2>
 
-							<p>내용을 고쳐 쓸 수 있어요. 체크한 항목만 프로필에 들어가요.</p>
+								<p>내용을 고쳐 쓸 수 있어요. 체크한 항목만 프로필에 들어가요.</p>
+							</div>
+
+							<button type="button" className={styles.close} aria-label="AI 프로필 초안 닫기" onClick={requestClose}>
+								<i className="bi bi-x-lg" aria-hidden="true"></i>
+							</button>
 						</div>
 
-						<button type="button" className={styles.close} aria-label="AI 프로필 초안 닫기" onClick={requestCloseResult}>
-							<i className="bi bi-x-lg" aria-hidden="true"></i>
-						</button>
-					</div>
-
-					<div className={styles.body}>
-						{/* /create 폼 순서 그대로: 이미지 유형 → 핵심 정보 → 퍼스널 컬러 → 선택 항목.
+						<div className={styles.body}>
+							{/* /create 폼 순서 그대로: 이미지 유형 → 핵심 정보 → 퍼스널 컬러 → 선택 항목.
 						    이미지 유형·퍼스널 컬러는 참고 이미지를 첨부했을 때만 온다. null이면 카드 자체를 그리지 않는다. */}
-						<div className={styles.result_grid}>
-							{promptResult !== null && promptResult.layout !== null ? (
-								<section className={`${styles.result_card} ${styles.result_field_wide}`} aria-label="이미지 유형 추천">
-									<div className={styles.result_head}>
-										<div className={styles.left}>
-											<input
-												type="checkbox"
-												className={styles.result_check}
-												aria-label="이미지 유형 추천 반영"
-												checked={selectedKey.includes("charProfileLayout")}
-												onChange={(e) => selectedKeyChange("charProfileLayout", e.target.checked)}
-											/>
+							<div className={styles.result_grid}>
+								{promptResult !== null && promptResult.layout !== null ? (
+									<section className={`${styles.result_card} ${styles.result_field_wide}`} aria-label="이미지 유형 추천">
+										<div className={styles.result_head}>
+											<div className={styles.left}>
+												<input
+													type="checkbox"
+													className={styles.result_check}
+													aria-label="이미지 유형 추천 반영"
+													checked={selectedKey.includes("charProfileLayout")}
+													onChange={(e) => selectedKeyChange("charProfileLayout", e.target.checked)}
+												/>
 
-											<span className={styles.result_label}>이미지 유형</span>
+												<span className={styles.result_label}>이미지 유형</span>
+											</div>
 										</div>
-									</div>
 
-									<div className={styles.layout_body}>
-										<span className={`${styles.layout_shape} ${styles[`shape_${promptResult.layout.type}`]}`} aria-hidden="true"></span>
+										<div className={styles.layout_body}>
+											<span className={`${styles.layout_shape} ${styles[`shape_${promptResult.layout.type}`]}`} aria-hidden="true"></span>
 
-										<div className={styles.layout_text}>
-											<p className={styles.layout_title}>{IMAGE_TYPE_DEFINITIONS[promptResult.layout.type].label}을 추천해요</p>
+											<div className={styles.layout_text}>
+												<p className={styles.layout_title}>{IMAGE_TYPE_DEFINITIONS[promptResult.layout.type].label}을 추천해요</p>
 
-											<p className={styles.layout_reason}>{promptResult.layout.reason}</p>
+												<p className={styles.layout_reason}>{promptResult.layout.reason}</p>
 
-											{currentLayout !== "" && currentLayout !== promptResult.layout.type ? (
-												<p className={styles.layout_diff}>
-													현재 {IMAGE_TYPE_DEFINITIONS[currentLayout].label} → {IMAGE_TYPE_DEFINITIONS[promptResult.layout.type].label}. 반영하면 이미지를 다시 잘라요.
-												</p>
-											) : null}
+												{currentLayout !== "" && currentLayout !== promptResult.layout.type ? (
+													<p className={styles.layout_diff}>
+														선택한 {IMAGE_TYPE_DEFINITIONS[currentLayout].label}을 {IMAGE_TYPE_DEFINITIONS[promptResult.layout.type].label}으로 변경해요.
+													</p>
+												) : null}
 
-											{errors.charProfileLayout?.message ? <p className={sectionStyles.error_message}>{errors.charProfileLayout.message}</p> : null}
+												{errors.charProfileLayout?.message ? <p className={sectionStyles.error_message}>{errors.charProfileLayout.message}</p> : null}
+											</div>
 										</div>
-									</div>
-								</section>
-							) : null}
+									</section>
+								) : null}
 
-							{promptResult !== null && promptResult.color !== null ? (
-								<section className={`${styles.result_card} ${styles.result_field_wide}`} aria-label="퍼스널 컬러 추천">
-									<div className={styles.result_head}>
-										<div className={styles.left}>
-											<input
-												type="checkbox"
-												className={styles.result_check}
-												aria-label="퍼스널 컬러 추천 반영"
-												checked={selectedKey.includes("charColor")}
-												onChange={(e) => selectedKeyChange("charColor", e.target.checked)}
-											/>
+								{promptResult !== null && promptResult.color !== null ? (
+									<section className={`${styles.result_card} ${styles.result_field_wide}`} aria-label="퍼스널 컬러 추천">
+										<div className={styles.result_head}>
+											<div className={styles.left}>
+												<input
+													type="checkbox"
+													className={styles.result_check}
+													aria-label="퍼스널 컬러 추천 반영"
+													checked={selectedKey.includes("charColor")}
+													onChange={(e) => selectedKeyChange("charColor", e.target.checked)}
+												/>
 
-											<span className={styles.result_label}>퍼스널 컬러</span>
+												<span className={styles.result_label}>퍼스널 컬러</span>
+											</div>
 										</div>
-									</div>
 
-									<div className={styles.color_body}>
-										{/* 색은 응답마다 달라 CSS 모듈에 못 박을 수 없다 - 인라인이 정당한 유일한 자리 */}
-										<span className={styles.color_swatch} style={{backgroundColor: promptResult.color}} aria-hidden="true"></span>
+										<div className={styles.color_body}>
+											{/* 색은 응답마다 달라 CSS 모듈에 못 박을 수 없다 - 인라인이 정당한 유일한 자리 */}
+											<span className={styles.color_swatch} style={{backgroundColor: promptResult.color}} aria-hidden="true"></span>
 
-										<div className={styles.color_text}>
-											<span className={styles.color_rgb}>{formatHexAsRgb(promptResult.color)}</span>
+											<div className={styles.color_text}>
+												<span className={styles.color_rgb}>{formatHexAsRgb(promptResult.color)}</span>
 
-											<span className={styles.color_code}>{promptResult.color.toUpperCase()}</span>
+												<span className={styles.color_code}>{promptResult.color.toUpperCase()}</span>
 
-											{errors.charColor?.message ? <p className={sectionStyles.error_message}>{errors.charColor.message}</p> : null}
+												{errors.charColor?.message ? <p className={sectionStyles.error_message}>{errors.charColor.message}</p> : null}
+											</div>
 										</div>
-									</div>
-								</section>
-							) : null}
+									</section>
+								) : null}
 
-							{CORE_DRAFT_FIELDS.map(renderDraftField)}
+								{CORE_DRAFT_FIELDS.map(renderDraftField)}
 
-							{OPTIONAL_DRAFT_FIELDS.map(renderDraftField)}
+								{OPTIONAL_DRAFT_FIELDS.map(renderDraftField)}
+							</div>
 						</div>
-					</div>
 
-					<div className={styles.actions}>
-						{/* TODO: 체크된 개수로 갱신. 0개면 반영 버튼 disabled */}
-						<span className={styles.remaining}>9개 항목 선택됨</span>
+						<div className={styles.actions}>
+							<span className={styles.remaining}>
+								{enabledCount}개 중 {selectedKey.length}개 항목 선택됨
+							</span>
 
-						<div className={styles.action_group}>
-							<ActionButton onClick={() => setHasResult(false)}>재시도</ActionButton>
+							<div className={styles.action_group}>
+								<ActionButton onClick={() => setHasResult(false)}>재시도</ActionButton>
 
-							<ActionButton onClick={requestCloseResult}>취소</ActionButton>
+								<ActionButton onClick={requestClose}>취소</ActionButton>
 
-							<ActionButton styleType="attention" onClick={handleSubmit(resultSubmit)}>
-								반영
-							</ActionButton>
+								<ActionButton styleType="attention" disabled={selectedKey.length === 0} onClick={handleSubmit(resultSubmit)}>
+									반영
+								</ActionButton>
+							</div>
 						</div>
-					</div>
-				</>
-			)}
-		</dialog>
+					</>
+				)}
+			</dialog>
+		</>
 	);
 }
