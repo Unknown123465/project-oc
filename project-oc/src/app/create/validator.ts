@@ -88,7 +88,7 @@ export const createCharForm = z.object({
 	charHate: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charHate, `싫어하는 것을 ${CHAR_MAX_LENGTH.charHate}자 이하로 입력해 주세요.`)),
 	charPersonality: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charPersonality, `성격을 ${CHAR_MAX_LENGTH.charPersonality}자 이하로 입력해 주세요.`)),
 	charTmi: genStringSchema("tmi")
-		.refine((data) => data.split("\n").length <= CHAR_TMI_MAX_LINES, `TMI는 최대 ${CHAR_TMI_MAX_LINES}개까지 입력 할 수 있어요.`)
+		.refine((data) => data.split("\n").length <= CHAR_TMI_MAX_LINES, `TMI는 최대 ${CHAR_TMI_MAX_LINES}개까지 입력할 수 있어요.`)
 		.refine((data) => data.split("\n").every((tmi) => tmi.length <= CHAR_TMI_MAX_LINE_LENGTH), `TMI는 각 최대 ${CHAR_TMI_MAX_LINE_LENGTH}자 이하로 입력할 수 있어요.`),
 	charKind: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charKind, `종족을 ${CHAR_MAX_LENGTH.charKind}자 이하로 입력해 주세요.`)),
 	charAge: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charAge, `나이를 ${CHAR_MAX_LENGTH.charAge}자 이하로 입력해 주세요.`)),
