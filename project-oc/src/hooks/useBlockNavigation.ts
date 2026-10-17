@@ -2,6 +2,56 @@
 
 import {useEffect} from "react";
 
+/* 더미 엔트리 표식. Next.js가 패치한 pushState는 넘긴 객체에 자기 상태(__NA 등)를
+   덧붙일 뿐 지우지 않아서(node_modules/next/dist/client/components/app-router.js의
+   copyNextJsInternalHistoryState) 이 표식이 그대로 남는다. */
+const DUMMY_ENTRY_KEY = "__blockNavigationDummy";
+
+/* 히스토리는 탭마다 하나인 공유 자원이라 차단도 훅 인스턴스가 아니라 이 모듈이 하나만
+   가진다(참조 카운팅). 훅은 켜질 때 개수를 올리고 꺼질 때 내릴 뿐이고, 0 → 1일 때만
+   등록하고 1 → 0일 때만 정리한다. 리스너를 인스턴스마다 두면 둘이 겹쳤을 때 뒤로가기
+   한 번에 두 칸이 쌓이고, 먼저 켠 쪽만 리스너를 갖게 하면 그쪽이 먼저 꺼질 때 아직 켜진
+   쪽이 있어도 차단이 풀린다. */
+let activeCount: number = 0;
+
+const pushDummy = () => {
+	history.pushState({[DUMMY_ENTRY_KEY]: true}, "", location.href);
+};
+
+const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+	e.preventDefault();
+};
+
+const acquire = () => {
+	activeCount += 1;
+
+	if (activeCount <= 1) {
+		pushDummy();
+
+		window.addEventListener("popstate", pushDummy);
+		window.addEventListener("beforeunload", handleBeforeUnload);
+	}
+};
+
+const release = () => {
+	activeCount -= 1;
+
+	if (activeCount > 0) {
+		return;
+	}
+
+	window.removeEventListener("popstate", pushDummy);
+	window.removeEventListener("beforeunload", handleBeforeUnload);
+
+	/* 켜질 때 쌓은 더미를 빼지 않으면 켤 때마다 한 칸씩 쌓여, 페이지를 떠나려면
+	   그만큼 뒤로가기를 더 눌러야 한다. 지금 위치가 더미일 때만 뺀다 - 링크로 다른
+	   페이지에 가면서 꺼진 경우엔 이미 새 엔트리 위라서, back()을 부르면 그 이동이 취소된다.
+	   리스너를 먼저 뗐으므로 이 back()이 일으키는 popstate는 다시 쌓이지 않는다. */
+	if (history.state?.[DUMMY_ENTRY_KEY]) {
+		history.back();
+	}
+};
+
 /* Next.js App Router에는 react-router의 useBlocker 같은 차단 훅이 없어
    (node_modules/next/dist/docs 확인 완료) history API를 직접 다루는 두 장치를
    함께 쓴다. 이 둘이 막는 범위가 서로 다르고 겹치지 않는다 - 하나만 쓰면 구멍이 남는다.
@@ -31,26 +81,10 @@ import {useEffect} from "react";
    명시하고 있다. */
 export function useBlockNavigation(active: boolean) {
 	useEffect(() => {
-		if (!active) {
-			return;
+		if (active) {
+			acquire();
+
+			return release;
 		}
-
-		history.pushState(null, "", location.href);
-
-		const handlePopState = () => {
-			history.pushState(null, "", location.href);
-		};
-
-		const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-			e.preventDefault();
-		};
-
-		window.addEventListener("popstate", handlePopState);
-		window.addEventListener("beforeunload", handleBeforeUnload);
-
-		return () => {
-			window.removeEventListener("popstate", handlePopState);
-			window.removeEventListener("beforeunload", handleBeforeUnload);
-		};
 	}, [active]);
 }
