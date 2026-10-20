@@ -100,6 +100,11 @@
 	--danger: light-dark(#bd3d3d, #ff8c88);
 	--success: light-dark(#26724e, #73d4a5);
 
+	/* 좋아요 하트. --danger는 오류용이라 라이트 모드에서 너무 어둡다. */
+	--like: light-dark(#f03e4a, #ff7a84);
+	--like-line: light-dark(#ff8f96, #a8505a);
+	--like-back-hover: light-dark(#fff0f1, #3b2629);
+
 	--error-text: light-dark(#bd3d3d, #ff8c88);
 	--success-text: light-dark(#00db0b, #73d4a5);
 
