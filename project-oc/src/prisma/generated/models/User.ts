@@ -287,6 +287,7 @@ export type UserWhereInput = {
   accounts?: Prisma.AccountListRelationFilter
   characters?: Prisma.CharacterListRelationFilter
   aiHistories?: Prisma.AiHistoryListRelationFilter
+  characterLikes?: Prisma.CharacterLikeListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -306,6 +307,7 @@ export type UserOrderByWithRelationInput = {
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   characters?: Prisma.CharacterOrderByRelationAggregateInput
   aiHistories?: Prisma.AiHistoryOrderByRelationAggregateInput
+  characterLikes?: Prisma.CharacterLikeOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -329,6 +331,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   accounts?: Prisma.AccountListRelationFilter
   characters?: Prisma.CharacterListRelationFilter
   aiHistories?: Prisma.AiHistoryListRelationFilter
+  characterLikes?: Prisma.CharacterLikeListRelationFilter
 }, "id" | "username" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -388,6 +391,7 @@ export type UserCreateInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -407,6 +411,7 @@ export type UserUncheckedCreateInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -426,6 +431,7 @@ export type UserUpdateInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -445,6 +451,7 @@ export type UserUncheckedUpdateInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -637,6 +644,20 @@ export type UserUpdateOneRequiredWithoutCharactersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCharactersInput, Prisma.UserUpdateWithoutCharactersInput>, Prisma.UserUncheckedUpdateWithoutCharactersInput>
 }
 
+export type UserCreateNestedOneWithoutCharacterLikesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCharacterLikesInput, Prisma.UserUncheckedCreateWithoutCharacterLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCharacterLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCharacterLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCharacterLikesInput, Prisma.UserUncheckedCreateWithoutCharacterLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCharacterLikesInput
+  upsert?: Prisma.UserUpsertWithoutCharacterLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCharacterLikesInput, Prisma.UserUpdateWithoutCharacterLikesInput>, Prisma.UserUncheckedUpdateWithoutCharacterLikesInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -653,6 +674,7 @@ export type UserCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -671,6 +693,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -705,6 +728,7 @@ export type UserUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -723,6 +747,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiHistoriesInput = {
@@ -741,6 +766,7 @@ export type UserCreateWithoutAiHistoriesInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiHistoriesInput = {
@@ -759,6 +785,7 @@ export type UserUncheckedCreateWithoutAiHistoriesInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiHistoriesInput = {
@@ -793,6 +820,7 @@ export type UserUpdateWithoutAiHistoriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiHistoriesInput = {
@@ -811,6 +839,7 @@ export type UserUncheckedUpdateWithoutAiHistoriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCharactersInput = {
@@ -829,6 +858,7 @@ export type UserCreateWithoutCharactersInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCharactersInput = {
@@ -847,6 +877,7 @@ export type UserUncheckedCreateWithoutCharactersInput = {
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCharactersInput = {
@@ -881,6 +912,7 @@ export type UserUpdateWithoutCharactersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCharactersInput = {
@@ -899,6 +931,99 @@ export type UserUncheckedUpdateWithoutCharactersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCharacterLikesInput = {
+  id?: string
+  name?: string | null
+  username?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  aiDraftUsedOn?: Date | string | null
+  aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
+  aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCharacterLikesInput = {
+  id?: string
+  name?: string | null
+  username?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  aiDraftUsedOn?: Date | string | null
+  aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
+  aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCharacterLikesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCharacterLikesInput, Prisma.UserUncheckedCreateWithoutCharacterLikesInput>
+}
+
+export type UserUpsertWithoutCharacterLikesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCharacterLikesInput, Prisma.UserUncheckedUpdateWithoutCharacterLikesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCharacterLikesInput, Prisma.UserUncheckedCreateWithoutCharacterLikesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCharacterLikesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCharacterLikesInput, Prisma.UserUncheckedUpdateWithoutCharacterLikesInput>
+}
+
+export type UserUpdateWithoutCharacterLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
+  aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCharacterLikesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
+  aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -910,12 +1035,14 @@ export type UserCountOutputType = {
   accounts: number
   characters: number
   aiHistories: number
+  characterLikes: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   characters?: boolean | UserCountOutputTypeCountCharactersArgs
   aiHistories?: boolean | UserCountOutputTypeCountAiHistoriesArgs
+  characterLikes?: boolean | UserCountOutputTypeCountCharacterLikesArgs
 }
 
 /**
@@ -949,6 +1076,13 @@ export type UserCountOutputTypeCountAiHistoriesArgs<ExtArgs extends runtime.Type
   where?: Prisma.AiHistoryWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCharacterLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CharacterLikeWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -967,6 +1101,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   characters?: boolean | Prisma.User$charactersArgs<ExtArgs>
   aiHistories?: boolean | Prisma.User$aiHistoriesArgs<ExtArgs>
+  characterLikes?: boolean | Prisma.User$characterLikesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -993,6 +1128,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   characters?: boolean | Prisma.User$charactersArgs<ExtArgs>
   aiHistories?: boolean | Prisma.User$aiHistoriesArgs<ExtArgs>
+  characterLikes?: boolean | Prisma.User$characterLikesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1002,6 +1138,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     characters: Prisma.$CharacterPayload<ExtArgs>[]
     aiHistories: Prisma.$AiHistoryPayload<ExtArgs>[]
+    characterLikes: Prisma.$CharacterLikePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1360,6 +1497,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   characters<T extends Prisma.User$charactersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$charactersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiHistories<T extends Prisma.User$aiHistoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiHistoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  characterLikes<T extends Prisma.User$characterLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$characterLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1819,6 +1957,30 @@ export type User$aiHistoriesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.AiHistoryScalarFieldEnum | Prisma.AiHistoryScalarFieldEnum[]
+}
+
+/**
+ * User.characterLikes
+ */
+export type User$characterLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CharacterLike
+   */
+  select?: Prisma.CharacterLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CharacterLike
+   */
+  omit?: Prisma.CharacterLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CharacterLikeInclude<ExtArgs> | null
+  where?: Prisma.CharacterLikeWhereInput
+  orderBy?: Prisma.CharacterLikeOrderByWithRelationInput | Prisma.CharacterLikeOrderByWithRelationInput[]
+  cursor?: Prisma.CharacterLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CharacterLikeScalarFieldEnum | Prisma.CharacterLikeScalarFieldEnum[]
 }
 
 /**
