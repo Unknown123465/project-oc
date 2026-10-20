@@ -12,6 +12,15 @@
 	box-shadow: var(--shadow-2);
 }
 
+/* 프로필 카드 맨 아래 띠. 30번 카드 보기 버튼도 여기에 붙는다. */
+.reaction {
+	padding: 18px clamp(24px, 4vw, 44px);
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	border-top: 1px solid var(--card-dark-line);
+}
+
 .inner {
 	padding: clamp(24px, 4vw, 44px);
 }

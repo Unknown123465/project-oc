@@ -28,6 +28,7 @@ export interface CharacterView extends TemplateCharacter {
 	 *  이미 만료돼 있고, 비공개 이미지가 SNS 쪽 캐시에 남는다. */
 	imagePublic: boolean;
 	creator: string;
+	charPublicMode: number;
 }
 
 /** 수정·삭제 시 이 태그로 무효화한다. 문자열을 직접 쓰지 않게 여기서만 만든다. */
@@ -164,10 +165,8 @@ export const getCharacter = cache(async (uuid: string): Promise<CharacterView | 
 		charTmi: toTmiLines(character.charTmi),
 		charMusic: toMusicView(character.charMusic),
 		aiUsed: character.aiUsed === 1,
-		/* 좋아요는 아직 저장하는 곳이 없다. 붙일 때 이 값을 위 캐시 안에서 세면
-		   숫자가 최대 10분 낡으므로, 캐시 밖에서 따로 세야 한다. */
-		likeCount: 0,
 		imagePublic,
 		creator: character.user.username || character.user.name || "알 수 없음",
+		charPublicMode: character.charPublicMode,
 	};
 });
