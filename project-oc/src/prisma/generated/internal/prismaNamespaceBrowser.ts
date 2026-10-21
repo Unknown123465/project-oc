@@ -55,7 +55,8 @@ export const ModelName = {
   Account: 'Account',
   AiHistory: 'AiHistory',
   VerificationToken: 'VerificationToken',
-  Character: 'Character'
+  Character: 'Character',
+  CharacterLike: 'CharacterLike'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -162,6 +163,15 @@ export const CharacterScalarFieldEnum = {
 } as const
 
 export type CharacterScalarFieldEnum = (typeof CharacterScalarFieldEnum)[keyof typeof CharacterScalarFieldEnum]
+
+
+export const CharacterLikeScalarFieldEnum = {
+  charId: 'charId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type CharacterLikeScalarFieldEnum = (typeof CharacterLikeScalarFieldEnum)[keyof typeof CharacterLikeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -272,4 +282,11 @@ export const CharacterOrderByRelevanceFieldEnum = {
 } as const
 
 export type CharacterOrderByRelevanceFieldEnum = (typeof CharacterOrderByRelevanceFieldEnum)[keyof typeof CharacterOrderByRelevanceFieldEnum]
+
+
+export const CharacterLikeOrderByRelevanceFieldEnum = {
+  userId: 'userId'
+} as const
+
+export type CharacterLikeOrderByRelevanceFieldEnum = (typeof CharacterLikeOrderByRelevanceFieldEnum)[keyof typeof CharacterLikeOrderByRelevanceFieldEnum]
 

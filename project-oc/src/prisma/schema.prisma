@@ -36,7 +36,8 @@ model User {
   // 마지막 호출 시각. 짧은 간격으로 몰아치는 요청을 막는 데만 쓴다.
   aiDraftLastCallAt DateTime?
 
-  aiHistories AiHistory[]
+  aiHistories    AiHistory[]
+  characterLikes CharacterLike[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -128,10 +129,34 @@ model Character {
   charUploaderId    String  @db.VarChar(191)
   user              User    @relation(fields: [charUploaderId], references: [id])
 
+  characterLikes CharacterLike[]
+
   createdAt DateTime  @default(now()) @db.DateTime(0)
   updatedAt DateTime? @updatedAt @db.DateTime(0)
 
   @@index([charUploaderId, createdAt(sort: Desc)], map: "idx_uploader_created")
   @@index([charPublicMode, createdAt(sort: Desc)], map: "idx_public_mode_created")
   @@map("character")
+}
+
+// 프로필 좋아요. 회원만 누를 수 있어 (캐릭터, 회원) 한 쌍이 곧 좋아요 하나다.
+//
+// PK가 그 한 쌍이라 같은 사람이 같은 캐릭터에 두 번 넣을 수 없다. 좋아요 여부를
+// SELECT로 먼저 확인해도 동시에 들어온 요청은 둘 다 "없음"을 볼 수 있어서, 중복을
+// 실제로 막는 건 이 PK다. 두 번째 INSERT는 P2002로 떨어진다.
+//
+// 캐릭터나 회원이 지워지면 좋아요도 같이 지운다. 남겨 두면 사라진 사람의 좋아요가
+// 개수에 계속 잡힌다.
+model CharacterLike {
+  charId    BigInt
+  userId    String    @db.VarChar(191)
+  character Character @relation(fields: [charId], references: [charId], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @db.DateTime(0)
+
+  @@id([charId, userId])
+  // PK가 charId로 시작해 "이 캐릭터의 좋아요 수"는 PK로 센다. userId FK에는 따로 인덱스를 둔다.
+  @@index([userId], map: "idx_characterlike_user")
+  @@map("characterlike")
 }

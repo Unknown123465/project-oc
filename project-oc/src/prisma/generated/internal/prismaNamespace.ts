@@ -401,7 +401,8 @@ export const ModelName = {
   Account: 'Account',
   AiHistory: 'AiHistory',
   VerificationToken: 'VerificationToken',
-  Character: 'Character'
+  Character: 'Character',
+  CharacterLike: 'CharacterLike'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "aiHistory" | "verificationToken" | "character"
+    modelProps: "user" | "account" | "aiHistory" | "verificationToken" | "character" | "characterLike"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -751,6 +752,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CharacterLike: {
+      payload: Prisma.$CharacterLikePayload<ExtArgs>
+      fields: Prisma.CharacterLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CharacterLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CharacterLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterLikePayload>
+        }
+        findFirst: {
+          args: Prisma.CharacterLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CharacterLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterLikePayload>
+        }
+        findMany: {
+          args: Prisma.CharacterLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterLikePayload>[]
+        }
+        create: {
+          args: Prisma.CharacterLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterLikePayload>
+        }
+        createMany: {
+          args: Prisma.CharacterLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CharacterLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterLikePayload>
+        }
+        update: {
+          args: Prisma.CharacterLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.CharacterLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CharacterLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CharacterLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterLikePayload>
+        }
+        aggregate: {
+          args: Prisma.CharacterLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCharacterLike>
+        }
+        groupBy: {
+          args: Prisma.CharacterLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CharacterLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CharacterLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CharacterLikeCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -880,6 +947,15 @@ export const CharacterScalarFieldEnum = {
 export type CharacterScalarFieldEnum = (typeof CharacterScalarFieldEnum)[keyof typeof CharacterScalarFieldEnum]
 
 
+export const CharacterLikeScalarFieldEnum = {
+  charId: 'charId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type CharacterLikeScalarFieldEnum = (typeof CharacterLikeScalarFieldEnum)[keyof typeof CharacterLikeScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -988,6 +1064,13 @@ export const CharacterOrderByRelevanceFieldEnum = {
 } as const
 
 export type CharacterOrderByRelevanceFieldEnum = (typeof CharacterOrderByRelevanceFieldEnum)[keyof typeof CharacterOrderByRelevanceFieldEnum]
+
+
+export const CharacterLikeOrderByRelevanceFieldEnum = {
+  userId: 'userId'
+} as const
+
+export type CharacterLikeOrderByRelevanceFieldEnum = (typeof CharacterLikeOrderByRelevanceFieldEnum)[keyof typeof CharacterLikeOrderByRelevanceFieldEnum]
 
 
 
@@ -1207,6 +1290,7 @@ export type GlobalOmitConfig = {
   aiHistory?: Prisma.AiHistoryOmit
   verificationToken?: Prisma.VerificationTokenOmit
   character?: Prisma.CharacterOmit
+  characterLike?: Prisma.CharacterLikeOmit
 }
 
 /* Types for Logging */

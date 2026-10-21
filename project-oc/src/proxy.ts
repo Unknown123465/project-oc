@@ -24,7 +24,7 @@ export function proxy(req: NextRequest) {
 		   출처를 남겨 두는 건 strict-dynamic을 모르는 구형 브라우저용 대비책이고,
 		   jsdelivr은 browser-image-compression이 웹 워커 안에서 importScripts로
 		   자기 자신을 받아오는 주소라 지우면 이미지 압축이 멈춘다. */
-		["script-src", SELF, STRICT_DYNAMIC, "https://cdn.jsdelivr.net", process.env.NODE_ENV === "development" ? UNSAFE_EVAL : "", NONCE],
+		["script-src", SELF, STRICT_DYNAMIC, "https://cdn.jsdelivr.net", "https://t1.kakaocdn.net", process.env.NODE_ENV === "development" ? UNSAFE_EVAL : "", NONCE],
 		/* 여기에는 nonce를 넣지 않는다. 목록에 nonce가 하나라도 있으면 브라우저가
 		   unsafe-inline을 무시하는데, style="..." 속성에는 nonce를 붙일 방법이 없어
 		   style={{"--bg": hex}} 같은 값 전달이 통째로 막힌다. */
@@ -36,16 +36,16 @@ export function proxy(req: NextRequest) {
 		["worker-src", SELF, "blob:"],
 		/* 이미지를 브라우저가 R2로 직접 PUT 한다. 이 줄이 없으면 default-src의
 		   'self'에 걸려 업로드가 조용히 실패한다. */
-		["connect-src", SELF, R2_ENDPOINT],
+		["connect-src", SELF, R2_ENDPOINT, "https://kapi.kakao.com"],
 		["font-src", SELF],
 		["object-src", NONE],
 		/* base-uri와 frame-ancestors는 default-src로 대체되지 않아 적지 않으면 무제한이다.
 		   base가 열려 있으면 주입된 <base>로 상대 경로 스크립트를 다른 서버로 돌릴 수 있어
 		   strict-dynamic을 우회당한다. */
 		["base-uri", SELF],
-		["form-action", SELF],
+		["form-action", SELF, "https://sharer.kakao.com", "https://accounts.kakao.com"],
 		["frame-ancestors", NONE],
-		["frame-src", ...MUSIC_EMBED_ORIGINS],
+		["frame-src", ...MUSIC_EMBED_ORIGINS, "kakaolink:", "https://talk-apps.kakao.com"],
 		["upgrade-insecure-requests"],
 	];
 

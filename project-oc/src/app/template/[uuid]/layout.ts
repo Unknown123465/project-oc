@@ -5,7 +5,7 @@ import {getCharacter} from "./getCharacter";
    같은 크롤러는 링크를 처음 볼 때 og:image를 한 번 가져가 자기 쪽에 캐싱해 두는데, 그
    시점을 지나 다시 가져가면 이미 만료돼 있다. 공개(0)가 아니면 만료되지 않는 파비콘으로
    갈아 끼워, 카드가 깨진 이미지로 굳어버리는 상황 자체를 피한다. */
-const FALLBACK_OG_IMAGE: string = "/favicon.svg";
+const FALLBACK_OG_IMAGE: string = "/share-fallback.png";
 
 export async function generateMetadata({params}: LayoutProps<"/template/[uuid]">): Promise<Metadata> {
 	const {uuid} = await params;

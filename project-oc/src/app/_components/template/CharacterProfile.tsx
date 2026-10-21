@@ -2,11 +2,13 @@ import styles from "./CharacterProfile.module.css";
 import ProfileActions from "./ProfileActions";
 import ProfileCover from "./ProfileCover";
 import ProfileIdentity from "./ProfileIdentity";
-import ProfileFacts from "./ProfileFacts";
+import ProfileFacts, {toProfileFacts} from "./ProfileFacts";
 import ProfileBlocks from "./ProfileBlocks";
 import Comments from "./Comments";
-import ShareDialog from "./ShareDialog";
+import ProfileLike, {type ProfileLikeView} from "./ProfileLike";
 import type {IframeHeight} from "@/app/create/musicEmbed";
+import {CharacterView} from "@/app/template/[uuid]/getCharacter";
+import {PUBLIC_MODE_PUBLIC} from "@/app/create/r2";
 
 export type ProfileLayout = "h" | "v" | "s";
 export type ImageFrame = "square" | "circle";
@@ -30,15 +32,19 @@ export interface TemplateCharacter {
 	charTmi: string[];
 	charMusic: {href: string; embedSrc: string; height: IframeHeight} | null;
 	aiUsed: boolean;
-	likeCount: number;
 }
 
 interface CharacterProfileProps {
+	nonce: string | undefined;
 	uuid: string;
-	character: TemplateCharacter;
+	character: CharacterView;
+	/** 비공개 프로필은 좋아요를 받지 않아 null이다. */
+	like: ProfileLikeView | null;
+	/** 비공개 프로필은 공유할 수 없다. */
+	shareable: boolean;
 }
 
-export default function CharacterProfile({uuid, character}: CharacterProfileProps) {
+export default function CharacterProfile({nonce, uuid, character, like, shareable}: CharacterProfileProps) {
 	const layout: ProfileLayout = character.charProfileLayout;
 
 	const alt: string = `${character.charName} 캐릭터 일러스트`;
@@ -111,14 +117,33 @@ export default function CharacterProfile({uuid, character}: CharacterProfileProp
 	return (
 		<>
 			<main className={styles.main}>
-				<ProfileActions likeCount={character.likeCount} />
+				<ProfileActions
+					nonce={nonce}
+					uuid={uuid}
+					charName={character.charName}
+					charMessage={character.charMessage}
+					kakaoDetail={{
+						creator: character.creator,
+						facts: toProfileFacts(character).map(({label, value}) => ({label, value})),
+						likeCount: like === null ? null : like.count,
+					}}
+					shareable={shareable}
+					imageSrc={character.charImage}
+					isPublic={character.charPublicMode === PUBLIC_MODE_PUBLIC}
+				/>
 
-				<article className={styles.sheet}>{sheet}</article>
+				<article className={styles.sheet}>
+					{sheet}
+
+					{like !== null ? (
+						<div className={styles.reaction}>
+							<ProfileLike uuid={uuid} like={like} />
+						</div>
+					) : null}
+				</article>
 
 				<Comments />
 			</main>
-
-			<ShareDialog uuid={uuid} characterName={character.charName} />
 		</>
 	);
 }
