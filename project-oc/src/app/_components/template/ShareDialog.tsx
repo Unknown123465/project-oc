@@ -318,7 +318,9 @@ export default function ShareDialog({nonce, uuid, characterName, characterMessag
 					</li>
 				</ul>
 
-				<p className={styles.status}>{kakaoSDKLoadStatus === "failure" ? "카카오톡 공유를 사용할 수 없어요. 다른 플랫폼으로 공유해 주세요." : null}</p>
+				<p className={styles.status} role="status">
+					{kakaoSDKLoadStatus === "failure" ? "카카오톡 공유를 사용할 수 없어요. 다른 플랫폼으로 공유해 주세요." : null}
+				</p>
 
 				<button type="button" className={styles.native} disabled={webShareCheckMessage !== "" || !isWebSharing} onClick={webShareStart}>
 					<i className="bi bi-box-arrow-up" aria-hidden="true"></i>
