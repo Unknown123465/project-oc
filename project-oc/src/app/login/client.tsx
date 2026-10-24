@@ -7,15 +7,15 @@ import {useCallback, useId} from "react";
 
 import {normalLoginAction} from "./action";
 import {useForm} from "react-hook-form";
-import {loginForm, type LoginFormType} from "./validator";
+import {LOGIN_UNEXPECTED_ERROR_MESSAGE, loginForm, toLoginQuery, type LoginFormType} from "./validator";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {useSession} from "next-auth/react";
 
 export function LoginForm() {
 	const session = useSession();
-
 	const router = useRouter();
+	const query = useSearchParams();
 
 	const formId = useId();
 	const userNameId = useId();
@@ -38,17 +38,25 @@ export function LoginForm() {
 
 	const onSubmit = useCallback(
 		async (data: LoginFormType) => {
-			const result = await normalLoginAction(data);
+			try {
+				const queryData = toLoginQuery(query);
 
-			if (result.success) {
-				session.update();
+				const result = await normalLoginAction(data, queryData);
 
-				router.replace("/");
-			} else {
-				setError("root", {message: result.message});
+				if (result.success) {
+					session.update();
+
+					router.replace(result.result);
+				} else {
+					setError("root", {message: result.message});
+				}
+			} catch {
+				setError("root", {
+					message: LOGIN_UNEXPECTED_ERROR_MESSAGE,
+				});
 			}
 		},
-		[router, session, setError],
+		[query, router, session, setError]
 	);
 
 	const message: string | undefined = errors.userName?.message ?? errors.password?.message ?? errors.root?.message;
