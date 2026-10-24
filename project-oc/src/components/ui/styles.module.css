@@ -142,13 +142,21 @@
 		border-color: var(--button-normal-line);
 		background-color: var(--button-normal-back);
 
-		&:hover {
+		&:enabled:hover {
 			border-color: var(--button-normal-line-hover);
 			background-color: var(--button-normal-back-hover);
 		}
+
+		/* 처리 중(소셜 로그인 등)에 비활성이 된 버튼이 눌릴 것처럼 보이지 않게 .submit과 같은 모양을 준다. */
+		&:disabled {
+			color: var(--input-disabled);
+			border-color: var(--line-color-1);
+			background-color: var(--card-dark-2);
+			cursor: not-allowed;
+		}
 	}
 
-	/* 기본 제출 버튼은 보조 동작(소셜 로그인)용 중립 스타일.
+	/* 제출 버튼은 기본이 중립 스타일이다.
 	   페이지당 하나뿐인 주요 동작에만 .attention을 얹어 색을 준다. */
 	&.submit {
 		&:enabled {

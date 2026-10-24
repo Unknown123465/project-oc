@@ -3,15 +3,38 @@
 import "server-only";
 import {AuthError} from "next-auth";
 import {signIn, authProviders} from "../../auth/auth";
-import {loginForm, LoginFormType} from "./validator";
+import {loginForm, LoginFormType, providerForm, ProviderFormType, resolveLoginRedirect} from "./validator";
 
-type LoginActionResult = {success: true} | {success: false; message: string};
+interface NormalLoginActionSuccessResult {
+	success: true;
+	result: string;
+}
+
+interface NormalLoginActionFailureResult {
+	success: false;
+	message: string;
+}
+type NormalLoginActionResult = NormalLoginActionSuccessResult | NormalLoginActionFailureResult;
+
+interface SocialLoginActionSuccessResult {
+	success: true;
+	result: string;
+}
+
+interface SocialLoginActionFailureResult {
+	success: false;
+	message: string;
+}
+
+type SocialLoginActionResult = SocialLoginActionSuccessResult | SocialLoginActionFailureResult;
 
 /* 없는 계정과 틀린 비밀번호를 같은 문구로 돌려준다. 둘을 구분해 알려주면
    로그인 폼만으로 어떤 사용자 이름이 가입돼 있는지 확인할 수 있게 된다. */
-const LOGIN_FAILED_MESSAGE = "사용자 이름 또는 비밀번호가 올바르지 않습니다.";
+const NORMAL_LOGIN_FAILED_MESSAGE = "사용자 이름 또는 비밀번호가 올바르지 않습니다.";
 
-export async function normalLoginAction(data: LoginFormType): Promise<LoginActionResult> {
+const SOCIAL_LOGIN_FAILED_MESSAGE = "소셜 로그인에 실패하였습니다. 다시 시도해 주세요.";
+
+export async function normalLoginAction(data: LoginFormType, query: Record<string, string> | null): Promise<NormalLoginActionResult> {
 	const check = loginForm.safeParse(data);
 
 	if (!check.success) {
@@ -21,56 +44,74 @@ export async function normalLoginAction(data: LoginFormType): Promise<LoginActio
 		};
 	}
 
+	const loginRedirect = resolveLoginRedirect(query);
+
+	if (!loginRedirect.success) {
+		return loginRedirect;
+	}
+
 	const {userName, password} = check.data;
 
 	try {
-		/* redirect: false여야 서버 액션이 NEXT_REDIRECT를 던지지 않고
-		   결과를 돌려줄 수 있다. 세션 쿠키는 그래도 설정된다. */
-		await signIn(authProviders.Credentials, {userName, password, redirect: false});
-	} catch (error) {
-		if (error instanceof AuthError) {
+		await signIn(authProviders.Credentials, {
+			userName,
+			password,
+			redirect: false,
+			redirectTo: loginRedirect.result,
+		});
+
+		return {
+			success: true,
+			result: loginRedirect.result,
+		};
+	} catch (err) {
+		if (err instanceof AuthError) {
 			return {
 				success: false,
-				message: LOGIN_FAILED_MESSAGE,
+				message: NORMAL_LOGIN_FAILED_MESSAGE,
 			};
 		}
 
-		throw error;
+		throw err;
+	}
+}
+
+export async function socialLoginAction(provider: ProviderFormType, query: Record<string, string> | null): Promise<SocialLoginActionResult> {
+	const providerCheck = providerForm.safeParse(provider);
+
+	if (!providerCheck.success) {
+		return {
+			success: false,
+			message: providerCheck.error.issues[0].message,
+		};
 	}
 
-	return {
-		success: true,
-	};
-}
+	const loginRedirect = resolveLoginRedirect(query);
 
-export async function googleLoginAction(): Promise<void> {
-	const id = authProviders.Google;
+	if (!loginRedirect.success) {
+		return loginRedirect;
+	}
 
-	await signIn(id, {
-		redirectTo: "/",
-	});
-}
+	const id = authProviders[provider];
 
-export async function naverLoginAction(): Promise<void> {
-	const id = authProviders.Naver;
+	try {
+		const redirectUrl: string = await signIn(id, {
+			redirect: false,
+			redirectTo: loginRedirect.result,
+		});
 
-	await signIn(id, {
-		redirectTo: "/",
-	});
-}
+		return {
+			success: true,
+			result: redirectUrl,
+		};
+	} catch (err) {
+		if (err instanceof AuthError) {
+			return {
+				success: false,
+				message: SOCIAL_LOGIN_FAILED_MESSAGE,
+			};
+		}
 
-export async function kakaoLoginAction(): Promise<void> {
-	const id = authProviders.Kakao;
-
-	await signIn(id, {
-		redirectTo: "/",
-	});
-}
-
-export async function twitterLoginAction(): Promise<void> {
-	const id = authProviders.Twitter;
-
-	await signIn(id, {
-		redirectTo: "/",
-	});
+		throw err;
+	}
 }

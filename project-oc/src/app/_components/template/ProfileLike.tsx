@@ -46,7 +46,7 @@ export default function ProfileLike({uuid, like}: ProfileLikeProps) {
 			setScrollLock(false);
 
 			if (result) {
-				router.push("/login");
+				router.push(`/login?link=template&uuid=${uuid}`);
 			}
 
 			return;
