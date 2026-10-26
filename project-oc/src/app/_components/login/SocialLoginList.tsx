@@ -12,6 +12,7 @@ const socialLogins = [
 	{provider: "Google", label: "구글로 로그인"},
 	{provider: "Naver", label: "네이버로 로그인"},
 	{provider: "Twitter", label: "X(트위터)로 로그인"},
+	{provider: "Kakao", label: "카카오로 로그인"},
 ] as const;
 
 export default function SocialLoginList() {
