@@ -201,5 +201,6 @@ export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
 	pages: {
 		signIn: "/login",
 		signOut: "/logout",
+		error: "/login",
 	},
 });
