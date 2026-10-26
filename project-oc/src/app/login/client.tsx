@@ -3,7 +3,7 @@
 import styles from "./page.module.css";
 import {PasswordInput, TextInput} from "@/components/ui/input";
 import {SubmitButton} from "@/components/ui/button";
-import {useCallback, useId} from "react";
+import {useCallback, useId, useSyncExternalStore} from "react";
 
 import {normalLoginAction} from "./action";
 import {useForm} from "react-hook-form";
@@ -11,6 +11,7 @@ import {LOGIN_UNEXPECTED_ERROR_MESSAGE, loginForm, toLoginQuery, type LoginFormT
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useSession} from "next-auth/react";
+import {genErrorMessage, removeErrorQuery} from "./errorQuery";
 
 export function LoginForm() {
 	const session = useSession();
@@ -36,9 +37,19 @@ export function LoginForm() {
 		mode: "onSubmit",
 	});
 
+	const errQuery: string | null = query.get("error");
+
+	const message: string | undefined = useSyncExternalStore(
+		() => () => {},
+		() => genErrorMessage(errQuery) ?? errors.userName?.message ?? errors.password?.message ?? errors.root?.message,
+		() => undefined
+	);
+
 	const onSubmit = useCallback(
 		async (data: LoginFormType) => {
 			try {
+				removeErrorQuery(query, router);
+
 				const queryData = toLoginQuery(query);
 
 				const result = await normalLoginAction(data, queryData);
@@ -59,10 +70,12 @@ export function LoginForm() {
 		[query, router, session, setError]
 	);
 
-	const message: string | undefined = errors.userName?.message ?? errors.password?.message ?? errors.root?.message;
+	const onError = useCallback(() => {
+		removeErrorQuery(query, router);
+	}, [query, router]);
 
 	return (
-		<form className={styles.login_form} id={formId} onSubmit={handleSubmit(onSubmit)} noValidate>
+		<form className={styles.login_form} id={formId} onSubmit={handleSubmit(onSubmit, onError)} noValidate>
 			<TextInput
 				id={userNameId}
 				name="userName"
