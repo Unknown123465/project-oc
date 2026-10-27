@@ -5,16 +5,19 @@ import loginStyles from "@/app/login/page.module.css";
 import {ActionButton} from "@/components/ui/button";
 import {socialLoginAction} from "@/app/login/action";
 import {useCallback, useState} from "react";
-import {useSearchParams} from "next/navigation";
+import {useSearchParams, useRouter} from "next/navigation";
 import {LOGIN_UNEXPECTED_ERROR_MESSAGE, toLoginQuery, type ProviderFormType} from "@/app/login/validator";
+import {removeErrorQuery} from "@/app/login/errorQuery";
 
 const socialLogins = [
 	{provider: "Google", label: "구글로 로그인"},
 	{provider: "Naver", label: "네이버로 로그인"},
 	{provider: "Twitter", label: "X(트위터)로 로그인"},
+	{provider: "Kakao", label: "카카오로 로그인"},
 ] as const;
 
 export default function SocialLoginList() {
+	const router = useRouter();
 	const query = useSearchParams();
 
 	const [isLogin, setIsLogin] = useState<boolean>(false);
@@ -24,6 +27,8 @@ export default function SocialLoginList() {
 	const loginStart = useCallback(
 		async (provider: ProviderFormType) => {
 			try {
+				removeErrorQuery(query, router);
+
 				setErrorMessage("");
 				setIsLogin(true);
 
@@ -42,7 +47,7 @@ export default function SocialLoginList() {
 				setIsLogin(false);
 			}
 		},
-		[query]
+		[query, router]
 	);
 
 	return (

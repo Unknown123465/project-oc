@@ -100,7 +100,7 @@ const providers: Provider[] = [
 		clientSecret: process.env.KAKAO_CLIENT_SECRET,
 		profile(profile) {
 			return {
-				id: profile.properties?.id,
+				id: profile.id.toString(),
 				email: profile.kakao_account?.email || null,
 				name: profile.properties?.nickname,
 				image: profile.properties?.profile_image || null,
@@ -201,5 +201,6 @@ export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
 	pages: {
 		signIn: "/login",
 		signOut: "/logout",
+		error: "/login",
 	},
 });
