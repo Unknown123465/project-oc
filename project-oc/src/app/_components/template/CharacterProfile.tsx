@@ -9,6 +9,7 @@ import ProfileLike, {type ProfileLikeView} from "./ProfileLike";
 import type {IframeHeight} from "@/app/create/musicEmbed";
 import {CharacterView} from "@/app/template/[uuid]/getCharacter";
 import {PUBLIC_MODE_PUBLIC} from "@/app/create/r2";
+import {LinkButton} from "@/components/ui/button";
 
 export type ProfileLayout = "h" | "v" | "s";
 export type ImageFrame = "square" | "circle";
@@ -135,11 +136,13 @@ export default function CharacterProfile({nonce, uuid, character, like, shareabl
 				<article className={styles.sheet}>
 					{sheet}
 
-					{like !== null ? (
-						<div className={styles.reaction}>
-							<ProfileLike uuid={uuid} like={like} />
-						</div>
-					) : null}
+					<div className={styles.reaction}>
+						{like !== null ? <ProfileLike uuid={uuid} like={like} /> : null}
+
+						<LinkButton href={`/template/${uuid}/card`} className={styles.card_link_button} styleType="simple">
+							프로필 카드 보기
+						</LinkButton>
+					</div>
 				</article>
 
 				<Comments />

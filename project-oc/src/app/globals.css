@@ -175,6 +175,11 @@ button {
 		color 0.18s ease;
 }
 
+body:has([data-no-header]) .site_header,
+body:has([data-no-footer]) .site_footer {
+	display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,

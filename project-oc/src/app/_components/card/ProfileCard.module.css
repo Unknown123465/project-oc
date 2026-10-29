@@ -1,0 +1,281 @@
+/* 프로필 카드 (1280 × 720, 1.5배로 찍어 1920 × 1080 PNG)
+   카드 안은 저장될 이미지라 사이트 테마(다크 모드)를 따르지 않고 색을 고정한다.
+   --char-color: 퍼스널 컬러(바깥 띠), --char-text: 흰 바탕에서 읽히게 보정한 글자색
+   이미지 칸 크기 × 1.5가 업로드 원본 크기(세로 900 × 1744, 가로 1200 × 396, 정사각 1000 × 1000)를 넘지 않게 잡아 확대로 흐려지지 않게 한다.
+   그림이 주인공이라 글은 실선·굵은 격자 대신 옅은 퍼스널 컬러 면과 여백으로만 나눈다. */
+
+/* 화면용: 1280px보다 좁으면 카드를 통째로 줄인다. tan(atan2(a, b))는 길이 a ÷ b를 단위 없는 수로 바꾸는 계산이다. */
+.display {
+	container-type: inline-size;
+	/* 크기 격리 때문에 내용으로 너비가 정해지지 않아, 부모가 grid·flex여도 0이 되지 않게 너비를 직접 준다 */
+	width: 100%;
+	max-width: 1280px;
+	aspect-ratio: 16 / 9;
+	margin: 0 auto;
+	overflow: hidden;
+
+	& .card {
+		transform-origin: 0 0;
+		scale: tan(atan2(100cqw, 1280px));
+	}
+}
+
+.card {
+	--card-paper: white;
+	--card-ink: #3a3833;
+	--card-sub: #5f5c55;
+	--card-muted: #8a877f;
+	/* 퍼스널 컬러를 종이색에 섞은 옅은 면. 연한 색이든 진한 색이든 글자 뒤에 깔려도 읽힌다. */
+	--char-soft: color-mix(in srgb, var(--char-color) 14%, var(--card-paper));
+	--char-mark: color-mix(in srgb, var(--char-color) 64%, var(--card-paper));
+	--name-size: 40px;
+
+	width: 1280px;
+	height: 720px;
+	padding: 22px;
+	background: var(--char-back);
+	color: var(--card-ink);
+	word-break: keep-all;
+	overflow-wrap: anywhere;
+
+	& .sheet {
+		position: relative;
+		display: grid;
+		align-items: start;
+		height: 100%;
+		padding: 34px;
+		overflow: hidden;
+		border-radius: 30px;
+		background: var(--card-paper);
+	}
+
+	& .image {
+		overflow: hidden;
+		border-radius: 20px;
+		background: var(--char-soft);
+
+		/* 이미지를 data: URL로 바꾸는 동안 칸 자리만 숨 쉬듯 보여 준다 */
+		&[aria-busy="true"] {
+			@media (prefers-reduced-motion: no-preference) {
+				animation: image-wait 1.6s ease-in-out infinite;
+			}
+		}
+
+		& img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	&[data-frame="circle"] .image {
+		border-radius: 50%;
+	}
+
+	& .column {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		min-width: 0;
+	}
+
+	& .identity {
+		& h1 {
+			margin: 0;
+			color: var(--char-title);
+			font-size: var(--name-size);
+			font-weight: 700;
+			line-height: 1.18;
+			letter-spacing: -0.01em;
+		}
+
+		& p {
+			margin: 8px 0 0;
+			color: var(--card-sub);
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 1.45;
+		}
+	}
+
+	& .ai_notice {
+		display: flex;
+		gap: 6px;
+		width: fit-content;
+		margin: -8px 0 0;
+		padding: 4px 11px;
+		border-radius: 999px;
+		background: #f3f1ea;
+		color: var(--card-sub);
+		font-size: 12px;
+		line-height: 1.5;
+
+		& strong {
+			font-weight: 650;
+		}
+	}
+
+	/* 칸 너비를 똑같이 나누지 않고 값 길이만큼만 차지하게 해 표처럼 보이지 않게 한다 */
+	& .facts {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 0;
+
+		& > div {
+			display: flex;
+			align-items: baseline;
+			gap: 8px;
+			max-width: 100%;
+			padding: 6px 13px;
+			border-radius: 12px;
+			background: var(--char-soft);
+		}
+
+		& dt {
+			flex-shrink: 0;
+			color: var(--card-muted);
+			font-size: 12px;
+			font-weight: 600;
+			line-height: 1.5;
+		}
+
+		& dd {
+			min-width: 0;
+			margin: 0;
+			font-size: 14px;
+			font-weight: 600;
+			line-height: 1.5;
+		}
+	}
+
+	& .blocks {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 28px;
+	}
+
+	& .block {
+		min-width: 0;
+
+		/* 제목은 밑줄 대신 형광펜처럼 아래쪽만 옅게 칠한다 */
+		& h2 {
+			display: inline;
+			margin: 0 0 0 -0.2em;
+			padding-right: 3px;
+			color: var(--char-text);
+			font-size: 15px;
+			font-weight: 700;
+			line-height: 1.5;
+
+			& i {
+				font-family: bootstrap-icons;
+			}
+		}
+
+		& p {
+			margin: 8px 0 0;
+			color: var(--card-ink);
+			font-size: 14px;
+			line-height: 1.62;
+		}
+
+		& ul {
+			margin: 8px 0 0;
+			padding: 0 0 0 16px;
+		}
+
+		& li {
+			font-size: 14px;
+			line-height: 1.62;
+
+			&::marker {
+				color: var(--char-mark);
+			}
+
+			&:nth-of-type(n + 2) {
+				margin-top: 2px;
+			}
+		}
+	}
+
+	& .brand {
+		position: absolute;
+		right: 34px;
+		bottom: 11px;
+		margin: 0;
+		color: var(--card-muted);
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.03em;
+	}
+}
+
+/* 세로형: 이미지 314 × 608(원본 900 × 1744의 0.35배) 왼쪽, 나머지 요소는 오른쪽 한 열 */
+.layout_v {
+	& .sheet {
+		grid-template-columns: 314px minmax(0, 1fr);
+		column-gap: 40px;
+	}
+
+	& .image {
+		width: 314px;
+		height: 608px;
+	}
+}
+
+/* 가로형: 이미지 760 × 251(원본 1200 × 396의 0.63배) 위, 그 아래 정보와 블록. 이름과 TMI는 오른쪽 열 */
+.layout_h {
+	--name-size: 30px;
+
+	& .sheet {
+		grid-template-columns: 760px minmax(0, 1fr);
+		/* 두 줄이 남는 높이를 나눠 갖지 않고 위로 붙게 한다 */
+		align-content: start;
+		gap: 20px 32px;
+	}
+
+	& .image {
+		width: 760px;
+		height: 251px;
+	}
+
+	& .identity p {
+		font-size: 16px;
+	}
+}
+
+/* 정사각형: 이미지 420 × 420(원본 1000 × 1000의 0.42배) 왼쪽 위, TMI는 이미지 아래 */
+.layout_s {
+	--name-size: 32px;
+
+	& .sheet {
+		grid-template-columns: 420px minmax(0, 1fr);
+		column-gap: 36px;
+	}
+
+	& .image {
+		width: 420px;
+		height: 420px;
+	}
+}
+
+/* 저장용: 화면 밖(왼쪽)에 두고 1280 × 720 틀만 찍는다. 숨기지 않고 밀어내기만 해야 PNG에 그려진다. */
+.capture {
+	position: fixed;
+	top: 0;
+	right: 100%;
+	pointer-events: none;
+
+	& .capture_frame {
+		width: 1280px;
+		height: 720px;
+	}
+}
+
+@keyframes image-wait {
+	50% {
+		opacity: 0.55;
+	}
+}
