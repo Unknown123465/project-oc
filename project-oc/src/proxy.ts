@@ -36,7 +36,7 @@ export function proxy(req: NextRequest) {
 		["worker-src", SELF, "blob:"],
 		/* 이미지를 브라우저가 R2로 직접 PUT 한다. 이 줄이 없으면 default-src의
 		   'self'에 걸려 업로드가 조용히 실패한다. */
-		["connect-src", SELF, R2_ENDPOINT, "https://kapi.kakao.com"],
+		["connect-src", SELF, R2_ENDPOINT, R2_PUBLIC_URL, "https://kapi.kakao.com"],
 		["font-src", SELF],
 		["object-src", NONE],
 		/* base-uri와 frame-ancestors는 default-src로 대체되지 않아 적지 않으면 무제한이다.

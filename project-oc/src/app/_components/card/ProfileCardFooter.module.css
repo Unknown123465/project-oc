@@ -1,0 +1,102 @@
+/* 카드 아래 버튼 줄. 카드 안과 달리 사이트 테마(다크 모드)를 따른다. */
+.footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 18px;
+	max-width: 1280px;
+	margin: 18px auto 0;
+	padding: 16px 20px;
+	background-color: var(--card-dark-1);
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-2);
+
+	& .note {
+		min-width: 0;
+		color: var(--muted);
+		font-size: 13px;
+		line-height: 1.5;
+		word-break: keep-all;
+
+		& p {
+			margin: 0;
+		}
+
+		& .message {
+			margin: 2px 0 0;
+			font-weight: 600;
+
+			&.normal {
+				color: var(--muted);
+			}
+
+			&.success {
+				color: var(--success);
+			}
+
+			&.error {
+				color: var(--danger);
+			}
+		}
+	}
+
+	& .actions {
+		display: flex;
+		flex-wrap: wrap;
+		flex-shrink: 0;
+		gap: 8px;
+	}
+
+	& .like {
+		height: 38px;
+		padding: 0 14px;
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		color: var(--button-normal-text);
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 1;
+		white-space: nowrap;
+
+		&.button {
+			background-color: var(--button-normal-back);
+			border: 1px solid var(--button-normal-line);
+			border-radius: var(--radius-2);
+			cursor: pointer;
+
+			&:hover {
+				border-color: var(--button-normal-line-hover);
+				background-color: var(--button-normal-back-hover);
+			}
+
+			&:active {
+				transform: translateY(1px);
+			}
+		}
+
+		&:is([aria-pressed="true"], .owner) i {
+			color: var(--like);
+		}
+	}
+
+	/* 색과 비활성 모양은 공용 버튼(ActionButton, LinkButton)을 따르고, 크기만 옆 버튼들과 맞춘다 */
+	& .ui_button {
+		width: auto;
+		min-height: 38px;
+		padding: 0 14px;
+		gap: 7px;
+		font-size: 14px;
+		letter-spacing: normal;
+		white-space: nowrap;
+	}
+
+	@media (width < 768px) {
+		align-items: stretch;
+		flex-direction: column;
+
+		& .actions {
+			flex-shrink: 1;
+		}
+	}
+}
