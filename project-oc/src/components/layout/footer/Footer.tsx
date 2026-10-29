@@ -10,7 +10,7 @@ export default async function Footer() {
 	const year: number = new Date().getFullYear();
 
 	return (
-		<footer className={styles.footer}>
+		<footer className={`site_footer ${styles.footer}`}>
 			<div className={styles.info}>
 				<span className={styles.copyright}>ⓒ {year} 프로젝트 OC</span>
 

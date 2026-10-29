@@ -65,7 +65,7 @@ export default function Header() {
 
 	return (
 		<>
-			<header className={styles.header}>
+			<header className={`site_header ${styles.header}`}>
 				<Link href="/" className={styles.logo_box} aria-label="사이트 로고">
 					<div className={styles.logo}>OC</div>
 
