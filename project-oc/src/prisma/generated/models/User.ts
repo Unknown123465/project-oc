@@ -288,6 +288,7 @@ export type UserWhereInput = {
   characters?: Prisma.CharacterListRelationFilter
   aiHistories?: Prisma.AiHistoryListRelationFilter
   characterLikes?: Prisma.CharacterLikeListRelationFilter
+  characterComments?: Prisma.CharacterCommentListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -308,6 +309,7 @@ export type UserOrderByWithRelationInput = {
   characters?: Prisma.CharacterOrderByRelationAggregateInput
   aiHistories?: Prisma.AiHistoryOrderByRelationAggregateInput
   characterLikes?: Prisma.CharacterLikeOrderByRelationAggregateInput
+  characterComments?: Prisma.CharacterCommentOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -332,6 +334,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   characters?: Prisma.CharacterListRelationFilter
   aiHistories?: Prisma.AiHistoryListRelationFilter
   characterLikes?: Prisma.CharacterLikeListRelationFilter
+  characterComments?: Prisma.CharacterCommentListRelationFilter
 }, "id" | "username" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -392,6 +395,7 @@ export type UserCreateInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -412,6 +416,7 @@ export type UserUncheckedCreateInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -432,6 +437,7 @@ export type UserUpdateInput = {
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -452,6 +458,7 @@ export type UserUncheckedUpdateInput = {
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -658,6 +665,20 @@ export type UserUpdateOneRequiredWithoutCharacterLikesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCharacterLikesInput, Prisma.UserUpdateWithoutCharacterLikesInput>, Prisma.UserUncheckedUpdateWithoutCharacterLikesInput>
 }
 
+export type UserCreateNestedOneWithoutCharacterCommentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCharacterCommentsInput, Prisma.UserUncheckedCreateWithoutCharacterCommentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCharacterCommentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCharacterCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCharacterCommentsInput, Prisma.UserUncheckedCreateWithoutCharacterCommentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCharacterCommentsInput
+  upsert?: Prisma.UserUpsertWithoutCharacterCommentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCharacterCommentsInput, Prisma.UserUpdateWithoutCharacterCommentsInput>, Prisma.UserUncheckedUpdateWithoutCharacterCommentsInput>
+}
+
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -675,6 +696,7 @@ export type UserCreateWithoutAccountsInput = {
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -694,6 +716,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -729,6 +752,7 @@ export type UserUpdateWithoutAccountsInput = {
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -748,6 +772,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAiHistoriesInput = {
@@ -767,6 +792,7 @@ export type UserCreateWithoutAiHistoriesInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAiHistoriesInput = {
@@ -786,6 +812,7 @@ export type UserUncheckedCreateWithoutAiHistoriesInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAiHistoriesInput = {
@@ -821,6 +848,7 @@ export type UserUpdateWithoutAiHistoriesInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAiHistoriesInput = {
@@ -840,6 +868,7 @@ export type UserUncheckedUpdateWithoutAiHistoriesInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCharactersInput = {
@@ -859,6 +888,7 @@ export type UserCreateWithoutCharactersInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCharactersInput = {
@@ -878,6 +908,7 @@ export type UserUncheckedCreateWithoutCharactersInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCharactersInput = {
@@ -913,6 +944,7 @@ export type UserUpdateWithoutCharactersInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCharactersInput = {
@@ -932,6 +964,7 @@ export type UserUncheckedUpdateWithoutCharactersInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCharacterLikesInput = {
@@ -951,6 +984,7 @@ export type UserCreateWithoutCharacterLikesInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCharacterLikesInput = {
@@ -970,6 +1004,7 @@ export type UserUncheckedCreateWithoutCharacterLikesInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
   aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
+  characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCharacterLikesInput = {
@@ -1005,6 +1040,7 @@ export type UserUpdateWithoutCharacterLikesInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCharacterLikesInput = {
@@ -1024,6 +1060,103 @@ export type UserUncheckedUpdateWithoutCharacterLikesInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
   aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
+  characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCharacterCommentsInput = {
+  id?: string
+  name?: string | null
+  username?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  aiDraftUsedOn?: Date | string | null
+  aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
+  aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCharacterCommentsInput = {
+  id?: string
+  name?: string | null
+  username?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  password?: string | null
+  aiDraftUsedOn?: Date | string | null
+  aiDraftUsedCount?: number
+  aiDraftCallCount?: number
+  aiDraftLastCallAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
+  aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
+  characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCharacterCommentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCharacterCommentsInput, Prisma.UserUncheckedCreateWithoutCharacterCommentsInput>
+}
+
+export type UserUpsertWithoutCharacterCommentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCharacterCommentsInput, Prisma.UserUncheckedUpdateWithoutCharacterCommentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCharacterCommentsInput, Prisma.UserUncheckedCreateWithoutCharacterCommentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCharacterCommentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCharacterCommentsInput, Prisma.UserUncheckedUpdateWithoutCharacterCommentsInput>
+}
+
+export type UserUpdateWithoutCharacterCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
+  aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCharacterCommentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
+  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
+  aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
+  characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1036,6 +1169,7 @@ export type UserCountOutputType = {
   characters: number
   aiHistories: number
   characterLikes: number
+  characterComments: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1043,6 +1177,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   characters?: boolean | UserCountOutputTypeCountCharactersArgs
   aiHistories?: boolean | UserCountOutputTypeCountAiHistoriesArgs
   characterLikes?: boolean | UserCountOutputTypeCountCharacterLikesArgs
+  characterComments?: boolean | UserCountOutputTypeCountCharacterCommentsArgs
 }
 
 /**
@@ -1083,6 +1218,13 @@ export type UserCountOutputTypeCountCharacterLikesArgs<ExtArgs extends runtime.T
   where?: Prisma.CharacterLikeWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCharacterCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CharacterCommentWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1102,6 +1244,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   characters?: boolean | Prisma.User$charactersArgs<ExtArgs>
   aiHistories?: boolean | Prisma.User$aiHistoriesArgs<ExtArgs>
   characterLikes?: boolean | Prisma.User$characterLikesArgs<ExtArgs>
+  characterComments?: boolean | Prisma.User$characterCommentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1129,6 +1272,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   characters?: boolean | Prisma.User$charactersArgs<ExtArgs>
   aiHistories?: boolean | Prisma.User$aiHistoriesArgs<ExtArgs>
   characterLikes?: boolean | Prisma.User$characterLikesArgs<ExtArgs>
+  characterComments?: boolean | Prisma.User$characterCommentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1139,6 +1283,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     characters: Prisma.$CharacterPayload<ExtArgs>[]
     aiHistories: Prisma.$AiHistoryPayload<ExtArgs>[]
     characterLikes: Prisma.$CharacterLikePayload<ExtArgs>[]
+    characterComments: Prisma.$CharacterCommentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1498,6 +1643,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   characters<T extends Prisma.User$charactersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$charactersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   aiHistories<T extends Prisma.User$aiHistoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiHistoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   characterLikes<T extends Prisma.User$characterLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$characterLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  characterComments<T extends Prisma.User$characterCommentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$characterCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1981,6 +2127,30 @@ export type User$characterLikesArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.CharacterLikeScalarFieldEnum | Prisma.CharacterLikeScalarFieldEnum[]
+}
+
+/**
+ * User.characterComments
+ */
+export type User$characterCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CharacterComment
+   */
+  select?: Prisma.CharacterCommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CharacterComment
+   */
+  omit?: Prisma.CharacterCommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CharacterCommentInclude<ExtArgs> | null
+  where?: Prisma.CharacterCommentWhereInput
+  orderBy?: Prisma.CharacterCommentOrderByWithRelationInput | Prisma.CharacterCommentOrderByWithRelationInput[]
+  cursor?: Prisma.CharacterCommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CharacterCommentScalarFieldEnum | Prisma.CharacterCommentScalarFieldEnum[]
 }
 
 /**

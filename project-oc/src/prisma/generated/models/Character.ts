@@ -374,6 +374,7 @@ export type CharacterWhereInput = {
   updatedAt?: Prisma.DateTimeNullableFilter<"Character"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   characterLikes?: Prisma.CharacterLikeListRelationFilter
+  characterComments?: Prisma.CharacterCommentListRelationFilter
 }
 
 export type CharacterOrderByWithRelationInput = {
@@ -403,6 +404,7 @@ export type CharacterOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   characterLikes?: Prisma.CharacterLikeOrderByRelationAggregateInput
+  characterComments?: Prisma.CharacterCommentOrderByRelationAggregateInput
   _relevance?: Prisma.CharacterOrderByRelevanceInput
 }
 
@@ -436,6 +438,7 @@ export type CharacterWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeNullableFilter<"Character"> | Date | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   characterLikes?: Prisma.CharacterLikeListRelationFilter
+  characterComments?: Prisma.CharacterCommentListRelationFilter
 }, "charId" | "charPublicLink">
 
 export type CharacterOrderByWithAggregationInput = {
@@ -526,6 +529,7 @@ export type CharacterCreateInput = {
   updatedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutCharactersInput
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutCharacterInput
+  characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateInput = {
@@ -554,6 +558,7 @@ export type CharacterUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutCharacterInput
+  characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUpdateInput = {
@@ -582,6 +587,7 @@ export type CharacterUpdateInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCharactersNestedInput
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutCharacterNestedInput
+  characterComments?: Prisma.CharacterCommentUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateInput = {
@@ -610,6 +616,7 @@ export type CharacterUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutCharacterNestedInput
+  characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterCreateManyInput = {
@@ -864,6 +871,20 @@ export type CharacterUpdateOneRequiredWithoutCharacterLikesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CharacterUpdateToOneWithWhereWithoutCharacterLikesInput, Prisma.CharacterUpdateWithoutCharacterLikesInput>, Prisma.CharacterUncheckedUpdateWithoutCharacterLikesInput>
 }
 
+export type CharacterCreateNestedOneWithoutCharacterCommentsInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutCharacterCommentsInput, Prisma.CharacterUncheckedCreateWithoutCharacterCommentsInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutCharacterCommentsInput
+  connect?: Prisma.CharacterWhereUniqueInput
+}
+
+export type CharacterUpdateOneRequiredWithoutCharacterCommentsNestedInput = {
+  create?: Prisma.XOR<Prisma.CharacterCreateWithoutCharacterCommentsInput, Prisma.CharacterUncheckedCreateWithoutCharacterCommentsInput>
+  connectOrCreate?: Prisma.CharacterCreateOrConnectWithoutCharacterCommentsInput
+  upsert?: Prisma.CharacterUpsertWithoutCharacterCommentsInput
+  connect?: Prisma.CharacterWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CharacterUpdateToOneWithWhereWithoutCharacterCommentsInput, Prisma.CharacterUpdateWithoutCharacterCommentsInput>, Prisma.CharacterUncheckedUpdateWithoutCharacterCommentsInput>
+}
+
 export type CharacterCreateWithoutUserInput = {
   charId?: bigint | number
   charName: string
@@ -889,6 +910,7 @@ export type CharacterCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutCharacterInput
+  characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateWithoutUserInput = {
@@ -916,6 +938,7 @@ export type CharacterUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutCharacterInput
+  characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterCreateOrConnectWithoutUserInput = {
@@ -999,6 +1022,7 @@ export type CharacterCreateWithoutCharacterLikesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string | null
   user: Prisma.UserCreateNestedOneWithoutCharactersInput
+  characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterUncheckedCreateWithoutCharacterLikesInput = {
@@ -1026,6 +1050,7 @@ export type CharacterUncheckedCreateWithoutCharacterLikesInput = {
   charUploaderId: string
   createdAt?: Date | string
   updatedAt?: Date | string | null
+  characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutCharacterInput
 }
 
 export type CharacterCreateOrConnectWithoutCharacterLikesInput = {
@@ -1069,6 +1094,7 @@ export type CharacterUpdateWithoutCharacterLikesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutCharactersNestedInput
+  characterComments?: Prisma.CharacterCommentUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutCharacterLikesInput = {
@@ -1096,6 +1122,135 @@ export type CharacterUncheckedUpdateWithoutCharacterLikesInput = {
   charUploaderId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutCharacterNestedInput
+}
+
+export type CharacterCreateWithoutCharacterCommentsInput = {
+  charId?: bigint | number
+  charName: string
+  charImage: string
+  charProfileLayout: string
+  charImageFrame: string
+  charMessage: string
+  charKind?: string | null
+  charColor?: string
+  charMusic?: string | null
+  charLike?: string | null
+  charHate?: string | null
+  charMbti?: string | null
+  charBirthplace?: string | null
+  charAge?: string | null
+  charBirthday?: string | null
+  charHeight?: string | null
+  charPersonality?: string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: runtime.Bytes
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  user: Prisma.UserCreateNestedOneWithoutCharactersInput
+  characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutCharacterInput
+}
+
+export type CharacterUncheckedCreateWithoutCharacterCommentsInput = {
+  charId?: bigint | number
+  charName: string
+  charImage: string
+  charProfileLayout: string
+  charImageFrame: string
+  charMessage: string
+  charKind?: string | null
+  charColor?: string
+  charMusic?: string | null
+  charLike?: string | null
+  charHate?: string | null
+  charMbti?: string | null
+  charBirthplace?: string | null
+  charAge?: string | null
+  charBirthday?: string | null
+  charHeight?: string | null
+  charPersonality?: string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode: number
+  aiUsed: number
+  charPublicLink: runtime.Bytes
+  charUploaderId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutCharacterInput
+}
+
+export type CharacterCreateOrConnectWithoutCharacterCommentsInput = {
+  where: Prisma.CharacterWhereUniqueInput
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutCharacterCommentsInput, Prisma.CharacterUncheckedCreateWithoutCharacterCommentsInput>
+}
+
+export type CharacterUpsertWithoutCharacterCommentsInput = {
+  update: Prisma.XOR<Prisma.CharacterUpdateWithoutCharacterCommentsInput, Prisma.CharacterUncheckedUpdateWithoutCharacterCommentsInput>
+  create: Prisma.XOR<Prisma.CharacterCreateWithoutCharacterCommentsInput, Prisma.CharacterUncheckedCreateWithoutCharacterCommentsInput>
+  where?: Prisma.CharacterWhereInput
+}
+
+export type CharacterUpdateToOneWithWhereWithoutCharacterCommentsInput = {
+  where?: Prisma.CharacterWhereInput
+  data: Prisma.XOR<Prisma.CharacterUpdateWithoutCharacterCommentsInput, Prisma.CharacterUncheckedUpdateWithoutCharacterCommentsInput>
+}
+
+export type CharacterUpdateWithoutCharacterCommentsInput = {
+  charId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  charName?: Prisma.StringFieldUpdateOperationsInput | string
+  charImage?: Prisma.StringFieldUpdateOperationsInput | string
+  charProfileLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  charImageFrame?: Prisma.StringFieldUpdateOperationsInput | string
+  charMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  charKind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charColor?: Prisma.StringFieldUpdateOperationsInput | string
+  charMusic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charLike?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charMbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charAge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charPersonality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode?: Prisma.IntFieldUpdateOperationsInput | number
+  aiUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  charPublicLink?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutCharactersNestedInput
+  characterLikes?: Prisma.CharacterLikeUpdateManyWithoutCharacterNestedInput
+}
+
+export type CharacterUncheckedUpdateWithoutCharacterCommentsInput = {
+  charId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  charName?: Prisma.StringFieldUpdateOperationsInput | string
+  charImage?: Prisma.StringFieldUpdateOperationsInput | string
+  charProfileLayout?: Prisma.StringFieldUpdateOperationsInput | string
+  charImageFrame?: Prisma.StringFieldUpdateOperationsInput | string
+  charMessage?: Prisma.StringFieldUpdateOperationsInput | string
+  charKind?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charColor?: Prisma.StringFieldUpdateOperationsInput | string
+  charMusic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charLike?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charMbti?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthplace?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charAge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charBirthday?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charHeight?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charPersonality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  charTmi?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  charPublicMode?: Prisma.IntFieldUpdateOperationsInput | number
+  aiUsed?: Prisma.IntFieldUpdateOperationsInput | number
+  charPublicLink?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  charUploaderId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterCreateManyUserInput = {
@@ -1149,6 +1304,7 @@ export type CharacterUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutCharacterNestedInput
+  characterComments?: Prisma.CharacterCommentUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateWithoutUserInput = {
@@ -1176,6 +1332,7 @@ export type CharacterUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutCharacterNestedInput
+  characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutCharacterNestedInput
 }
 
 export type CharacterUncheckedUpdateManyWithoutUserInput = {
@@ -1211,10 +1368,12 @@ export type CharacterUncheckedUpdateManyWithoutUserInput = {
 
 export type CharacterCountOutputType = {
   characterLikes: number
+  characterComments: number
 }
 
 export type CharacterCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   characterLikes?: boolean | CharacterCountOutputTypeCountCharacterLikesArgs
+  characterComments?: boolean | CharacterCountOutputTypeCountCharacterCommentsArgs
 }
 
 /**
@@ -1232,6 +1391,13 @@ export type CharacterCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
  */
 export type CharacterCountOutputTypeCountCharacterLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CharacterLikeWhereInput
+}
+
+/**
+ * CharacterCountOutputType without action
+ */
+export type CharacterCountOutputTypeCountCharacterCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CharacterCommentWhereInput
 }
 
 
@@ -1262,6 +1428,7 @@ export type CharacterSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   characterLikes?: boolean | Prisma.Character$characterLikesArgs<ExtArgs>
+  characterComments?: boolean | Prisma.Character$characterCommentsArgs<ExtArgs>
   _count?: boolean | Prisma.CharacterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["character"]>
 
@@ -1298,6 +1465,7 @@ export type CharacterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type CharacterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   characterLikes?: boolean | Prisma.Character$characterLikesArgs<ExtArgs>
+  characterComments?: boolean | Prisma.Character$characterCommentsArgs<ExtArgs>
   _count?: boolean | Prisma.CharacterCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1306,6 +1474,7 @@ export type $CharacterPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     characterLikes: Prisma.$CharacterLikePayload<ExtArgs>[]
+    characterComments: Prisma.$CharacterCommentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     charId: bigint
@@ -1674,6 +1843,7 @@ export interface Prisma__CharacterClient<T, Null = never, ExtArgs extends runtim
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   characterLikes<T extends Prisma.Character$characterLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$characterLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  characterComments<T extends Prisma.Character$characterCommentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Character$characterCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2096,6 +2266,30 @@ export type Character$characterLikesArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.CharacterLikeScalarFieldEnum | Prisma.CharacterLikeScalarFieldEnum[]
+}
+
+/**
+ * Character.characterComments
+ */
+export type Character$characterCommentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CharacterComment
+   */
+  select?: Prisma.CharacterCommentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CharacterComment
+   */
+  omit?: Prisma.CharacterCommentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CharacterCommentInclude<ExtArgs> | null
+  where?: Prisma.CharacterCommentWhereInput
+  orderBy?: Prisma.CharacterCommentOrderByWithRelationInput | Prisma.CharacterCommentOrderByWithRelationInput[]
+  cursor?: Prisma.CharacterCommentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CharacterCommentScalarFieldEnum | Prisma.CharacterCommentScalarFieldEnum[]
 }
 
 /**

@@ -71,3 +71,8 @@ export type Character = Prisma.CharacterModel
  * 
  */
 export type CharacterLike = Prisma.CharacterLikeModel
+/**
+ * Model CharacterComment
+ * 
+ */
+export type CharacterComment = Prisma.CharacterCommentModel
