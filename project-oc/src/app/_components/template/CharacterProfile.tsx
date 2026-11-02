@@ -10,6 +10,7 @@ import type {IframeHeight} from "@/app/create/musicEmbed";
 import {CharacterView} from "@/app/template/[uuid]/getCharacter";
 import {PUBLIC_MODE_PUBLIC} from "@/app/create/r2";
 import {LinkButton} from "@/components/ui/button";
+import {CommentFromTemplate} from "@/app/template/[uuid]/commentMessage";
 
 export type ProfileLayout = "h" | "v" | "s";
 export type ImageFrame = "square" | "circle";
@@ -35,17 +36,27 @@ export interface TemplateCharacter {
 	aiUsed: boolean;
 }
 
+/* 코멘트 UI 확인용 임시 데이터. 서버 액션을 연결하면 지운다. */
+const PREVIEW_COMMENTS: CommentFromTemplate[] = [
+	{commentId: "1", userName: "푸른연필", charComment: "한 문장 소개와 표정이 정말 잘 어울려요.", createdAt: new Date("2026-10-30T09:12:00Z"), updated: false, hidden: false, isMine: false},
+	{commentId: "2", userName: "소금별", charComment: "머리핀을 만지는 습관이 귀엽네요!", createdAt: new Date("2026-10-31T02:40:00Z"), updated: true, hidden: false, isMine: true},
+	{commentId: "3", userName: "밤산책", charComment: "숨긴 코멘트 본문", createdAt: new Date("2026-11-01T11:05:00Z"), updated: false, hidden: true, isMine: false},
+	{commentId: "4", userName: "소금별", charComment: "TMI 세 번째 줄이 제일 좋아요.", createdAt: new Date("2026-11-01T12:30:00Z"), updated: false, hidden: false, isMine: true},
+];
+
 interface CharacterProfileProps {
 	nonce: string | undefined;
 	uuid: string;
 	character: CharacterView;
+	comments: CommentFromTemplate[] | null;
 	/** 비공개 프로필은 좋아요를 받지 않아 null이다. */
 	like: ProfileLikeView | null;
 	/** 비공개 프로필은 공유할 수 없다. */
 	shareable: boolean;
+	serverNow: number;
 }
 
-export default function CharacterProfile({nonce, uuid, character, like, shareable}: CharacterProfileProps) {
+export default function CharacterProfile({nonce, uuid, character, comments, like, shareable, serverNow}: CharacterProfileProps) {
 	const layout: ProfileLayout = character.charProfileLayout;
 
 	const alt: string = `${character.charName} 캐릭터 일러스트`;
@@ -145,7 +156,8 @@ export default function CharacterProfile({nonce, uuid, character, like, shareabl
 					</div>
 				</article>
 
-				<Comments />
+				{/* 서버 액션을 연결하기 전 화면 확인용 임시 값. 연결할 때 실제 목록·로그인 여부로 바꾼다. */}
+				<Comments uuid={uuid} comments={comments} isOwner={like?.isOwner ?? false} isPrivate={!shareable} serverNow={serverNow} />
 			</main>
 		</>
 	);
