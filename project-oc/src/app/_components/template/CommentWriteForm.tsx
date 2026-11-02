@@ -16,7 +16,7 @@ interface CommentWriteFormProps {
 export default function CommentWriteForm({uuid}: CommentWriteFormProps) {
 	const {
 		control,
-		formState: {errors},
+		formState: {errors, isSubmitting},
 		handleSubmit,
 		setValue,
 		setError,
@@ -63,7 +63,9 @@ export default function CommentWriteForm({uuid}: CommentWriteFormProps) {
 			) : null}
 
 			<div className={styles.form_actions}>
-				<SubmitButton className={styles.submit_button}>코멘트 등록</SubmitButton>
+				<SubmitButton className={styles.submit_button} disabled={isSubmitting}>
+					코멘트 등록
+				</SubmitButton>
 			</div>
 		</form>
 	);
