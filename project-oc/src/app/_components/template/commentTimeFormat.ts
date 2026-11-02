@@ -2,7 +2,7 @@ const TIME_DIFF_NUMBER = {
 	least1minute: 60,
 	least60minute: 60 * 60,
 	least1day: 60 * 60 * 24,
-	least7day: 60 * 60 * 24 * 7,
+	least8day: 60 * 60 * 24 * 8,
 } as const;
 
 /* 코멘트 작성 시각을 "방금 전", "n분 전" 같은 문구로 바꾼다. 지금 시각과 시간대를 인자로 받는 순수 함수라
@@ -32,7 +32,7 @@ export function toCommentTimeFormat(createdAt: Date, now: number, timeZone: stri
 		const hourDiff: number = Math.floor(timeDiff / TIME_DIFF_NUMBER.least60minute);
 
 		return hourDiff + "시간 전";
-	} else if (timeDiff < TIME_DIFF_NUMBER.least7day) {
+	} else if (timeDiff < TIME_DIFF_NUMBER.least8day) {
 		const dayDiff: number = Math.floor(timeDiff / TIME_DIFF_NUMBER.least1day);
 
 		return dayDiff + "일 전";
