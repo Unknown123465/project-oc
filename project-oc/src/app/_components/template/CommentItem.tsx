@@ -87,7 +87,6 @@ export default function CommentItem({uuid, comment, isOwner, disabled, errors, i
 						</span>
 					) : null}
 
-					{/* 상대 시간 표시는 시간 표시 기능을 붙일 때 바꾼다. 지금은 날짜만 보여 준다. */}
 					<time className={styles.time} dateTime={comment.createdAt.toISOString()}>
 						{toCommentTimeFormat(comment.createdAt, now, timeZone)}
 						{comment.updated ? " (수정됨)" : null}

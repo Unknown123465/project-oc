@@ -148,7 +148,6 @@ export default function CharacterProfile({nonce, uuid, character, comments, like
 					</div>
 				</article>
 
-				{/* 서버 액션을 연결하기 전 화면 확인용 임시 값. 연결할 때 실제 목록·로그인 여부로 바꾼다. */}
 				<Comments uuid={uuid} comments={comments} isOwner={like?.isOwner ?? false} isPrivate={!shareable} serverNow={serverNow} />
 			</main>
 		</>
