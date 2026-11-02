@@ -474,11 +474,12 @@ export async function hideComment(data: DeleteOrHiddenCommentFormType): Promise<
 	} catch (err) {
 		console.error(err);
 
-		/* 확인과 변경 사이에 작성자가 코멘트를 지우면 update가 P2025로 떨어진다. */
+		/* 확인과 변경 사이에 작성자가 코멘트를 지우거나, 같은 코멘트에 숨김/표시 요청이 동시에 들어와 hiddenAt이 먼저 바뀌거나,
+		   프로필이 비공개로 바뀌면 update가 P2025로 떨어진다. P2025만으로는 셋을 가릴 수 없어 상태가 바뀌었다는 문구로 묶는다. */
 		if (err instanceof PrismaClientKnownRequestError && err.code === "P2025") {
 			return {
 				success: false,
-				message: COMMENT_MESSAGE.notFound,
+				message: COMMENT_MESSAGE.hideChanged[hideMode],
 			};
 		}
 
