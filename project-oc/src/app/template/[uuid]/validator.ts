@@ -32,7 +32,7 @@ export const editCommentForm = z.object(
 	{
 		uuid: writeCommentForm.shape.uuid,
 		commentId: z
-			.union([z.bigint().positive(WRONG_COMMENT_ID_MESSAGE), z.string().regex(/^[1-9]\d*$/, WRONG_COMMENT_ID_MESSAGE), z.enum([""])], WRONG_COMMENT_ID_MESSAGE)
+			.union([z.bigint().positive(WRONG_COMMENT_ID_MESSAGE), z.string().regex(/^[1-9]\d*$/, WRONG_COMMENT_ID_MESSAGE)], WRONG_COMMENT_ID_MESSAGE)
 			.pipe(z.coerce.bigint(WRONG_COMMENT_ID_MESSAGE)),
 		comment: writeCommentForm.shape.comment,
 	},

@@ -36,14 +36,6 @@ export interface TemplateCharacter {
 	aiUsed: boolean;
 }
 
-/* 코멘트 UI 확인용 임시 데이터. 서버 액션을 연결하면 지운다. */
-const PREVIEW_COMMENTS: CommentFromTemplate[] = [
-	{commentId: "1", userName: "푸른연필", charComment: "한 문장 소개와 표정이 정말 잘 어울려요.", createdAt: new Date("2026-10-30T09:12:00Z"), updated: false, hidden: false, isMine: false},
-	{commentId: "2", userName: "소금별", charComment: "머리핀을 만지는 습관이 귀엽네요!", createdAt: new Date("2026-10-31T02:40:00Z"), updated: true, hidden: false, isMine: true},
-	{commentId: "3", userName: "밤산책", charComment: "숨긴 코멘트 본문", createdAt: new Date("2026-11-01T11:05:00Z"), updated: false, hidden: true, isMine: false},
-	{commentId: "4", userName: "소금별", charComment: "TMI 세 번째 줄이 제일 좋아요.", createdAt: new Date("2026-11-01T12:30:00Z"), updated: false, hidden: false, isMine: true},
-];
-
 interface CharacterProfileProps {
 	nonce: string | undefined;
 	uuid: string;
