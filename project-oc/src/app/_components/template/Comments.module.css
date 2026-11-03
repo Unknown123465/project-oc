@@ -2,111 +2,170 @@
 	margin-top: 44px;
 	padding-top: 34px;
 	border-top: 1px solid var(--card-dark-line);
-}
 
-.comments h2 {
-	margin: 0;
-	color: var(--title-text);
-	font-size: 28px;
-	letter-spacing: -0.04em;
+	& h2 {
+		margin: 0;
+		color: var(--title-text);
+		font-size: 28px;
+		letter-spacing: -0.04em;
 
-	& span {
+		& span {
+			color: var(--muted);
+		}
+	}
+
+	& .notice {
+		margin: 20px 0 0;
+		padding: 18px 20px;
 		color: var(--muted);
+		font-size: 14.5px;
+		background-color: var(--card-dark-2);
+		border-radius: var(--radius-2);
 	}
-}
 
-.list {
-	display: grid;
-	gap: 12px;
-	margin-top: 20px;
-}
+	& .list {
+		display: grid;
+		margin-top: 20px;
+	}
 
-.comment {
-	padding: 17px 0;
-	border-bottom: 1px solid var(--card-dark-line);
-}
+	& .comment {
+		padding: 17px 0;
+		border-bottom: 1px solid var(--card-dark-line);
 
-.head {
-	display: flex;
-	justify-content: space-between;
-	gap: 16px;
-}
+		/* 수정 중인 코멘트만 노랑 배경으로 구분한다(편집 중 요소는 노랑을 쓰는 자리). */
+		&[data-editing="true"] {
+			margin: 0 -14px;
+			padding: 17px 14px;
+			background-color: var(--personal-bright);
+			border-radius: var(--radius-2);
+		}
+	}
 
-.author {
-	color: var(--title-text);
-	font-weight: 780;
-}
+	& .head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 16px;
+	}
 
-.time {
-	color: var(--muted);
-	font-size: 12px;
-}
+	& .author {
+		color: var(--title-text);
+		font-weight: 780;
+	}
 
-.comment p {
-	margin: 8px 0 0;
-	color: var(--muted);
-}
+	& .right {
+		display: flex;
+		align-items: flex-end;
+		gap: 10px;
 
-.form {
-	margin-top: 26px;
-}
+		& span,
+		& time {
+			flex-shrink: 0;
+			color: var(--muted);
+			font-size: 12px;
+		}
+	}
 
-.field {
-	display: grid;
-	gap: 8px;
-}
+	& .edit_form {
+		margin-top: 10px;
+	}
 
-.field_label {
-	color: var(--title-text);
-	font-size: 13.5px;
-	font-weight: 700;
-}
+	/* ProfileLike의 오류 문구와 같은 모양. 있을 때만 그려서 자리를 미리 잡지 않는다. */
+	& .error_message {
+		margin: 8px 0 0;
+		color: var(--error-text);
+		font-size: 12.5px;
+		font-weight: 600;
+		word-break: keep-all;
+	}
 
-.textarea {
-	width: 100%;
-	padding: 12px 15px;
-	color: var(--input-text);
-	font: inherit;
-	font-size: 15px;
-	line-height: 1.5;
-	background-color: var(--input-back);
-	border: 1px solid var(--input-line);
-	border-radius: 10px;
-	resize: vertical;
+	& .edit_actions {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 6px;
+		margin-top: 10px;
+	}
 
-	&::placeholder {
+	/* 공용 버튼은 너비 100%, 높이 46px이 기본이라 코멘트 안의 작은 버튼만 줄인다. */
+	& .small_button {
+		width: auto;
+		min-height: 34px;
+		padding: 0 12px;
+		font-size: 13px;
+	}
+
+	& .blind {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 12px;
+		margin-top: 8px;
+		padding: 8px 8px 8px 14px;
+		background-color: var(--card-dark-2);
+		border-radius: var(--radius-1);
+
+		& p {
+			margin: 0;
+			color: var(--muted);
+			font-size: 14px;
+		}
+	}
+
+	& .body {
+		margin: 8px 0 0;
+		color: var(--personal-text);
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+
+	& .actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 6px;
+		margin-top: 6px;
+	}
+
+	& .form {
+		margin-top: 26px;
+	}
+
+	& .form_actions {
+		display: flex;
+		justify-content: flex-end;
+		margin-top: 14px;
+
+		& .submit_button {
+			width: auto;
+			padding: 0 24px;
+		}
+	}
+
+	& .login {
+		margin: 26px 0 0;
 		color: var(--muted);
-	}
+		font-size: 14.5px;
 
-	&:focus {
-		outline: 0;
-		border-color: var(--input-select-line);
-		box-shadow: 0 0 0 3px color-mix(in srgb, var(--personal) 45%, transparent);
+		& a {
+			color: var(--title-text);
+			font-weight: 750;
+			text-decoration: underline;
+			text-underline-offset: 3px;
+		}
 	}
 }
 
-.form_actions {
-	margin-top: 14px;
-	display: flex;
-	justify-content: flex-end;
-}
+@media (max-width: 767px) {
+	.comments {
+		& .head {
+			flex-direction: column;
+			gap: 2px;
+		}
 
-.submit {
-	min-height: 46px;
-	padding: 0 24px;
-	color: var(--button-submit-text);
-	font-size: 15px;
-	font-weight: 750;
-	background-color: var(--button-submit-back);
-	border: 1px solid var(--button-submit-line);
-	border-radius: 10px;
-	cursor: pointer;
-
-	&:hover {
-		background-color: var(--personal-dark);
-	}
-
-	&:active {
-		transform: scale(0.98);
+		& .blind {
+			flex-direction: column;
+			align-items: flex-start;
+			padding: 12px 14px;
+		}
 	}
 }

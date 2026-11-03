@@ -36,8 +36,9 @@ model User {
   // 마지막 호출 시각. 짧은 간격으로 몰아치는 요청을 막는 데만 쓴다.
   aiDraftLastCallAt DateTime?
 
-  aiHistories    AiHistory[]
-  characterLikes CharacterLike[]
+  aiHistories       AiHistory[]
+  characterLikes    CharacterLike[]
+  characterComments CharacterComment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -129,7 +130,8 @@ model Character {
   charUploaderId    String  @db.VarChar(191)
   user              User    @relation(fields: [charUploaderId], references: [id])
 
-  characterLikes CharacterLike[]
+  characterLikes    CharacterLike[]
+  characterComments CharacterComment[]
 
   createdAt DateTime  @default(now()) @db.DateTime(0)
   updatedAt DateTime? @updatedAt @db.DateTime(0)
@@ -159,4 +161,35 @@ model CharacterLike {
   // PK가 charId로 시작해 "이 캐릭터의 좋아요 수"는 PK로 센다. userId FK에는 따로 인덱스를 둔다.
   @@index([userId], map: "idx_characterlike_user")
   @@map("characterlike")
+}
+
+// 프로필 코멘트.
+//
+// 본인이 지운 코멘트는 행을 지우지 않고 deletedAt만 채운다. 신고가 들어왔을 때 관리자가
+// 지워진 본문을 확인할 수 있어야 해서다. 보관한 행은 30일 뒤 크론이 지운다(별도 이슈).
+// 반대로 캐릭터나 회원이 지워지면 코멘트도 같이 지운다. SET NULL로 남기면 누가 썼는지
+// 알 수 없어 관리에 쓸 수 없고, 탈퇴한 사람의 글을 보관 기간 없이 들고 있게 된다.
+model CharacterComment {
+  commentId   BigInt    @id @default(autoincrement())
+  charId      BigInt
+  userId      String    @db.VarChar(191)
+  charComment String    @db.VarChar(300)
+  character   Character @relation(fields: [charId], references: [charId], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now()) @db.DateTime(0)
+  // @updatedAt을 쓰지 않는다. 쓰면 삭제(deletedAt)나 숨김(hiddenAt)에도 갱신돼 "(수정됨)"이
+  // 잘못 붙는다. 본문(charComment)을 고칠 때만 직접 넣는다.
+  updatedAt DateTime? @db.DateTime(0)
+  deletedAt DateTime? @db.DateTime(0)
+  // 프로필 제작자가 숨긴 시각. null이면 숨기지 않은 상태다.
+  hiddenAt  DateTime? @db.DateTime(0)
+
+  // 목록은 "이 캐릭터의 코멘트를 오래된 순으로" 읽는다. createdAt이 초 단위라 같은 값이
+  // 나올 수 있어 정렬은 (createdAt, commentId)로 적는데, InnoDB 보조 인덱스는 끝에 PK를
+  // 붙이므로 이 인덱스만으로 추가 정렬 없이 처리된다.
+  @@index([charId, createdAt], map: "idx_charactercomment_char_created")
+  // userId FK에 쓸 인덱스. MySQL이 FK에 인덱스를 자동으로 만들지만 좋아요처럼 명시해 둔다.
+  @@index([userId], map: "idx_charactercomment_user")
+  @@map("charactercomment")
 }

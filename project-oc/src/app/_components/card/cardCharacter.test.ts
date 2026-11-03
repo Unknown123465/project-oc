@@ -12,7 +12,7 @@ describe("글자색 보정", () => {
 		{value: "#ffc90e", bigTextResult: "#c08a00", otherResult: "#9f6900"},
 		{value: "#a8e6cf", bigTextResult: "#63a18a", otherResult: "#44826b"},
 		{value: "#ffffff", bigTextResult: "#939393", otherResult: "#737373"},
-	] as const)("기준에 못 미치는 색($value)을 넣으면 bigText는 $bigTextResult, other는 $otherResult여야 한다", ({value, bigTextResult, otherResult}) => {
+	] as const)("기준에 못 미치는 색($value)을 넣으면 bigText는 $bigTextResult, other는 '$otherResult'여야 한다", ({value, bigTextResult, otherResult}) => {
 		expect(colorCorrection(value, "bigText"), `bigText는 ${bigTextResult}여야 한다`).toBe(bigTextResult);
 		expect(colorCorrection(value, "other"), `other는 ${otherResult}여야 한다`).toBe(otherResult);
 	});

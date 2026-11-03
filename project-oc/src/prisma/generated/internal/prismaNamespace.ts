@@ -402,7 +402,8 @@ export const ModelName = {
   AiHistory: 'AiHistory',
   VerificationToken: 'VerificationToken',
   Character: 'Character',
-  CharacterLike: 'CharacterLike'
+  CharacterLike: 'CharacterLike',
+  CharacterComment: 'CharacterComment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "account" | "aiHistory" | "verificationToken" | "character" | "characterLike"
+    modelProps: "user" | "account" | "aiHistory" | "verificationToken" | "character" | "characterLike" | "characterComment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -818,6 +819,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CharacterComment: {
+      payload: Prisma.$CharacterCommentPayload<ExtArgs>
+      fields: Prisma.CharacterCommentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CharacterCommentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterCommentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CharacterCommentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterCommentPayload>
+        }
+        findFirst: {
+          args: Prisma.CharacterCommentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterCommentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CharacterCommentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterCommentPayload>
+        }
+        findMany: {
+          args: Prisma.CharacterCommentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterCommentPayload>[]
+        }
+        create: {
+          args: Prisma.CharacterCommentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterCommentPayload>
+        }
+        createMany: {
+          args: Prisma.CharacterCommentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.CharacterCommentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterCommentPayload>
+        }
+        update: {
+          args: Prisma.CharacterCommentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterCommentPayload>
+        }
+        deleteMany: {
+          args: Prisma.CharacterCommentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CharacterCommentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.CharacterCommentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CharacterCommentPayload>
+        }
+        aggregate: {
+          args: Prisma.CharacterCommentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCharacterComment>
+        }
+        groupBy: {
+          args: Prisma.CharacterCommentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CharacterCommentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CharacterCommentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CharacterCommentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -956,6 +1023,20 @@ export const CharacterLikeScalarFieldEnum = {
 export type CharacterLikeScalarFieldEnum = (typeof CharacterLikeScalarFieldEnum)[keyof typeof CharacterLikeScalarFieldEnum]
 
 
+export const CharacterCommentScalarFieldEnum = {
+  commentId: 'commentId',
+  charId: 'charId',
+  userId: 'userId',
+  charComment: 'charComment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  hiddenAt: 'hiddenAt'
+} as const
+
+export type CharacterCommentScalarFieldEnum = (typeof CharacterCommentScalarFieldEnum)[keyof typeof CharacterCommentScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1071,6 +1152,14 @@ export const CharacterLikeOrderByRelevanceFieldEnum = {
 } as const
 
 export type CharacterLikeOrderByRelevanceFieldEnum = (typeof CharacterLikeOrderByRelevanceFieldEnum)[keyof typeof CharacterLikeOrderByRelevanceFieldEnum]
+
+
+export const CharacterCommentOrderByRelevanceFieldEnum = {
+  userId: 'userId',
+  charComment: 'charComment'
+} as const
+
+export type CharacterCommentOrderByRelevanceFieldEnum = (typeof CharacterCommentOrderByRelevanceFieldEnum)[keyof typeof CharacterCommentOrderByRelevanceFieldEnum]
 
 
 
@@ -1291,6 +1380,7 @@ export type GlobalOmitConfig = {
   verificationToken?: Prisma.VerificationTokenOmit
   character?: Prisma.CharacterOmit
   characterLike?: Prisma.CharacterLikeOmit
+  characterComment?: Prisma.CharacterCommentOmit
 }
 
 /* Types for Logging */

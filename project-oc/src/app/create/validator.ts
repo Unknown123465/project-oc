@@ -31,7 +31,7 @@ export const CHAR_TMI_MAX_LINES = 5;
 export const CHAR_TMI_MAX_LINE_LENGTH = 30;
 
 /** 입력한 문자열 좌우에 일반, 특수 공백, ZWJ, 변형 선택자(좌측 한정)를 잘라 공백으로만 제출하는 걸 막는다. */
-const blankRegex: RegExp = /^[\u200b-\u200d\u2060\u115f-\u1160\u3164\uffa0\ufe0f\s]+|[\u200b-\u200d\u2060\u115f-\u1160\u3164\uffa0\s]+$/g;
+export const blankRegex: RegExp = /^[\u200b-\u200d\u2060\u115f-\u1160\u3164\uffa0\ufe0f\s]+|[\u200b-\u200d\u2060\u115f-\u1160\u3164\uffa0\s]+$/g;
 
 function genStringSchema(name: "default" | "tmi") {
 	/* 공백을 수만 자 넣어서 ReDoS를 일으키는 걸 방지하기 위해 transform 전 max로 상한을 잡는다. 이때, 상한은 모든 요소 중 가장 상한이 높은 것을 기준으로 잡아 여유롭게 1000자로 지정했다. */
@@ -82,7 +82,7 @@ export const createCharForm = z.object({
 	charProfileLayout: z.enum(["h", "v", "s", ""], "이미지 유형을 선택해 주세요.").refine((data) => data === "h" || data === "v" || data === "s", "이미지 유형을 선택해 주세요."),
 	charImageFrame: z.enum(["square", "circle", ""], "이미지 프레임을 선택해 주세요.").refine((data) => data === "square" || data === "circle", "이미지 프레임을 선택해 주세요."),
 	charMessage: genStringSchema("default").pipe(
-		z.string().min(1, "한 줄 소개를 입력해 주세요.").max(CHAR_MAX_LENGTH.charMessage, `한 줄 소개를 ${CHAR_MAX_LENGTH.charMessage}자 이하로 입력해 주세요.`),
+		z.string().min(1, "한 줄 소개를 입력해 주세요.").max(CHAR_MAX_LENGTH.charMessage, `한 줄 소개를 ${CHAR_MAX_LENGTH.charMessage}자 이하로 입력해 주세요.`)
 	),
 	charLike: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charLike, `좋아하는 것을 ${CHAR_MAX_LENGTH.charLike}자 이하로 입력해 주세요.`)),
 	charHate: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charHate, `싫어하는 것을 ${CHAR_MAX_LENGTH.charHate}자 이하로 입력해 주세요.`)),
@@ -104,7 +104,7 @@ export const createCharForm = z.object({
 				message: "링크가 유효하지 않아요.",
 			})
 			.max(CHAR_MAX_LENGTH.charMusic, `테마곡 주소가 너무 길어요. ${CHAR_MAX_LENGTH.charMusic}자 이하로 입력해 주세요.`)
-			.or(z.string().refine((data) => data === "")),
+			.or(z.string().refine((data) => data === ""))
 	),
 	charColor: z
 		.string()
@@ -343,7 +343,7 @@ const draftColor = z
 
 			return shorthand !== null ? `#${shorthand[1]}${shorthand[1]}${shorthand[2]}${shorthand[2]}${shorthand[3]}${shorthand[3]}` : hex;
 		},
-		z.string().regex(/^#[0-9a-f]{6}$/),
+		z.string().regex(/^#[0-9a-f]{6}$/)
 	)
 	.nullable()
 	.describe('캐릭터를 대표하는 색 하나를 "#rrggbb" 형식으로. 배경색이 아니라 머리카락·눈·의상 같은 캐릭터 본인의 색에서 고른다. 참고 이미지가 없으면 null.');
@@ -355,7 +355,7 @@ export const createPromptResultForm = z.object({
 			/* 고르는 주체는 사용자다. 모델이 "선택했습니다"로 끝맺으면 화면의 "○○을 추천해요"
 			   제목과 어긋나고, 이미 정해진 일처럼 읽힌다. 어미를 문구로 못박아 둔다. */
 			reason: clippedText(LAYOUT_REASON_MAX_LENGTH).describe(
-				`그 유형을 왜 추천하는지. ${LAYOUT_REASON_MAX_LENGTH}자 이내 한 문장이며 "~추천합니다"로 끝맺는다. "선택했습니다", "정했습니다"처럼 이미 결정된 것처럼 쓰지 않는다.`,
+				`그 유형을 왜 추천하는지. ${LAYOUT_REASON_MAX_LENGTH}자 이내 한 문장이며 "~추천합니다"로 끝맺는다. "선택했습니다", "정했습니다"처럼 이미 결정된 것처럼 쓰지 않는다.`
 			),
 			fx: ratio("잘라도 반드시 남아야 하는 지점(보통 얼굴 중심)의 가로 위치. 이미지 왼쪽 끝이 0, 오른쪽 끝이 1."),
 			fy: ratio("같은 지점의 세로 위치. 이미지 위쪽 끝이 0, 아래쪽 끝이 1."),
@@ -389,13 +389,13 @@ export const createPromptResultForm = z.object({
 									/* 지침을 줘도 모델이 습관적으로 붙이는 경우가 있어 방어적으로 한 번 더 뗀다.
 									   "..."처럼 의미 있는 말줄임표까지 지우지 않도록 마지막 한 글자만 본다. */
 									.replace(/[.]$/, "")
-									.slice(0, CHAR_TMI_MAX_LINE_LENGTH),
+									.slice(0, CHAR_TMI_MAX_LINE_LENGTH)
 							)
 							.join("\n");
 					}, z.string())
 					.nullable()
 					.describe(
-						`다른 항목에 들어가지 않는 나머지 설정을 모으는 칸. 출신, 과거에 있었던 일, 다른 인물과의 관계, 처지, 버릇, 재주 등 무엇이든 넣는다. 사소한 것만 담는 칸이 아니다. 한 줄에 하나씩 줄바꿈으로 구분한다. 최대 ${CHAR_TMI_MAX_LINES}줄, 각 줄 ${CHAR_TMI_MAX_LINE_LENGTH}자 이내. 각 줄은 "~한다", "~좋아한다"처럼 평서형으로 끝맺는다. "~함", "~있음"처럼 명사형으로 끝내지 않는다. 단, 평서형으로 쓰면 글자 수를 넘는 줄은 그 줄만 명사형으로 줄여 쓴다. 줄 끝에 마침표를 붙이지 않는다.`,
+						`다른 항목에 들어가지 않는 나머지 설정을 모으는 칸. 출신, 과거에 있었던 일, 다른 인물과의 관계, 처지, 버릇, 재주 등 무엇이든 넣는다. 사소한 것만 담는 칸이 아니다. 한 줄에 하나씩 줄바꿈으로 구분한다. 최대 ${CHAR_TMI_MAX_LINES}줄, 각 줄 ${CHAR_TMI_MAX_LINE_LENGTH}자 이내. 각 줄은 "~한다", "~좋아한다"처럼 평서형으로 끝맺는다. "~함", "~있음"처럼 명사형으로 끝내지 않는다. 단, 평서형으로 쓰면 글자 수를 넘는 줄은 그 줄만 명사형으로 줄여 쓴다. 줄 끝에 마침표를 붙이지 않는다.`
 					),
 				reason: z.enum(["unverified"]).optional(),
 			}),

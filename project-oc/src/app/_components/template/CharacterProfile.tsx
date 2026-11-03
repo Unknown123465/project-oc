@@ -10,6 +10,7 @@ import type {IframeHeight} from "@/app/create/musicEmbed";
 import {CharacterView} from "@/app/template/[uuid]/getCharacter";
 import {PUBLIC_MODE_PUBLIC} from "@/app/create/r2";
 import {LinkButton} from "@/components/ui/button";
+import {CommentFromTemplate} from "@/app/template/[uuid]/commentMessage";
 
 export type ProfileLayout = "h" | "v" | "s";
 export type ImageFrame = "square" | "circle";
@@ -39,13 +40,15 @@ interface CharacterProfileProps {
 	nonce: string | undefined;
 	uuid: string;
 	character: CharacterView;
+	comments: CommentFromTemplate[] | null;
 	/** 비공개 프로필은 좋아요를 받지 않아 null이다. */
 	like: ProfileLikeView | null;
 	/** 비공개 프로필은 공유할 수 없다. */
 	shareable: boolean;
+	serverNow: number;
 }
 
-export default function CharacterProfile({nonce, uuid, character, like, shareable}: CharacterProfileProps) {
+export default function CharacterProfile({nonce, uuid, character, comments, like, shareable, serverNow}: CharacterProfileProps) {
 	const layout: ProfileLayout = character.charProfileLayout;
 
 	const alt: string = `${character.charName} 캐릭터 일러스트`;
@@ -145,7 +148,7 @@ export default function CharacterProfile({nonce, uuid, character, like, shareabl
 					</div>
 				</article>
 
-				<Comments />
+				<Comments uuid={uuid} comments={comments} isOwner={like?.isOwner ?? false} isPrivate={!shareable} serverNow={serverNow} />
 			</main>
 		</>
 	);

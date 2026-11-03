@@ -86,7 +86,7 @@ describe("입력 검사", () => {
 	it.each([
 		{value: "123", label: "문자열"},
 		{value: ["0198f2a4-7c3e-7b21-9d4a-5e6f7a8b9c0d"], label: "유사 문자열 배열"},
-	] as const)("UUID가 아닌 $label을 넣으면 거부되고 reason이 'not-a-uuid'여야 한다", async ({value}) => {
+	] as const)("UUID가 아닌 값($label)을 넣으면 거부되고 reason이 'not-a-uuid'여야 한다", async ({value}) => {
 		loginAs(null);
 
 		const result = await setCharacterLike(value as unknown as string);
@@ -107,7 +107,7 @@ describe("권한", () => {
 	it.each([
 		{value: fixture.notFoundUuid, label: "없는 UUID"},
 		{value: fixture.privateUuid, label: "비공개 프로필"},
-	] as const)("$label에 요청하면 거부되고 reason이 'character-not-found'여야 한다", async ({value}) => {
+	] as const)("$label(으)로 요청하면 거부되고 reason이 'character-not-found'여야 한다", async ({value}) => {
 		loginAs(fixture.viewerId);
 
 		const result = await setCharacterLike(value);
@@ -167,7 +167,7 @@ describe("getCharacterLike", () => {
 	it.each([
 		{value: "123", label: "문자열"},
 		{value: ["0198f2a4-7c3e-7b21-9d4a-5e6f7a8b9c0d"], label: "유사 문자열 배열"},
-	] as const)("UUID가 아닌 $label을 넣으면 null을 반환해야 한다", async ({value}) => {
+	] as const)("UUID가 아닌 값($label)을 넣으면 null을 반환해야 한다", async ({value}) => {
 		loginAs(null);
 
 		const result = await getCharacterLike(value as unknown as string);
@@ -191,7 +191,7 @@ describe("getCharacterLike", () => {
 		{getValue: () => null, label: "로그아웃이고", result: {count: 0, liked: false, isOwner: false}, resultText: "liked는 false, isOwner가 false"},
 		{getValue: () => fixture.viewerId, label: "방문자이고", result: {count: 0, liked: false, isOwner: false}, resultText: "liked는 false, isOwner가 false"},
 		{getValue: () => fixture.ownerId, label: "프로필 제작자면", result: {count: 0, liked: false, isOwner: true}, resultText: "liked는 false, isOwner가 true"},
-	] as const)("$label 공개 프로필을 조회하면 $resultText여야 한다", async ({getValue, result}) => {
+	] as const)("$label 공개 프로필을 조회하면 결과가 $resultText(으)로 나와야 한다", async ({getValue, result}) => {
 		loginAs(getValue());
 
 		const getResult = await getCharacterLike(fixture.publicUuid);
