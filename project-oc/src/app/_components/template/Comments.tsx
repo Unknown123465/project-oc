@@ -8,7 +8,7 @@ import {COMMENT_MESSAGE, CommentFromTemplate} from "@/app/template/[uuid]/commen
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {commentForm, CommentFormType} from "@/app/template/[uuid]/validator";
-import {useId, useState, useSyncExternalStore} from "react";
+import {useId, useState, useSyncExternalStore, useTransition} from "react";
 import {deleteComment, editComment} from "@/app/template/[uuid]/comment";
 import {useRouter} from "next/navigation";
 import useConfirm from "@/hooks/useConfirm";
@@ -65,6 +65,7 @@ export default function Comments({uuid, comments, isOwner, isPrivate, serverNow}
 	});
 
 	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
 
 	/* 수정 중인 코멘트 하나의 id. 다른 코멘트의 수정을 누르면 값이 바뀌어 앞의 수정 화면은
 	   원래 모습으로 돌아가고, 고치던 내용은 저장되지 않고 사라진다(수정 폼이 언마운트된다). */
@@ -114,9 +115,10 @@ export default function Comments({uuid, comments, isOwner, isPrivate, serverNow}
 			const result = await editComment({uuid, commentId: editTarget, comment});
 
 			if (result.success) {
-				setEditTarget(null);
-
-				router.refresh();
+				startTransition(() => {
+					setEditTarget(null);
+					router.refresh();
+				});
 			} else {
 				throw new Error(result.message);
 			}
@@ -202,7 +204,7 @@ export default function Comments({uuid, comments, isOwner, isPrivate, serverNow}
 							isOwner={isOwner}
 							isEditing={comment.commentId === editTarget}
 							control={control}
-							disabled={isSending}
+							disabled={isSending || isPending}
 							errors={errors}
 							now={now ?? serverNow}
 							timeZone={now !== null ? timeZone : "Asia/Seoul"}
