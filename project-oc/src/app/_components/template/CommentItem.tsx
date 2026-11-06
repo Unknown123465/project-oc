@@ -7,10 +7,18 @@ import {COMMENT_MAX_LENGTH, type CommentFormType} from "@/app/template/[uuid]/va
 import {CommentFromTemplate} from "@/app/template/[uuid]/commentMessage";
 import type {Control, FieldErrors} from "react-hook-form";
 import {useFormValueLength} from "@/hooks/commetsWatch";
-import {useState} from "react";
+import {useState, useTransition} from "react";
 import {hideComment} from "@/app/template/[uuid]/comment";
 import {useRouter} from "next/navigation";
 import {toCommentTimeFormat} from "./commentTimeFormat";
+
+function genHiddenMessage(messageType: "hidden" | "blinded", isOwner: boolean): string {
+	if (messageType === "hidden") {
+		return `${isOwner ? "본인이" : "프로필 제작자가"} 숨긴 코멘트예요.`;
+	} else {
+		return "자동으로 가려진 코멘트예요.";
+	}
+}
 
 interface CommentItemProps {
 	uuid: string;
@@ -29,18 +37,18 @@ interface CommentItemProps {
 }
 
 export default function CommentItem({uuid, comment, isOwner, disabled, errors, isEditing, control, now, timeZone, onEdit, onCancelEdit, onDelete}: CommentItemProps) {
-	/* 숨김 요청이 성공하면 바로 바꾸는 숨긴 state다. comment.hidden은 router.refresh()가 완료돼야 바뀌어서, comment.hidden에 의존하면 버튼 문구가 잠깐 이전 state로 남아 후술할 isHiddenComment와 맞지 않게 된다. */
-	const [isHidden, setIsHidden] = useState<boolean>(comment.hidden);
-	/* isHidden state와 비슷하지만 사용자가 코멘트 보기 버튼을 누르면 숨겨진 코멘트를 보이게 할지 여부가 할당된 state다. */
-	const [isHiddenComment, setIsHiddenComment] = useState<boolean>(comment.hidden);
+	const [isHiddenComment, setIsHiddenComment] = useState<boolean>(true);
 
 	const [isSending, setIsSending] = useState<boolean>(false);
 
 	const [errorMessage, setErrorMessage] = useState<string>("");
 
 	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
 
 	const stringLength = useFormValueLength(control, "comment");
+
+	const hiddenMessage: string = genHiddenMessage(comment.blinded ? "blinded" : "hidden", isOwner);
 
 	const message: string | undefined = isEditing ? (errors.root?.message ?? errors.comment?.message) : errorMessage;
 
@@ -52,11 +60,12 @@ export default function CommentItem({uuid, comment, isOwner, disabled, errors, i
 			const result = await hideComment({uuid, commentId: comment.commentId});
 
 			if (result.success) {
-				setIsHidden(result.result === "hide");
-				setIsHiddenComment(result.result === "hide");
-				setErrorMessage("");
+				startTransition(() => {
+					setIsHiddenComment(true);
+					setErrorMessage("");
 
-				router.refresh();
+					router.refresh();
+				});
 			} else {
 				throw new Error(result.message);
 			}
@@ -116,9 +125,9 @@ export default function CommentItem({uuid, comment, isOwner, disabled, errors, i
 				</div>
 			) : (
 				<>
-					{isHiddenComment ? (
+					{(comment.hidden || comment.blinded) && isHiddenComment ? (
 						<div className={styles.blind}>
-							<p>{isOwner ? "본인이" : "프로필 제작자가"} 숨긴 코멘트예요.</p>
+							<p>{hiddenMessage}</p>
 
 							<ActionButton className={styles.small_button} onClick={() => setIsHiddenComment(false)}>
 								코멘트 보기
@@ -133,17 +142,17 @@ export default function CommentItem({uuid, comment, isOwner, disabled, errors, i
 							<div className={styles.actions}>
 								{comment.isMine ? (
 									<>
-										<ActionButton className={styles.small_button} disabled={disabled || isSending} onClick={onEdit}>
+										<ActionButton className={styles.small_button} disabled={disabled || isSending || isPending} onClick={onEdit}>
 											수정
 										</ActionButton>
 
-										<ActionButton className={styles.small_button} disabled={disabled || isSending} onClick={() => deleteStart(comment.commentId)}>
+										<ActionButton className={styles.small_button} disabled={disabled || isSending || isPending} onClick={() => deleteStart(comment.commentId)}>
 											삭제
 										</ActionButton>
 									</>
 								) : (
-									<ActionButton className={styles.small_button} disabled={disabled || isSending} onClick={hideChange}>
-										{isHidden ? "표시하기" : "숨기기"}
+									<ActionButton className={styles.small_button} disabled={disabled || isSending || isPending} onClick={hideChange}>
+										{comment.hidden ? "표시하기" : "숨기기"}
 									</ActionButton>
 								)}
 							</div>
