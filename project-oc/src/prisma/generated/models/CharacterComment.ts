@@ -29,11 +29,25 @@ export type AggregateCharacterComment = {
 export type CharacterCommentAvgAggregateOutputType = {
   commentId: number | null
   charId: number | null
+  spamScore: number | null
+  mockeryScore: number | null
+  ownerAttackScore: number | null
+  userAttackScore: number | null
+  sexualScore: number | null
+  goreScore: number | null
+  rejudgeCount: number | null
 }
 
 export type CharacterCommentSumAggregateOutputType = {
   commentId: bigint | null
   charId: bigint | null
+  spamScore: number | null
+  mockeryScore: number | null
+  ownerAttackScore: number | null
+  userAttackScore: number | null
+  sexualScore: number | null
+  goreScore: number | null
+  rejudgeCount: number | null
 }
 
 export type CharacterCommentMinAggregateOutputType = {
@@ -45,6 +59,13 @@ export type CharacterCommentMinAggregateOutputType = {
   updatedAt: Date | null
   deletedAt: Date | null
   hiddenAt: Date | null
+  spamScore: number | null
+  mockeryScore: number | null
+  ownerAttackScore: number | null
+  userAttackScore: number | null
+  sexualScore: number | null
+  goreScore: number | null
+  rejudgeCount: number | null
 }
 
 export type CharacterCommentMaxAggregateOutputType = {
@@ -56,6 +77,13 @@ export type CharacterCommentMaxAggregateOutputType = {
   updatedAt: Date | null
   deletedAt: Date | null
   hiddenAt: Date | null
+  spamScore: number | null
+  mockeryScore: number | null
+  ownerAttackScore: number | null
+  userAttackScore: number | null
+  sexualScore: number | null
+  goreScore: number | null
+  rejudgeCount: number | null
 }
 
 export type CharacterCommentCountAggregateOutputType = {
@@ -67,6 +95,13 @@ export type CharacterCommentCountAggregateOutputType = {
   updatedAt: number
   deletedAt: number
   hiddenAt: number
+  spamScore: number
+  mockeryScore: number
+  ownerAttackScore: number
+  userAttackScore: number
+  sexualScore: number
+  goreScore: number
+  rejudgeCount: number
   _all: number
 }
 
@@ -74,11 +109,25 @@ export type CharacterCommentCountAggregateOutputType = {
 export type CharacterCommentAvgAggregateInputType = {
   commentId?: true
   charId?: true
+  spamScore?: true
+  mockeryScore?: true
+  ownerAttackScore?: true
+  userAttackScore?: true
+  sexualScore?: true
+  goreScore?: true
+  rejudgeCount?: true
 }
 
 export type CharacterCommentSumAggregateInputType = {
   commentId?: true
   charId?: true
+  spamScore?: true
+  mockeryScore?: true
+  ownerAttackScore?: true
+  userAttackScore?: true
+  sexualScore?: true
+  goreScore?: true
+  rejudgeCount?: true
 }
 
 export type CharacterCommentMinAggregateInputType = {
@@ -90,6 +139,13 @@ export type CharacterCommentMinAggregateInputType = {
   updatedAt?: true
   deletedAt?: true
   hiddenAt?: true
+  spamScore?: true
+  mockeryScore?: true
+  ownerAttackScore?: true
+  userAttackScore?: true
+  sexualScore?: true
+  goreScore?: true
+  rejudgeCount?: true
 }
 
 export type CharacterCommentMaxAggregateInputType = {
@@ -101,6 +157,13 @@ export type CharacterCommentMaxAggregateInputType = {
   updatedAt?: true
   deletedAt?: true
   hiddenAt?: true
+  spamScore?: true
+  mockeryScore?: true
+  ownerAttackScore?: true
+  userAttackScore?: true
+  sexualScore?: true
+  goreScore?: true
+  rejudgeCount?: true
 }
 
 export type CharacterCommentCountAggregateInputType = {
@@ -112,6 +175,13 @@ export type CharacterCommentCountAggregateInputType = {
   updatedAt?: true
   deletedAt?: true
   hiddenAt?: true
+  spamScore?: true
+  mockeryScore?: true
+  ownerAttackScore?: true
+  userAttackScore?: true
+  sexualScore?: true
+  goreScore?: true
+  rejudgeCount?: true
   _all?: true
 }
 
@@ -210,6 +280,13 @@ export type CharacterCommentGroupByOutputType = {
   updatedAt: Date | null
   deletedAt: Date | null
   hiddenAt: Date | null
+  spamScore: number | null
+  mockeryScore: number | null
+  ownerAttackScore: number | null
+  userAttackScore: number | null
+  sexualScore: number | null
+  goreScore: number | null
+  rejudgeCount: number | null
   _count: CharacterCommentCountAggregateOutputType | null
   _avg: CharacterCommentAvgAggregateOutputType | null
   _sum: CharacterCommentSumAggregateOutputType | null
@@ -244,6 +321,13 @@ export type CharacterCommentWhereInput = {
   updatedAt?: Prisma.DateTimeNullableFilter<"CharacterComment"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"CharacterComment"> | Date | string | null
   hiddenAt?: Prisma.DateTimeNullableFilter<"CharacterComment"> | Date | string | null
+  spamScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  mockeryScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  ownerAttackScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  userAttackScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  sexualScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  goreScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  rejudgeCount?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
   character?: Prisma.XOR<Prisma.CharacterScalarRelationFilter, Prisma.CharacterWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -257,6 +341,13 @@ export type CharacterCommentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   hiddenAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  spamScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  mockeryScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerAttackScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  userAttackScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  sexualScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  goreScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejudgeCount?: Prisma.SortOrderInput | Prisma.SortOrder
   character?: Prisma.CharacterOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   _relevance?: Prisma.CharacterCommentOrderByRelevanceInput
@@ -274,6 +365,13 @@ export type CharacterCommentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeNullableFilter<"CharacterComment"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"CharacterComment"> | Date | string | null
   hiddenAt?: Prisma.DateTimeNullableFilter<"CharacterComment"> | Date | string | null
+  spamScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  mockeryScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  ownerAttackScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  userAttackScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  sexualScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  goreScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  rejudgeCount?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
   character?: Prisma.XOR<Prisma.CharacterScalarRelationFilter, Prisma.CharacterWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "commentId">
@@ -287,6 +385,13 @@ export type CharacterCommentOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   hiddenAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  spamScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  mockeryScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerAttackScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  userAttackScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  sexualScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  goreScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejudgeCount?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CharacterCommentCountOrderByAggregateInput
   _avg?: Prisma.CharacterCommentAvgOrderByAggregateInput
   _max?: Prisma.CharacterCommentMaxOrderByAggregateInput
@@ -306,6 +411,13 @@ export type CharacterCommentScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CharacterComment"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CharacterComment"> | Date | string | null
   hiddenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"CharacterComment"> | Date | string | null
+  spamScore?: Prisma.IntNullableWithAggregatesFilter<"CharacterComment"> | number | null
+  mockeryScore?: Prisma.IntNullableWithAggregatesFilter<"CharacterComment"> | number | null
+  ownerAttackScore?: Prisma.IntNullableWithAggregatesFilter<"CharacterComment"> | number | null
+  userAttackScore?: Prisma.IntNullableWithAggregatesFilter<"CharacterComment"> | number | null
+  sexualScore?: Prisma.IntNullableWithAggregatesFilter<"CharacterComment"> | number | null
+  goreScore?: Prisma.IntNullableWithAggregatesFilter<"CharacterComment"> | number | null
+  rejudgeCount?: Prisma.IntNullableWithAggregatesFilter<"CharacterComment"> | number | null
 }
 
 export type CharacterCommentCreateInput = {
@@ -315,6 +427,13 @@ export type CharacterCommentCreateInput = {
   updatedAt?: Date | string | null
   deletedAt?: Date | string | null
   hiddenAt?: Date | string | null
+  spamScore?: number | null
+  mockeryScore?: number | null
+  ownerAttackScore?: number | null
+  userAttackScore?: number | null
+  sexualScore?: number | null
+  goreScore?: number | null
+  rejudgeCount?: number | null
   character: Prisma.CharacterCreateNestedOneWithoutCharacterCommentsInput
   user: Prisma.UserCreateNestedOneWithoutCharacterCommentsInput
 }
@@ -328,6 +447,13 @@ export type CharacterCommentUncheckedCreateInput = {
   updatedAt?: Date | string | null
   deletedAt?: Date | string | null
   hiddenAt?: Date | string | null
+  spamScore?: number | null
+  mockeryScore?: number | null
+  ownerAttackScore?: number | null
+  userAttackScore?: number | null
+  sexualScore?: number | null
+  goreScore?: number | null
+  rejudgeCount?: number | null
 }
 
 export type CharacterCommentUpdateInput = {
@@ -337,6 +463,13 @@ export type CharacterCommentUpdateInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   character?: Prisma.CharacterUpdateOneRequiredWithoutCharacterCommentsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterCommentsNestedInput
 }
@@ -350,6 +483,13 @@ export type CharacterCommentUncheckedUpdateInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type CharacterCommentCreateManyInput = {
@@ -361,6 +501,13 @@ export type CharacterCommentCreateManyInput = {
   updatedAt?: Date | string | null
   deletedAt?: Date | string | null
   hiddenAt?: Date | string | null
+  spamScore?: number | null
+  mockeryScore?: number | null
+  ownerAttackScore?: number | null
+  userAttackScore?: number | null
+  sexualScore?: number | null
+  goreScore?: number | null
+  rejudgeCount?: number | null
 }
 
 export type CharacterCommentUpdateManyMutationInput = {
@@ -370,6 +517,13 @@ export type CharacterCommentUpdateManyMutationInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type CharacterCommentUncheckedUpdateManyInput = {
@@ -381,6 +535,13 @@ export type CharacterCommentUncheckedUpdateManyInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type CharacterCommentListRelationFilter = {
@@ -408,11 +569,25 @@ export type CharacterCommentCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   hiddenAt?: Prisma.SortOrder
+  spamScore?: Prisma.SortOrder
+  mockeryScore?: Prisma.SortOrder
+  ownerAttackScore?: Prisma.SortOrder
+  userAttackScore?: Prisma.SortOrder
+  sexualScore?: Prisma.SortOrder
+  goreScore?: Prisma.SortOrder
+  rejudgeCount?: Prisma.SortOrder
 }
 
 export type CharacterCommentAvgOrderByAggregateInput = {
   commentId?: Prisma.SortOrder
   charId?: Prisma.SortOrder
+  spamScore?: Prisma.SortOrder
+  mockeryScore?: Prisma.SortOrder
+  ownerAttackScore?: Prisma.SortOrder
+  userAttackScore?: Prisma.SortOrder
+  sexualScore?: Prisma.SortOrder
+  goreScore?: Prisma.SortOrder
+  rejudgeCount?: Prisma.SortOrder
 }
 
 export type CharacterCommentMaxOrderByAggregateInput = {
@@ -424,6 +599,13 @@ export type CharacterCommentMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   hiddenAt?: Prisma.SortOrder
+  spamScore?: Prisma.SortOrder
+  mockeryScore?: Prisma.SortOrder
+  ownerAttackScore?: Prisma.SortOrder
+  userAttackScore?: Prisma.SortOrder
+  sexualScore?: Prisma.SortOrder
+  goreScore?: Prisma.SortOrder
+  rejudgeCount?: Prisma.SortOrder
 }
 
 export type CharacterCommentMinOrderByAggregateInput = {
@@ -435,11 +617,25 @@ export type CharacterCommentMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   hiddenAt?: Prisma.SortOrder
+  spamScore?: Prisma.SortOrder
+  mockeryScore?: Prisma.SortOrder
+  ownerAttackScore?: Prisma.SortOrder
+  userAttackScore?: Prisma.SortOrder
+  sexualScore?: Prisma.SortOrder
+  goreScore?: Prisma.SortOrder
+  rejudgeCount?: Prisma.SortOrder
 }
 
 export type CharacterCommentSumOrderByAggregateInput = {
   commentId?: Prisma.SortOrder
   charId?: Prisma.SortOrder
+  spamScore?: Prisma.SortOrder
+  mockeryScore?: Prisma.SortOrder
+  ownerAttackScore?: Prisma.SortOrder
+  userAttackScore?: Prisma.SortOrder
+  sexualScore?: Prisma.SortOrder
+  goreScore?: Prisma.SortOrder
+  rejudgeCount?: Prisma.SortOrder
 }
 
 export type CharacterCommentCreateNestedManyWithoutUserInput = {
@@ -533,6 +729,13 @@ export type CharacterCommentCreateWithoutUserInput = {
   updatedAt?: Date | string | null
   deletedAt?: Date | string | null
   hiddenAt?: Date | string | null
+  spamScore?: number | null
+  mockeryScore?: number | null
+  ownerAttackScore?: number | null
+  userAttackScore?: number | null
+  sexualScore?: number | null
+  goreScore?: number | null
+  rejudgeCount?: number | null
   character: Prisma.CharacterCreateNestedOneWithoutCharacterCommentsInput
 }
 
@@ -544,6 +747,13 @@ export type CharacterCommentUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string | null
   deletedAt?: Date | string | null
   hiddenAt?: Date | string | null
+  spamScore?: number | null
+  mockeryScore?: number | null
+  ownerAttackScore?: number | null
+  userAttackScore?: number | null
+  sexualScore?: number | null
+  goreScore?: number | null
+  rejudgeCount?: number | null
 }
 
 export type CharacterCommentCreateOrConnectWithoutUserInput = {
@@ -584,6 +794,13 @@ export type CharacterCommentScalarWhereInput = {
   updatedAt?: Prisma.DateTimeNullableFilter<"CharacterComment"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"CharacterComment"> | Date | string | null
   hiddenAt?: Prisma.DateTimeNullableFilter<"CharacterComment"> | Date | string | null
+  spamScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  mockeryScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  ownerAttackScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  userAttackScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  sexualScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  goreScore?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
+  rejudgeCount?: Prisma.IntNullableFilter<"CharacterComment"> | number | null
 }
 
 export type CharacterCommentCreateWithoutCharacterInput = {
@@ -593,6 +810,13 @@ export type CharacterCommentCreateWithoutCharacterInput = {
   updatedAt?: Date | string | null
   deletedAt?: Date | string | null
   hiddenAt?: Date | string | null
+  spamScore?: number | null
+  mockeryScore?: number | null
+  ownerAttackScore?: number | null
+  userAttackScore?: number | null
+  sexualScore?: number | null
+  goreScore?: number | null
+  rejudgeCount?: number | null
   user: Prisma.UserCreateNestedOneWithoutCharacterCommentsInput
 }
 
@@ -604,6 +828,13 @@ export type CharacterCommentUncheckedCreateWithoutCharacterInput = {
   updatedAt?: Date | string | null
   deletedAt?: Date | string | null
   hiddenAt?: Date | string | null
+  spamScore?: number | null
+  mockeryScore?: number | null
+  ownerAttackScore?: number | null
+  userAttackScore?: number | null
+  sexualScore?: number | null
+  goreScore?: number | null
+  rejudgeCount?: number | null
 }
 
 export type CharacterCommentCreateOrConnectWithoutCharacterInput = {
@@ -640,6 +871,13 @@ export type CharacterCommentCreateManyUserInput = {
   updatedAt?: Date | string | null
   deletedAt?: Date | string | null
   hiddenAt?: Date | string | null
+  spamScore?: number | null
+  mockeryScore?: number | null
+  ownerAttackScore?: number | null
+  userAttackScore?: number | null
+  sexualScore?: number | null
+  goreScore?: number | null
+  rejudgeCount?: number | null
 }
 
 export type CharacterCommentUpdateWithoutUserInput = {
@@ -649,6 +887,13 @@ export type CharacterCommentUpdateWithoutUserInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   character?: Prisma.CharacterUpdateOneRequiredWithoutCharacterCommentsNestedInput
 }
 
@@ -660,6 +905,13 @@ export type CharacterCommentUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type CharacterCommentUncheckedUpdateManyWithoutUserInput = {
@@ -670,6 +922,13 @@ export type CharacterCommentUncheckedUpdateManyWithoutUserInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type CharacterCommentCreateManyCharacterInput = {
@@ -680,6 +939,13 @@ export type CharacterCommentCreateManyCharacterInput = {
   updatedAt?: Date | string | null
   deletedAt?: Date | string | null
   hiddenAt?: Date | string | null
+  spamScore?: number | null
+  mockeryScore?: number | null
+  ownerAttackScore?: number | null
+  userAttackScore?: number | null
+  sexualScore?: number | null
+  goreScore?: number | null
+  rejudgeCount?: number | null
 }
 
 export type CharacterCommentUpdateWithoutCharacterInput = {
@@ -689,6 +955,13 @@ export type CharacterCommentUpdateWithoutCharacterInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   user?: Prisma.UserUpdateOneRequiredWithoutCharacterCommentsNestedInput
 }
 
@@ -700,6 +973,13 @@ export type CharacterCommentUncheckedUpdateWithoutCharacterInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type CharacterCommentUncheckedUpdateManyWithoutCharacterInput = {
@@ -710,6 +990,13 @@ export type CharacterCommentUncheckedUpdateManyWithoutCharacterInput = {
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   hiddenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  spamScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  mockeryScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ownerAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userAttackScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sexualScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  goreScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rejudgeCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -723,6 +1010,13 @@ export type CharacterCommentSelect<ExtArgs extends runtime.Types.Extensions.Inte
   updatedAt?: boolean
   deletedAt?: boolean
   hiddenAt?: boolean
+  spamScore?: boolean
+  mockeryScore?: boolean
+  ownerAttackScore?: boolean
+  userAttackScore?: boolean
+  sexualScore?: boolean
+  goreScore?: boolean
+  rejudgeCount?: boolean
   character?: boolean | Prisma.CharacterDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["characterComment"]>
@@ -738,9 +1032,16 @@ export type CharacterCommentSelectScalar = {
   updatedAt?: boolean
   deletedAt?: boolean
   hiddenAt?: boolean
+  spamScore?: boolean
+  mockeryScore?: boolean
+  ownerAttackScore?: boolean
+  userAttackScore?: boolean
+  sexualScore?: boolean
+  goreScore?: boolean
+  rejudgeCount?: boolean
 }
 
-export type CharacterCommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"commentId" | "charId" | "userId" | "charComment" | "createdAt" | "updatedAt" | "deletedAt" | "hiddenAt", ExtArgs["result"]["characterComment"]>
+export type CharacterCommentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"commentId" | "charId" | "userId" | "charComment" | "createdAt" | "updatedAt" | "deletedAt" | "hiddenAt" | "spamScore" | "mockeryScore" | "ownerAttackScore" | "userAttackScore" | "sexualScore" | "goreScore" | "rejudgeCount", ExtArgs["result"]["characterComment"]>
 export type CharacterCommentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   character?: boolean | Prisma.CharacterDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -761,6 +1062,13 @@ export type $CharacterCommentPayload<ExtArgs extends runtime.Types.Extensions.In
     updatedAt: Date | null
     deletedAt: Date | null
     hiddenAt: Date | null
+    spamScore: number | null
+    mockeryScore: number | null
+    ownerAttackScore: number | null
+    userAttackScore: number | null
+    sexualScore: number | null
+    goreScore: number | null
+    rejudgeCount: number | null
   }, ExtArgs["result"]["characterComment"]>
   composites: {}
 }
@@ -1140,6 +1448,13 @@ export interface CharacterCommentFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"CharacterComment", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"CharacterComment", 'DateTime'>
   readonly hiddenAt: Prisma.FieldRef<"CharacterComment", 'DateTime'>
+  readonly spamScore: Prisma.FieldRef<"CharacterComment", 'Int'>
+  readonly mockeryScore: Prisma.FieldRef<"CharacterComment", 'Int'>
+  readonly ownerAttackScore: Prisma.FieldRef<"CharacterComment", 'Int'>
+  readonly userAttackScore: Prisma.FieldRef<"CharacterComment", 'Int'>
+  readonly sexualScore: Prisma.FieldRef<"CharacterComment", 'Int'>
+  readonly goreScore: Prisma.FieldRef<"CharacterComment", 'Int'>
+  readonly rejudgeCount: Prisma.FieldRef<"CharacterComment", 'Int'>
 }
     
 

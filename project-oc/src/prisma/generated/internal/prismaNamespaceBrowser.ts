@@ -88,6 +88,7 @@ export const UserScalarFieldEnum = {
   aiDraftUsedCount: 'aiDraftUsedCount',
   aiDraftCallCount: 'aiDraftCallCount',
   aiDraftLastCallAt: 'aiDraftLastCallAt',
+  commentLastRequestAt: 'commentLastRequestAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -183,7 +184,14 @@ export const CharacterCommentScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
-  hiddenAt: 'hiddenAt'
+  hiddenAt: 'hiddenAt',
+  spamScore: 'spamScore',
+  mockeryScore: 'mockeryScore',
+  ownerAttackScore: 'ownerAttackScore',
+  userAttackScore: 'userAttackScore',
+  sexualScore: 'sexualScore',
+  goreScore: 'goreScore',
+  rejudgeCount: 'rejudgeCount'
 } as const
 
 export type CharacterCommentScalarFieldEnum = (typeof CharacterCommentScalarFieldEnum)[keyof typeof CharacterCommentScalarFieldEnum]

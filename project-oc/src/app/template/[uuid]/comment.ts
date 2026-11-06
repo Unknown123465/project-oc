@@ -7,6 +7,11 @@ import {auth} from "@/auth/auth";
 import {COMMENT_MESSAGE, type CommentFromTemplate} from "./commentMessage";
 import {PrismaClientKnownRequestError} from "@prisma/client/runtime/client";
 import {PUBLIC_MODE_PRIVATE} from "@/app/create/r2";
+import {JUDGE_COMMENT_NULL_RESULT, judgeComment, judgeCommentScore, JudgeScore, setCommentScoreIfOwner} from "./commentJudge";
+import {claimCommentJudge} from "./commentJudgeDraft";
+import {getCommentJudgeEnabled} from "@/app/create/globalConfig";
+
+const BLIND_COMMENT_SCORE: number | null = typeof process.env.BLIND_COMMENT_SCORE === "string" ? parseInt(process.env.BLIND_COMMENT_SCORE, 10) : null;
 
 interface CommentSuccessResult {
 	success: true;
@@ -25,6 +30,14 @@ interface CommentFailureResult {
 type CommentResult = CommentSuccessResult | CommentFailureResult;
 
 type CommentHiddenResult = CommentSuccessHiddenResult | CommentFailureResult;
+
+function getBlindable(score: JudgeScore<number | null>): boolean {
+	if (BLIND_COMMENT_SCORE === null || Number.isNaN(BLIND_COMMENT_SCORE)) {
+		return false;
+	}
+
+	return Object.values(score).some((value) => value !== null && value >= BLIND_COMMENT_SCORE);
+}
 
 export async function getCommentsByTemplate(uuid: string): Promise<CommentFromTemplate[] | null> {
 	if (typeof uuid !== "string" || !isUuid(uuid)) {
@@ -45,6 +58,12 @@ export async function getCommentsByTemplate(uuid: string): Promise<CommentFromTe
 			createdAt: true,
 			updatedAt: true,
 			hiddenAt: true,
+			spamScore: true,
+			mockeryScore: true,
+			ownerAttackScore: true,
+			userAttackScore: true,
+			sexualScore: true,
+			goreScore: true,
 			character: {
 				select: {
 					charPublicMode: true,
@@ -83,6 +102,14 @@ export async function getCommentsByTemplate(uuid: string): Promise<CommentFromTe
 		updated: comment.updatedAt !== null,
 		hidden: comment.hiddenAt !== null,
 		isMine: comment.user.id === authInfo?.user?.id,
+		blinded: getBlindable({
+			spamScore: comment.spamScore,
+			mockeryScore: comment.mockeryScore,
+			ownerAttackScore: comment.ownerAttackScore,
+			userAttackScore: comment.userAttackScore,
+			sexualScore: comment.sexualScore,
+			goreScore: comment.goreScore,
+		}),
 	}));
 }
 
@@ -110,25 +137,71 @@ export async function writeComment(data: WriteCommentFormType): Promise<CommentR
 	const {uuid, comment} = check.data;
 
 	try {
+		const claim: boolean = await claimCommentJudge(userId);
+
+		if (!claim) {
+			return {
+				success: false,
+				message: COMMENT_MESSAGE.writeTooFast,
+			};
+		}
+
 		const binUuid = uuidToBin(uuid);
 
+		const originCharacter = await db.character.findUnique({
+			where: {
+				charPublicLink: binUuid,
+			},
+			select: {
+				charId: true,
+				charPublicMode: true,
+				charUploaderId: true,
+			},
+		});
+
+		if (originCharacter === null) {
+			return {
+				success: false,
+				message: COMMENT_MESSAGE.profileNotFound,
+			};
+		} else if (originCharacter.charPublicMode === PUBLIC_MODE_PRIVATE) {
+			return {
+				success: false,
+				message: COMMENT_MESSAGE.writePrivate,
+			};
+		}
+
+		const isOwner: boolean = originCharacter.charUploaderId === userId;
+
+		const judgeCommentEnabled: boolean = await getCommentJudgeEnabled();
+
+		const judgeScore = judgeCommentEnabled ? setCommentScoreIfOwner(await judgeComment(comment), isOwner) : JUDGE_COMMENT_NULL_RESULT;
+
+		const {isDeny, highestScoreType, retry} = judgeCommentScore(judgeScore);
+
+		if (isDeny && highestScoreType !== null && highestScoreType !== "sexualScore" && highestScoreType !== "goreScore") {
+			return {
+				success: false,
+				message: COMMENT_MESSAGE.deny[highestScoreType],
+			};
+		}
+
 		const result: CommentResult = await db.$transaction(async (t) => {
-			const originCharacter = await t.character.findUnique({
+			const originCharacterAfterJudge = await t.character.findUnique({
 				where: {
 					charPublicLink: binUuid,
 				},
 				select: {
-					charId: true,
 					charPublicMode: true,
 				},
 			});
 
-			if (originCharacter === null) {
+			if (originCharacterAfterJudge === null) {
 				return {
 					success: false,
 					message: COMMENT_MESSAGE.profileNotFound,
 				};
-			} else if (originCharacter.charPublicMode === PUBLIC_MODE_PRIVATE) {
+			} else if (originCharacterAfterJudge.charPublicMode === PUBLIC_MODE_PRIVATE) {
 				return {
 					success: false,
 					message: COMMENT_MESSAGE.writePrivate,
@@ -140,6 +213,8 @@ export async function writeComment(data: WriteCommentFormType): Promise<CommentR
 					userId,
 					charId: originCharacter.charId,
 					charComment: comment,
+					...judgeScore,
+					rejudgeCount: judgeCommentEnabled && retry ? 0 : null,
 				},
 			});
 
@@ -191,68 +266,92 @@ export async function editComment(data: EditCommentFormInputType): Promise<Comme
 	const {uuid, commentId, comment} = check.data;
 
 	try {
+		const claim: boolean = await claimCommentJudge(userId);
+
+		if (!claim) {
+			return {
+				success: false,
+				message: COMMENT_MESSAGE.editTooFast,
+			};
+		}
+
 		const binUuid = uuidToBin(uuid);
 
-		const result: CommentResult = await db.$transaction(async (t) => {
-			const originData = await t.characterComment.findUnique({
-				where: {
-					character: {
-						charPublicLink: binUuid,
+		const originData = await db.characterComment.findUnique({
+			where: {
+				character: {
+					charPublicLink: binUuid,
+				},
+				commentId,
+				deletedAt: null,
+			},
+			select: {
+				userId: true,
+				character: {
+					select: {
+						charPublicMode: true,
+						charUploaderId: true,
 					},
-					commentId,
-					deletedAt: null,
 				},
-				select: {
-					userId: true,
-					character: {
-						select: {
-							charPublicMode: true,
-						},
-					},
-				},
-			});
-
-			if (originData === null) {
-				return {
-					success: false,
-					message: COMMENT_MESSAGE.notFound,
-				};
-			} else if (originData.character.charPublicMode === PUBLIC_MODE_PRIVATE) {
-				return {
-					success: false,
-					message: COMMENT_MESSAGE.editPrivate,
-				};
-			} else if (userId !== originData.userId) {
-				return {
-					success: false,
-					message: COMMENT_MESSAGE.editNotOwner,
-				};
-			}
-
-			await t.characterComment.update({
-				data: {
-					charComment: comment,
-					updatedAt: new Date(),
-				},
-				where: {
-					character: {
-						charPublicLink: binUuid,
-						charPublicMode: {
-							not: PUBLIC_MODE_PRIVATE,
-						},
-					},
-					userId,
-					commentId,
-					deletedAt: null,
-				},
-			});
-
-			return {
-				success: true,
-			};
+			},
 		});
 
-		return result;
+		if (originData === null) {
+			return {
+				success: false,
+				message: COMMENT_MESSAGE.notFound,
+			};
+		} else if (originData.character.charPublicMode === PUBLIC_MODE_PRIVATE) {
+			return {
+				success: false,
+				message: COMMENT_MESSAGE.editPrivate,
+			};
+		} else if (userId !== originData.userId) {
+			return {
+				success: false,
+				message: COMMENT_MESSAGE.editNotOwner,
+			};
+		}
+
+		const isOwner: boolean = originData.character.charUploaderId === userId;
+
+		const judgeCommentEnabled: boolean = await getCommentJudgeEnabled();
+
+		const judgeScore = judgeCommentEnabled ? setCommentScoreIfOwner(await judgeComment(comment), isOwner) : JUDGE_COMMENT_NULL_RESULT;
+
+		const {isDeny, highestScoreType, retry} = judgeCommentScore(judgeScore);
+
+		if (isDeny && highestScoreType !== null && highestScoreType !== "sexualScore" && highestScoreType !== "goreScore") {
+			return {
+				success: false,
+				message: COMMENT_MESSAGE.deny[highestScoreType],
+			};
+		}
+
+		/* 코멘트 업데이트는 트랜잭션을 적용하지않는다. 쿼리가 하나밖에 없기 때문이다. */
+		await db.characterComment.update({
+			data: {
+				charComment: comment,
+				updatedAt: new Date(),
+				...judgeScore,
+				rejudgeCount: judgeCommentEnabled && retry ? 0 : null,
+			},
+			where: {
+				character: {
+					charPublicLink: binUuid,
+					charPublicMode: {
+						not: PUBLIC_MODE_PRIVATE,
+					},
+				},
+				userId,
+				commentId,
+				deletedAt: null,
+			},
+		});
+
+		return {
+			success: true,
+		};
 	} catch (err) {
 		console.error(err);
 
