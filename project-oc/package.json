@@ -21,9 +21,9 @@
     "@aws-sdk/s3-request-presigner": "^3.1127.0",
     "@google/genai": "^2.22.0",
     "@hookform/resolvers": "^5.9.1",
-    "@prisma/adapter-mariadb": "^7.9.1",
-    "@prisma/client": "^7.9.1",
-    "@prisma/config": "^7.9.1",
+    "@prisma/adapter-mariadb": "^7.10.1",
+    "@prisma/client": "^7.10.1",
+    "@prisma/config": "^7.10.1",
     "@typesafe-ai/sdk": "^0.7.0",
     "@vercel/global-config": "^1.5.1",
     "bcryptjs": "^3.0.3",
@@ -31,7 +31,7 @@
     "browser-image-compression": "^2.0.2",
     "dotenv": "^17.4.2",
     "html-to-image": "^1.11.13",
-    "next": "~16.3.8",
+    "next": "^16.4.5",
     "next-auth": "^5.0.0-beta.32",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -45,13 +45,10 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "~16.3.8",
+    "eslint-config-next": "^16.4.5",
     "prettier": "^3.9.6",
-    "prisma": "^7.9.1",
+    "prisma": "^7.10.1",
     "typescript": "^5",
     "vitest": "^5.0.0"
-  },
-  "overrides": {
-    "mariadb": "3.4.7"
   }
 }
