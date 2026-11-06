@@ -36,6 +36,10 @@ model User {
   // 마지막 호출 시각. 짧은 간격으로 몰아치는 요청을 막는 데만 쓴다.
   aiDraftLastCallAt DateTime?
 
+  // 마지막 코멘트 작성/수정 요청 시각. 짧은 간격으로 Jev를 부르는 요청을 막는 데만 쓴다.
+  // aiDraftLastCallAt을 같이 쓰면 AI 초안과 코멘트가 서로의 요청을 막아 안내가 어긋난다.
+  commentLastRequestAt DateTime?
+
   aiHistories       AiHistory[]
   characterLikes    CharacterLike[]
   characterComments CharacterComment[]
@@ -184,6 +188,17 @@ model CharacterComment {
   deletedAt DateTime? @db.DateTime(0)
   // 프로필 제작자가 숨긴 시각. null이면 숨기지 않은 상태다.
   hiddenAt  DateTime? @db.DateTime(0)
+
+  // Jev 판정값(0~1)에 100을 곱해 반올림한 값. FLOAT는 비교가 어긋날 수 있고 DECIMAL은
+  // 클라이언트로 보낼 때 변환이 필요해 정수로 저장한다. null이면 판정값이 없는 상태다.
+  spamScore        Int? @db.TinyInt
+  mockeryScore     Int? @db.TinyInt
+  ownerAttackScore Int? @db.TinyInt
+  userAttackScore  Int? @db.TinyInt
+  sexualScore      Int? @db.TinyInt
+  goreScore        Int? @db.TinyInt
+  // 재판정 횟수. 판정에 실패하면 0, 판정에 성공하면 null이다. 5가 되면 더 재판정하지 않는다.
+  rejudgeCount     Int? @db.TinyInt
 
   // 목록은 "이 캐릭터의 코멘트를 오래된 순으로" 읽는다. createdAt이 초 단위라 같은 값이
   // 나올 수 있어 정렬은 (createdAt, commentId)로 적는데, InnoDB 보조 인덱스는 끝에 PK를
