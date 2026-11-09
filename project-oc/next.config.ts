@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
 	reactCompiler: true,
 	allowedDevOrigins: ["127.0.0.1", "localhost"],
 	experimental: {
+		authInterrupts: true,
 		useLightningcss: true,
 		lightningCssFeatures: {
 			exclude: ["light-dark"],

@@ -1,4 +1,4 @@
-import {notFound} from "next/navigation";
+import {forbidden, notFound, unauthorized} from "next/navigation";
 import styles from "./page.module.css";
 import {getCharacter} from "../getCharacter";
 import {getCharacterLike} from "../characterLike";
@@ -12,16 +12,24 @@ export async function generateMetadata({params}: PageProps<"/template/[uuid]/car
 
 	const character = await getCharacter(uuid);
 
-	if (character === null) {
-		return {title: "찾을 수 없는 프로필"};
+	if (!character.success) {
+		const {reason} = character;
+
+		if (reason === "unauthorized") {
+			return {title: "로그인이 필요한 프로필 - 프로젝트 OC"};
+		} else if (reason === "forbidden") {
+			return {title: "볼 수 없는 프로필 - 프로젝트 OC"};
+		} else {
+			return {title: "찾을 수 없는 프로필 - 프로젝트 OC"};
+		}
 	}
 
-	const {charName} = character;
+	const {charName} = character.result;
 	const title: string = `${charName} 프로필 카드 - 프로젝트 OC`;
 
 	return {
 		title,
-		...genCharTemplateMetadata(title, character),
+		...genCharTemplateMetadata(title, character.result),
 		robots: "noindex, noai, noimageai",
 	};
 }
@@ -31,13 +39,21 @@ export default async function ProfileCardPage({params}: PageProps<"/template/[uu
 
 	const [character, like] = await Promise.all([getCharacter(uuid), getCharacterLike(uuid)]);
 
-	if (character === null) {
-		notFound();
+	if (!character.success) {
+		const {reason} = character;
+
+		if (reason === "unauthorized") {
+			unauthorized();
+		} else if (reason === "forbidden") {
+			forbidden();
+		} else {
+			notFound();
+		}
 	}
 
 	return (
 		<main className={styles.main} data-no-header data-no-footer>
-			<ProfileCardView key={character.charImage.split("?")[0]} uuid={uuid} shareable={character.charPublicMode !== PUBLIC_MODE_PRIVATE} like={like} character={character} />
+			<ProfileCardView key={character.result.charImage.split("?")[0]} uuid={uuid} shareable={character.result.charPublicMode !== PUBLIC_MODE_PRIVATE} like={like} character={character.result} />
 		</main>
 	);
 }
