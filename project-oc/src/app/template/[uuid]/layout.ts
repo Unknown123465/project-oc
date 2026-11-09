@@ -7,18 +7,27 @@ export async function generateMetadata({params}: LayoutProps<"/template/[uuid]">
 
 	const character = await getCharacter(uuid);
 
-	if (character === null) {
-		return {title: "찾을 수 없는 프로필"};
+	if (!character.success) {
+		const {reason} = character;
+
+		if (reason === "unauthorized") {
+			return {title: "로그인이 필요한 프로필 - 프로젝트 OC"};
+		} else if (reason === "forbidden") {
+			return {title: "볼 수 없는 프로필 - 프로젝트 OC"};
+		} else {
+			return {title: "찾을 수 없는 프로필 - 프로젝트 OC"};
+		}
 	}
 
-	const {charName, charMessage, creator} = character;
+	const {charName, charMessage, creator, imagePublic} = character.result;
 	const title: string = `${charName} 프로필 - 프로젝트 OC`;
 
 	return {
 		title,
 		description: charMessage,
 		creator,
-		...genCharTemplateMetadata(title, character),
+		...genCharTemplateMetadata(title, character.result),
+		robots: imagePublic ? "index, noai, noimageai" : "noindex, noai, noimageai",
 	};
 }
 

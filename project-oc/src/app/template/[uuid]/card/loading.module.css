@@ -1,0 +1,54 @@
+/* 응답이 빠를 때 뼈대가 번쩍이지 않게 150ms 뒤에 나타난다. */
+.main {
+	width: calc(100% - 32px);
+	max-width: 1280px;
+	margin: 34px auto 90px;
+
+	@media (prefers-reduced-motion: no-preference) {
+		animation: appear 0.2s ease 0.15s both;
+	}
+
+	& .card,
+	& .footer > div {
+		background-color: var(--card-dark-2);
+
+		@media (prefers-reduced-motion: no-preference) {
+			animation: breathe 1.6s ease-in-out infinite;
+		}
+	}
+
+	& .card {
+		aspect-ratio: 16 / 9;
+		border: 1px solid var(--card-dark-line);
+		border-radius: var(--radius-3);
+	}
+
+	& .footer {
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+		margin-top: 20px;
+
+		& > div {
+			width: 120px;
+			height: 46px;
+			border-radius: var(--radius-2);
+		}
+	}
+}
+
+@keyframes appear {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes breathe {
+	50% {
+		opacity: 0.55;
+	}
+}

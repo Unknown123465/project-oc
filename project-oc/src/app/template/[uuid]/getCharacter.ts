@@ -31,6 +31,18 @@ export interface CharacterView extends TemplateCharacter {
 	charPublicMode: number;
 }
 
+interface GetCharacterSuccessResult {
+	success: true;
+	result: CharacterView;
+}
+
+interface GetCharacterFailureResult {
+	success: false;
+	reason: "invalidUUID" | "notFound" | "forbidden" | "unauthorized";
+}
+
+type GetCharacterResult = GetCharacterSuccessResult | GetCharacterFailureResult;
+
 /** 수정·삭제 시 이 태그로 무효화한다. 문자열을 직접 쓰지 않게 여기서만 만든다. */
 export function characterTag(uuid: string): string {
 	return `character:${uuid}`;
@@ -113,24 +125,29 @@ function cachedCharacterRow(uuid: string) {
 			});
 		},
 		["template-character", uuid],
-		{revalidate: CHARACTER_CACHE_MAX_AGE, tags: [characterTag(uuid)]},
+		{revalidate: CHARACTER_CACHE_MAX_AGE, tags: [characterTag(uuid)]}
 	);
 }
 
 /* 한 요청 안에서 generateMetadata와 페이지가 각각 부르므로 react의 cache로 묶는다.
-   여기서 캐릭터를 못 찾은 것과 볼 권한이 없는 것을 모두 null로 돌려준다. 부르는 쪽이
-   둘을 구분하면 "없음"과 "비공개"가 응답으로 갈려 링크만으로 존재 여부가 새어 나간다. */
-export const getCharacter = cache(async (uuid: string): Promise<CharacterView | null> => {
+   여기서 캐릭터를 못 찾은 것과 볼 권한이 없는 것을 모두 success를 false로 하고 reason에 실패 사유를 돌려준다. */
+export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResult> => {
 	/* uuidToBin은 형식이 틀리면 예외를 던진다. 주소창에서 온 값이라 손으로 고친 링크는
 	   장애가 아니라 없는 페이지다. */
 	if (!isUuid(uuid)) {
-		return null;
+		return {
+			success: false,
+			reason: "invalidUUID",
+		};
 	}
 
 	const character = await cachedCharacterRow(uuid)();
 
 	if (character === null) {
-		return null;
+		return {
+			success: false,
+			reason: "notFound",
+		};
 	}
 
 	/* 비공개(2)는 올린 사람만 본다. 이 확인이 캐시 밖에 있어야 하는 이유는, 캐시가
@@ -140,33 +157,39 @@ export const getCharacter = cache(async (uuid: string): Promise<CharacterView | 
 		const authInfo = await auth();
 
 		if (authInfo?.user?.id !== character.charUploaderId) {
-			return null;
+			return {
+				success: false,
+				reason: authInfo?.user?.id ? "forbidden" : "unauthorized",
+			};
 		}
 	}
 
 	const imagePublic: boolean = character.charPublicMode === PUBLIC_MODE_PUBLIC;
 
 	return {
-		charName: character.charName,
-		charMessage: character.charMessage,
-		charProfileLayout: toProfileLayout(character.charProfileLayout),
-		charImageFrame: toImageFrame(character.charImageFrame),
-		charImage: await charImageURL(character.charPublicMode, character.charUploaderId, character.charImage),
-		charColor: character.charColor,
-		charKind: character.charKind,
-		charAge: character.charAge,
-		charBirthday: character.charBirthday,
-		charHeight: character.charHeight,
-		charMbti: character.charMbti,
-		charBirthplace: character.charBirthplace,
-		charLike: character.charLike,
-		charHate: character.charHate,
-		charPersonality: character.charPersonality,
-		charTmi: toTmiLines(character.charTmi),
-		charMusic: toMusicView(character.charMusic),
-		aiUsed: character.aiUsed === 1,
-		imagePublic,
-		creator: character.user.username || character.user.name || "알 수 없음",
-		charPublicMode: character.charPublicMode,
+		success: true,
+		result: {
+			charName: character.charName,
+			charMessage: character.charMessage,
+			charProfileLayout: toProfileLayout(character.charProfileLayout),
+			charImageFrame: toImageFrame(character.charImageFrame),
+			charImage: await charImageURL(character.charPublicMode, character.charUploaderId, character.charImage),
+			charColor: character.charColor,
+			charKind: character.charKind,
+			charAge: character.charAge,
+			charBirthday: character.charBirthday,
+			charHeight: character.charHeight,
+			charMbti: character.charMbti,
+			charBirthplace: character.charBirthplace,
+			charLike: character.charLike,
+			charHate: character.charHate,
+			charPersonality: character.charPersonality,
+			charTmi: toTmiLines(character.charTmi),
+			charMusic: toMusicView(character.charMusic),
+			aiUsed: character.aiUsed === 1,
+			imagePublic,
+			creator: character.user.username || character.user.name || "알 수 없음",
+			charPublicMode: character.charPublicMode,
+		},
 	};
 });

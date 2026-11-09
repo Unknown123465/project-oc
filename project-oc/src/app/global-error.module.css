@@ -1,0 +1,167 @@
+/* 이 화면은 루트 layout을 대신해 그려져 globals.css의 색과 글꼴이 들어오지 않는다.
+   사이트 테마 전환도 닿지 않으므로 값을 여기에 직접 두고 OS 색상 설정을 따른다. */
+.body {
+	--brand: #ffc90e;
+	--brand-dark: #e8b300;
+	--brand-text: #29251a;
+	--back: light-dark(#f7f7f3, #191916);
+	--surface: light-dark(#fffef9, #23231f);
+	--title: light-dark(#262621, #f1f0e8);
+	--text: light-dark(#6f7068, #b8b7ad);
+	--line: light-dark(#dcdcd3, #41413a);
+
+	/* ActionButton(components/ui)이 globals.css에서 읽는 값. 여기서 다시 정한다. */
+	--button-submit-text: var(--brand-text);
+	--button-submit-line: var(--brand-dark);
+	--button-submit-back: var(--brand);
+	--personal-dark: var(--brand-dark);
+	--input-disabled: var(--text);
+	--line-color-1: var(--line);
+	--card-dark-2: light-dark(#f0f0ea, #2c2c27);
+
+	margin: 0;
+	color-scheme: light dark;
+	background-color: var(--back);
+	font-family: Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+	& .main {
+		width: calc(100% - 40px);
+		max-width: 1180px;
+		min-height: 100dvh;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(0, 0.85fr) minmax(300px, 1.15fr);
+		gap: 60px;
+		align-items: center;
+		padding: 54px 0;
+		box-sizing: border-box;
+	}
+
+	& .copy {
+		& .title {
+			max-width: none;
+			margin: 0 0 0 -0.11em;
+			color: var(--brand-dark);
+			font-size: clamp(84px, 14vw, 165px);
+			font-weight: 900;
+			line-height: 0.8;
+			letter-spacing: -0.1em;
+		}
+
+		& h1 {
+			margin: 24px 0 0;
+			color: var(--title);
+			font-size: clamp(34px, 5vw, 58px);
+			line-height: 1.12;
+			letter-spacing: -0.055em;
+			word-break: keep-all;
+		}
+
+		& p {
+			max-width: 48ch;
+			color: var(--text);
+			line-height: 1.6;
+			word-break: keep-all;
+			white-space: pre-line;
+		}
+
+		& .actions {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 28px;
+
+			/* 버튼은 글꼴을 물려받지 않는다. 크기와 굵기는 ActionButton 것을 그대로 쓴다. */
+			& .retry {
+				font-family: inherit;
+			}
+
+			& .home {
+				min-height: 46px;
+				padding: 0 22px;
+				display: inline-flex;
+				align-items: center;
+				box-sizing: border-box;
+				border: 1px solid var(--line);
+				border-radius: 10px;
+				font-size: 15px;
+				font-weight: 750;
+				letter-spacing: -0.05em;
+				text-decoration: none;
+				background-color: var(--surface);
+				color: var(--title);
+			}
+		}
+	}
+
+	& .visual {
+		min-height: 440px;
+		display: grid;
+		place-items: center;
+		border: 1px solid var(--line);
+		border-radius: 14px;
+		background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--brand) 22%, transparent), transparent 44%), var(--surface);
+
+		& .shape {
+			width: 220px;
+			aspect-ratio: 4 / 3;
+			display: grid;
+			place-items: center;
+			border: 2px solid var(--title);
+			border-radius: 14px;
+			background-color: var(--brand);
+			color: var(--brand-text);
+			font-size: 48px;
+			font-weight: 900;
+			letter-spacing: -0.05em;
+		}
+	}
+}
+
+@media (width < 876px) {
+	.body {
+		& .main {
+			width: calc(100% - 28px);
+			grid-template-columns: 1fr;
+		}
+
+		& .copy {
+			padding: 24px;
+			border: 1px solid var(--line);
+			border-radius: 14px;
+			background-color: var(--surface);
+
+			& .title {
+				margin-top: 0.2em;
+			}
+
+			& p {
+				width: 100%;
+				white-space: inherit;
+
+				&:not(.title) {
+					max-width: 100%;
+				}
+			}
+		}
+
+		& .visual {
+			display: none;
+		}
+	}
+}
+
+@media (width < 768px) {
+	.body {
+		& .copy {
+			& :is(h1, p) {
+				text-align: center;
+			}
+
+			& .actions {
+				justify-content: center;
+			}
+		}
+	}
+}

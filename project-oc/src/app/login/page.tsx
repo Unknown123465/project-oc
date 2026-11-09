@@ -5,12 +5,17 @@ import SocialLoginList from "../_components/login/SocialLoginList";
 import {auth} from "@/auth/auth";
 import {redirect} from "next/navigation";
 import Link from "next/link";
+import {resolveLoginRedirect} from "./validator";
 
-export default async function Login() {
+export default async function Login({searchParams}: PageProps<"/login">) {
 	const authInfo = await auth();
 
 	if (authInfo !== null) {
-		return redirect("/", "replace");
+		const query = await searchParams;
+
+		const redirectResult = resolveLoginRedirect(query);
+
+		return redirect(redirectResult.success ? redirectResult.result : "/", "replace");
 	}
 
 	return (
