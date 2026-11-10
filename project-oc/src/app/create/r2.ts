@@ -1,5 +1,7 @@
-import {CopyObjectCommand, DeleteObjectCommand, HeadObjectCommand, S3Client, type HeadObjectCommandOutput} from "@aws-sdk/client-s3";
+import {ClientDefaults, CopyObjectCommand, DeleteObjectCommand, HeadObjectCommand, S3Client, type HeadObjectCommandOutput} from "@aws-sdk/client-s3";
 import {r2Endpoint} from "./r2Endpoint";
+
+type RequestHandler = ClientDefaults["requestHandler"];
 
 /* 공개(0)는 커스텀 도메인으로 누구나 읽을 수 있는 버킷에, 일부 공개(1)와
    비공개(2)는 서명된 URL로만 열리는 버킷에 넣는다. 버킷을 물리적으로 나눠 두면
@@ -21,34 +23,27 @@ function readEnv(name: string): string {
 	return value;
 }
 
-/* 모듈을 읽는 시점에 만들면 환경 변수가 없는 빌드 단계에서 next build가 죽는다.
-   실제로 R2를 쓰는 첫 호출까지 미룬다. */
-let client: S3Client | null = null;
+export function r2(requestHandler?: RequestHandler): S3Client {
+	const endpoint: string = r2Endpoint();
 
-export function r2(): S3Client {
-	if (client === null) {
-		const endpoint: string = r2Endpoint();
-
-		if (!endpoint) {
-			throw new Error("환경 변수 R2_ACCOUNT_ID가 비어 있습니다.");
-		}
-
-		client = new S3Client({
-			/* R2에는 리전 개념이 없어 auto로 고정한다. */
-			region: "auto",
-			endpoint,
-			/* 기본값인 가상 호스트 방식은 버킷 이름이 호스트 앞에 붙어 버킷마다 주소가
-			   달라진다. 경로 방식으로 고정해야 CSP connect-src에 와일드카드 없이
-			   호스트 한 줄만 적을 수 있다. */
-			forcePathStyle: true,
-			credentials: {
-				accessKeyId: readEnv("R2_ACCESS_KEY_ID"),
-				secretAccessKey: readEnv("R2_SECRET_ACCESS_KEY"),
-			},
-		});
+	if (!endpoint) {
+		throw new Error("환경 변수 R2_ACCOUNT_ID가 비어 있습니다.");
 	}
 
-	return client;
+	return new S3Client({
+		/* R2에는 리전 개념이 없어 auto로 고정한다. */
+		region: "auto",
+		endpoint,
+		/* 기본값인 가상 호스트 방식은 버킷 이름이 호스트 앞에 붙어 버킷마다 주소가
+		   달라진다. 경로 방식으로 고정해야 CSP connect-src에 와일드카드 없이
+		   호스트 한 줄만 적을 수 있다. */
+		forcePathStyle: true,
+		credentials: {
+			accessKeyId: readEnv("R2_ACCESS_KEY_ID"),
+			secretAccessKey: readEnv("R2_SECRET_ACCESS_KEY"),
+		},
+		requestHandler,
+	});
 }
 
 export function charImageBucket(publicMode: number): string {
@@ -77,14 +72,14 @@ export function charImageTempKey(userId: string, imageName: string): string {
 	return `tmp/${userId}/${imageName}`;
 }
 
-export async function headCharImage(bucket: string, key: string): Promise<HeadObjectCommandOutput> {
-	return await r2().send(new HeadObjectCommand({Bucket: bucket, Key: key}));
+export async function headCharImage(bucket: string, key: string, requestHandler?: RequestHandler): Promise<HeadObjectCommandOutput> {
+	return await r2(requestHandler).send(new HeadObjectCommand({Bucket: bucket, Key: key}));
 }
 
 /* 같은 버킷 안에서 옮기므로 이미지가 다시 오갈 일은 없다. Content-Type을 비롯한
    메타데이터는 기본 동작대로 원본에서 그대로 따라온다. */
-export async function copyCharImage(bucket: string, sourceKey: string, key: string): Promise<void> {
-	await r2().send(
+export async function copyCharImage(bucket: string, sourceKey: string, key: string, requestHandler?: RequestHandler): Promise<void> {
+	await r2(requestHandler).send(
 		new CopyObjectCommand({
 			Bucket: bucket,
 			/* CopySource는 버킷 이름까지 포함한 경로이고, 경로 조각은 인코딩해서 넘긴다. */
@@ -93,15 +88,15 @@ export async function copyCharImage(bucket: string, sourceKey: string, key: stri
 				.map((piece) => encodeURIComponent(piece))
 				.join("/"),
 			Key: key,
-		}),
+		})
 	);
 }
 
 /* 정리에 실패했다고 사용자에게 보여줄 것은 없다. 원래 오류를 덮지 않도록 삼키되,
    남은 오브젝트는 그대로 요금이 나가므로 로그로는 남긴다. */
-export async function removeCharImage(bucket: string, key: string): Promise<void> {
+export async function removeCharImage(bucket: string, key: string, requestHandler?: RequestHandler): Promise<void> {
 	try {
-		await r2().send(new DeleteObjectCommand({Bucket: bucket, Key: key}));
+		await r2(requestHandler).send(new DeleteObjectCommand({Bucket: bucket, Key: key}));
 	} catch (err) {
 		console.error("R2 이미지 정리 실패", {bucket, key, err});
 	}
