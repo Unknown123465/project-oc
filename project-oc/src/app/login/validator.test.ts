@@ -108,13 +108,13 @@ describe("쿼리 분기 판단", () => {
 	it.each([
 		{uuid: "01A1669B-1AC1-7172-9AD2-6BF5ECDD15F4", label: "대문자"},
 		{uuid: "01A1669B-1Ac1-7172-9ad2-6bf5ecdD15F4", label: "대소문자가 섞인"},
-	] as const)("$label uuid도 통과하고 result가 그 프로필 경로여야 한다", ({uuid}) => {
+	] as const)("$label uuid는 통과되지 말아야 한다", ({uuid}) => {
 		const link: string = "template";
 
 		const queryObject = genQueryObject(`?link=${link}&uuid=${uuid}`);
 		const result = resolveLoginRedirect(queryObject);
 
-		expect(result).toStrictEqual({success: true, result: `/${link}/${uuid}`});
+		expect(result).toStrictEqual({success: false, message: LOGIN_QUERY_UUID_IS_NOT_VALID});
 	});
 
 	it.each(["not-template", "create", "login", "../template", "//evil.com", "javascript:alert('you have been hacked')"] as const)(
