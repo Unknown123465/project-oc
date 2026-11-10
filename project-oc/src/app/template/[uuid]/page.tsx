@@ -39,6 +39,7 @@ export default async function TemplatePage({params}: PageProps<"/template/[uuid]
 				comments={comments}
 				shareable={character.result.charPublicMode !== PUBLIC_MODE_PRIVATE}
 				serverNow={now}
+				isOwner={character.result.isOwner}
 			/>
 		</>
 	);

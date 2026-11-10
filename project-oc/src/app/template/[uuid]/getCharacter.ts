@@ -150,12 +150,12 @@ export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResu
 		};
 	}
 
+	const authInfo = await auth();
+
 	/* 비공개(2)는 올린 사람만 본다. 이 확인이 캐시 밖에 있어야 하는 이유는, 캐시가
 	   uuid로만 갈려 보는 사람이 누구인지와 무관하기 때문이다. 안에서 판단하면 주인이
 	   채워 놓은 항목이 남에게 그대로 나간다. */
 	if (character.charPublicMode === PUBLIC_MODE_PRIVATE) {
-		const authInfo = await auth();
-
 		if (authInfo?.user?.id !== character.charUploaderId) {
 			return {
 				success: false,
@@ -190,6 +190,7 @@ export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResu
 			imagePublic,
 			creator: character.user.username || character.user.name || "알 수 없음",
 			charPublicMode: character.charPublicMode,
+			isOwner: character.charUploaderId === authInfo?.user?.id,
 		},
 	};
 });
