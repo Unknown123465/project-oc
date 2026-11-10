@@ -27,6 +27,9 @@
 	font-size: 18px;
 	letter-spacing: -0.02em;
 	word-break: keep-all;
+	/* 캐릭터 이름처럼 사용자가 쓴 값이 띄어쓰기 없이 길게 들어오면 keep-all이 줄을 못 바꾼다.
+	   break-word는 grid 열의 최소 너비 계산에는 반영되지 않아 모달이 그대로 넓어지므로 anywhere를 쓴다. */
+	overflow-wrap: anywhere;
 }
 
 .description {
@@ -36,6 +39,8 @@
 	line-height: 1.6;
 	word-break: keep-all;
 	white-space: pre-line;
+	/* 본문도 호출하는 쪽이 정하므로 제목과 같은 이유로 긴 값이 모달을 넓히지 않게 한다. */
+	overflow-wrap: anywhere;
 }
 
 .actions {

@@ -16,29 +16,36 @@
 		}
 	}
 
-	& .share {
+	/* 둘러보기 링크가 왼쪽 끝을 차지하므로, 버튼은 한 덩어리로 묶어 오른쪽 끝에 붙인다. */
+	& .buttons {
+		margin-left: auto;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	/* 색과 hover는 ActionButton(normal, danger)을 그대로 쓰고, 여기서는 상단 줄에 맞게 크기만 줄인다.
+	   ActionButton 기본값은 폼 버튼 기준(너비 100%, 높이 46px)이라 그대로 두면 줄을 꽉 채운다. */
+	& .action_button {
+		width: auto;
 		height: 38px;
+		min-height: 38px;
 		padding: 0 12px;
 		display: inline-flex;
-		justify-content: center;
-		align-items: center;
 		gap: 9px;
-		color: var(--button-normal-text);
 		font-size: 15px;
 		font-weight: 500;
 		line-height: 1.2;
-		background-color: var(--button-normal-back);
-		border: 1px solid var(--button-normal-line);
+		letter-spacing: normal;
 		border-radius: var(--radius-2);
-		cursor: pointer;
-
-		&:hover {
-			border-color: var(--button-normal-line-hover);
-			background-color: var(--button-normal-back-hover);
-		}
-
-		&:active {
-			transform: translateY(1px);
-		}
 	}
+}
+
+.error_message {
+	margin: 0 0 0.5em;
+	color: var(--error-text);
+	font-size: 13.5px;
+	font-weight: 600;
+	text-align: right;
+	word-break: keep-all;
 }

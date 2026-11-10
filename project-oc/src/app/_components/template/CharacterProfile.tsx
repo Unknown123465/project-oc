@@ -34,6 +34,7 @@ export interface TemplateCharacter {
 	charTmi: string[];
 	charMusic: {href: string; embedSrc: string; height: IframeHeight} | null;
 	aiUsed: boolean;
+	isOwner: boolean;
 }
 
 interface CharacterProfileProps {
@@ -46,9 +47,10 @@ interface CharacterProfileProps {
 	/** 비공개 프로필은 공유할 수 없다. */
 	shareable: boolean;
 	serverNow: number;
+	isOwner: boolean;
 }
 
-export default function CharacterProfile({nonce, uuid, character, comments, like, shareable, serverNow}: CharacterProfileProps) {
+export default function CharacterProfile({nonce, uuid, character, comments, like, shareable, serverNow, isOwner}: CharacterProfileProps) {
 	const layout: ProfileLayout = character.charProfileLayout;
 
 	const alt: string = `${character.charName} 캐릭터 일러스트`;
@@ -134,6 +136,7 @@ export default function CharacterProfile({nonce, uuid, character, comments, like
 					shareable={shareable}
 					imageSrc={character.charImage}
 					isPublic={character.charPublicMode === PUBLIC_MODE_PUBLIC}
+					isOwner={isOwner}
 				/>
 
 				<article className={styles.sheet}>

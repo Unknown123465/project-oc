@@ -22,8 +22,11 @@ const UUID_HEX_PATTERN: RegExp = /^[0-9a-f]{32}$/i;
    장애가 아니라 없는 페이지로 다뤄야 한다. 그 판단을 던지지 않는 함수로 따로 낸다.
 
    uuidToBin과 달리 하이픈 위치까지 본다. 읽기 경로는 링크가 곧 주소라, 하이픈만
-   뺀 32자리도 같이 통과시키면 같은 캐릭터가 서로 다른 주소 두 개로 열린다. */
-const UUID_PATTERN: RegExp = new RegExp(`^${UUID_SEGMENTS.map((length) => `[0-9a-f]{${length}}`).join("-")}$`, "i");
+   뺀 32자리도 같이 통과시키면 같은 캐릭터가 서로 다른 주소 두 개로 열린다.
+   
+   uuid는 소문자만 받는다. 왜냐하면 캐시로 저장할 때 대소문자가 다르면 프로필을 삭제할 때
+   대소문자로 인해 태그가 다르면 캐시가 업데이트 되지 않기 때문이다. */
+const UUID_PATTERN: RegExp = new RegExp(`^${UUID_SEGMENTS.map((length) => `[0-9a-f]{${length}}`).join("-")}$`);
 
 export function isUuid(uuid: string): boolean {
 	return UUID_PATTERN.test(uuid);

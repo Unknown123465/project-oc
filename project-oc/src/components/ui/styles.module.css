@@ -180,6 +180,16 @@
 			}
 		}
 
+		&.danger:enabled {
+			color: var(--button-danger-text);
+			border-color: var(--button-danger-line);
+			background-color: var(--button-danger-back);
+
+			&:hover {
+				background-color: var(--button-danger-back-hover);
+			}
+		}
+
 		&:disabled {
 			color: var(--input-disabled);
 			border-color: var(--line-color-1);
@@ -220,6 +230,16 @@
 
 		&:hover {
 			background-color: var(--personal-dark);
+		}
+	}
+
+	&.danger {
+		color: var(--button-danger-text);
+		border-color: var(--button-danger-line);
+		background-color: var(--button-danger-back);
+
+		&:hover {
+			background-color: var(--button-danger-back-hover);
 		}
 	}
 
