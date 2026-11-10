@@ -74,6 +74,12 @@
 	--button-submit-back-2: light-dark(#262621, #f1f0e8);
 	--button-submit-line-2: light-dark(#262621, #f1f0e8);
 
+	/* 삭제처럼 되돌릴 수 없는 동작. 배경은 --danger와 같은 색이라 다크 모드에서는 밝은 빨강 위에 어두운 글자를 둔다. */
+	--button-danger-text: light-dark(#fffef9, #2a1514);
+	--button-danger-back: light-dark(#bd3d3d, #ff8c88);
+	--button-danger-line: light-dark(#a33232, #ff8c88);
+	--button-danger-back-hover: light-dark(#a33232, #ffa6a3);
+
 	--input-text: light-dark(#262621, #f1f0e8);
 	--input-back: light-dark(#fffef9, #23231f);
 	--input-line: light-dark(#b7b8ae, #68685f);

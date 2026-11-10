@@ -10,12 +10,14 @@ interface UseConfirmProps {
 	confirmLabel: string;
 	cancelLabel: string;
 	blockHooks?: boolean;
+	/** 삭제처럼 되돌릴 수 없는 확인이면 "danger"로 확인 버튼을 빨갛게 한다. */
+	confirmStyleType?: "attention" | "danger";
 }
 
 /** 파괴적인 동작(예: 레이아웃 변경 시 기존 크롭 초기화)을 확인받는 범용 모달 hook.
    버튼 문구는 호출하는 쪽이 상황에 맞게 정한다 - "예/아니오" 같은 라벨은
    무엇에 대한 확인인지 다시 읽어야 알 수 있어 쓰지 않는다. */
-export default function useConfirm({confirmLabel, cancelLabel, blockHooks = true}: UseConfirmProps) {
+export default function useConfirm({confirmLabel, cancelLabel, blockHooks = true, confirmStyleType = "attention"}: UseConfirmProps) {
 	const titleId = useId();
 	const descriptionId = useId();
 
@@ -114,7 +116,7 @@ export default function useConfirm({confirmLabel, cancelLabel, blockHooks = true
 			<div className={styles.actions}>
 				<ActionButton onClick={() => requestSubmit(false)}>{cancelLabel}</ActionButton>
 
-				<ActionButton styleType="attention" onClick={() => requestSubmit(true)}>
+				<ActionButton styleType={confirmStyleType} onClick={() => requestSubmit(true)}>
 					{confirmLabel}
 				</ActionButton>
 			</div>
