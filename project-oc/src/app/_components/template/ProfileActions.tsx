@@ -52,6 +52,8 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 
 			if (serverResult.success) {
 				router.replace(DELETE_REDIRECT_URL);
+			} else if (serverResult.requireRefresh) {
+				router.refresh();
 			} else {
 				throw new Error(serverResult.message);
 			}

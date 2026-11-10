@@ -135,6 +135,7 @@ describe("잘못된 uuid", () => {
 		expect(result).toStrictEqual({
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.invalidUuid,
+			requireRefresh: false,
 		});
 	});
 
@@ -146,6 +147,7 @@ describe("잘못된 uuid", () => {
 		expect(result).toStrictEqual({
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.invalidUuid,
+			requireRefresh: false,
 		});
 	});
 
@@ -167,6 +169,7 @@ describe("잘못된 uuid", () => {
 		expect(result).toStrictEqual({
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.invalidUuid,
+			requireRefresh: false,
 		});
 	});
 });
@@ -180,6 +183,7 @@ describe("권한 없음 및 존재하지 않는 프로필", () => {
 		expect(result).toStrictEqual({
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.notLoggedIn,
+			requireRefresh: false,
 		});
 	});
 
@@ -191,6 +195,7 @@ describe("권한 없음 및 존재하지 않는 프로필", () => {
 		expect(result).toStrictEqual({
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.notFound,
+			requireRefresh: true,
 		});
 	});
 
@@ -208,6 +213,7 @@ describe("권한 없음 및 존재하지 않는 프로필", () => {
 		expect(deleteResult).toStrictEqual({
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.notOwner,
+			requireRefresh: false,
 		});
 		expect(existResult).toBeGreaterThan(0);
 
@@ -311,6 +317,7 @@ describe("이미 지워진 프로필", () => {
 		expect(secondResult).toStrictEqual({
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.notFound,
+			requireRefresh: true,
 		});
 
 		fixture.keepCharId = (await createCharacter(PUBLIC_MODE_PUBLIC, imageName, userId, uuid)).charId;
@@ -337,6 +344,7 @@ describe("이미 지워진 프로필", () => {
 		expect(failureResult).toStrictEqual({
 			success: false,
 			message: expect.toBeOneOf([DELETE_CHARACTER_MESSAGE.alreadyDeleted, DELETE_CHARACTER_MESSAGE.notFound]),
+			requireRefresh: true,
 		});
 
 		expect(mocks.removeCharImage).toHaveBeenCalledOnce();

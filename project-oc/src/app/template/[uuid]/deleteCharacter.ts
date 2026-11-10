@@ -15,6 +15,7 @@ interface DeleteCharacterSuccessResult {
 interface DeleteCharacterFailureResult {
 	success: false;
 	message: string;
+	requireRefresh: boolean;
 }
 
 type DeleteCharacterResult = DeleteCharacterSuccessResult | DeleteCharacterFailureResult;
@@ -24,6 +25,7 @@ export async function deleteCharacter(uuid: unknown): Promise<DeleteCharacterRes
 		return {
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.invalidUuid,
+			requireRefresh: false,
 		};
 	}
 
@@ -33,6 +35,7 @@ export async function deleteCharacter(uuid: unknown): Promise<DeleteCharacterRes
 		return {
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.notLoggedIn,
+			requireRefresh: false,
 		};
 	}
 
@@ -53,6 +56,7 @@ export async function deleteCharacter(uuid: unknown): Promise<DeleteCharacterRes
 		return {
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.notFound,
+			requireRefresh: true,
 		};
 	}
 
@@ -63,6 +67,7 @@ export async function deleteCharacter(uuid: unknown): Promise<DeleteCharacterRes
 		return {
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.notOwner,
+			requireRefresh: false,
 		};
 	}
 
@@ -78,6 +83,7 @@ export async function deleteCharacter(uuid: unknown): Promise<DeleteCharacterRes
 			return {
 				success: false,
 				message: DELETE_CHARACTER_MESSAGE.alreadyDeleted,
+				requireRefresh: true,
 			};
 		}
 
@@ -101,6 +107,7 @@ export async function deleteCharacter(uuid: unknown): Promise<DeleteCharacterRes
 		return {
 			success: false,
 			message: DELETE_CHARACTER_MESSAGE.failed,
+			requireRefresh: false,
 		};
 	}
 }
