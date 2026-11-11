@@ -31,17 +31,20 @@ export interface CharacterView extends TemplateCharacter {
 	charPublicMode: number;
 }
 
-interface GetCharacterSuccessResult {
+interface GetCharacterSuccessResult<V> {
 	success: true;
-	result: CharacterView;
+	result: V;
 }
 
 interface GetCharacterFailureResult {
 	success: false;
-	reason: "invalidUUID" | "notFound" | "forbidden" | "unauthorized";
+	reason: "invalidUUID" | "notFound" | "forbidden" | "unauthorized" | "notLoggedIn";
 }
 
-type GetCharacterResult = GetCharacterSuccessResult | GetCharacterFailureResult;
+type GetCharacterResult<V> = GetCharacterSuccessResult<V> | GetCharacterFailureResult;
+
+type GetCharacterAsRows = Exclude<Awaited<ReturnType<ReturnType<typeof cachedCharacterRow>>>, null>;
+export type GetCharacterAsRowsResult = Omit<GetCharacterAsRows, "user" | "charUploaderId">;
 
 /** 수정·삭제 시 이 태그로 무효화한다. 문자열을 직접 쓰지 않게 여기서만 만든다. */
 export function characterTag(uuid: string): string {
@@ -131,7 +134,7 @@ function cachedCharacterRow(uuid: string) {
 
 /* 한 요청 안에서 generateMetadata와 페이지가 각각 부르므로 react의 cache로 묶는다.
    여기서 캐릭터를 못 찾은 것과 볼 권한이 없는 것을 모두 success를 false로 하고 reason에 실패 사유를 돌려준다. */
-export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResult> => {
+export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResult<CharacterView>> => {
 	/* uuidToBin은 형식이 틀리면 예외를 던진다. 주소창에서 온 값이라 손으로 고친 링크는
 	   장애가 아니라 없는 페이지다. */
 	if (!isUuid(uuid)) {
@@ -191,6 +194,63 @@ export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResu
 			creator: character.user.username || character.user.name || "알 수 없음",
 			charPublicMode: character.charPublicMode,
 			isOwner: character.charUploaderId === authInfo?.user?.id,
+		},
+	};
+});
+
+export const getCharacterAsRows = cache(async (uuid: string): Promise<GetCharacterResult<GetCharacterAsRowsResult>> => {
+	if (!isUuid(uuid)) {
+		return {
+			success: false,
+			reason: "invalidUUID",
+		};
+	}
+
+	const authInfo = await auth();
+
+	if (authInfo === null) {
+		return {
+			success: false,
+			reason: "notLoggedIn",
+		};
+	}
+
+	const character = await cachedCharacterRow(uuid)();
+
+	if (character === null) {
+		return {
+			success: false,
+			reason: "notFound",
+		};
+	} else if (character.charUploaderId !== authInfo.user?.id) {
+		return {
+			success: false,
+			reason: authInfo.user?.id ? "forbidden" : "unauthorized",
+		};
+	}
+
+	return {
+		success: true,
+		result: {
+			charName: character.charName,
+			charImage: await charImageURL(character.charPublicMode, character.charUploaderId, character.charImage),
+			charProfileLayout: character.charProfileLayout,
+			charImageFrame: character.charImageFrame,
+			charMessage: character.charMessage,
+			charLike: character.charLike,
+			charHate: character.charHate,
+			charPersonality: character.charPersonality,
+			charTmi: character.charTmi,
+			charKind: character.charKind,
+			charAge: character.charAge,
+			charBirthday: character.charBirthday,
+			charHeight: character.charHeight,
+			charBirthplace: character.charBirthplace,
+			charMbti: character.charMbti,
+			charMusic: character.charMusic,
+			charColor: character.charColor,
+			aiUsed: character.aiUsed,
+			charPublicMode: character.charPublicMode,
 		},
 	};
 });

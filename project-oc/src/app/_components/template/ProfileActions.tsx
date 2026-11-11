@@ -5,7 +5,7 @@ import styles from "./ProfileActions.module.css";
 import {useState} from "react";
 import ShareDialog, {type KakaoShareDetail} from "./ShareDialog";
 import useConfirm from "@/hooks/useConfirm";
-import {ActionButton} from "@/components/ui/button";
+import {ActionButton, LinkButton} from "@/components/ui/button";
 import {deleteCharacter} from "@/app/template/[uuid]/deleteCharacter";
 import {useRouter} from "next/navigation";
 
@@ -20,7 +20,7 @@ interface ProfileActionsProps {
 	imageSrc: string;
 
 	isPublic: boolean;
-	/** 삭제 버튼은 프로필 제작자에게만 그린다. */
+	/** 수정, 삭제 버튼은 프로필 제작자에게만 그린다. */
 	isOwner: boolean;
 }
 
@@ -97,6 +97,10 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 					{isOwner ? (
 						<>
 							{component}
+							<LinkButton href={`/edit/${uuid}`} className={styles.action_button} styleType="simple">
+								<i className="bi bi-pencil" aria-hidden="true"></i>
+								수정
+							</LinkButton>
 
 							<ActionButton className={styles.action_button} disabled={isSending} styleType="danger" ariaHasPopup="dialog" onClick={deleteProfile}>
 								<i className="bi bi-trash3" aria-hidden="true"></i>

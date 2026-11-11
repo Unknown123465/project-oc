@@ -7,6 +7,17 @@
 .heading {
 	margin-bottom: 32px;
 
+	& a {
+		color: var(--muted);
+		font-size: 14px;
+		font-weight: 700;
+
+		&:hover {
+			color: var(--title-text);
+			text-decoration: underline;
+		}
+	}
+
 	& h1 {
 		margin: 0 0 8px;
 		color: var(--title-text);

@@ -28,7 +28,7 @@ export const LOGIN_UNEXPECTED_ERROR_MESSAGE = "로그인 중 문제가 생겼어
 const loginQueryForm = z
 	.object(
 		{
-			link: z.enum(["template"], "주소가 유효하지 않아요. 다시 시도해 주세요."),
+			link: z.enum(["template", "edit"], "주소가 유효하지 않아요. 다시 시도해 주세요."),
 			uuid: z.string(LOGIN_QUERY_UUID_IS_NOT_VALID).refine((value: string) => isUuid(value), LOGIN_QUERY_UUID_IS_NOT_VALID),
 		},
 		LOGIN_QUERY_TYPE_IS_NOT_VALID

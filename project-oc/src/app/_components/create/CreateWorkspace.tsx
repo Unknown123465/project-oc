@@ -5,9 +5,10 @@ import CreateForm from "./CreateForm";
 import LivePreview from "./LivePreview";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {createCharForm, CreateCharFormType, CreateCharFormInputType} from "@/app/create/validator";
+import {createCharForm, CreateCharFormType, CreateCharFormInputType, editCharForm, EditCharFormType} from "@/app/create/validator";
 import {useState} from "react";
 import {useMediaQuery} from "@/hooks/useMediaQuery";
+import {ToEditFormValues} from "@/app/edit/[uuid]/toEditFormValues";
 
 type MobileTab = "create" | "preview";
 
@@ -21,9 +22,10 @@ interface CreateWorkspaceProps {
 	/** 서버가 알려준 오늘 남은 AI 초안 횟수. 초안 모달까지 그대로 내려간다. */
 	aiDraftRemaining: number;
 	aiDraftEnabled: boolean;
+	character?: ToEditFormValues;
 }
 
-export default function CreateWorkspace({aiDraftRemaining, aiDraftEnabled}: CreateWorkspaceProps) {
+export default function CreateWorkspace({character, aiDraftRemaining, aiDraftEnabled}: CreateWorkspaceProps) {
 	const {
 		control,
 		register,
@@ -32,29 +34,29 @@ export default function CreateWorkspace({aiDraftRemaining, aiDraftEnabled}: Crea
 		setValue,
 		setValues,
 		formState: {errors, isSubmitting},
-	} = useForm<CreateCharFormInputType, unknown, CreateCharFormType>({
+	} = useForm<CreateCharFormInputType, unknown, CreateCharFormType | EditCharFormType>({
 		defaultValues: {
-			charName: "",
+			charName: character?.charName ?? "",
 			charImage: null,
-			charProfileLayout: "",
-			charImageFrame: "",
-			charMessage: "",
-			charLike: "",
-			charHate: "",
-			charPersonality: "",
-			charTmi: "",
-			charKind: "",
-			charAge: "",
-			charBirthday: "",
-			charHeight: "",
-			charBirthplace: "",
-			charMbti: "",
-			charMusic: "",
-			charColor: "#d3d3d3",
-			aiUsed: "",
-			publicMode: "0",
+			charProfileLayout: character?.charProfileLayout ?? "",
+			charImageFrame: character?.charImageFrame ?? "",
+			charMessage: character?.charMessage ?? "",
+			charLike: character?.charLike ?? "",
+			charHate: character?.charHate ?? "",
+			charPersonality: character?.charPersonality ?? "",
+			charTmi: character?.charTmi ?? "",
+			charKind: character?.charKind ?? "",
+			charAge: character?.charAge ?? "",
+			charBirthday: character?.charBirthday ?? "",
+			charHeight: character?.charHeight ?? "",
+			charBirthplace: character?.charBirthplace ?? "",
+			charMbti: character?.charMbti ?? "",
+			charMusic: character?.charMusic ?? "",
+			charColor: character?.charColor ?? "#d3d3d3",
+			aiUsed: character?.aiUsed ?? "",
+			publicMode: character?.publicMode ?? "0",
 		},
-		resolver: zodResolver(createCharForm),
+		resolver: zodResolver(character ? editCharForm : createCharForm),
 		mode: "onChange",
 	});
 
@@ -91,10 +93,11 @@ export default function CreateWorkspace({aiDraftRemaining, aiDraftEnabled}: Crea
 						isSubmitting={isSubmitting}
 						aiDraftRemaining={aiDraftRemaining}
 						aiDraftEnabled={aiDraftEnabled}
+						editable={typeof character?.charImage === "string"}
 					/>
 				) : null}
 
-				{showPreview ? <LivePreview control={control} /> : null}
+				{showPreview ? <LivePreview control={control} imageURL={character?.charImage} /> : null}
 			</div>
 		</>
 	);

@@ -1,6 +1,8 @@
 import z from "zod";
 import {MUSIC_HOST_PATTERN, MUSIC_PROTOCOL_PATTERN} from "./musicEmbed";
 import {IMAGE_ACCEPTED_TYPES, IMAGE_MAX_FILE_SIZE} from "./imageEditor";
+import {isUuid} from "@/prisma/uuid";
+import {CHAR_ACTION_MESSAGE} from "./charActionMessage";
 
 /** 한 계정이 만들 수 있는 프로필 수. 업로드 서명과 등록에서 함께 본다. */
 export const MAX_TEMPLATE_LIMIT = 10;
@@ -116,6 +118,12 @@ export const createCharForm = z.object({
 
 export type CreateCharFormType = z.infer<typeof createCharForm>;
 
+export const editCharForm = createCharForm.omit({charImage: true}).extend({
+	charImage: createCharForm.shape.charImage.nullable(),
+});
+
+export type EditCharFormType = z.infer<typeof editCharForm>;
+
 /* 서명을 받기 전에 서버가 알아야 하는 값. 어느 버킷에 넣을지는 공개 여부가 정하고,
    크기는 서명에 그대로 박혀 업로드 시점의 상한이 된다. */
 export const uploadTicket = z.object({
@@ -124,6 +132,13 @@ export const uploadTicket = z.object({
 });
 
 export type UploadTicketType = z.infer<typeof uploadTicket>;
+
+export const editUploadTicket = z.object({
+	...uploadTicket.shape,
+	uuid: z.string(CHAR_ACTION_MESSAGE.invalidUuid).refine((value) => isUuid(value), CHAR_ACTION_MESSAGE.invalidUuid),
+});
+
+export type EditUploadTicketType = z.infer<typeof editUploadTicket>;
 
 /* 이미지 본체는 브라우저가 R2로 곧장 올리므로 서버 액션에는 결과 파일 이름만 넘어온다.
    이름이 서버가 발급한 형식(uuid + .png)인지 확인해야 ../ 같은 조각이 섞여 자기
@@ -135,6 +150,13 @@ export const createCharServerForm = createCharForm.omit({charImage: true}).exten
 });
 
 export type CreateCharServerFormType = z.infer<typeof createCharServerForm>;
+
+export const editCharServerForm = createCharForm.omit({charImage: true}).extend({
+	uuid: z.string(CHAR_ACTION_MESSAGE.invalidUuid).refine((value) => isUuid(value), CHAR_ACTION_MESSAGE.invalidUuid),
+	charImageName: createCharServerForm.shape.charImageName.nullable(),
+});
+
+export type EditCharServerFormType = z.infer<typeof editCharServerForm>;
 
 /* aiUsed는 "선택 안 함"을 빈 문자열로 표현하는데, refine이 붙으면 zod가 출력 타입을
    "0" | "1"로 좁혀 버려서 defaultValues의 빈 문자열을 못 받는다.
