@@ -6,6 +6,7 @@ import {IMAGE_TYPE_DEFINITIONS} from "@/app/create/imageEditor";
 
 interface LivePreviewProps {
 	control: Control<CreateCharFormInputType>;
+	imageURL: string | undefined;
 }
 
 /* 유형별 이름은 imageEditor.ts 하나만 본다. 여기서 따로 적으면 이미지 편집
@@ -17,7 +18,7 @@ const LAYOUT_LABEL: Record<ProfileLayout, string> = {
 	s: `${IMAGE_TYPE_DEFINITIONS.s.label} 프로필`,
 };
 
-export default function LivePreview({control}: LivePreviewProps) {
+export default function LivePreview({control, imageURL}: LivePreviewProps) {
 	const layout = useWatch({
 		name: "charProfileLayout",
 		control,
@@ -31,7 +32,7 @@ export default function LivePreview({control}: LivePreviewProps) {
 				<span>{LAYOUT_LABEL[layout]}</span>
 			</div>
 
-			<ProfileSheet control={control} />
+			<ProfileSheet control={control} previewImageURL={imageURL} />
 		</aside>
 	);
 }

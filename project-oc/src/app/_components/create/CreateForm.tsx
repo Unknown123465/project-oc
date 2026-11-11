@@ -27,15 +27,18 @@ interface CreateFormProps {
 	/** 오늘 남은 AI 초안 횟수. ImageUploadField를 거쳐 초안 모달이 쓴다. */
 	aiDraftRemaining: number;
 	aiDraftEnabled: boolean;
+	editable: boolean;
 }
 
-export default function CreateForm({control, register, handleSubmit, setError, setValue, setValues, errors, isSubmitting, aiDraftRemaining, aiDraftEnabled}: CreateFormProps) {
+export default function CreateForm({control, register, handleSubmit, setError, setValue, setValues, errors, isSubmitting, aiDraftRemaining, aiDraftEnabled, editable}: CreateFormProps) {
+	const param = useParams();
+
 	const router = useRouter();
 
 	const aiHeadingId = useId();
 	const visibilityHeadingId = useId();
 
-	const onSubmit = async (data: CreateCharFormInputType) => {
+	const createSubmit = async (data: unknown) => {
 		const check = createCharForm.safeParse(data);
 
 		if (!check.success) {
@@ -75,7 +78,9 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 				method: "PUT",
 				body: charImage,
 				/* 서명에 박힌 값과 어긋나면 R2가 거부하므로 그대로 맞춰 보낸다. */
-				headers: {"Content-Type": IMAGE_UPLOAD_TYPE},
+				headers: {
+					"Content-Type": IMAGE_UPLOAD_TYPE,
+				},
 			});
 
 			if (!uploaded.ok) {
@@ -101,6 +106,90 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 			});
 		}
 	};
+
+	const editSubmit = async (data: unknown, uuid: string) => {
+		const check = editCharForm.safeParse(data);
+
+		if (!check.success) {
+			setError("root", {
+				message: check.error.issues[0].message,
+			});
+
+			return;
+		}
+
+		const {charImage, ...charData} = check.data;
+
+		let imageName: string | null = null;
+
+		if (charImage !== null) {
+			const issued = await editUploadURLAction({
+				uuid,
+				publicMode: charData.publicMode,
+				size: charImage.size,
+			});
+
+			if (!issued.success) {
+				setError("root", {
+					message: issued.message,
+				});
+
+				return;
+			}
+
+			try {
+				const uploaded: Response = await fetch(issued.uploadURL, {
+					method: "PUT",
+					body: charImage,
+					headers: {
+						"Content-Type": IMAGE_UPLOAD_TYPE,
+					},
+				});
+
+				if (!uploaded.ok) {
+					throw new Error();
+				}
+
+				imageName = issued.imageName;
+			} catch {
+				setError("root", {
+					message: "이미지를 올리지 못했어요. 잠시 후 다시 시도해 주세요.",
+				});
+
+				return;
+			}
+		}
+
+		const result = await editCharAction({...charData, charImageName: imageName, uuid});
+
+		if (result.success) {
+			router.replace(result.link);
+		} else {
+			setError("root", {
+				message: result.message,
+			});
+		}
+	};
+
+	const onSubmit = async (data: CreateCharFormInputType | EditCharFormType) => {
+		if (!editable) {
+			await createSubmit(data);
+		} else if (editable && typeof param.uuid === "string") {
+			await editSubmit(data, param.uuid);
+		} else {
+			setError("root", {
+				message: "수정할 원본 프로필을 찾지 못했어요. 다시 시도해 주세요.",
+			});
+		}
+	};
+
+	let submitButtonMessage: string = "";
+
+	if (!editable) {
+		submitButtonMessage = isSubmitting ? "제출중" : "프로필 완성";
+	} else {
+		submitButtonMessage = isSubmitting ? "수정중" : "프로필 수정";
+	}
 
 	return (
 		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -131,7 +220,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 				register={register}
 				errors={errors}
 				choices={[
-					{value: "0", title: "공개", description: "검색과 링크를 통해 누구나 프로필을 볼 수 있습니다.", defaultChecked: true},
+					{value: "0", title: "공개", description: "검색과 링크를 통해 누구나 프로필을 볼 수 있습니다."},
 					{value: "1", title: "일부 공개", description: "링크를 가진 사람만 프로필을 볼 수 있습니다."},
 					{value: "2", title: "비공개", description: "본인만 프로필을 볼 수 있습니다."},
 				]}
@@ -143,12 +232,18 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 
 			<div className={styles.actions}>
 				<SubmitButton styleType="attention" disabled={isSubmitting} style={{flex: 1}}>
-					{isSubmitting ? "제출중" : "프로필 완성"}
+					{submitButtonMessage}
 				</SubmitButton>
 
-				<NormalButton disabled={isSubmitting} style={{flex: 1}}>
-					임시 저장
-				</NormalButton>
+				{!editable ? (
+					<NormalButton disabled={isSubmitting} style={{flex: 1}}>
+						임시 저장
+					</NormalButton>
+				) : (
+					<LinkButton href={`/template/${param.uuid}`} styleType="simple" style={{flex: 1}}>
+						취소
+					</LinkButton>
+				)}
 			</div>
 		</form>
 	);

@@ -9,6 +9,7 @@ export type ProfileLayout = CreateCharFormInputType["charProfileLayout"];
 
 interface ProfileSheetProps {
 	control: Control<CreateCharFormInputType>;
+	previewImageURL: string | undefined;
 }
 
 const LAYOUT_CLASS: Record<ProfileLayout, string> = {
@@ -18,7 +19,7 @@ const LAYOUT_CLASS: Record<ProfileLayout, string> = {
 	s: styles.square,
 };
 
-export default function ProfileSheet({control}: ProfileSheetProps) {
+export default function ProfileSheet({control, previewImageURL}: ProfileSheetProps) {
 	const name = useWatch({
 		name: "charName",
 		control,
@@ -66,7 +67,7 @@ export default function ProfileSheet({control}: ProfileSheetProps) {
 		<article className={`${styles.sheet} ${LAYOUT_CLASS[layout]}`}>
 			<div className={styles.hero_grid}>
 				<div className={`${styles.cover} ${LAYOUT_CLASS[layout]}`} style={{"--char-color": color}}>
-					{imageURL !== null ? <img src={imageURL} alt="캐릭터 프로필 이미지" className={styles.cover_image} /> : null}
+					{imageURL !== null || previewImageURL ? <img src={imageURL ?? previewImageURL} alt="캐릭터 프로필 이미지" className={styles.cover_image} /> : null}
 				</div>
 
 				<div className={styles.inner}>
