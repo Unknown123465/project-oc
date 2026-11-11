@@ -6,13 +6,13 @@ import ImageUploadField from "./ImageUploadField";
 import CoreInfoSection from "./CoreInfoSection";
 import ColorSection from "./ColorSection";
 import ChoiceSection from "./ChoiceSection";
-import {SubmitButton, NormalButton} from "@/components/ui/button";
+import {SubmitButton, NormalButton, LinkButton} from "@/components/ui/button";
 import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue, UseFormSetValues} from "react-hook-form";
-import {createCharForm, type CreateCharFormInputType} from "@/app/create/validator";
+import {createCharForm, editCharForm, EditCharFormType, type CreateCharFormInputType} from "@/app/create/validator";
 import {useId} from "react";
-import {useRouter} from "next/navigation";
-import createCharAction from "@/app/create/action";
-import createUploadUrlAction from "@/app/create/uploadAction";
+import {useParams, useRouter} from "next/navigation";
+import {createCharAction, editCharAction} from "@/app/create/action";
+import {createUploadURLAction, editUploadURLAction} from "@/app/create/uploadAction";
 import {IMAGE_UPLOAD_TYPE} from "@/app/create/imageEditor";
 
 interface CreateFormProps {
@@ -60,7 +60,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 		/* 이미지는 서버를 거치지 않고 브라우저에서 R2로 곧장 올린다. 서버 액션 본문
 		   제한(1MB)과 Vercel 요청 본문 제한(4.5MB)에 걸리지 않게 하기 위함이고,
 		   서버 액션에는 업로드 결과 파일 이름만 넘어간다. */
-		const issued = await createUploadUrlAction({publicMode: charData.publicMode, size: charImage.size});
+		const issued = await createUploadURLAction({publicMode: charData.publicMode, size: charImage.size});
 
 		if (!issued.success) {
 			setError("root", {
@@ -71,7 +71,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 		}
 
 		try {
-			const uploaded: Response = await fetch(issued.uploadUrl, {
+			const uploaded: Response = await fetch(issued.uploadURL, {
 				method: "PUT",
 				body: charImage,
 				/* 서명에 박힌 값과 어긋나면 R2가 거부하므로 그대로 맞춰 보낸다. */

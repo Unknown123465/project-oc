@@ -76,14 +76,18 @@ export async function headCharImage(bucket: string, key: string, requestHandler?
 	return await r2(requestHandler).send(new HeadObjectCommand({Bucket: bucket, Key: key}));
 }
 
-/* 같은 버킷 안에서 옮기므로 이미지가 다시 오갈 일은 없다. Content-Type을 비롯한
-   메타데이터는 기본 동작대로 원본에서 그대로 따라온다. */
-export async function copyCharImage(bucket: string, sourceKey: string, key: string, requestHandler?: RequestHandler): Promise<void> {
+/*  Content-Type을 비롯한 메타데이터는 기본 동작대로 원본에서 그대로 따라온다. */
+export async function copyCharImage(
+	bucket: string,
+	sourceKey: string,
+	key: string,
+	{sourceBucket = bucket, requestHandler}: {sourceBucket?: string; requestHandler?: RequestHandler} = {sourceBucket: bucket}
+): Promise<void> {
 	await r2(requestHandler).send(
 		new CopyObjectCommand({
 			Bucket: bucket,
 			/* CopySource는 버킷 이름까지 포함한 경로이고, 경로 조각은 인코딩해서 넘긴다. */
-			CopySource: `${bucket}/${sourceKey}`
+			CopySource: `${sourceBucket}/${sourceKey}`
 				.split("/")
 				.map((piece) => encodeURIComponent(piece))
 				.join("/"),

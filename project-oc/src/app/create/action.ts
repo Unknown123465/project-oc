@@ -1,26 +1,124 @@
 "use server";
 
 import {auth} from "@/auth/auth";
-import {createCharServerForm, MAX_TEMPLATE_LIMIT, type CreateCharServerFormType} from "./validator";
+import {createCharServerForm, editCharServerForm, EditCharServerFormType, MAX_TEMPLATE_LIMIT, type CreateCharServerFormType} from "./validator";
 import db from "@/prisma/client";
 import {uuidToBin} from "@/prisma/uuid";
 import {v7 as uuidv7} from "uuid";
 import {charImageBucket, charImageKey, charImageTempKey, copyCharImage, headCharImage, removeCharImage} from "./r2";
 import {IMAGE_MAX_FILE_SIZE, IMAGE_UPLOAD_TYPE} from "./imageEditor";
+import {updateTag} from "next/cache";
+import {characterTag} from "../template/[uuid]/getCharacter";
+import {CHAR_ACTION_MESSAGE} from "./charActionMessage";
 
-export type CreateCharActionResult = {success: true; link: string} | {success: false; message: string};
+interface CharActionSuccessResult {
+	success: true;
+	link: string;
+}
 
-export default async function createCharAction(data: CreateCharServerFormType): Promise<CreateCharActionResult> {
+interface CharActionFailureResult {
+	success: false;
+	message: string;
+}
+
+type CharActionResult = CharActionSuccessResult | CharActionFailureResult;
+
+interface UpdateCharSuccessResult {
+	success: true;
+	originBucket: string;
+	originKey: string;
+}
+
+interface UpdateCharFailureResult {
+	success: false;
+	message: string;
+}
+
+type UpdateCharResult = UpdateCharSuccessResult | UpdateCharFailureResult;
+
+async function updateChar(data: EditCharServerFormType, charImageName: string | null, userId: string, binUuid: ReturnType<typeof uuidToBin>): Promise<UpdateCharResult> {
+	const charTmi: string[] = data.charTmi.split("\n").filter((tmi) => tmi.trim());
+
+	const result: UpdateCharResult = await db.$transaction(async (t) => {
+		const originData = await t.character.findUnique({
+			where: {
+				charPublicLink: binUuid,
+			},
+			select: {
+				charId: true,
+				charUploaderId: true,
+				charImage: true,
+				charPublicMode: true,
+			},
+		});
+
+		if (originData === null) {
+			return {
+				success: false,
+				message: CHAR_ACTION_MESSAGE.notFound,
+			};
+		} else if (originData.charUploaderId !== userId) {
+			return {
+				success: false,
+				message: CHAR_ACTION_MESSAGE.notOwner,
+			};
+		}
+
+		await t.character.update({
+			data: {
+				charName: data.charName,
+				charImage: charImageName ?? undefined,
+				charProfileLayout: data.charProfileLayout,
+				charImageFrame: data.charImageFrame,
+				charMessage: data.charMessage,
+				charKind: data.charKind || null,
+				charColor: data.charColor,
+				charMusic: data.charMusic || null,
+				charLike: data.charLike || null,
+				charHate: data.charHate || null,
+				charMbti: data.charMbti || null,
+				charBirthplace: data.charBirthplace || null,
+				charAge: data.charAge || null,
+				charBirthday: data.charBirthday || null,
+				charHeight: data.charHeight || null,
+				charPersonality: data.charPersonality || null,
+				charTmi,
+				charPublicMode: parseInt(data.publicMode, 10),
+				aiUsed: parseInt(data.aiUsed, 10),
+			},
+			where: {
+				charPublicLink: binUuid,
+				charUploaderId: userId,
+			},
+		});
+
+		return {
+			success: true,
+			originBucket: charImageBucket(originData.charPublicMode),
+			originKey: charImageKey(userId, originData.charImage),
+		};
+	});
+
+	return result;
+}
+
+export async function createCharAction(data: CreateCharServerFormType): Promise<CharActionResult> {
 	const authInfo = await auth();
 
 	if (authInfo === null || !authInfo.user) {
-		return {success: false, message: "로그인이 안 되어 있어요. 로그인 후 이용해 주세요."};
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.notLoggedIn,
+		};
 	}
 
 	const check = createCharServerForm.safeParse(data);
 
 	if (!check.success) {
-		return {success: false, message: check.error.issues[0].message};
+		return {
+			success: false,
+			message: check.error.issues[0].message,
+		};
 	}
 
 	const user = await db.user.findUnique({
@@ -38,9 +136,15 @@ export default async function createCharAction(data: CreateCharServerFormType): 
 	});
 
 	if (user === null) {
-		return {success: false, message: "접속 한 계정 정보를 찾을 수 없어요."};
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.userNotFound,
+		};
 	} else if (user.characters.length >= MAX_TEMPLATE_LIMIT) {
-		return {success: false, message: `더 이상 템플릿을 만들 수 없어요. 템플릿은 최대 ${MAX_TEMPLATE_LIMIT}개 까지 만들 수 있어요.`};
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.limitExceeded(MAX_TEMPLATE_LIMIT),
+		};
 	}
 
 	const charImageName: string = check.data.charImageName;
@@ -52,7 +156,10 @@ export default async function createCharAction(data: CreateCharServerFormType): 
 	   이미지까지 사라진다. 이름은 업로드마다 새로 발급되므로 정상 흐름에서는
 	   걸릴 일이 없고, 손으로 만든 요청만 여기서 막힌다. */
 	if (user.characters.some((character) => character.charImage === charImageName)) {
-		return {success: false, message: "이미 사용 중인 이미지예요. 이미지를 다시 올려 주세요."};
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.imageInUse,
+		};
 	}
 
 	/* 업로드는 브라우저가 직접 했으므로 올라왔다는 말을 그대로 믿지 않고 확인한다.
@@ -62,7 +169,10 @@ export default async function createCharAction(data: CreateCharServerFormType): 
 	try {
 		uploaded = await headCharImage(bucket, tempKey);
 	} catch {
-		return {success: false, message: "이미지 업로드가 확인되지 않았어요. 이미지를 다시 올려 주세요."};
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.imageNotUploaded,
+		};
 	}
 
 	const uploadedSize: number = uploaded.ContentLength ?? 0;
@@ -70,7 +180,10 @@ export default async function createCharAction(data: CreateCharServerFormType): 
 	if (uploaded.ContentType !== IMAGE_UPLOAD_TYPE || uploadedSize <= 0 || uploadedSize > IMAGE_MAX_FILE_SIZE) {
 		await removeCharImage(bucket, tempKey);
 
-		return {success: false, message: "이미지가 올바르지 않아요. 이미지를 다시 올려 주세요."};
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.imageInvalid,
+		};
 	}
 
 	try {
@@ -116,15 +229,291 @@ export default async function createCharAction(data: CreateCharServerFormType): 
 		   하루 뒤 정리하므로 여기서 실패를 따로 다루지 않는다. */
 		await removeCharImage(bucket, tempKey);
 
-		return {success: true, link: `/template/${publicLink}`};
+		return {
+			success: true,
+			link: `/template/${publicLink}`,
+		};
 	} catch (err) {
 		/* 등록이 깨지면 올라간 이미지는 어디서도 참조되지 않는 채로 남아 요금만
 		   나간다. 사용자에게 보여줄 메시지와 별개로 여기서 반드시 지운다.
 		   복사 전에 깨졌다면 최종 경로 삭제는 그냥 헛일이 될 뿐이라 무해하다. */
-		console.error("템플릿 등록 실패", err);
+		console.error("프로필 등록 실패", err);
 
-		await Promise.all([removeCharImage(bucket, key), removeCharImage(bucket, tempKey)]);
+		await Promise.allSettled([
+			removeCharImage(bucket, key, {
+				connectionTimeout: 1000 * 3,
+				requestTimeout: 1000 * 5,
+				throwOnRequestTimeout: true,
+			}),
+			removeCharImage(bucket, tempKey),
+		]);
 
-		return {success: false, message: "템플릿 등록에 실패했어요. 다시 시도해 주세요."};
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.createFailed,
+		};
+	}
+}
+
+export async function editCharAction(data: EditCharServerFormType): Promise<CharActionResult> {
+	const authInfo = await auth();
+
+	if (authInfo === null || !authInfo.user?.id) {
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.notLoggedIn,
+		};
+	}
+
+	const userId: string = authInfo.user.id;
+
+	const check = editCharServerForm.safeParse(data);
+
+	if (!check.success) {
+		return {
+			success: false,
+			message: check.error.issues[0].message,
+		};
+	}
+
+	const user = await db.user.findUnique({
+		where: {
+			id: userId,
+		},
+		include: {
+			characters: {
+				select: {
+					charId: true,
+					charImage: true,
+				},
+			},
+		},
+	});
+
+	if (user === null) {
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.userNotFound,
+		};
+	}
+
+	const {uuid} = check.data;
+	const binUuid = uuidToBin(uuid);
+
+	const originData = await db.character.findUnique({
+		where: {
+			charPublicLink: binUuid,
+		},
+		select: {
+			charId: true,
+			charUploaderId: true,
+			charPublicMode: true,
+			charImage: true,
+			charProfileLayout: true,
+			charImageFrame: true,
+		},
+	});
+
+	if (originData === null) {
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.notFound,
+		};
+	} else if (originData.charUploaderId !== userId) {
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.notOwner,
+		};
+	}
+
+	const charImageName: string | null = check.data.charImageName;
+
+	if (charImageName === null && (originData.charProfileLayout !== check.data.charProfileLayout || originData.charImageFrame !== check.data.charImageFrame)) {
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.layoutChangeWithoutImage,
+		};
+	}
+
+	if (charImageName !== null) {
+		const bucket: string = charImageBucket(parseInt(check.data.publicMode, 10));
+		const tempKey: string = charImageTempKey(userId, charImageName);
+		const key: string = charImageKey(userId, charImageName);
+
+		if (user.characters.some((character) => character.charImage === charImageName)) {
+			return {
+				success: false,
+				message: CHAR_ACTION_MESSAGE.imageInUse,
+			};
+		}
+
+		let uploaded;
+
+		try {
+			uploaded = await headCharImage(bucket, tempKey);
+		} catch {
+			return {
+				success: false,
+				message: CHAR_ACTION_MESSAGE.imageNotUploaded,
+			};
+		}
+
+		const uploadedSize: number = uploaded.ContentLength ?? 0;
+
+		let updateResult;
+
+		if (uploaded.ContentType !== IMAGE_UPLOAD_TYPE || uploadedSize <= 0 || uploadedSize > IMAGE_MAX_FILE_SIZE) {
+			await removeCharImage(bucket, tempKey);
+
+			return {
+				success: false,
+				message: CHAR_ACTION_MESSAGE.imageInvalid,
+			};
+		}
+
+		try {
+			await copyCharImage(bucket, tempKey, key);
+
+			updateResult = await updateChar(check.data, charImageName, userId, binUuid);
+
+			if (!updateResult.success) {
+				await Promise.allSettled([removeCharImage(bucket, tempKey), removeCharImage(bucket, key)]);
+
+				return {
+					success: false,
+					message: updateResult.message,
+				};
+			}
+
+			updateTag(characterTag(check.data.uuid));
+		} catch (err) {
+			console.error("프로필 수정 실패(이미지 교체)", err);
+
+			await Promise.allSettled([
+				removeCharImage(bucket, tempKey),
+				removeCharImage(bucket, key, {
+					connectionTimeout: 1000 * 3,
+					requestTimeout: 1000 * 5,
+					throwOnRequestTimeout: true,
+				}),
+			]);
+
+			return {
+				success: false,
+				message: CHAR_ACTION_MESSAGE.editFailed,
+			};
+		}
+
+		await Promise.allSettled([
+			removeCharImage(bucket, tempKey, {
+				connectionTimeout: 1000 * 3,
+				requestTimeout: 1000 * 5,
+				throwOnRequestTimeout: true,
+			}),
+			removeCharImage(updateResult.originBucket, updateResult.originKey, {
+				connectionTimeout: 1000 * 3,
+				requestTimeout: 1000 * 5,
+				throwOnRequestTimeout: true,
+			}),
+		]);
+
+		return {
+			success: true,
+			link: `/template/${uuid}`,
+		};
+	} else if (charImageBucket(originData.charPublicMode) !== charImageBucket(parseInt(check.data.publicMode, 10))) {
+		const originBucket: string = charImageBucket(originData.charPublicMode);
+		const newBucket: string = charImageBucket(parseInt(check.data.publicMode, 10));
+		const key: string = charImageKey(userId, originData.charImage);
+
+		try {
+			await copyCharImage(newBucket, key, key, {
+				sourceBucket: originBucket,
+			});
+		} catch (err) {
+			console.error("공개 또는 비공개 버킷으로 이미지 복사 실패", err);
+
+			return {
+				success: false,
+				message: CHAR_ACTION_MESSAGE.editFailed,
+			};
+		}
+
+		try {
+			const updateResult = await updateChar(check.data, null, userId, binUuid);
+
+			if (!updateResult.success) {
+				await removeCharImage(newBucket, key, {
+					connectionTimeout: 1000 * 3,
+					requestTimeout: 1000 * 5,
+					throwOnRequestTimeout: true,
+				});
+
+				return {
+					success: false,
+					message: updateResult.message,
+				};
+			}
+		} catch (err) {
+			console.error("프로필 DB 업데이트 실패", err);
+
+			await removeCharImage(newBucket, key, {
+				connectionTimeout: 1000 * 3,
+				requestTimeout: 1000 * 5,
+				throwOnRequestTimeout: true,
+			});
+
+			return {
+				success: false,
+				message: CHAR_ACTION_MESSAGE.editFailed,
+			};
+		}
+
+		updateTag(characterTag(uuid));
+
+		try {
+			await removeCharImage(originBucket, key, {
+				connectionTimeout: 1000 * 3,
+				requestTimeout: 1000 * 5,
+				throwOnRequestTimeout: true,
+			});
+
+			return {
+				success: true,
+				link: `/template/${uuid}`,
+			};
+		} catch (err) {
+			console.error("과거 공개 또는 비공개 버킷에 있는 이미지 삭제 실패", err);
+
+			return {
+				success: true,
+				link: `/template/${uuid}`,
+			};
+		}
+	}
+
+	try {
+		const updateResult = await updateChar(check.data, charImageName, userId, binUuid);
+
+		if (!updateResult.success) {
+			return {
+				success: false,
+				message: updateResult.message,
+			};
+		}
+
+		updateTag(characterTag(uuid));
+
+		return {
+			success: true,
+			link: `/template/${uuid}`,
+		};
+	} catch (err) {
+		console.error("프로필 수정 실패", err);
+
+		return {
+			success: false,
+			message: CHAR_ACTION_MESSAGE.editFailed,
+		};
 	}
 }
