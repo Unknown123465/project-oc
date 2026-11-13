@@ -29,19 +29,26 @@ export const LOGIN_UNEXPECTED_ERROR_MESSAGE = "로그인 중 문제가 생겼어
 const INVALID_LINK_QUERY = "주소가 유효하지 않아요. 다시 시도해 주세요." as const;
 
 const loginQueryForm = z
-	.object(
-		{
-			link: z.enum(["template", "edit"], INVALID_LINK_QUERY),
-			uuid: z.string(LOGIN_QUERY_UUID_IS_NOT_VALID).refine((value: string) => isUuid(value), LOGIN_QUERY_UUID_IS_NOT_VALID),
-		},
+	.discriminatedUnion(
+		"link",
+		[
+			z.object(
+				{
+					link: z.enum(["template", "edit"], INVALID_LINK_QUERY),
+					uuid: z.string(LOGIN_QUERY_UUID_IS_NOT_VALID).refine((value) => isUuid(value), LOGIN_QUERY_UUID_IS_NOT_VALID),
+				},
+				LOGIN_QUERY_TYPE_IS_NOT_VALID
+			),
+			z.object(
+				{
+					link: z.enum(["mylist"], INVALID_LINK_QUERY),
+					...myListQueryForm.shape,
+					page: myListQueryForm.shape.page.nullish().transform((value) => (typeof value === "number" ? value : 1)),
+				},
+				LOGIN_QUERY_TYPE_IS_NOT_VALID
+			),
+		],
 		LOGIN_QUERY_TYPE_IS_NOT_VALID
-	)
-	.or(
-		z.object({
-			link: z.enum(["mylist"], INVALID_LINK_QUERY),
-			...myListQueryForm.shape,
-			page: myListQueryForm.shape.page.nullish().transform((value) => (typeof value === "number" ? value : 1)),
-		})
 	)
 	.nullable();
 

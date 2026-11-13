@@ -1,5 +1,6 @@
 import {describe, expect, it} from "vitest";
 import {providerForm, toLoginQuery, resolveLoginRedirect, LOGIN_QUERY_TYPE_IS_NOT_VALID, LOGIN_QUERY_UUID_IS_NOT_VALID} from "./validator";
+import {INVALID_MY_LIST_QUERY, MAX_KEYWORD_LENGTH} from "../_components/mylist/validator";
 
 function genQueryObject(stringParams: string): Record<string, string> | null {
 	const searchParams: URLSearchParams = new URLSearchParams(stringParams);
@@ -168,5 +169,125 @@ describe("쿼리 분기 판단", () => {
 		const result = resolveLoginRedirect(queryObject);
 
 		expect(result).toStrictEqual({success: true, result: `/${link}/${uuid}`});
+	});
+
+	it("쿼리에 link=mylist만 있으면 /mylist?page=1&sort=latest&public_mode=all이 반환되어야 한다", () => {
+		const link: string = "mylist";
+
+		const queryObject = genQueryObject(`?link=${link}`);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result).toStrictEqual({
+			success: true,
+			result: `/mylist?page=1&sort=latest&public_mode=all`,
+		});
+	});
+
+	it.each([
+		{page: "1", keyword: "char", sort: "oldest", public_mode: "all"},
+		{page: "3", keyword: "", sort: "latest", public_mode: "link"},
+		{page: "2", keyword: "캐릭터 이름", sort: "like", public_mode: "private"},
+	] as const)("link=mylist의 나머지 쿼리가 모두 정상이면 page, keyword, sort, public_mode 값이 '$page', '$keyword', '$sort', '$public_mode'(으)로 되어 있는 URL이 반영되어야 한다", (value) => {
+		const URLResult: string = new URLSearchParams(value).toString();
+
+		const result = resolveLoginRedirect({...value, link: "mylist"});
+
+		expect(result, "keyword는 인코딩된 채 반영되어야 한다").toStrictEqual({
+			success: true,
+			result: `/mylist?${URLResult}`,
+		});
+	});
+
+	it.each([{keyword: "키워드"}, {sort: "name"}, {public_mode: "public"}, {}] as const)("page가 없으면 1이 할당되어야 한다", (value) => {
+		const URLResult: string = new URLSearchParams(Object.entries({...value, link: "mylist"})).toString();
+
+		const queryObject = genQueryObject("?" + URLResult);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result.success).toBe(true);
+
+		const queryResult = new URLSearchParams(result.success ? result.result.substring(result.result.indexOf("?")) : "");
+
+		expect(queryResult.get("page")).toBe("1");
+	});
+
+	it.each(["abc", "error", "not-sort-value"] as const)("sort가 %s(이)면 실패해야 한다", (value) => {
+		const queryObject = genQueryObject("?link=mylist&sort=" + value);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result).toStrictEqual({
+			success: false,
+			message: INVALID_MY_LIST_QUERY,
+		});
+	});
+
+	it.each(["not-public", "not-all", "error"] as const)("public_mode가 %s(이)면 실패해야 한다", (value) => {
+		const queryObject = genQueryObject("?link=mylist&public_mode=" + value);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result).toStrictEqual({
+			success: false,
+			message: INVALID_MY_LIST_QUERY,
+		});
+	});
+
+	it(`keyword가 ${MAX_KEYWORD_LENGTH}자면 통과되어야 한다`, () => {
+		const keyword: string = "가".repeat(MAX_KEYWORD_LENGTH);
+
+		const queryObject = genQueryObject("?link=mylist&keyword=" + keyword);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result.success).toBe(true);
+
+		const queryResult = new URLSearchParams(result.success ? result.result.substring(result.result.indexOf("?")) : "");
+
+		expect(queryResult.get("keyword")).toBe(keyword);
+	});
+
+	it(`keyword가 ${MAX_KEYWORD_LENGTH}자를 초과하면 실패해야 한다`, () => {
+		const keyword: string = "가".repeat(MAX_KEYWORD_LENGTH + 1);
+
+		const queryObject = genQueryObject("?link=mylist&keyword=" + keyword);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result).toStrictEqual({
+			success: false,
+			message: INVALID_MY_LIST_QUERY,
+		});
+	});
+
+	it.each(["0", "-1", "01", "1.5", "2.0", "not-a-number"] as const)("page가 %s(이)면 실패해야 한다", (value) => {
+		const queryObject = genQueryObject("?link=mylist&page=" + value);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result).toStrictEqual({
+			success: false,
+			message: INVALID_MY_LIST_QUERY,
+		});
+	});
+
+	it("link=mylist에 uuid 쿼리가 붙어도 해당 쿼리가 반환되지 않아야 한다", () => {
+		const uuid: string = "01a1669b-1ac1-7172-9ad2-6bf5ecdd15f4";
+
+		const queryObject = genQueryObject("?link=mylist&uuid=" + uuid);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result.success).toBe(true);
+
+		const queryResult = new URLSearchParams(result.success ? result.result.substring(result.result.indexOf("?")) : "");
+
+		expect(queryResult.get("uuid")).toBeNull();
+	});
+
+	it.each(["sort", "public_mode", "keyword"] as const)("link=template에 %s 쿼리가 있으면 해당 쿼리가 반환되지 않아야 한다", (key) => {
+		const uuid: string = "01a1669b-1ac1-7172-9ad2-6bf5ecdd15f4";
+
+		const queryObject = genQueryObject(`?link=template&uuid=${uuid}&${key}=test-value`);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result).toStrictEqual({
+			success: true,
+			result: "/template/" + uuid,
+		});
 	});
 });
