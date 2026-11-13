@@ -8,7 +8,7 @@ import {v7 as uuidv7} from "uuid";
 import {charImageBucket, charImageKey, charImageTempKey, copyCharImage, headCharImage, removeCharImage} from "./r2";
 import {IMAGE_MAX_FILE_SIZE, IMAGE_UPLOAD_TYPE} from "./imageEditor";
 import {updateTag} from "next/cache";
-import {charactersMyListTag, characterTag} from "../template/[uuid]/getCharacter";
+import {characterTag} from "../template/[uuid]/getCharacter";
 import {CHAR_ACTION_MESSAGE} from "./charActionMessage";
 
 interface CharActionSuccessResult {
@@ -225,8 +225,6 @@ export async function createCharAction(data: CreateCharServerFormType): Promise<
 			},
 		});
 
-		updateTag(charactersMyListTag(user.id));
-
 		/* 등록이 끝났으니 임시 사본은 쓸모가 없다. 지우지 못해도 수명 주기 규칙이
 		   하루 뒤 정리하므로 여기서 실패를 따로 다루지 않는다. */
 		await removeCharImage(bucket, tempKey);
@@ -388,7 +386,6 @@ export async function editCharAction(data: EditCharServerFormType, link: unknown
 			}
 
 			updateTag(characterTag(check.data.uuid));
-			updateTag(charactersMyListTag(user.id));
 		} catch (err) {
 			console.error("프로필 수정 실패(이미지 교체)", err);
 
@@ -473,7 +470,6 @@ export async function editCharAction(data: EditCharServerFormType, link: unknown
 		}
 
 		updateTag(characterTag(uuid));
-		updateTag(charactersMyListTag(user.id));
 
 		try {
 			await removeCharImage(originBucket, key, {
@@ -507,7 +503,6 @@ export async function editCharAction(data: EditCharServerFormType, link: unknown
 		}
 
 		updateTag(characterTag(uuid));
-		updateTag(charactersMyListTag(user.id));
 
 		return {
 			success: true,

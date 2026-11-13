@@ -6,8 +6,6 @@ import {isUuid, uuidToBin} from "@/prisma/uuid";
 import {PrismaClientKnownRequestError} from "@prisma/client/runtime/client";
 import {PUBLIC_MODE_PRIVATE} from "@/app/create/r2";
 import type {ProfileLikeView} from "@/app/_components/template/ProfileLike";
-import {updateTag} from "next/cache";
-import {charactersMyListTag} from "./getCharacter";
 
 interface SetCharacterLikeSuccessResult {
 	success: true;
@@ -171,8 +169,6 @@ export async function setCharacterLike(uuid: string): Promise<SetCharacterLikeRe
 				result,
 			};
 		});
-
-		updateTag(charactersMyListTag(charUploaderId));
 
 		return {
 			success: true,

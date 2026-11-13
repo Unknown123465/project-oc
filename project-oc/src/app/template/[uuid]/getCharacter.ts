@@ -17,11 +17,6 @@ import {MAX_KEYWORD_LENGTH, myListQueryForm} from "@/app/_components/mylist/vali
    수정·삭제 기능을 붙일 때 아래 characterTag로 updateTag를 반드시 같이 호출한다. */
 const CHARACTER_CACHE_MAX_AGE: number = 600;
 
-const CHARACTER_MYLIST_CACHE_MAX_AGE = {
-	normal: 60 * 5,
-	keyword: 30,
-} as const;
-
 const PROFILE_LAYOUTS: readonly ProfileLayout[] = ["h", "v", "s"];
 const IMAGE_FRAME: readonly ImageFrame[] = ["square", "circle"];
 
@@ -67,10 +62,6 @@ export function characterTag(uuid: string): string {
 	return `character:${uuid}`;
 }
 
-export function charactersMyListTag(userId: string): string {
-	return `mylist:${userId}`;
-}
-
 /* Json 컬럼이라 타입이 보장되지 않는다. as string[]로 단언하면 TMI를 비워 둔
    캐릭터(null)가 그대로 통과해 화면에서 .length를 부를 때 터진다. */
 function toTmiLines(raw: unknown): string[] {
@@ -85,7 +76,7 @@ function toImageFrame(raw: string): ImageFrame {
 	return IMAGE_FRAME.find((frame) => frame === raw) ?? DEFAULT_IMAGE_FRAME;
 }
 
-async function toMyList(data: Awaited<ReturnType<ReturnType<typeof cachedCharactersMyListRow>>>["rows"][number]): Promise<MyListItem> {
+async function toMyList(data: Awaited<ReturnType<typeof getCharactersMyListRow>>["rows"][number]): Promise<MyListItem> {
 	return {
 		uuid: data.charPublicLink,
 		charName: data.charName,
@@ -170,102 +161,96 @@ function cachedCharacterRow(uuid: string) {
 	);
 }
 
-function cachedCharactersMyListRow(userId: string, {keyword, sort, public_mode}: MyListQueryFormType) {
-	return unstable_cache(
-		async () => {
-			const where: Record<string, unknown> = {
-				charUploaderId: userId,
-			};
+async function getCharactersMyListRow(userId: string, {keyword, sort, public_mode}: MyListQueryFormType) {
+	const where: Record<string, unknown> = {
+		charUploaderId: userId,
+	};
 
-			if (keyword) {
-				where.OR = [
-					{
-						charName: {
-							contains: keyword,
-						},
-					},
-					{
-						charMessage: {
-							contains: keyword,
-						},
-					},
-				];
-			}
+	if (keyword) {
+		where.OR = [
+			{
+				charName: {
+					contains: keyword,
+				},
+			},
+			{
+				charMessage: {
+					contains: keyword,
+				},
+			},
+		];
+	}
 
-			if (public_mode === "public") {
-				where.charPublicMode = 0;
-			} else if (public_mode === "link") {
-				where.charPublicMode = 1;
-			} else if (public_mode === "private") {
-				where.charPublicMode = 2;
-			}
+	if (public_mode === "public") {
+		where.charPublicMode = 0;
+	} else if (public_mode === "link") {
+		where.charPublicMode = 1;
+	} else if (public_mode === "private") {
+		where.charPublicMode = 2;
+	}
 
-			const orderBy: Record<string, "asc" | "desc" | Record<string, "asc" | "desc">>[] = [];
+	const orderBy: Record<string, "asc" | "desc" | Record<string, "asc" | "desc">>[] = [];
 
-			if (sort === "latest") {
-				orderBy.push({createdAt: "desc"}, {charId: "desc"});
-			} else if (sort === "oldest") {
-				orderBy.push({createdAt: "asc"}, {charId: "asc"});
-			} else if (sort === "name") {
-				orderBy.push({charName: "asc"}, {charId: "asc"});
-			} else {
-				orderBy.push({characterLikes: {_count: "desc"}}, {charId: "desc"});
-			}
+	if (sort === "latest") {
+		orderBy.push({createdAt: "desc"}, {charId: "desc"});
+	} else if (sort === "oldest") {
+		orderBy.push({createdAt: "asc"}, {charId: "asc"});
+	} else if (sort === "name") {
+		orderBy.push({charName: "asc"}, {charId: "asc"});
+	} else {
+		orderBy.push({characterLikes: {_count: "desc"}}, {charId: "desc"});
+	}
 
-			const [rows, count] = await Promise.all([
-				db.character.findMany({
-					where,
+	const [rows, count] = await Promise.all([
+		db.character.findMany({
+			where,
+			select: {
+				charPublicLink: true,
+				charName: true,
+				charImage: true,
+				charColor: true,
+				charPublicMode: true,
+				charUploaderId: true,
+				charMessage: true,
+				charKind: true,
+				charAge: true,
+				charBirthday: true,
+				charHeight: true,
+				charMbti: true,
+				charBirthplace: true,
+				user: {
 					select: {
-						charPublicLink: true,
-						charName: true,
-						charImage: true,
-						charColor: true,
-						charPublicMode: true,
-						charUploaderId: true,
-						charMessage: true,
-						charKind: true,
-						charAge: true,
-						charBirthday: true,
-						charHeight: true,
-						charMbti: true,
-						charBirthplace: true,
-						user: {
-							select: {
-								username: true,
-								name: true,
-							},
-						},
-						_count: {
-							select: {
-								characterLikes: true,
-								characterComments: {
-									where: {
-										deletedAt: null,
-									},
-								},
+						username: true,
+						name: true,
+					},
+				},
+				_count: {
+					select: {
+						characterLikes: true,
+						characterComments: {
+							where: {
+								deletedAt: null,
 							},
 						},
 					},
-					orderBy,
-				}),
-				db.character.count({
-					where: {
-						charUploaderId: userId,
-					},
-				}),
-			]);
+				},
+			},
+			orderBy,
+		}),
+		db.character.count({
+			where: {
+				charUploaderId: userId,
+			},
+		}),
+	]);
 
-			return {
-				rows: rows.map((row) => ({
-					...row,
-					charPublicLink: binToUuid(row.charPublicLink),
-				})),
-				count,
-			};
-		},
-		[`mylist-${userId}-${keyword ?? ""}-${public_mode}-${sort}`],
-		{revalidate: !keyword ? CHARACTER_MYLIST_CACHE_MAX_AGE.normal : CHARACTER_MYLIST_CACHE_MAX_AGE.keyword, tags: [charactersMyListTag(userId)]}
-	);
+	return {
+		rows: rows.map((row) => ({
+			...row,
+			charPublicLink: binToUuid(row.charPublicLink),
+		})),
+		count,
+	};
 }
 
 /* 한 요청 안에서 generateMetadata와 페이지가 각각 부르므로 react의 cache로 묶는다.
@@ -435,7 +420,7 @@ export const getCharactersAsMyList = cache(
 
 		const query = check.data;
 
-		const {rows, count} = await cachedCharactersMyListRow(userId, query)();
+		const {rows, count} = await getCharactersMyListRow(userId, query);
 
 		const correctPage: number = Math.max(Math.ceil(rows.length / MAX_PAGINATION_TILE), 1);
 

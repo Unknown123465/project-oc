@@ -5,7 +5,7 @@ import db from "@/prisma/client";
 import {charImageBucket, charImageKey, removeCharImage} from "@/app/create/r2";
 import {isUuid, uuidToBin} from "@/prisma/uuid";
 import {auth} from "@/auth/auth";
-import {charactersMyListTag, characterTag} from "./getCharacter";
+import {characterTag} from "./getCharacter";
 import {DELETE_CHARACTER_MESSAGE} from "./deleteCharacterMessage";
 
 interface DeleteCharacterSuccessResult {
@@ -88,7 +88,6 @@ export async function deleteCharacter(uuid: unknown): Promise<DeleteCharacterRes
 		}
 
 		updateTag(characterTag(uuid));
-		updateTag(charactersMyListTag(userId));
 
 		const bucket: string = charImageBucket(charPublicMode);
 		const imageKey: string = charImageKey(userId, charImage);
