@@ -10,6 +10,8 @@ import {PUBLIC_MODE_PRIVATE} from "@/app/create/r2";
 import {JUDGE_COMMENT_NULL_RESULT, judgeComment, judgeCommentScore, JudgeScore, setCommentScoreIfOwner} from "./commentJudge";
 import {claimCommentJudge} from "./commentJudgeDraft";
 import {getCommentJudgeEnabled} from "@/app/create/globalConfig";
+import {updateTag} from "next/cache";
+import {charactersMyListTag} from "./getCharacter";
 
 const BLIND_COMMENT_SCORE: number | null = typeof process.env.BLIND_COMMENT_SCORE === "string" ? parseInt(process.env.BLIND_COMMENT_SCORE, 10) : null;
 
@@ -223,6 +225,8 @@ export async function writeComment(data: WriteCommentFormType): Promise<CommentR
 			};
 		});
 
+		updateTag(charactersMyListTag(originCharacter.charUploaderId));
+
 		return result;
 	} catch (err) {
 		console.error(err);
@@ -396,6 +400,8 @@ export async function deleteComment(data: DeleteOrHiddenCommentFormType): Promis
 	try {
 		const binUuid = uuidToBin(uuid);
 
+		let charUploaderId: string | null = null;
+
 		const result: CommentResult = await db.$transaction(async (t) => {
 			const originData = await t.characterComment.findUnique({
 				where: {
@@ -410,6 +416,7 @@ export async function deleteComment(data: DeleteOrHiddenCommentFormType): Promis
 					character: {
 						select: {
 							charPublicMode: true,
+							charUploaderId: true,
 						},
 					},
 				},
@@ -449,10 +456,16 @@ export async function deleteComment(data: DeleteOrHiddenCommentFormType): Promis
 				},
 			});
 
+			charUploaderId = originData.character.charUploaderId;
+
 			return {
 				success: true,
 			};
 		});
+
+		if (charUploaderId !== null) {
+			updateTag(charactersMyListTag(charUploaderId));
+		}
 
 		return result;
 	} catch (err) {
