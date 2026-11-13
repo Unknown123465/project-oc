@@ -5,7 +5,7 @@ import {isUuid} from "@/prisma/uuid";
 import {CHAR_ACTION_MESSAGE} from "./charActionMessage";
 
 /** 한 계정이 만들 수 있는 프로필 수. 업로드 서명과 등록에서 함께 본다. */
-export const MAX_TEMPLATE_LIMIT = 10;
+export const MAX_TEMPLATE_LIMIT = 30 as const;
 
 /* 항목별 글자 수 상한. 같은 숫자를 생성 폼·AI 초안 폼·AI 응답 스키마·화면 카운터가
    각자 리터럴로 들고 있어서 한 곳만 고치면 나머지가 조용히 어긋났다. 문구에도
