@@ -1,0 +1,78 @@
+.main {
+	width: calc(100% - 40px);
+	max-width: var(--page-width);
+	display: grid;
+	gap: 24px;
+	margin: 40px auto 80px;
+
+	& .heading {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 16px;
+		margin-bottom: 8px;
+
+		& h1 {
+			margin: 0 0 6px;
+			color: var(--title-text);
+			font-size: 32px;
+			font-weight: 900;
+			letter-spacing: -0.06em;
+		}
+
+		& p {
+			margin: 0;
+			color: var(--muted);
+			font-size: 15px;
+			font-variant-numeric: tabular-nums;
+
+			& strong {
+				color: var(--title-text);
+				font-weight: 800;
+			}
+		}
+
+		/* LinkButton 기본값은 폼 버튼 기준(높이 46px)이라 제목 줄에 맞게 줄인다. */
+		& .create {
+			height: 42px;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 0 18px;
+			font-size: 15px;
+			white-space: nowrap;
+		}
+	}
+
+	& .grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 28px 20px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+}
+
+@media (width < 1024px) {
+	.main .grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (width < 768px) {
+	.main {
+		width: calc(100% - 28px);
+		gap: 20px;
+		margin-top: 28px;
+
+		& .heading h1 {
+			font-size: 28px;
+		}
+
+		& .grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 22px 12px;
+		}
+	}
+}

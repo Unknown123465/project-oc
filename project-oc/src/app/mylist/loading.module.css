@@ -1,0 +1,71 @@
+/* 응답이 빠를 때 뼈대가 번쩍이지 않게 150ms 뒤에 나타난다. */
+.main {
+	@media (prefers-reduced-motion: no-preference) {
+		animation: appear 0.2s ease 0.15s both;
+	}
+
+	& .heading {
+		display: grid;
+		gap: 12px;
+		margin-bottom: 8px;
+
+		& .title {
+			width: 160px;
+			height: 36px;
+			border-radius: var(--radius-1);
+		}
+
+		& .count {
+			width: 120px;
+			height: 16px;
+			border-radius: var(--radius-1);
+		}
+	}
+
+	& .toolbar {
+		height: 46px;
+		border-radius: var(--radius-2);
+	}
+
+	& .tile {
+		display: grid;
+		gap: 12px;
+
+		& > div:first-of-type {
+			aspect-ratio: 4 / 5;
+			border-radius: var(--radius-2);
+		}
+
+		& > div:last-of-type {
+			width: 70%;
+			height: 18px;
+			border-radius: var(--radius-1);
+		}
+	}
+
+	& .heading > div,
+	& .toolbar,
+	& .tile > div {
+		background-color: var(--card-dark-2);
+
+		@media (prefers-reduced-motion: no-preference) {
+			animation: breathe 1.6s ease-in-out infinite;
+		}
+	}
+}
+
+@keyframes appear {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes breathe {
+	50% {
+		opacity: 0.55;
+	}
+}

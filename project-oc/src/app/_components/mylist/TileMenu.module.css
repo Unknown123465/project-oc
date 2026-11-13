@@ -1,0 +1,104 @@
+.menu {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+
+	& summary {
+		width: 34px;
+		height: 34px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: var(--title-text);
+		font-size: 16px;
+		line-height: 0;
+		list-style: none;
+		background-color: color-mix(in srgb, var(--card-dark-1) 88%, transparent);
+		border: 1px solid var(--line-color-1);
+		border-radius: var(--radius-1);
+		cursor: pointer;
+		transition: background-color 0.15s ease;
+
+		&::-webkit-details-marker {
+			display: none;
+		}
+
+		&:hover {
+			background-color: var(--card-dark-1);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--input-select-line);
+			outline-offset: 2px;
+		}
+	}
+
+	&[open] summary {
+		background-color: var(--card-dark-1);
+		border-color: var(--line-color-2);
+	}
+
+	& .popover {
+		min-width: 148px;
+		display: grid;
+		position: absolute;
+		top: 40px;
+		right: 0;
+		z-index: 2;
+		padding: 6px;
+		background-color: var(--card-dark-1);
+		border: 1px solid var(--line-color-1);
+		border-radius: var(--radius-2);
+		box-shadow: var(--shadow-1);
+
+		& a,
+		& button {
+			height: 38px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 0 10px;
+			color: var(--title-text);
+			font: inherit;
+			font-size: 14px;
+			font-weight: 600;
+			text-align: left;
+			white-space: nowrap;
+			background-color: transparent;
+			border: 0;
+			border-radius: var(--radius-1);
+			cursor: pointer;
+
+			& i {
+				width: 16px;
+				color: var(--muted);
+				font-size: 14px;
+				line-height: 0;
+			}
+
+			&:hover,
+			&:focus-visible {
+				outline: 0;
+				background-color: var(--card-dark-2);
+			}
+		}
+
+		/* 삭제는 되돌릴 수 없어 위 항목들과 선 하나로 떼어 놓는다. */
+		& .danger {
+			margin-top: 4px;
+			color: var(--danger);
+			box-shadow: 0 -1px 0 var(--line-color-1);
+			border-radius: 0 0 var(--radius-1) var(--radius-1);
+
+			& i {
+				color: var(--danger);
+			}
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.menu summary {
+		transition: none;
+	}
+}
