@@ -13,9 +13,10 @@ export default async function SignupComplete() {
 	/* 가입 액션이 심어 준 표시가 있을 때만 연다. 주소만 알고 찾아온 사람에게는
 	   완료할 가입이 없다. 세션까지 같이 보는 이유는 쿠키가 남은 채로 로그아웃한
 	   상태에서 들어오면 완료를 알릴 계정이 없기 때문이다. */
-	if (authInfo === null || !cookieStore.has(SIGNUP_COMPLETE_COOKIE)) {
-		//TODO: 내 캐릭터 페이지 완성 시 해당 페이지로 리다이렉트 되게 구현 할 예정
+	if (authInfo === null) {
 		return redirect("/", "replace");
+	} else if (!cookieStore.has(SIGNUP_COMPLETE_COOKIE)) {
+		return redirect("/mylist?page=1", "replace");
 	}
 
 	const userName = authInfo.user?.name;

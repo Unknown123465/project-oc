@@ -7,9 +7,12 @@ import {getAiDraftEnabled} from "@/app/create/globalConfig";
 import {getCharacterAsRows} from "@/app/template/[uuid]/getCharacter";
 import {toEditFormValues} from "./toEditFormValues";
 import Link from "next/link";
+import {toEncodeParam} from "./toEncodeParam";
+
 /* notFound(), unauthorized()를 던지면 같은 폴더의 not-found.tsx, unauthorized.tsx로 모인다.  */
-export default async function EditPage({params}: PageProps<"/edit/[uuid]">) {
-	const uuid = (await params).uuid;
+export default async function EditPage({params, searchParams}: PageProps<"/edit/[uuid]">) {
+	const {uuid} = await params;
+	const {link, page, keyword, sort, public_mode} = await searchParams;
 
 	const authInfo = await auth();
 
@@ -33,17 +36,22 @@ export default async function EditPage({params}: PageProps<"/edit/[uuid]">) {
 	const aiDraftRemaining: number = await getAiDraftRemaining(authInfo.user?.id);
 	const aiDraftEnabled: boolean = await getAiDraftEnabled();
 
+	const backURL: string =
+		link === "mylist"
+			? `/mylist?${toEncodeParam("page", page, "1")}${toEncodeParam("keyword", keyword)}${toEncodeParam("sort", sort)}${toEncodeParam("public_mode", public_mode)}`.replace(/&+$/, "")
+			: `/template/${uuid}`;
+
 	return (
 		<main className={styles.main}>
 			<section className={styles.heading}>
-				<Link href={`/template/${uuid}`}>← 프로필로</Link>
+				<Link href={backURL}>← {link === "mylist" ? "리스트" : "프로필"}로</Link>
 
 				<h1>캐릭터 수정</h1>
 
 				<p className={styles.subtitle}>바꿀 곳만 고치면 돼요. 오른쪽 프로필에 바로 반영돼요.</p>
 			</section>
 
-			<CreateWorkspace character={characterResult} aiDraftRemaining={aiDraftRemaining} aiDraftEnabled={aiDraftEnabled} />
+			<CreateWorkspace character={characterResult} aiDraftRemaining={aiDraftRemaining} aiDraftEnabled={aiDraftEnabled} backURL={backURL} />
 		</main>
 	);
 }

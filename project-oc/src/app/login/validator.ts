@@ -1,5 +1,6 @@
 import {isUuid} from "@/prisma/uuid";
 import z, {type ZodSafeParseResult} from "zod";
+import {myListQueryForm} from "../_components/mylist/validator";
 
 export const loginForm = z.object({
 	userName: z.string("값이 올바르지 않음").trim().min(1, "사용자 이름을 입력해 주세요."),
@@ -25,13 +26,22 @@ export const LOGIN_QUERY_UUID_IS_NOT_VALID = "돌아갈 프로필 주소가 올�
    action.ts는 "use server" 파일이라 함수 말고는 export할 수 없어 클라이언트와 같이 쓰는 이 파일에 둔다. */
 export const LOGIN_UNEXPECTED_ERROR_MESSAGE = "로그인 중 문제가 생겼어요. 잠시 후 다시 시도해 주세요." as const;
 
+const INVALID_LINK_QUERY = "주소가 유효하지 않아요. 다시 시도해 주세요." as const;
+
 const loginQueryForm = z
 	.object(
 		{
-			link: z.enum(["template", "edit"], "주소가 유효하지 않아요. 다시 시도해 주세요."),
+			link: z.enum(["template", "edit"], INVALID_LINK_QUERY),
 			uuid: z.string(LOGIN_QUERY_UUID_IS_NOT_VALID).refine((value: string) => isUuid(value), LOGIN_QUERY_UUID_IS_NOT_VALID),
 		},
 		LOGIN_QUERY_TYPE_IS_NOT_VALID
+	)
+	.or(
+		z.object({
+			link: z.enum(["mylist"], INVALID_LINK_QUERY),
+			...myListQueryForm.shape,
+			page: myListQueryForm.shape.page.nullish().transform((value) => (typeof value === "number" ? value : 1)),
+		})
 	)
 	.nullable();
 
@@ -48,7 +58,17 @@ function isLinkQueryFailed(check: LoginQueryCheck): boolean {
 }
 
 function genRedirectToUrl(query: NonNullable<LoginQueryFormType>): string {
-	return `/${encodeURIComponent(query.link)}/${encodeURIComponent(query.uuid)}`;
+	if (query.link === "template" || query.link === "edit") {
+		return `/${encodeURIComponent(query.link)}/${encodeURIComponent(query.uuid)}`;
+	} else {
+		const queryArray: string[][] = Object.entries(query).flatMap(([key, value]) => (value === null || value === undefined ? [] : [[key, value.toString()]]));
+
+		const realQuery: URLSearchParams = new URLSearchParams(queryArray);
+
+		realQuery.delete("link");
+
+		return `/${encodeURIComponent(query.link)}?` + realQuery.toString();
+	}
 }
 
 /* 쿼리가 비어 있으면 undefined가 아니라 null을 돌려준다. loginQueryForm은

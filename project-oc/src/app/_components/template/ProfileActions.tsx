@@ -8,6 +8,7 @@ import useConfirm from "@/hooks/useConfirm";
 import {ActionButton, LinkButton} from "@/components/ui/button";
 import {deleteCharacter} from "@/app/template/[uuid]/deleteCharacter";
 import {useRouter} from "next/navigation";
+import {DELETE_CHARACTER_MESSAGE} from "@/app/template/[uuid]/deleteCharacterMessage";
 
 interface ProfileActionsProps {
 	nonce: string | undefined;
@@ -24,8 +25,7 @@ interface ProfileActionsProps {
 	isOwner: boolean;
 }
 
-/* 지금은 메인 페이지로 리다이렉트 시킨다. 사용자가 제작한 프로필 리스트 페이지가 만들어지면 해당 주소로 리다이렉트 시킨다. */
-const DELETE_REDIRECT_URL = "/" as const;
+const DELETE_REDIRECT_URL = "/mylist?page=1" as const;
 
 export default function ProfileActions({nonce, uuid, charName, charMessage, kakaoDetail, shareable, imageSrc, isPublic, isOwner}: ProfileActionsProps) {
 	const {start, component} = useConfirm({confirmLabel: "삭제", cancelLabel: "취소", confirmStyleType: "danger"});
@@ -55,11 +55,11 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 			} else if (serverResult.requireRefresh) {
 				router.refresh();
 			} else {
-				throw new Error(serverResult.message);
+				throw new Error(serverResult.message, {cause: true});
 			}
 		} catch (err) {
 			if (err instanceof Error) {
-				setErrorMessage(err.message);
+				setErrorMessage(err.cause === true ? err.message : DELETE_CHARACTER_MESSAGE.failed);
 			}
 		} finally {
 			setIsSending(false);
@@ -97,7 +97,7 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 					{isOwner ? (
 						<>
 							{component}
-							<LinkButton href={`/edit/${uuid}`} className={styles.action_button} styleType="simple">
+							<LinkButton href={`/edit/${uuid}?link=profile`} className={styles.action_button} styleType="simple">
 								<i className="bi bi-pencil" aria-hidden="true"></i>
 								수정
 							</LinkButton>
