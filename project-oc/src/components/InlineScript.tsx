@@ -1,3 +1,4 @@
+"use client";
 interface InlineScriptProps {
 	html: string;
 	nonce?: string;

@@ -255,7 +255,7 @@ export async function createCharAction(data: CreateCharServerFormType): Promise<
 	}
 }
 
-export async function editCharAction(data: EditCharServerFormType): Promise<CharActionResult> {
+export async function editCharAction(data: EditCharServerFormType, link: unknown = "profile"): Promise<CharActionResult> {
 	const authInfo = await auth();
 
 	if (authInfo === null || !authInfo.user?.id) {
@@ -419,7 +419,7 @@ export async function editCharAction(data: EditCharServerFormType): Promise<Char
 
 		return {
 			success: true,
-			link: `/template/${uuid}`,
+			link: link === "mylist" ? `/mylist?page=1` : `/template/${uuid}`,
 		};
 	} else if (charImageBucket(originData.charPublicMode) !== charImageBucket(parseInt(check.data.publicMode, 10))) {
 		const originBucket: string = charImageBucket(originData.charPublicMode);
@@ -480,14 +480,14 @@ export async function editCharAction(data: EditCharServerFormType): Promise<Char
 
 			return {
 				success: true,
-				link: `/template/${uuid}`,
+				link: link === "mylist" ? `/mylist?page=1` : `/template/${uuid}`,
 			};
 		} catch (err) {
 			console.error("과거 공개 또는 비공개 버킷에 있는 이미지 삭제 실패", err);
 
 			return {
 				success: true,
-				link: `/template/${uuid}`,
+				link: link === "mylist" ? `/mylist?page=1` : `/template/${uuid}`,
 			};
 		}
 	}
@@ -506,7 +506,7 @@ export async function editCharAction(data: EditCharServerFormType): Promise<Char
 
 		return {
 			success: true,
-			link: `/template/${uuid}`,
+			link: link === "mylist" ? `/mylist?page=1` : `/template/${uuid}`,
 		};
 	} catch (err) {
 		console.error("프로필 수정 실패", err);

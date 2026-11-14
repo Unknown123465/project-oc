@@ -23,9 +23,10 @@ interface CreateWorkspaceProps {
 	aiDraftRemaining: number;
 	aiDraftEnabled: boolean;
 	character?: ToEditFormValues;
+	backURL?: string;
 }
 
-export default function CreateWorkspace({character, aiDraftRemaining, aiDraftEnabled}: CreateWorkspaceProps) {
+export default function CreateWorkspace({character, aiDraftRemaining, aiDraftEnabled, backURL}: CreateWorkspaceProps) {
 	const {
 		control,
 		register,
@@ -94,6 +95,7 @@ export default function CreateWorkspace({character, aiDraftRemaining, aiDraftEna
 						aiDraftRemaining={aiDraftRemaining}
 						aiDraftEnabled={aiDraftEnabled}
 						editable={typeof character?.charImage === "string"}
+						backURL={backURL}
 					/>
 				) : null}
 

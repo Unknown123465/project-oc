@@ -1,0 +1,69 @@
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 6px;
+
+	& .step {
+		width: 38px;
+		height: 38px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: var(--title-text);
+		font-size: 13px;
+		line-height: 0;
+		border: 1px solid var(--line-color-1);
+		border-radius: var(--radius-1);
+
+		&:hover {
+			background-color: var(--card-dark-2);
+		}
+
+		&.disabled {
+			color: var(--line-color-2);
+			pointer-events: none;
+		}
+	}
+
+	& ol {
+		display: flex;
+		gap: 4px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	& a,
+	& span[aria-current] {
+		min-width: 38px;
+		height: 38px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0 6px;
+		font-size: 14px;
+		font-weight: 700;
+		font-variant-numeric: tabular-nums;
+		border-radius: var(--radius-1);
+	}
+
+	& ol a {
+		color: var(--muted);
+
+		&:hover {
+			color: var(--title-text);
+			background-color: var(--card-dark-2);
+		}
+	}
+
+	& span[aria-current] {
+		color: var(--button-submit-text);
+		background-color: var(--button-submit-back);
+	}
+
+	& a:focus-visible {
+		outline: 2px solid var(--input-select-line);
+		outline-offset: 2px;
+	}
+}

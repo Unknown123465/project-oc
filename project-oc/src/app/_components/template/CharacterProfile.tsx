@@ -77,7 +77,7 @@ export default function CharacterProfile({nonce, uuid, character, comments, like
 	);
 
 	if (layout === "h") {
-		cover = <ProfileCover layout={layout} imageSrc={character.charImage} alt={alt} color={character.charColor} />;
+		cover = <ProfileCover layout={layout} imageSrc={character.charImage} alt={alt} color={character.charColor} unoptimized={character.charPublicMode !== PUBLIC_MODE_PUBLIC} />;
 
 		sheet = (
 			<>
@@ -91,7 +91,7 @@ export default function CharacterProfile({nonce, uuid, character, comments, like
 			</>
 		);
 	} else if (layout === "v") {
-		cover = <ProfileCover layout={layout} imageSrc={character.charImage} alt={alt} color={character.charColor} />;
+		cover = <ProfileCover layout={layout} imageSrc={character.charImage} alt={alt} color={character.charColor} unoptimized={character.charPublicMode !== PUBLIC_MODE_PUBLIC} />;
 
 		sheet = (
 			<div className={styles.inner}>
@@ -107,7 +107,7 @@ export default function CharacterProfile({nonce, uuid, character, comments, like
 			</div>
 		);
 	} else {
-		cover = <ProfileCover layout={layout} imageSrc={character.charImage} alt={alt} color={character.charColor} />;
+		cover = <ProfileCover layout={layout} imageSrc={character.charImage} alt={alt} color={character.charColor} unoptimized={character.charPublicMode !== PUBLIC_MODE_PUBLIC} />;
 
 		sheet = (
 			<div className={styles.inner}>

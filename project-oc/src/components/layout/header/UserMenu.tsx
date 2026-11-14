@@ -15,8 +15,8 @@ export default function UserMenu() {
 				프로필 만들기
 			</Link>
 
-			<Link href="/my" className={styles.text}>
-				내 캐릭터
+			<Link href="/mylist?page=1" className={styles.text}>
+				내 프로필
 			</Link>
 
 			<Link href="/setting" className={styles.text}>

@@ -1,0 +1,123 @@
+.tile {
+	position: relative;
+	min-width: 0;
+
+	& .link {
+		display: block;
+		color: inherit;
+		text-decoration: none;
+
+		&:focus-visible {
+			outline: 2px solid var(--input-select-line);
+			outline-offset: 3px;
+			border-radius: var(--radius-2);
+		}
+
+		&:hover .media img {
+			transform: scale(1.03);
+		}
+
+		&:hover h2 {
+			text-decoration: underline;
+			text-underline-offset: 3px;
+		}
+	}
+
+	/* 캐릭터 색을 배경에 옅게 깔아, 이미지가 투명하거나 비율이 달라 남는 부분도 그 캐릭터 색으로 보이게 한다. */
+	& .media {
+		aspect-ratio: 4 / 5;
+		position: relative;
+		overflow: hidden;
+		background-color: color-mix(in srgb, var(--char-color) 32%, var(--card-dark-1));
+		border: 1px solid var(--line-color-1);
+		border-radius: var(--radius-2);
+
+		& img {
+			object-fit: cover;
+			transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+	}
+
+	& .body {
+		padding: 12px 2px 0;
+
+		& h2 {
+			margin: 0 0 8px;
+			overflow-x: hidden;
+			overflow-y: hidden;
+			color: var(--title-text);
+			font-size: 16px;
+			font-weight: 800;
+			letter-spacing: -0.02em;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+
+	& .meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 8px;
+	}
+
+	/* 공개만 노랑으로 띄운다. 나머지 둘은 글자로 구분한다(노랑만으로 상태를 나누지 않는다). */
+	& .visibility {
+		padding: 3px 8px;
+		color: var(--muted);
+		font-size: 12px;
+		font-weight: 700;
+		white-space: nowrap;
+		background-color: var(--card-dark-2);
+		border-radius: 6px;
+
+		&.public {
+			color: var(--input-select-text);
+			background-color: var(--input-select-back);
+		}
+	}
+
+	& .stats {
+		display: flex;
+		gap: 10px;
+		color: var(--muted);
+		font-size: 13px;
+		font-variant-numeric: tabular-nums;
+
+		& > span {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		& i {
+			font-size: 12px;
+			line-height: 0;
+		}
+	}
+}
+
+@media (width < 768px) {
+	.tile {
+		& .body h2 {
+			font-size: 15px;
+		}
+
+		& .meta {
+			flex-wrap: wrap;
+			gap: 6px;
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tile {
+		& .media img {
+			transition: none;
+		}
+
+		& .link:hover .media img {
+			transform: none;
+		}
+	}
+}

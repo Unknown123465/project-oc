@@ -2,11 +2,14 @@ import {cache} from "react";
 import {unstable_cache} from "next/cache";
 import {auth} from "@/auth/auth";
 import db from "@/prisma/client";
-import {isUuid, uuidToBin} from "@/prisma/uuid";
+import {binToUuid, isUuid, uuidToBin} from "@/prisma/uuid";
 import {PUBLIC_MODE_PRIVATE, PUBLIC_MODE_PUBLIC} from "@/app/create/r2";
 import {toMusicEmbed} from "@/app/create/musicEmbed";
 import {charImageURL} from "./r2";
 import type {ImageFrame, ProfileLayout, TemplateCharacter} from "@/app/_components/template/CharacterProfile";
+import {toProfileFacts} from "@/app/_components/template/ProfileFacts";
+import type {MyListItem, MyListQueryFormType} from "@/app/_components/mylist/validator";
+import {MAX_KEYWORD_LENGTH, myListQueryForm} from "@/app/_components/mylist/validator";
 
 /* 캐시가 들고 있는 건 DB 행이지 이미지 서명이 아니다. 그래서 이 값은 "공개 설정을
    바꾸거나 캐릭터를 지웠을 때 화면에 반영되기까지 걸리는 최대 시간"으로 읽어야 한다.
@@ -21,6 +24,8 @@ const IMAGE_FRAME: readonly ImageFrame[] = ["square", "circle"];
    하나가 아니면 커버가 통째로 안 그려지므로 가로형으로 떨어뜨린다. */
 const DEFAULT_PROFILE_LAYOUT: ProfileLayout = "h";
 const DEFAULT_IMAGE_FRAME: ImageFrame = "square";
+
+export const MAX_PAGINATION_TILE = 12 as const;
 
 export interface CharacterView extends TemplateCharacter {
 	/** 이미지 주소가 만료되지 않는 공개 주소인지. 동적 metadata에서 og:image를 넣을지
@@ -38,10 +43,16 @@ interface GetCharacterSuccessResult<V> {
 
 interface GetCharacterFailureResult {
 	success: false;
-	reason: "invalidUUID" | "notFound" | "forbidden" | "unauthorized" | "notLoggedIn";
+	reason: "invalidUUID" | "invalidQuery" | "notFound" | "forbidden" | "unauthorized" | "notLoggedIn";
+}
+
+interface GetCharactersAsMyListFailureResult extends GetCharacterFailureResult {
+	redirectQuery?: string;
 }
 
 type GetCharacterResult<V> = GetCharacterSuccessResult<V> | GetCharacterFailureResult;
+
+type GetCharactersAsMyListResult<V> = GetCharacterSuccessResult<V> | GetCharactersAsMyListFailureResult;
 
 type GetCharacterAsRows = Exclude<Awaited<ReturnType<ReturnType<typeof cachedCharacterRow>>>, null>;
 export type GetCharacterAsRowsResult = Omit<GetCharacterAsRows, "user" | "charUploaderId">;
@@ -63,6 +74,24 @@ function toProfileLayout(raw: string): ProfileLayout {
 
 function toImageFrame(raw: string): ImageFrame {
 	return IMAGE_FRAME.find((frame) => frame === raw) ?? DEFAULT_IMAGE_FRAME;
+}
+
+async function toMyList(data: Awaited<ReturnType<typeof getCharactersMyListRow>>["rows"][number]): Promise<MyListItem> {
+	return {
+		uuid: data.charPublicLink,
+		charName: data.charName,
+		charImage: await charImageURL(data.charPublicMode, data.charUploaderId, data.charImage),
+		charColor: data.charColor,
+		charPublicMode: data.charPublicMode,
+		likeCount: data._count.characterLikes,
+		commentCount: data._count.characterComments,
+		charMessage: data.charMessage,
+		kakaoDetail: {
+			creator: data.user.username || data.user.name || "알 수 없음",
+			facts: toProfileFacts(data).map(({label, value}) => ({label, value})),
+			likeCount: data._count.characterLikes,
+		},
+	};
 }
 
 /* 저장할 때 통과한 주소라도 그 사이 임베드 지원이 바뀔 수 있어 읽을 때 다시 본다.
@@ -130,6 +159,98 @@ function cachedCharacterRow(uuid: string) {
 		["template-character", uuid],
 		{revalidate: CHARACTER_CACHE_MAX_AGE, tags: [characterTag(uuid)]}
 	);
+}
+
+async function getCharactersMyListRow(userId: string, {keyword, sort, public_mode}: MyListQueryFormType) {
+	const where: Record<string, unknown> = {
+		charUploaderId: userId,
+	};
+
+	if (keyword) {
+		where.OR = [
+			{
+				charName: {
+					contains: keyword,
+				},
+			},
+			{
+				charMessage: {
+					contains: keyword,
+				},
+			},
+		];
+	}
+
+	if (public_mode === "public") {
+		where.charPublicMode = 0;
+	} else if (public_mode === "link") {
+		where.charPublicMode = 1;
+	} else if (public_mode === "private") {
+		where.charPublicMode = 2;
+	}
+
+	const orderBy: Record<string, "asc" | "desc" | Record<string, "asc" | "desc">>[] = [];
+
+	if (sort === "latest") {
+		orderBy.push({createdAt: "desc"}, {charId: "desc"});
+	} else if (sort === "oldest") {
+		orderBy.push({createdAt: "asc"}, {charId: "asc"});
+	} else if (sort === "name") {
+		orderBy.push({charName: "asc"}, {charId: "asc"});
+	} else {
+		orderBy.push({characterLikes: {_count: "desc"}}, {charId: "desc"});
+	}
+
+	const [rows, count] = await Promise.all([
+		db.character.findMany({
+			where,
+			select: {
+				charPublicLink: true,
+				charName: true,
+				charImage: true,
+				charColor: true,
+				charPublicMode: true,
+				charUploaderId: true,
+				charMessage: true,
+				charKind: true,
+				charAge: true,
+				charBirthday: true,
+				charHeight: true,
+				charMbti: true,
+				charBirthplace: true,
+				user: {
+					select: {
+						username: true,
+						name: true,
+					},
+				},
+				_count: {
+					select: {
+						characterLikes: true,
+						characterComments: {
+							where: {
+								deletedAt: null,
+							},
+						},
+					},
+				},
+			},
+			orderBy,
+		}),
+		db.character.count({
+			where: {
+				charUploaderId: userId,
+			},
+		}),
+	]);
+
+	return {
+		rows: rows.map((row) => ({
+			...row,
+			charPublicLink: binToUuid(row.charPublicLink),
+		})),
+		count,
+	};
 }
 
 /* 한 요청 안에서 generateMetadata와 페이지가 각각 부르므로 react의 cache로 묶는다.
@@ -254,3 +375,79 @@ export const getCharacterAsRows = cache(async (uuid: string): Promise<GetCharact
 		},
 	};
 });
+
+export const getCharactersAsMyList = cache(
+	async (queryData: Record<string, string | string[] | undefined>): Promise<GetCharactersAsMyListResult<{characters: MyListItem[]; count: number; allCount: number}>> => {
+		const authInfo = await auth();
+
+		if (authInfo === null || !authInfo.user?.id) {
+			return {
+				success: false,
+				reason: "notLoggedIn",
+			};
+		}
+
+		const userId: string = authInfo.user.id;
+
+		const check = myListQueryForm.safeParse(queryData);
+
+		if (!check.success) {
+			const wrongKeys = new Set(check.error.issues.flatMap(({path}) => path));
+			const params: URLSearchParams = new URLSearchParams();
+
+			params.set("page", wrongKeys.has("page") || queryData.page === null || queryData.page === undefined ? "1" : queryData.page.toString());
+
+			if (typeof queryData.keyword === "string") {
+				const keyword: string = queryData.keyword;
+
+				params.set("keyword", wrongKeys.has("keyword") ? keyword.substring(0, MAX_KEYWORD_LENGTH) : keyword);
+			}
+
+			if (typeof queryData.sort === "string") {
+				params.set("sort", wrongKeys.has("sort") ? "latest" : queryData.sort);
+			}
+
+			if (typeof queryData.public_mode === "string") {
+				params.set("public_mode", wrongKeys.has("public_mode") ? "all" : queryData.public_mode);
+			}
+
+			return {
+				success: false,
+				reason: "invalidQuery",
+				redirectQuery: "?" + params.toString(),
+			};
+		}
+
+		const query = check.data;
+
+		const {rows, count} = await getCharactersMyListRow(userId, query);
+
+		const correctPage: number = Math.max(Math.ceil(rows.length / MAX_PAGINATION_TILE), 1);
+
+		if (query.page > correctPage) {
+			const queryArray: string[][] = Object.entries(query).flatMap(([key, value]) => (value === null || value === undefined ? [] : [[key, value.toString()]]));
+
+			const params: URLSearchParams = new URLSearchParams(queryArray);
+
+			params.set("page", correctPage.toString());
+
+			return {
+				success: false,
+				reason: "notFound",
+				redirectQuery: "?" + params.toString(),
+			};
+		}
+
+		const pageTile: number = query.page * MAX_PAGINATION_TILE - MAX_PAGINATION_TILE;
+		const characters = await Promise.all(rows.slice(pageTile, pageTile + MAX_PAGINATION_TILE).map(toMyList));
+
+		return {
+			success: true,
+			result: {
+				characters,
+				count: rows.length,
+				allCount: count,
+			},
+		};
+	}
+);

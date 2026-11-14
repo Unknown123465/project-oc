@@ -10,7 +10,7 @@ import {SubmitButton, NormalButton, LinkButton} from "@/components/ui/button";
 import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue, UseFormSetValues} from "react-hook-form";
 import {createCharForm, editCharForm, EditCharFormType, type CreateCharFormInputType} from "@/app/create/validator";
 import {useId} from "react";
-import {useParams, useRouter} from "next/navigation";
+import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {createCharAction, editCharAction} from "@/app/create/action";
 import {createUploadURLAction, editUploadURLAction} from "@/app/create/uploadAction";
 import {IMAGE_UPLOAD_TYPE} from "@/app/create/imageEditor";
@@ -28,10 +28,12 @@ interface CreateFormProps {
 	aiDraftRemaining: number;
 	aiDraftEnabled: boolean;
 	editable: boolean;
+	backURL?: string;
 }
 
-export default function CreateForm({control, register, handleSubmit, setError, setValue, setValues, errors, isSubmitting, aiDraftRemaining, aiDraftEnabled, editable}: CreateFormProps) {
+export default function CreateForm({control, register, handleSubmit, setError, setValue, setValues, errors, isSubmitting, aiDraftRemaining, aiDraftEnabled, editable, backURL = "/"}: CreateFormProps) {
 	const param = useParams();
+	const query = useSearchParams();
 
 	const router = useRouter();
 
@@ -160,10 +162,15 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 			}
 		}
 
-		const result = await editCharAction({...charData, charImageName: imageName, uuid});
+		let link: string | null = query.get("link");
+
+		link = link === "profile" || link === "mylist" ? link : "profile";
+
+		const result = await editCharAction({...charData, charImageName: imageName, uuid}, link);
 
 		if (result.success) {
-			router.replace(result.link);
+			/* 목록에서 왔으면 서버가 정한 주소 대신, 목록의 검색 조건을 담아 둔 backURL로 돌아간다. */
+			router.replace(link === "mylist" ? backURL : result.link);
 		} else {
 			setError("root", {
 				message: result.message,
@@ -240,7 +247,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 						임시 저장
 					</NormalButton>
 				) : (
-					<LinkButton href={`/template/${param.uuid}`} styleType="simple" style={{flex: 1}}>
+					<LinkButton href={backURL} styleType="simple" style={{flex: 1}}>
 						취소
 					</LinkButton>
 				)}
