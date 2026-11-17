@@ -73,7 +73,7 @@ export default function PlaybackSection({autoplayMusic}: PlaybackSectionProps) {
 
 			<ul className={styles.notes}>
 				<li>브라우저가 소리 나는 자동 재생을 막으면 켜 두어도 재생되지 않을 수 있어요.</li>
-				<li>스포티파이는 자동 재생이 되지 않을 수 있어요.</li>
+				<li>스포티파이는 자동 재생을 지원하지 않아요.</li>
 			</ul>
 		</section>
 	);
