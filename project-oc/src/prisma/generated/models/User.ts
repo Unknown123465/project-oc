@@ -49,6 +49,7 @@ export type UserMinAggregateOutputType = {
   aiDraftCallCount: number | null
   aiDraftLastCallAt: Date | null
   commentLastRequestAt: Date | null
+  autoplayMusic: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +67,7 @@ export type UserMaxAggregateOutputType = {
   aiDraftCallCount: number | null
   aiDraftLastCallAt: Date | null
   commentLastRequestAt: Date | null
+  autoplayMusic: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -83,6 +85,7 @@ export type UserCountAggregateOutputType = {
   aiDraftCallCount: number
   aiDraftLastCallAt: number
   commentLastRequestAt: number
+  autoplayMusic: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -112,6 +115,7 @@ export type UserMinAggregateInputType = {
   aiDraftCallCount?: true
   aiDraftLastCallAt?: true
   commentLastRequestAt?: true
+  autoplayMusic?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -129,6 +133,7 @@ export type UserMaxAggregateInputType = {
   aiDraftCallCount?: true
   aiDraftLastCallAt?: true
   commentLastRequestAt?: true
+  autoplayMusic?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -146,6 +151,7 @@ export type UserCountAggregateInputType = {
   aiDraftCallCount?: true
   aiDraftLastCallAt?: true
   commentLastRequestAt?: true
+  autoplayMusic?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -250,6 +256,7 @@ export type UserGroupByOutputType = {
   aiDraftCallCount: number
   aiDraftLastCallAt: Date | null
   commentLastRequestAt: Date | null
+  autoplayMusic: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -290,6 +297,7 @@ export type UserWhereInput = {
   aiDraftCallCount?: Prisma.IntFilter<"User"> | number
   aiDraftLastCallAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   commentLastRequestAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  autoplayMusic?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -312,6 +320,7 @@ export type UserOrderByWithRelationInput = {
   aiDraftCallCount?: Prisma.SortOrder
   aiDraftLastCallAt?: Prisma.SortOrderInput | Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  autoplayMusic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
@@ -338,6 +347,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   aiDraftCallCount?: Prisma.IntFilter<"User"> | number
   aiDraftLastCallAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   commentLastRequestAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  autoplayMusic?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
@@ -360,6 +370,7 @@ export type UserOrderByWithAggregationInput = {
   aiDraftCallCount?: Prisma.SortOrder
   aiDraftLastCallAt?: Prisma.SortOrderInput | Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  autoplayMusic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -385,6 +396,7 @@ export type UserScalarWhereWithAggregatesInput = {
   aiDraftCallCount?: Prisma.IntWithAggregatesFilter<"User"> | number
   aiDraftLastCallAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   commentLastRequestAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  autoplayMusic?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -402,6 +414,7 @@ export type UserCreateInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -424,6 +437,7 @@ export type UserUncheckedCreateInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -446,6 +460,7 @@ export type UserUpdateInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -468,6 +483,7 @@ export type UserUncheckedUpdateInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -490,6 +506,7 @@ export type UserCreateManyInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -507,6 +524,7 @@ export type UserUpdateManyMutationInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -524,6 +542,7 @@ export type UserUncheckedUpdateManyInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -547,6 +566,7 @@ export type UserCountOrderByAggregateInput = {
   aiDraftCallCount?: Prisma.SortOrder
   aiDraftLastCallAt?: Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrder
+  autoplayMusic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -569,6 +589,7 @@ export type UserMaxOrderByAggregateInput = {
   aiDraftCallCount?: Prisma.SortOrder
   aiDraftLastCallAt?: Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrder
+  autoplayMusic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -586,6 +607,7 @@ export type UserMinOrderByAggregateInput = {
   aiDraftCallCount?: Prisma.SortOrder
   aiDraftLastCallAt?: Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrder
+  autoplayMusic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -623,6 +645,10 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -714,6 +740,7 @@ export type UserCreateWithoutAccountsInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
@@ -735,6 +762,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
@@ -772,6 +800,7 @@ export type UserUpdateWithoutAccountsInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
@@ -793,6 +822,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
@@ -814,6 +844,7 @@ export type UserCreateWithoutAiHistoriesInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -835,6 +866,7 @@ export type UserUncheckedCreateWithoutAiHistoriesInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -872,6 +904,7 @@ export type UserUpdateWithoutAiHistoriesInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -893,6 +926,7 @@ export type UserUncheckedUpdateWithoutAiHistoriesInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -914,6 +948,7 @@ export type UserCreateWithoutCharactersInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -935,6 +970,7 @@ export type UserUncheckedCreateWithoutCharactersInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -972,6 +1008,7 @@ export type UserUpdateWithoutCharactersInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -993,6 +1030,7 @@ export type UserUncheckedUpdateWithoutCharactersInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1014,6 +1052,7 @@ export type UserCreateWithoutCharacterLikesInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1035,6 +1074,7 @@ export type UserUncheckedCreateWithoutCharacterLikesInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1072,6 +1112,7 @@ export type UserUpdateWithoutCharacterLikesInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1093,6 +1134,7 @@ export type UserUncheckedUpdateWithoutCharacterLikesInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1114,6 +1156,7 @@ export type UserCreateWithoutCharacterCommentsInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
@@ -1135,6 +1178,7 @@ export type UserUncheckedCreateWithoutCharacterCommentsInput = {
   aiDraftCallCount?: number
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
+  autoplayMusic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
@@ -1172,6 +1216,7 @@ export type UserUpdateWithoutCharacterCommentsInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
@@ -1193,6 +1238,7 @@ export type UserUncheckedUpdateWithoutCharacterCommentsInput = {
   aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -1281,6 +1327,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   aiDraftCallCount?: boolean
   aiDraftLastCallAt?: boolean
   commentLastRequestAt?: boolean
+  autoplayMusic?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -1306,11 +1353,12 @@ export type UserSelectScalar = {
   aiDraftCallCount?: boolean
   aiDraftLastCallAt?: boolean
   commentLastRequestAt?: boolean
+  autoplayMusic?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "username" | "email" | "emailVerified" | "image" | "password" | "aiDraftUsedOn" | "aiDraftUsedCount" | "aiDraftCallCount" | "aiDraftLastCallAt" | "commentLastRequestAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "username" | "email" | "emailVerified" | "image" | "password" | "aiDraftUsedOn" | "aiDraftUsedCount" | "aiDraftCallCount" | "aiDraftLastCallAt" | "commentLastRequestAt" | "autoplayMusic" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   characters?: boolean | Prisma.User$charactersArgs<ExtArgs>
@@ -1342,6 +1390,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     aiDraftCallCount: number
     aiDraftLastCallAt: Date | null
     commentLastRequestAt: Date | null
+    autoplayMusic: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1730,6 +1779,7 @@ export interface UserFieldRefs {
   readonly aiDraftCallCount: Prisma.FieldRef<"User", 'Int'>
   readonly aiDraftLastCallAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly commentLastRequestAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly autoplayMusic: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
