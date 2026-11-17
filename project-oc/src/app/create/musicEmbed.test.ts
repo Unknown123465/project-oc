@@ -69,6 +69,39 @@ describe("임베드 주소 변환", () => {
 	])("%s 는 임베드하지 않는다 (%s)", (raw) => {
 		expect(toMusicEmbed(raw)).toBeNull();
 	});
+
+	it.each([
+		{
+			value: "https://soundcloud.com/user-300305526/10-min-prod-hi-ken?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
+			originLabel: "사운드클라우드",
+			queryLabel: "auto_play=true",
+			query: "auto_play",
+			queryResult: "true",
+		},
+		{
+			value: "https://youtu.be/RcxlexAJycY?si=jE8xIOX0sbXMOqEO",
+			originLabel: "유튜브",
+			queryLabel: "autoplay=1",
+			query: "autoplay",
+			queryResult: "1",
+		},
+	] as const)("도메인이 $originLabel(이)고, 자동 재생 설정이 켜져 있으면 URL 쿼리에 $queryLabel 이(가) 있어야 한다", ({value, query, queryResult}) => {
+		const result = toMusicEmbed(value, true);
+
+		expect(result).not.toBeNull();
+
+		const resultURL = new URL(result?.src as string);
+
+		expect(resultURL.searchParams.get(query)).toBe(queryResult);
+	});
+
+	it("스포티파이 URL에 /intl-ko가 들어가 있으면 해당 경로를 제거한 URL이 반환되어야 한다", () => {
+		const url: string = "https://open.spotify.com/intl-ko/track/63gCdrDtZlt1PMIGrzYEqt?si=bc2d1bb03ff942b7";
+
+		const result = toMusicEmbed(url);
+
+		expect(result?.src).not.contain("/intl-ko");
+	});
 });
 
 describe("CSP frame-src 출처", () => {

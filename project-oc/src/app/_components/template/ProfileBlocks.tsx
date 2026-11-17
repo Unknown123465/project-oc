@@ -3,9 +3,10 @@ import type {TemplateCharacter} from "./CharacterProfile";
 
 interface ProfileBlocksProps {
 	character: Pick<TemplateCharacter, "charName" | "charLike" | "charHate" | "charPersonality" | "charTmi" | "charMusic">;
+	autoplayMusic: boolean;
 }
 
-export default function ProfileBlocks({character}: ProfileBlocksProps) {
+export default function ProfileBlocks({character, autoplayMusic}: ProfileBlocksProps) {
 	const {charName: name, charLike: like, charHate: hate, charPersonality: personality, charTmi: tmi, charMusic: music} = character;
 
 	return (
@@ -60,8 +61,9 @@ export default function ProfileBlocks({character}: ProfileBlocksProps) {
 							height={music.height}
 							title={`${name} 캐릭터 테마곡`}
 							sandbox="allow-scripts allow-same-origin allow-presentation"
-							allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope;"
-							loading="lazy"></iframe>
+							allow={`accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope; ${autoplayMusic ? "autoplay" : ""}`}
+							loading="lazy"
+						></iframe>
 					</div>
 				</section>
 			) : null}
