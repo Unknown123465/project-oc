@@ -1,0 +1,115 @@
+/* 응답이 빠를 때 뼈대가 번쩍이지 않게 150ms 뒤에 나타난다. */
+.main {
+	@media (prefers-reduced-motion: no-preference) {
+		animation: appear 0.2s ease 0.15s both;
+	}
+
+	& .title {
+		width: 150px;
+		height: 38px;
+		margin-bottom: 28px;
+		border-radius: var(--radius-1);
+	}
+
+	& .nav {
+		display: grid;
+		gap: 10px;
+
+		& > div {
+			width: 110px;
+			height: 22px;
+			margin: 8px 14px;
+			border-radius: var(--radius-1);
+		}
+	}
+
+	/* 실제 문단 판과 같은 틀(SettingSection.module.css의 .section)에 빈 줄만 넣는다. */
+	& .section {
+		display: grid;
+		gap: 22px;
+		padding: 28px;
+		background-color: var(--card-dark-1);
+		border: 1px solid var(--line-color-1);
+		border-radius: var(--radius-3);
+
+		& .heading {
+			width: 90px;
+			height: 24px;
+			margin-bottom: 4px;
+			border-radius: var(--radius-1);
+		}
+
+		& .row {
+			height: 20px;
+			border-radius: var(--radius-1);
+
+			&:nth-last-of-type(n + 2) {
+				width: 80%;
+			}
+
+			&:last-of-type {
+				width: 55%;
+			}
+		}
+	}
+
+	& .title,
+	& .nav > div,
+	& .section > div {
+		background-color: var(--card-dark-2);
+
+		@media (prefers-reduced-motion: no-preference) {
+			animation: breathe 1.6s ease-in-out infinite;
+		}
+	}
+}
+
+@media (width < 876px) {
+	.main {
+		/* 실제 목차 띠(높이 약 50px)와 같은 자리를 차지한다. */
+		& .nav {
+			grid-template-columns: repeat(4, 1fr);
+			gap: 4px;
+			margin-bottom: 24px;
+			padding: 4px;
+			background-color: var(--card-dark-1);
+			border: 1px solid var(--card-dark-line);
+			border-radius: var(--radius-2);
+
+			& > div {
+				width: auto;
+				height: 40px;
+				margin: 0;
+			}
+		}
+	}
+}
+
+@media (width < 768px) {
+	.main {
+		& .title {
+			height: 34px;
+			margin-bottom: 20px;
+		}
+
+		& .section {
+			padding: 22px 18px;
+		}
+	}
+}
+
+@keyframes appear {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes breathe {
+	50% {
+		opacity: 0.55;
+	}
+}

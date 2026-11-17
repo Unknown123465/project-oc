@@ -51,13 +51,15 @@ interface ActionButtonProps extends ButtonProps {
 	styleType?: "normal" | "attention" | "danger";
 	/** 누르면 다이얼로그가 열리는 버튼(공유, 삭제 확인)은 "dialog"를 넘겨 화면 낭독기에 알린다. */
 	ariaHasPopup?: AriaAttributes["aria-haspopup"];
+	/** 켜고 끄는 버튼(자동 재생 설정)은 지금 상태를 넘겨 화면 낭독기에 알린다. */
+	ariaPressed?: boolean;
 }
 
 /* NormalButton은 onClick을 받지 않고 SubmitButton은 type="submit"으로 고정돼
    있어, form 안에 떠 있는 다이얼로그의 취소·적용 같은 동작에는 못 쓴다(제출
    타입을 쓰면 다이얼로그를 감싼 바깥 form까지 함께 제출돼 버린다). 색은
    NormalButton·SubmitButton과 같은 클래스를 그대로 가져와 맞춘다. */
-export function ActionButton({children, className, width, height, style, hoverAnimation = true, disabled, onClick, styleType = "normal", ariaHasPopup}: ActionButtonProps) {
+export function ActionButton({children, className, width, height, style, hoverAnimation = true, disabled, onClick, styleType = "normal", ariaHasPopup, ariaPressed}: ActionButtonProps) {
 	return (
 		<button
 			type="button"
@@ -66,6 +68,7 @@ export function ActionButton({children, className, width, height, style, hoverAn
 			aria-disabled={disabled}
 			onClick={onClick}
 			aria-haspopup={ariaHasPopup}
+			aria-pressed={ariaPressed}
 			style={{width, height, ...style}}
 		>
 			{children}
