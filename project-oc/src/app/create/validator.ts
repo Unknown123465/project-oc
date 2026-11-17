@@ -1,5 +1,5 @@
 import z from "zod";
-import {MUSIC_HOST_PATTERN, MUSIC_PROTOCOL_PATTERN} from "./musicEmbed";
+import {MUSIC_HOST_PATTERN, MUSIC_PROTOCOL_PATTERN, SOUNDCLOUD_SHORT_LINK_MESSAGE, SOUNDCLOUD_SHORT_LINK_PATTERN} from "./musicEmbed";
 import {IMAGE_ACCEPTED_TYPES, IMAGE_MAX_FILE_SIZE} from "./imageEditor";
 import {isUuid} from "@/prisma/uuid";
 import {CHAR_ACTION_MESSAGE} from "./charActionMessage";
@@ -99,14 +99,20 @@ export const createCharForm = z.object({
 	charBirthplace: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charBirthplace, `출생지를 ${CHAR_MAX_LENGTH.charBirthplace}자 이하로 입력해 주세요.`)),
 	charMbti: genStringSchema("default").pipe(z.string().max(CHAR_MAX_LENGTH.charMbti, `MBTI를 ${CHAR_MAX_LENGTH.charMbti}자 이하로 입력해 주세요.`)),
 	charMusic: genStringSchema("default").pipe(
+		/* 짧은 링크는 호스트 검사에서 "유효하지 않음"으로 떨어지기 전에 먼저 걸러 따로 안내한다. */
 		z
-			.url({
-				protocol: MUSIC_PROTOCOL_PATTERN,
-				hostname: MUSIC_HOST_PATTERN,
-				message: "링크가 유효하지 않아요.",
-			})
-			.max(CHAR_MAX_LENGTH.charMusic, `테마곡 주소가 너무 길어요. ${CHAR_MAX_LENGTH.charMusic}자 이하로 입력해 주세요.`)
-			.or(z.string().refine((data) => data === ""))
+			.string()
+			.refine((data) => !SOUNDCLOUD_SHORT_LINK_PATTERN.test(data), {message: SOUNDCLOUD_SHORT_LINK_MESSAGE, abort: true})
+			.pipe(
+				z
+					.url({
+						protocol: MUSIC_PROTOCOL_PATTERN,
+						hostname: MUSIC_HOST_PATTERN,
+						message: "링크가 유효하지 않아요.",
+					})
+					.max(CHAR_MAX_LENGTH.charMusic, `테마곡 주소가 너무 길어요. ${CHAR_MAX_LENGTH.charMusic}자 이하로 입력해 주세요.`)
+					.or(z.string().refine((data) => data === ""))
+			)
 	),
 	charColor: z
 		.string()

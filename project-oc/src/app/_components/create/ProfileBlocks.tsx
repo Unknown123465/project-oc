@@ -1,7 +1,7 @@
 import {useWatch, type Control} from "react-hook-form";
 import styles from "./ProfileBlocks.module.css";
 import {CreateCharFormInputType, parseValue, CHAR_TMI_MAX_LINES} from "@/app/create/validator";
-import {toMusicEmbed, type IframeHeight} from "@/app/create/musicEmbed";
+import {toMusicEmbed, SOUNDCLOUD_SHORT_LINK_MESSAGE, SOUNDCLOUD_SHORT_LINK_PATTERN, type IframeHeight} from "@/app/create/musicEmbed";
 import z from "zod";
 
 interface ProfileBlocksProps {
@@ -10,7 +10,7 @@ interface ProfileBlocksProps {
 
 const MUSIC_URL = z.httpUrl("링크가 유효하지 않아요.");
 
-type MusicView = {kind: "empty"} | {kind: "invalid"; message: string} | {kind: "unsupported"} | {kind: "embed"; src: string; height: IframeHeight};
+type MusicView = {kind: "empty"} | {kind: "invalid"; message: string} | {kind: "unsupported"} | {kind: "tooShortSoundCloudLink"; message: string} | {kind: "embed"; src: string; height: IframeHeight};
 
 function resolveMusic(raw: string): MusicView {
 	if (!raw) {
@@ -21,6 +21,9 @@ function resolveMusic(raw: string): MusicView {
 
 	if (!parsed.success) {
 		return {kind: "invalid", message: parsed.error.issues[0].message};
+		// https://on.soundcloud.com/2qsoGx5dZGWEdPJwvb
+	} else if (SOUNDCLOUD_SHORT_LINK_PATTERN.test(raw)) {
+		return {kind: "tooShortSoundCloudLink", message: SOUNDCLOUD_SHORT_LINK_MESSAGE};
 	}
 
 	const result = toMusicEmbed(parsed.data);
@@ -111,7 +114,7 @@ export default function ProfileBlocks({control}: ProfileBlocksProps) {
 				<section className={styles.block_wide}>
 					<h3>테마곡</h3>
 
-					{musicView.kind === "invalid" ? <p>{musicView.message}</p> : null}
+					{musicView.kind === "invalid" || musicView.kind === "tooShortSoundCloudLink" ? <p>{musicView.message}</p> : null}
 
 					{musicView.kind === "unsupported" ? <p>유튜브, 스포티파이, 사운드클라우드 링크만 재생할 수 있어요.</p> : null}
 
@@ -122,7 +125,8 @@ export default function ProfileBlocks({control}: ProfileBlocksProps) {
 							title="테마곡 미리듣기"
 							sandbox="allow-scripts allow-same-origin allow-presentation"
 							allow="accelerometer; clipboard-write; encrypted-media; fullscreen; gyroscope;"
-							loading="lazy"></iframe>
+							loading="lazy"
+						></iframe>
 					) : null}
 				</section>
 			) : null}
