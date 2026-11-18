@@ -16,7 +16,7 @@ interface MusicService {
 	hosts: readonly string[];
 	height: IframeHeight;
 	/** 임베드 전용 주소로 바꾼다. 바꿀 수 없는 주소면 null. */
-	toSrc: (url: URL) => string | null;
+	toSrc: (url: URL, autoplay: boolean) => string | null;
 }
 
 /* 서비스를 늘리려면 이 배열에 한 줄만 더하면 된다. */
@@ -24,35 +24,43 @@ const MUSIC_SERVICES: readonly MusicService[] = [
 	{
 		hosts: ["youtube.com", "m.youtube.com"],
 		height: YOUTUBE_HEIGHT,
-		toSrc: (url) => {
+		toSrc: (url, autoplay) => {
 			const videoId: string | null = url.searchParams.get("v");
 
-			return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+			return videoId ? `https://www.youtube.com/embed/${videoId}${autoplay ? "?autoplay=1" : ""}` : null;
 		},
 	},
 	{
 		hosts: ["youtu.be"],
 		height: YOUTUBE_HEIGHT,
-		toSrc: (url) => {
+		toSrc: (url, autoplay) => {
 			const videoId: string = url.pathname.slice(1);
 
-			return videoId.trim() ? `https://www.youtube.com/embed/${videoId}` : null;
+			return videoId.trim() ? `https://www.youtube.com/embed/${videoId}${autoplay ? "?autoplay=1" : ""}` : null;
 		},
 	},
 	{
 		hosts: ["open.spotify.com"],
 		height: SPOTIFY_HEIGHT,
-		toSrc: (url) => (url.pathname.startsWith("/embed/") ? `https://open.spotify.com${url.pathname}` : `https://open.spotify.com/embed${url.pathname}`),
+		toSrc: (url) => (url.pathname.startsWith("/embed/") ? `https://open.spotify.com${url.pathname}` : `https://open.spotify.com/embed${url.pathname.replaceAll(/^\/intl-[a-z-]+/gi, "")}`),
 	},
 	{
 		hosts: ["soundcloud.com"],
 		height: SOUNDCLOUD_HEIGHT,
-		toSrc: (url) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url.href)}`,
+		toSrc: (url, autoplay) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url.href)}${autoplay ? "&auto_play=true" : ""}`,
 	},
 ];
 
 /** iframe이 실제로 불러오는 출처. 입력 호스트와 다르므로(soundcloud.com → w.soundcloud.com) 따로 적는다. */
 export const MUSIC_EMBED_ORIGINS: readonly string[] = ["https://www.youtube.com", "https://open.spotify.com", "https://w.soundcloud.com"];
+
+/* 사운드클라우드 앱의 공유 버튼이 주는 짧은 링크. 실제 곡 주소로 302 리다이렉트만 해 주는
+   주소라 플레이어에 그대로 넣을 수 없다. 서버에서 풀지 않고 곡 페이지 주소를 넣어 달라고
+   안내한다(서버가 사용자가 넣은 주소로 요청을 보내지 않게). 입력 검증과 미리보기가 같은 판정과
+   문구를 쓰도록 여기에 둔다. */
+export const SOUNDCLOUD_SHORT_LINK_PATTERN: RegExp = /^https?:\/\/on\.soundcloud\.com\//i;
+
+export const SOUNDCLOUD_SHORT_LINK_MESSAGE = "on.soundcloud.com으로 시작하는 짧은 링크는 재생할 수 없어요. 곡 페이지를 열어 주소창의 soundcloud.com 주소를 넣어 주세요." as const;
 
 /** 평문 http로 받은 주소는 임베드하지 않는다. */
 export const MUSIC_PROTOCOL_PATTERN: RegExp = /^https$/;
@@ -67,14 +75,14 @@ export const MUSIC_HOST_PATTERN: RegExp = new RegExp(
 	`^(www\\.)?(${MUSIC_SERVICES.flatMap((service) => service.hosts)
 		.map((host) => host.replaceAll(".", "\\."))
 		.join("|")})$`,
-	"i",
+	"i"
 );
 
 /* iframe은 우리 페이지 안에서 남의 사이트를 실행시키는 것이라, URL 형식만 보고
    그대로 넣으면 아무 사이트나 임베드된다. 그래서 호스트를 위 목록으로 막는다.
    덧붙여 유튜브는 watch 주소의 임베드를 X-Frame-Options로 거부하므로,
    서비스마다 정해진 임베드 전용 주소로 바꿔 줘야 실제로 재생된다. */
-export function toMusicEmbed(raw: string): MusicEmbed | null {
+export function toMusicEmbed(raw: string, autoplay: boolean = false): MusicEmbed | null {
 	let url: URL;
 
 	try {
@@ -95,7 +103,7 @@ export function toMusicEmbed(raw: string): MusicEmbed | null {
 		return null;
 	}
 
-	const src: string | null = service.toSrc(url);
+	const src: string | null = service.toSrc(url, autoplay);
 
 	return src === null ? null : {src, height: service.height};
 }

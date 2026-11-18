@@ -48,9 +48,10 @@ interface CharacterProfileProps {
 	shareable: boolean;
 	serverNow: number;
 	isOwner: boolean;
+	autoplayMusic: boolean;
 }
 
-export default function CharacterProfile({nonce, uuid, character, comments, like, shareable, serverNow, isOwner}: CharacterProfileProps) {
+export default function CharacterProfile({nonce, uuid, character, comments, like, shareable, serverNow, isOwner, autoplayMusic}: CharacterProfileProps) {
 	const layout: ProfileLayout = character.charProfileLayout;
 
 	const alt: string = `${character.charName} 캐릭터 일러스트`;
@@ -72,7 +73,7 @@ export default function CharacterProfile({nonce, uuid, character, comments, like
 
 			<ProfileFacts character={character} />
 
-			<ProfileBlocks character={character} />
+			<ProfileBlocks character={character} autoplayMusic={autoplayMusic} />
 		</>
 	);
 

@@ -10,12 +10,13 @@ import type {ImageFrame, ProfileLayout, TemplateCharacter} from "@/app/_componen
 import {toProfileFacts} from "@/app/_components/template/ProfileFacts";
 import type {MyListItem, MyListQueryFormType} from "@/app/_components/mylist/validator";
 import {MAX_KEYWORD_LENGTH, myListQueryForm} from "@/app/_components/mylist/validator";
+import {getMyAccountInfo} from "@/app/setting/getAccountInfo";
 
 /* 캐시가 들고 있는 건 DB 행이지 이미지 서명이 아니다. 그래서 이 값은 "공개 설정을
    바꾸거나 캐릭터를 지웠을 때 화면에 반영되기까지 걸리는 최대 시간"으로 읽어야 한다.
    공개→비공개 전환이 늦게 먹히는 건 화면이 낡은 정도가 아니라 프라이버시 문제라,
    수정·삭제 기능을 붙일 때 아래 characterTag로 updateTag를 반드시 같이 호출한다. */
-const CHARACTER_CACHE_MAX_AGE: number = 600;
+const CHARACTER_CACHE_MAX_AGE: number = 1;
 
 const PROFILE_LAYOUTS: readonly ProfileLayout[] = ["h", "v", "s"];
 const IMAGE_FRAME: readonly ImageFrame[] = ["square", "circle"];
@@ -96,12 +97,12 @@ async function toMyList(data: Awaited<ReturnType<typeof getCharactersMyListRow>>
 
 /* 저장할 때 통과한 주소라도 그 사이 임베드 지원이 바뀔 수 있어 읽을 때 다시 본다.
    임베드로 바꿀 수 없는 주소면 테마곡 자체를 접는다. */
-function toMusicView(raw: string | null): TemplateCharacter["charMusic"] {
+function toMusicView(raw: string | null, autoplay: boolean): TemplateCharacter["charMusic"] {
 	if (raw === null) {
 		return null;
 	}
 
-	const embed = toMusicEmbed(raw);
+	const embed = toMusicEmbed(raw, autoplay);
 
 	return embed === null ? null : {href: raw, embedSrc: embed.src, height: embed.height};
 }
@@ -288,6 +289,8 @@ export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResu
 		}
 	}
 
+	const accountInfo = await getMyAccountInfo();
+
 	const imagePublic: boolean = character.charPublicMode === PUBLIC_MODE_PUBLIC;
 
 	return {
@@ -309,7 +312,7 @@ export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResu
 			charHate: character.charHate,
 			charPersonality: character.charPersonality,
 			charTmi: toTmiLines(character.charTmi),
-			charMusic: toMusicView(character.charMusic),
+			charMusic: toMusicView(character.charMusic, !accountInfo.success || accountInfo.result.autoplayMusic),
 			aiUsed: character.aiUsed === 1,
 			imagePublic,
 			creator: character.user.username || character.user.name || "알 수 없음",

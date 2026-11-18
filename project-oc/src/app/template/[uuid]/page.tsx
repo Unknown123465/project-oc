@@ -5,13 +5,14 @@ import {getCharacterLike} from "./characterLike";
 import {PUBLIC_MODE_PRIVATE} from "@/app/create/r2";
 import {headers} from "next/headers";
 import {getCommentsByTemplate} from "./comment";
+import {getMyAccountInfo} from "@/app/setting/getAccountInfo";
 
 export default async function TemplatePage({params}: PageProps<"/template/[uuid]">) {
 	const {uuid} = await params;
 
 	const nonce: string | null = (await headers()).get("x-nonce");
 
-	const [character, like, comments] = await Promise.all([getCharacter(uuid), getCharacterLike(uuid), getCommentsByTemplate(uuid)]);
+	const [character, like, comments, accountInfo] = await Promise.all([getCharacter(uuid), getCharacterLike(uuid), getCommentsByTemplate(uuid), getMyAccountInfo()]);
 
 	if (!character.success) {
 		const {reason} = character;
@@ -40,6 +41,7 @@ export default async function TemplatePage({params}: PageProps<"/template/[uuid]
 				shareable={character.result.charPublicMode !== PUBLIC_MODE_PRIVATE}
 				serverNow={now}
 				isOwner={character.result.isOwner}
+				autoplayMusic={!accountInfo.success || accountInfo.result.autoplayMusic}
 			/>
 		</>
 	);

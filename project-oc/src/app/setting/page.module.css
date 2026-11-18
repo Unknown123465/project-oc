@@ -1,0 +1,57 @@
+/* 목차를 누르면 해당 문단까지 부드럽게 내려간다. 이 페이지에서만 켜고,
+   움직임을 줄이도록 설정한 사용자에게는 바로 이동한다. */
+@media (prefers-reduced-motion: no-preference) {
+	html:has(.main) {
+		scroll-behavior: smooth;
+	}
+}
+
+.main {
+	width: calc(100% - 40px);
+	max-width: var(--page-width);
+	margin: 40px auto 80px;
+
+	& h1 {
+		margin: 0 0 28px;
+		color: var(--title-text);
+		font-size: 32px;
+		font-weight: 900;
+		letter-spacing: -0.06em;
+	}
+
+	& .layout {
+		display: grid;
+		grid-template-columns: 180px minmax(0, 1fr);
+		align-items: start;
+		gap: 40px;
+	}
+
+	& .sections {
+		display: grid;
+		gap: 24px;
+	}
+}
+
+@media (width < 876px) {
+	.main {
+		& .layout {
+			display: block;
+		}
+	}
+}
+
+@media (width < 768px) {
+	.main {
+		width: calc(100% - 28px);
+		margin-top: 28px;
+
+		& h1 {
+			margin-bottom: 20px;
+			font-size: 28px;
+		}
+
+		& .sections {
+			gap: 20px;
+		}
+	}
+}

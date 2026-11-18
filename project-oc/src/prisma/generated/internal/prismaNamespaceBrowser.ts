@@ -89,6 +89,7 @@ export const UserScalarFieldEnum = {
   aiDraftCallCount: 'aiDraftCallCount',
   aiDraftLastCallAt: 'aiDraftLastCallAt',
   commentLastRequestAt: 'commentLastRequestAt',
+  autoplayMusic: 'autoplayMusic',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

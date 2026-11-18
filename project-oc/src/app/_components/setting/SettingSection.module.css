@@ -1,0 +1,264 @@
+/* 일반, 재생 설정, 내 활동, 위험 구역이 같이 쓴다. 문단 하나가 판 하나다. */
+.section {
+	/* 해시로 이동했을 때 제목이 고정 헤더 밑에 숨지 않게 한다. */
+	scroll-margin-top: calc(var(--header-height) + 24px);
+	padding: 28px 28px 24px;
+	background-color: var(--card-dark-1);
+	border: 1px solid var(--line-color-1);
+	border-radius: var(--radius-3);
+
+	& h2 {
+		margin: 0 0 8px;
+		color: var(--title-text);
+		font-size: 20px;
+		font-weight: 800;
+		letter-spacing: -0.04em;
+	}
+
+	& .rows {
+		margin: 0;
+
+		& .row {
+			display: grid;
+			grid-template-columns: 140px minmax(0, 1fr) auto;
+			align-items: center;
+			gap: 16px;
+			padding: 18px 0;
+
+			&:nth-of-type(n + 2) {
+				border-top: 1px solid var(--line-color-1);
+			}
+
+			& dt {
+				color: var(--title-text);
+				font-size: 15px;
+				font-weight: 700;
+			}
+
+			& dd {
+				margin: 0;
+			}
+
+			& .value {
+				min-width: 0;
+				display: grid;
+				gap: 4px;
+
+				& .text {
+					color: var(--text-important);
+					font-size: 15px;
+					overflow-wrap: anywhere;
+				}
+
+				& .empty {
+					color: var(--muted);
+					font-size: 15px;
+				}
+
+				& small {
+					color: var(--muted);
+					font-size: 13px;
+					line-height: 1.5;
+					word-break: keep-all;
+				}
+			}
+
+			/* ActionButton 기본값은 폼 버튼 기준(높이 46px)이라 행에 맞게 줄인다. */
+			& .action button {
+				height: 38px;
+				padding: 0 16px;
+				font-size: 14px;
+				white-space: nowrap;
+			}
+
+			& .toggle {
+				min-width: 72px;
+			}
+		}
+	}
+
+	& .notice {
+		display: flex;
+		align-items: flex-start;
+		gap: 8px;
+		margin: 8px 0 0;
+		padding: 12px 14px;
+		color: var(--muted);
+		font-size: 13.5px;
+		line-height: 1.5;
+		word-break: keep-all;
+		background-color: var(--card-dark-2);
+		border-radius: var(--radius-1);
+
+		& i {
+			line-height: 1.5;
+		}
+	}
+
+	& .error_message {
+		margin: 0;
+		color: var(--error-text);
+		font-size: 12.5px;
+		font-weight: 600;
+		word-break: keep-all;
+	}
+
+	& .notes {
+		display: grid;
+		gap: 4px;
+		margin: 4px 0 0;
+		padding: 0 0 0 18px;
+		color: var(--muted);
+		font-size: 13.5px;
+		line-height: 1.5;
+		word-break: keep-all;
+	}
+
+	& .stats {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 12px;
+		margin: 16px 0 0;
+
+		& > div {
+			display: grid;
+			gap: 6px;
+			padding: 16px 18px;
+			background-color: var(--card-dark-2);
+			border-radius: var(--radius-2);
+		}
+
+		& dt {
+			color: var(--muted);
+			font-size: 13.5px;
+			font-weight: 600;
+		}
+
+		& dd {
+			margin: 0;
+			color: var(--title-text);
+			font-size: 28px;
+			font-weight: 900;
+			letter-spacing: -0.04em;
+			font-variant-numeric: tabular-nums;
+		}
+	}
+
+	& .rankings {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 32px;
+		margin-top: 28px;
+
+		& .ranking {
+			min-width: 0;
+
+			& h3 {
+				margin: 0 0 8px;
+				color: var(--title-text);
+				font-size: 15px;
+				font-weight: 800;
+			}
+
+			& ol {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+
+				& li {
+					display: grid;
+					grid-template-columns: 24px minmax(0, 1fr) auto;
+					align-items: center;
+					gap: 10px;
+					padding: 10px 0;
+
+					&:nth-of-type(n + 2) {
+						border-top: 1px solid var(--line-color-1);
+					}
+
+					& .rank {
+						color: var(--muted);
+						font-size: 14px;
+						font-weight: 800;
+						font-variant-numeric: tabular-nums;
+					}
+
+					& .name {
+						overflow-x: hidden;
+						overflow-y: hidden;
+						color: var(--text-important);
+						font-size: 15px;
+						font-weight: 600;
+						text-decoration: none;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+
+						&:hover {
+							text-decoration: underline;
+						}
+					}
+
+					& .count {
+						color: var(--muted);
+						font-size: 14px;
+						font-variant-numeric: tabular-nums;
+					}
+				}
+			}
+
+			& .empty {
+				margin: 0;
+				padding: 10px 0;
+				color: var(--muted);
+				font-size: 14px;
+			}
+		}
+	}
+
+	&.danger {
+		border-color: var(--button-danger-line);
+
+		& h2 {
+			color: var(--danger);
+		}
+	}
+}
+
+@media (width < 876px) {
+	.section {
+		/* 헤더 아래에 붙는 목차 띠(높이 약 50px)만큼 더 띄운다. */
+		scroll-margin-top: calc(var(--header-height) + 66px);
+	}
+}
+
+@media (width < 768px) {
+	.section {
+		padding: 22px 18px 18px;
+
+		& .rows .row {
+			grid-template-columns: minmax(0, 1fr) auto;
+			gap: 6px 12px;
+
+			& dt {
+				grid-column: 1 / -1;
+			}
+		}
+
+		& .stats {
+			gap: 8px;
+
+			& > div {
+				padding: 12px;
+			}
+
+			& dd {
+				font-size: 22px;
+			}
+		}
+
+		& .rankings {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 20px;
+		}
+	}
+}

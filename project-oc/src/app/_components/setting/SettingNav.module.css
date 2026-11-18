@@ -1,0 +1,76 @@
+/* 목차는 데스크톱에서 왼쪽 세로 목록, 876px보다 좁으면 생성 페이지의
+   .mobile_tabs와 같은 모양의 가로 띠가 되어 헤더 아래에 붙는다.
+
+   지금 보는 항목 표시는 JS 없이 :target으로 한다. 주소에 해시가 없으면
+   첫 항목(일반)을 표시한다. */
+.nav {
+	position: sticky;
+	top: calc(var(--header-height) + 24px);
+	display: grid;
+	gap: 2px;
+
+	& a {
+		padding: 10px 14px;
+		color: var(--muted);
+		font-size: 15px;
+		font-weight: 600;
+		text-decoration: none;
+		border-radius: var(--radius-1);
+		transition: color 0.15s ease, background-color 0.15s ease;
+
+		&:hover {
+			color: var(--title-text);
+			background-color: var(--card-dark-2);
+		}
+	}
+}
+
+/* 목차와 문단이 다른 컴포넌트라 페이지 전체(body)에서 :target을 찾는다.
+   #general로 쓰면 CSS 모듈이 id 이름까지 바꿔 버려서 속성 선택자로 고른다. */
+body:has([id="general"]:target) .nav a[data-section="general"],
+body:has([id="playback"]:target) .nav a[data-section="playback"],
+body:has([id="activity"]:target) .nav a[data-section="activity"],
+body:has([id="danger"]:target) .nav a[data-section="danger"],
+body:not(:has(section:target)) .nav a[data-section="general"] {
+	color: var(--title-text);
+	font-weight: 800;
+	background-color: var(--card-dark-2);
+}
+
+@media (width < 876px) {
+	.nav {
+		top: var(--header-height);
+		z-index: 5;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 4px;
+		margin: 0 0 24px;
+		padding: 4px;
+		background-color: var(--card-dark-1);
+		border: 1px solid var(--card-dark-line);
+		border-radius: var(--radius-2);
+
+		& a {
+			min-height: 40px;
+			display: grid;
+			place-items: center;
+			padding: 0 4px;
+			font-size: 14px;
+			font-weight: 700;
+			text-align: center;
+			white-space: nowrap;
+
+			&:hover {
+				background-color: transparent;
+			}
+		}
+	}
+
+	body:has([id="general"]:target) .nav a[data-section="general"],
+	body:has([id="playback"]:target) .nav a[data-section="playback"],
+	body:has([id="activity"]:target) .nav a[data-section="activity"],
+	body:has([id="danger"]:target) .nav a[data-section="danger"],
+	body:not(:has(section:target)) .nav a[data-section="general"] {
+		color: var(--button-submit-text);
+		background-color: var(--button-submit-back);
+	}
+}
