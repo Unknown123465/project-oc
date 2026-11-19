@@ -10,7 +10,7 @@ import type {ImageFrame, ProfileLayout, TemplateCharacter} from "@/app/_componen
 import {toProfileFacts} from "@/app/_components/template/ProfileFacts";
 import type {MyListItem, MyListQueryFormType} from "@/app/_components/mylist/validator";
 import {MAX_KEYWORD_LENGTH, myListQueryForm} from "@/app/_components/mylist/validator";
-import {getMyAccountInfo} from "@/app/setting/getAccountInfo";
+import {getMyAutoplayMusic} from "@/app/setting/getAccountInfo";
 
 /* 캐시가 들고 있는 건 DB 행이지 이미지 서명이 아니다. 그래서 이 값은 "공개 설정을
    바꾸거나 캐릭터를 지웠을 때 화면에 반영되기까지 걸리는 최대 시간"으로 읽어야 한다.
@@ -289,7 +289,7 @@ export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResu
 		}
 	}
 
-	const accountInfo = await getMyAccountInfo();
+	const autoplayMusic: boolean = await getMyAutoplayMusic();
 
 	const imagePublic: boolean = character.charPublicMode === PUBLIC_MODE_PUBLIC;
 
@@ -312,7 +312,7 @@ export const getCharacter = cache(async (uuid: string): Promise<GetCharacterResu
 			charHate: character.charHate,
 			charPersonality: character.charPersonality,
 			charTmi: toTmiLines(character.charTmi),
-			charMusic: toMusicView(character.charMusic, !accountInfo.success || accountInfo.result.autoplayMusic),
+			charMusic: toMusicView(character.charMusic, autoplayMusic),
 			aiUsed: character.aiUsed === 1,
 			imagePublic,
 			creator: character.user.username || character.user.name || "알 수 없음",
