@@ -5,6 +5,7 @@ import styles from "../page.module.css";
 import SuccessMark from "@/app/_components/signup/complete/SuccessMark";
 import {LinkButton} from "@/components/ui/button";
 import {CHANGE_PASSWORD_COMPLETE_COOKIE} from "../completeCookie";
+import SignOutComponent from "./SignOutComponent";
 
 export const metadata: Metadata = {
 	title: "비밀번호를 바꿨어요 - 프로젝트 OC",
@@ -40,6 +41,8 @@ export default async function ChangePasswordComplete() {
 					</LinkButton>
 				</div>
 			</section>
+
+			<SignOutComponent />
 		</main>
 	);
 }

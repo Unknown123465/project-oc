@@ -46,11 +46,9 @@ export default function ChangePasswordForm({userName}: ChangePasswordFormProps) 
 		try {
 			const result = await changePasswordAction(data);
 
-			if (result.success) {
-				window.location.replace("/setting/changepw/complete");
-			} else if (result.path) {
+			if (!result.success && result.path) {
 				setError(result.path, {message: result.message});
-			} else {
+			} else if (!result.success) {
 				setError("root", {message: result.message});
 			}
 		} catch {

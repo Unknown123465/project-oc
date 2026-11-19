@@ -7,6 +7,7 @@ import {auth, NORMAL_PROVIDER, signOut} from "@/auth/auth";
 import {hashPassword, verifyPassword} from "@/auth/password";
 import {changePasswordForm} from "../validator";
 import {CHANGE_PASSWORD_COMPLETE_COOKIE, CHANGE_PASSWORD_COMPLETE_MAX_AGE, CHANGE_PASSWORD_COMPLETE_PATH} from "./completeCookie";
+import {redirect} from "next/navigation";
 
 interface ChangePasswordActionSuccessRsult {
 	success: true;
@@ -125,7 +126,5 @@ export async function changePasswordAction(data: unknown): Promise<ChangePasswor
 		redirect: false,
 	});
 
-	return {
-		success: true,
-	};
+	redirect("/setting/changepw/complete", "replace");
 }
