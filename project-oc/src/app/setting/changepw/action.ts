@@ -81,19 +81,15 @@ export async function changePasswordAction(data: unknown): Promise<ChangePasswor
 		};
 	}
 
-	const [matched, currentMatched] = await Promise.all([verifyPassword(currentPassword, user.password), verifyPassword(newPassword, user.password)]);
+	/* 새 비밀번호가 현재 비밀번호와 같은 경우는 위 스키마 검사(refine)에서 이미 막았다.
+	   현재 비밀번호가 맞았다면 새 비밀번호는 그와 다른 문자열이므로 해시와 다시 비교하지 않는다. */
+	const matched: boolean = await verifyPassword(currentPassword, user.password);
 
 	if (!matched) {
 		return {
 			success: false,
 			message: "현재 비밀번호가 맞지 않아요. 현재 비밀번호를 올바르게 입력해 주세요.",
 			path: "currentPassword",
-		};
-	} else if (currentMatched) {
-		return {
-			success: false,
-			message: "새 비밀번호가 현재 비밀번호와 같아요. 다른 비밀번호를 입력해 주세요.",
-			path: "newPassword",
 		};
 	}
 
