@@ -39,6 +39,7 @@ export type AiHistoryMinAggregateOutputType = {
   userId: string | null
   action: string | null
   reason: string | null
+  identityHash: string | null
   createdDt: Date | null
 }
 
@@ -47,6 +48,7 @@ export type AiHistoryMaxAggregateOutputType = {
   userId: string | null
   action: string | null
   reason: string | null
+  identityHash: string | null
   createdDt: Date | null
 }
 
@@ -55,6 +57,7 @@ export type AiHistoryCountAggregateOutputType = {
   userId: number
   action: number
   reason: number
+  identityHash: number
   createdDt: number
   _all: number
 }
@@ -73,6 +76,7 @@ export type AiHistoryMinAggregateInputType = {
   userId?: true
   action?: true
   reason?: true
+  identityHash?: true
   createdDt?: true
 }
 
@@ -81,6 +85,7 @@ export type AiHistoryMaxAggregateInputType = {
   userId?: true
   action?: true
   reason?: true
+  identityHash?: true
   createdDt?: true
 }
 
@@ -89,6 +94,7 @@ export type AiHistoryCountAggregateInputType = {
   userId?: true
   action?: true
   reason?: true
+  identityHash?: true
   createdDt?: true
   _all?: true
 }
@@ -184,6 +190,7 @@ export type AiHistoryGroupByOutputType = {
   userId: string
   action: string
   reason: string | null
+  identityHash: string | null
   createdDt: Date
   _count: AiHistoryCountAggregateOutputType | null
   _avg: AiHistoryAvgAggregateOutputType | null
@@ -215,8 +222,8 @@ export type AiHistoryWhereInput = {
   userId?: Prisma.StringFilter<"AiHistory"> | string
   action?: Prisma.StringFilter<"AiHistory"> | string
   reason?: Prisma.StringNullableFilter<"AiHistory"> | string | null
+  identityHash?: Prisma.StringNullableFilter<"AiHistory"> | string | null
   createdDt?: Prisma.DateTimeFilter<"AiHistory"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type AiHistoryOrderByWithRelationInput = {
@@ -224,8 +231,8 @@ export type AiHistoryOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityHash?: Prisma.SortOrderInput | Prisma.SortOrder
   createdDt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   _relevance?: Prisma.AiHistoryOrderByRelevanceInput
 }
 
@@ -237,8 +244,8 @@ export type AiHistoryWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"AiHistory"> | string
   action?: Prisma.StringFilter<"AiHistory"> | string
   reason?: Prisma.StringNullableFilter<"AiHistory"> | string | null
+  identityHash?: Prisma.StringNullableFilter<"AiHistory"> | string | null
   createdDt?: Prisma.DateTimeFilter<"AiHistory"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type AiHistoryOrderByWithAggregationInput = {
@@ -246,6 +253,7 @@ export type AiHistoryOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
+  identityHash?: Prisma.SortOrderInput | Prisma.SortOrder
   createdDt?: Prisma.SortOrder
   _count?: Prisma.AiHistoryCountOrderByAggregateInput
   _avg?: Prisma.AiHistoryAvgOrderByAggregateInput
@@ -262,15 +270,17 @@ export type AiHistoryScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"AiHistory"> | string
   action?: Prisma.StringWithAggregatesFilter<"AiHistory"> | string
   reason?: Prisma.StringNullableWithAggregatesFilter<"AiHistory"> | string | null
+  identityHash?: Prisma.StringNullableWithAggregatesFilter<"AiHistory"> | string | null
   createdDt?: Prisma.DateTimeWithAggregatesFilter<"AiHistory"> | Date | string
 }
 
 export type AiHistoryCreateInput = {
   id?: bigint | number
+  userId: string
   action: string
   reason?: string | null
+  identityHash?: string | null
   createdDt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutAiHistoriesInput
 }
 
 export type AiHistoryUncheckedCreateInput = {
@@ -278,15 +288,17 @@ export type AiHistoryUncheckedCreateInput = {
   userId: string
   action: string
   reason?: string | null
+  identityHash?: string | null
   createdDt?: Date | string
 }
 
 export type AiHistoryUpdateInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdDt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutAiHistoriesNestedInput
 }
 
 export type AiHistoryUncheckedUpdateInput = {
@@ -294,6 +306,7 @@ export type AiHistoryUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdDt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -302,13 +315,16 @@ export type AiHistoryCreateManyInput = {
   userId: string
   action: string
   reason?: string | null
+  identityHash?: string | null
   createdDt?: Date | string
 }
 
 export type AiHistoryUpdateManyMutationInput = {
   id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdDt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -317,17 +333,8 @@ export type AiHistoryUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.StringFieldUpdateOperationsInput | string
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  identityHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdDt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type AiHistoryListRelationFilter = {
-  every?: Prisma.AiHistoryWhereInput
-  some?: Prisma.AiHistoryWhereInput
-  none?: Prisma.AiHistoryWhereInput
-}
-
-export type AiHistoryOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type AiHistoryOrderByRelevanceInput = {
@@ -341,6 +348,7 @@ export type AiHistoryCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
   reason?: Prisma.SortOrder
+  identityHash?: Prisma.SortOrder
   createdDt?: Prisma.SortOrder
 }
 
@@ -353,6 +361,7 @@ export type AiHistoryMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
   reason?: Prisma.SortOrder
+  identityHash?: Prisma.SortOrder
   createdDt?: Prisma.SortOrder
 }
 
@@ -361,53 +370,12 @@ export type AiHistoryMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   action?: Prisma.SortOrder
   reason?: Prisma.SortOrder
+  identityHash?: Prisma.SortOrder
   createdDt?: Prisma.SortOrder
 }
 
 export type AiHistorySumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-}
-
-export type AiHistoryCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AiHistoryCreateWithoutUserInput, Prisma.AiHistoryUncheckedCreateWithoutUserInput> | Prisma.AiHistoryCreateWithoutUserInput[] | Prisma.AiHistoryUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AiHistoryCreateOrConnectWithoutUserInput | Prisma.AiHistoryCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AiHistoryCreateManyUserInputEnvelope
-  connect?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-}
-
-export type AiHistoryUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AiHistoryCreateWithoutUserInput, Prisma.AiHistoryUncheckedCreateWithoutUserInput> | Prisma.AiHistoryCreateWithoutUserInput[] | Prisma.AiHistoryUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AiHistoryCreateOrConnectWithoutUserInput | Prisma.AiHistoryCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AiHistoryCreateManyUserInputEnvelope
-  connect?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-}
-
-export type AiHistoryUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AiHistoryCreateWithoutUserInput, Prisma.AiHistoryUncheckedCreateWithoutUserInput> | Prisma.AiHistoryCreateWithoutUserInput[] | Prisma.AiHistoryUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AiHistoryCreateOrConnectWithoutUserInput | Prisma.AiHistoryCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AiHistoryUpsertWithWhereUniqueWithoutUserInput | Prisma.AiHistoryUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AiHistoryCreateManyUserInputEnvelope
-  set?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-  disconnect?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-  delete?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-  connect?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-  update?: Prisma.AiHistoryUpdateWithWhereUniqueWithoutUserInput | Prisma.AiHistoryUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AiHistoryUpdateManyWithWhereWithoutUserInput | Prisma.AiHistoryUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.AiHistoryScalarWhereInput | Prisma.AiHistoryScalarWhereInput[]
-}
-
-export type AiHistoryUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AiHistoryCreateWithoutUserInput, Prisma.AiHistoryUncheckedCreateWithoutUserInput> | Prisma.AiHistoryCreateWithoutUserInput[] | Prisma.AiHistoryUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AiHistoryCreateOrConnectWithoutUserInput | Prisma.AiHistoryCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AiHistoryUpsertWithWhereUniqueWithoutUserInput | Prisma.AiHistoryUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AiHistoryCreateManyUserInputEnvelope
-  set?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-  disconnect?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-  delete?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-  connect?: Prisma.AiHistoryWhereUniqueInput | Prisma.AiHistoryWhereUniqueInput[]
-  update?: Prisma.AiHistoryUpdateWithWhereUniqueWithoutUserInput | Prisma.AiHistoryUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AiHistoryUpdateManyWithWhereWithoutUserInput | Prisma.AiHistoryUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.AiHistoryScalarWhereInput | Prisma.AiHistoryScalarWhereInput[]
 }
 
 export type BigIntFieldUpdateOperationsInput = {
@@ -418,85 +386,6 @@ export type BigIntFieldUpdateOperationsInput = {
   divide?: bigint | number
 }
 
-export type AiHistoryCreateWithoutUserInput = {
-  id?: bigint | number
-  action: string
-  reason?: string | null
-  createdDt?: Date | string
-}
-
-export type AiHistoryUncheckedCreateWithoutUserInput = {
-  id?: bigint | number
-  action: string
-  reason?: string | null
-  createdDt?: Date | string
-}
-
-export type AiHistoryCreateOrConnectWithoutUserInput = {
-  where: Prisma.AiHistoryWhereUniqueInput
-  create: Prisma.XOR<Prisma.AiHistoryCreateWithoutUserInput, Prisma.AiHistoryUncheckedCreateWithoutUserInput>
-}
-
-export type AiHistoryCreateManyUserInputEnvelope = {
-  data: Prisma.AiHistoryCreateManyUserInput | Prisma.AiHistoryCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type AiHistoryUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.AiHistoryWhereUniqueInput
-  update: Prisma.XOR<Prisma.AiHistoryUpdateWithoutUserInput, Prisma.AiHistoryUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.AiHistoryCreateWithoutUserInput, Prisma.AiHistoryUncheckedCreateWithoutUserInput>
-}
-
-export type AiHistoryUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.AiHistoryWhereUniqueInput
-  data: Prisma.XOR<Prisma.AiHistoryUpdateWithoutUserInput, Prisma.AiHistoryUncheckedUpdateWithoutUserInput>
-}
-
-export type AiHistoryUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.AiHistoryScalarWhereInput
-  data: Prisma.XOR<Prisma.AiHistoryUpdateManyMutationInput, Prisma.AiHistoryUncheckedUpdateManyWithoutUserInput>
-}
-
-export type AiHistoryScalarWhereInput = {
-  AND?: Prisma.AiHistoryScalarWhereInput | Prisma.AiHistoryScalarWhereInput[]
-  OR?: Prisma.AiHistoryScalarWhereInput[]
-  NOT?: Prisma.AiHistoryScalarWhereInput | Prisma.AiHistoryScalarWhereInput[]
-  id?: Prisma.BigIntFilter<"AiHistory"> | bigint | number
-  userId?: Prisma.StringFilter<"AiHistory"> | string
-  action?: Prisma.StringFilter<"AiHistory"> | string
-  reason?: Prisma.StringNullableFilter<"AiHistory"> | string | null
-  createdDt?: Prisma.DateTimeFilter<"AiHistory"> | Date | string
-}
-
-export type AiHistoryCreateManyUserInput = {
-  id?: bigint | number
-  action: string
-  reason?: string | null
-  createdDt?: Date | string
-}
-
-export type AiHistoryUpdateWithoutUserInput = {
-  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  action?: Prisma.StringFieldUpdateOperationsInput | string
-  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdDt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type AiHistoryUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  action?: Prisma.StringFieldUpdateOperationsInput | string
-  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdDt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type AiHistoryUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  action?: Prisma.StringFieldUpdateOperationsInput | string
-  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdDt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
 
 
 export type AiHistorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -504,8 +393,8 @@ export type AiHistorySelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   userId?: boolean
   action?: boolean
   reason?: boolean
+  identityHash?: boolean
   createdDt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["aiHistory"]>
 
 
@@ -515,24 +404,21 @@ export type AiHistorySelectScalar = {
   userId?: boolean
   action?: boolean
   reason?: boolean
+  identityHash?: boolean
   createdDt?: boolean
 }
 
-export type AiHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "action" | "reason" | "createdDt", ExtArgs["result"]["aiHistory"]>
-export type AiHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
+export type AiHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "action" | "reason" | "identityHash" | "createdDt", ExtArgs["result"]["aiHistory"]>
 
 export type $AiHistoryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AiHistory"
-  objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: bigint
     userId: string
     action: string
     reason: string | null
+    identityHash: string | null
     createdDt: Date
   }, ExtArgs["result"]["aiHistory"]>
   composites: {}
@@ -874,7 +760,6 @@ readonly fields: AiHistoryFieldRefs;
  */
 export interface Prisma__AiHistoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -908,6 +793,7 @@ export interface AiHistoryFieldRefs {
   readonly userId: Prisma.FieldRef<"AiHistory", 'String'>
   readonly action: Prisma.FieldRef<"AiHistory", 'String'>
   readonly reason: Prisma.FieldRef<"AiHistory", 'String'>
+  readonly identityHash: Prisma.FieldRef<"AiHistory", 'String'>
   readonly createdDt: Prisma.FieldRef<"AiHistory", 'DateTime'>
 }
     
@@ -925,10 +811,6 @@ export type AiHistoryFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the AiHistory
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
   /**
    * Filter, which AiHistory to fetch.
    */
@@ -948,10 +830,6 @@ export type AiHistoryFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
-  /**
    * Filter, which AiHistory to fetch.
    */
   where: Prisma.AiHistoryWhereUniqueInput
@@ -969,10 +847,6 @@ export type AiHistoryFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the AiHistory
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
   /**
    * Filter, which AiHistory to fetch.
    */
@@ -1022,10 +896,6 @@ export type AiHistoryFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
-  /**
    * Filter, which AiHistory to fetch.
    */
   where?: Prisma.AiHistoryWhereInput
@@ -1073,10 +943,6 @@ export type AiHistoryFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the AiHistory
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
   /**
    * Filter, which AiHistories to fetch.
    */
@@ -1126,10 +992,6 @@ export type AiHistoryCreateArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
-  /**
    * The data needed to create a AiHistory.
    */
   data: Prisma.XOR<Prisma.AiHistoryCreateInput, Prisma.AiHistoryUncheckedCreateInput>
@@ -1158,10 +1020,6 @@ export type AiHistoryUpdateArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the AiHistory
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
   /**
    * The data needed to update a AiHistory.
    */
@@ -1203,10 +1061,6 @@ export type AiHistoryUpsertArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
-  /**
    * The filter to search for the AiHistory to update in case it exists.
    */
   where: Prisma.AiHistoryWhereUniqueInput
@@ -1232,10 +1086,6 @@ export type AiHistoryDeleteArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the AiHistory
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
   /**
    * Filter which AiHistory to delete.
    */
@@ -1268,8 +1118,4 @@ export type AiHistoryDefaultArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the AiHistory
    */
   omit?: Prisma.AiHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
 }

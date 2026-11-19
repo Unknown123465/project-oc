@@ -1,12 +1,13 @@
 import styles from "./SettingSection.module.css";
-import {ActionButton} from "@/components/ui/button";
+import {LinkButton} from "@/components/ui/button";
 import type {SettingAccount} from "../../setting/validator";
+import EmailRow from "./EmailRow";
+import UserNameRow from "./UserNameRow";
 
 interface GeneralSectionProps {
 	account: SettingAccount;
 }
 
-/* 변경 버튼은 아직 목업이다. 눌러도 아무 일이 없고, 아래 안내 문구로 알린다. */
 export default function GeneralSection({account}: GeneralSectionProps) {
 	const {email, username, socialProvider} = account;
 
@@ -17,49 +18,25 @@ export default function GeneralSection({account}: GeneralSectionProps) {
 			<h2 id="setting-general-title">일반</h2>
 
 			<dl className={styles.rows}>
-				<div className={styles.row}>
-					<dt>이메일</dt>
-					<dd className={styles.value}>
-						{email !== null ? <span className={styles.text}>{email}</span> : <span className={styles.empty}>등록된 이메일이 없어요.</span>}
-						{isSocial ? <small>{socialProvider} 계정으로 가입해서 이메일은 바꿀 수 없어요.</small> : null}
-					</dd>
+				<EmailRow email={email} socialProviderName={isSocial ? socialProvider : null} />
 
-					{!isSocial ? (
-						<dd className={styles.action}>
-							<ActionButton>변경</ActionButton>
-						</dd>
-					) : null}
-				</div>
-
-				<div className={styles.row}>
-					<dt>사용자 이름</dt>
-
-					<dd className={styles.value}>
-						<span className={styles.text}>{username}</span>
-						{!isSocial ? <small>로그인할 때 쓰는 이름이에요.</small> : null}
-					</dd>
-					<dd className={styles.action}>
-						<ActionButton>변경</ActionButton>
-					</dd>
-				</div>
+				<UserNameRow username={username} isSocial={isSocial} />
 
 				{!isSocial ? (
 					<div className={styles.row}>
 						<dt>비밀번호</dt>
 						<dd className={styles.value}>
 							<span className={styles.text}>••••••••</span>
+							<small>바꾸면 모든 기기에서 로그아웃돼요.</small>
 						</dd>
 						<dd className={styles.action}>
-							<ActionButton>변경</ActionButton>
+							<LinkButton href="/setting/changepw" styleType="simple" className={styles.link_button}>
+								변경
+							</LinkButton>
 						</dd>
 					</div>
 				) : null}
 			</dl>
-
-			<p className={styles.notice}>
-				<i className="bi bi-info-circle" aria-hidden="true"></i>
-				{isSocial ? "사용자 이름 변경은" : "이메일, 사용자 이름, 비밀번호 변경은"} 아직 준비 중이에요. 지금은 버튼을 눌러도 바뀌지 않아요.
-			</p>
 		</section>
 	);
 }

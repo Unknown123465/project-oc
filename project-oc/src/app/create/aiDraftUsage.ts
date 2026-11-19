@@ -1,7 +1,8 @@
 import db from "@/prisma/client";
 /* 날짜 경계와 남은 횟수 계산은 DB를 타지 않는 순수 규칙이라 validator.ts에 둔다.
    여기는 그 규칙을 DB에 적용하는 자리다. */
-import {AI_DRAFT_DAILY_CALL_LIMIT, AI_DRAFT_DAILY_LIMIT, AI_DRAFT_MIN_CALL_INTERVAL_SECONDS, type AiHistoryRefundReasonType, getKstToday, remainingFrom} from "./validator";
+import {AI_DRAFT_DAILY_CALL_LIMIT, AI_DRAFT_DAILY_LIMIT, AI_DRAFT_MIN_CALL_INTERVAL_SECONDS, type AiHistoryRefundReasonType, getKstToday, getKstTodayStart, remainingFrom} from "./validator";
+import {identityHashOf} from "@/auth/identityHash";
 
 /** 오늘 남은 AI 초안 횟수. 로그인하지 않았거나 사용자를 못 찾으면 0으로 본다. */
 export async function getAiDraftRemaining(userId?: string): Promise<number> {
@@ -41,34 +42,67 @@ export async function claimAiDraft(userId: string): Promise<ClaimResult> {
 	const now: Date = new Date();
 	const callableAfter: Date = new Date(now.getTime() - AI_DRAFT_MIN_CALL_INTERVAL_SECONDS * 1000);
 
-	const claimed: boolean = await db.$transaction(async (tx) => {
+	/* 같은 날 탈퇴하기 전에 쓴 횟수. 오늘 처음 초기화할 때 시작값으로 넣는다. */
+	const before: UsageBeforeWithdrawal = await getUsageBeforeWithdrawal(userId);
+
+	const claimed: boolean = await db.$transaction(async (t) => {
 		/* 날짜가 바뀌었으면 오늘치로 되돌린다. where에 "오늘이 아님"을 넣어 두면 이미
 		   오늘로 세고 있는 행은 건드리지 않아, 동시 요청이 서로의 사용량을 지우지 않는다.
 		   aiDraftUsedOn이 null인 신규 사용자는 not 비교에 걸리지 않아 따로 적어 준다.
-		   호출 수도 같이 초기화한다 — 두 값의 기준일이 같아야 한다. */
-		await tx.user.updateMany({
+		   호출 수도 같이 초기화한다 - 두 값의 기준일이 같아야 한다. */
+		await t.user.updateMany({
+			data: {
+				aiDraftUsedOn: today,
+				aiDraftUsedCount: before.used,
+				aiDraftCallCount: before.calls,
+			},
 			where: {
 				id: userId,
-				OR: [{aiDraftUsedOn: null}, {aiDraftUsedOn: {not: today}}],
+				OR: [
+					{
+						aiDraftUsedOn: null,
+					},
+					{
+						aiDraftUsedOn: {
+							not: today,
+						},
+					},
+				],
 			},
-			data: {aiDraftUsedOn: today, aiDraftUsedCount: 0, aiDraftCallCount: 0},
 		});
 
-		const updated = await tx.user.updateMany({
+		const updated = await t.user.updateMany({
+			data: {
+				aiDraftUsedCount: {
+					increment: 1,
+				},
+				aiDraftCallCount: {
+					increment: 1,
+				},
+				aiDraftLastCallAt: now,
+			},
 			where: {
 				id: userId,
 				aiDraftUsedOn: today,
 				/* 화면에 보이는 한도. 실패하면 환불되어 다시 올라간다. */
-				aiDraftUsedCount: {lt: AI_DRAFT_DAILY_LIMIT},
+				aiDraftUsedCount: {
+					lt: AI_DRAFT_DAILY_LIMIT,
+				},
 				/* 실제 호출 상한. 환불해도 줄지 않아 차감-환불 반복을 끊는다. */
-				aiDraftCallCount: {lt: AI_DRAFT_DAILY_CALL_LIMIT},
+				aiDraftCallCount: {
+					lt: AI_DRAFT_DAILY_CALL_LIMIT,
+				},
 				/* 직전 호출과의 간격. null이면 오늘 처음이라 그냥 통과시킨다. */
-				OR: [{aiDraftLastCallAt: null}, {aiDraftLastCallAt: {lte: callableAfter}}],
-			},
-			data: {
-				aiDraftUsedCount: {increment: 1},
-				aiDraftCallCount: {increment: 1},
-				aiDraftLastCallAt: now,
+				OR: [
+					{
+						aiDraftLastCallAt: null,
+					},
+					{
+						aiDraftLastCallAt: {
+							lte: callableAfter,
+						},
+					},
+				],
 			},
 		});
 
@@ -76,7 +110,12 @@ export async function claimAiDraft(userId: string): Promise<ClaimResult> {
 			return false;
 		}
 
-		await tx.aiHistory.create({data: {userId, action: "use"}});
+		await t.aiHistory.create({
+			data: {
+				userId,
+				action: "use",
+			},
+		});
 
 		return true;
 	});
@@ -86,6 +125,68 @@ export async function claimAiDraft(userId: string): Promise<ClaimResult> {
 	}
 
 	return {ok: false, ...(await diagnoseClaimFailure(userId, callableAfter))};
+}
+
+interface UsageBeforeWithdrawal {
+	/** 오늘 쓴 횟수에서 환불을 뺀 값. aiDraftUsedCount와 같은 기준. */
+	used: number;
+	/** 오늘 실제로 부른 횟수. aiDraftCallCount와 같은 기준. */
+	calls: number;
+}
+
+/* 같은 날 탈퇴하고 다시 가입하면 User 행이 새로 생겨 하루 횟수가 0부터 시작한다.
+   탈퇴할 때 AiHistory에 남겨 둔 식별값(identityHash)과 지금 계정의 식별값이 같은 기록을
+   한국 시간 오늘 것만 세서 초기화할 때 시작값으로 넣는다. 살아 있는 계정의 기록은 identityHash가
+   null이라 지금 계정의 기록이 두 번 세어지지 않는다.
+
+   키 설정이 없거나 계정을 못 찾으면 0으로 본다. 이 확인 때문에 AI 초안 자체가 막히면 안 된다. */
+async function getUsageBeforeWithdrawal(userId: string): Promise<UsageBeforeWithdrawal> {
+	const account = await db.account.findUnique({
+		where: {userId},
+		select: {provider: true, providerAccountId: true, user: {select: {email: true}}},
+	});
+
+	if (account === null) {
+		return {used: 0, calls: 0};
+	}
+
+	const identityHash: string | null = identityHashOf({
+		provider: account.provider,
+		providerAccountId: account.providerAccountId,
+		email: account.user?.email ?? null,
+	});
+
+	if (identityHash === null) {
+		return {used: 0, calls: 0};
+	}
+
+	const todayStart: Date = getKstTodayStart();
+
+	const [useCount, refundCount] = await Promise.all([
+		db.aiHistory.count({
+			where: {
+				identityHash,
+				action: "use",
+				createdDt: {
+					gte: todayStart,
+				},
+			},
+		}),
+		db.aiHistory.count({
+			where: {
+				identityHash,
+				action: "refund",
+				createdDt: {
+					gte: todayStart,
+				},
+			},
+		}),
+	]);
+
+	return {
+		used: Math.max(0, useCount - refundCount),
+		calls: useCount,
+	};
 }
 
 /* 확보에 실패한 뒤 원인을 가린다. 위 updateMany의 where를 그대로 되짚는 순서라,

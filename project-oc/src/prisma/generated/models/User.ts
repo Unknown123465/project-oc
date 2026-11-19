@@ -29,11 +29,13 @@ export type AggregateUser = {
 export type UserAvgAggregateOutputType = {
   aiDraftUsedCount: number | null
   aiDraftCallCount: number | null
+  sessionVersion: number | null
 }
 
 export type UserSumAggregateOutputType = {
   aiDraftUsedCount: number | null
   aiDraftCallCount: number | null
+  sessionVersion: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -50,6 +52,7 @@ export type UserMinAggregateOutputType = {
   aiDraftLastCallAt: Date | null
   commentLastRequestAt: Date | null
   autoplayMusic: boolean | null
+  sessionVersion: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +71,7 @@ export type UserMaxAggregateOutputType = {
   aiDraftLastCallAt: Date | null
   commentLastRequestAt: Date | null
   autoplayMusic: boolean | null
+  sessionVersion: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -86,6 +90,7 @@ export type UserCountAggregateOutputType = {
   aiDraftLastCallAt: number
   commentLastRequestAt: number
   autoplayMusic: number
+  sessionVersion: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -95,11 +100,13 @@ export type UserCountAggregateOutputType = {
 export type UserAvgAggregateInputType = {
   aiDraftUsedCount?: true
   aiDraftCallCount?: true
+  sessionVersion?: true
 }
 
 export type UserSumAggregateInputType = {
   aiDraftUsedCount?: true
   aiDraftCallCount?: true
+  sessionVersion?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -116,6 +123,7 @@ export type UserMinAggregateInputType = {
   aiDraftLastCallAt?: true
   commentLastRequestAt?: true
   autoplayMusic?: true
+  sessionVersion?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -134,6 +142,7 @@ export type UserMaxAggregateInputType = {
   aiDraftLastCallAt?: true
   commentLastRequestAt?: true
   autoplayMusic?: true
+  sessionVersion?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -152,6 +161,7 @@ export type UserCountAggregateInputType = {
   aiDraftLastCallAt?: true
   commentLastRequestAt?: true
   autoplayMusic?: true
+  sessionVersion?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -257,6 +267,7 @@ export type UserGroupByOutputType = {
   aiDraftLastCallAt: Date | null
   commentLastRequestAt: Date | null
   autoplayMusic: boolean
+  sessionVersion: number
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -298,11 +309,11 @@ export type UserWhereInput = {
   aiDraftLastCallAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   commentLastRequestAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   autoplayMusic?: Prisma.BoolFilter<"User"> | boolean
+  sessionVersion?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
   characters?: Prisma.CharacterListRelationFilter
-  aiHistories?: Prisma.AiHistoryListRelationFilter
   characterLikes?: Prisma.CharacterLikeListRelationFilter
   characterComments?: Prisma.CharacterCommentListRelationFilter
 }
@@ -321,11 +332,11 @@ export type UserOrderByWithRelationInput = {
   aiDraftLastCallAt?: Prisma.SortOrderInput | Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrderInput | Prisma.SortOrder
   autoplayMusic?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   characters?: Prisma.CharacterOrderByRelationAggregateInput
-  aiHistories?: Prisma.AiHistoryOrderByRelationAggregateInput
   characterLikes?: Prisma.CharacterLikeOrderByRelationAggregateInput
   characterComments?: Prisma.CharacterCommentOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
@@ -348,11 +359,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   aiDraftLastCallAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   commentLastRequestAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   autoplayMusic?: Prisma.BoolFilter<"User"> | boolean
+  sessionVersion?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   accounts?: Prisma.AccountListRelationFilter
   characters?: Prisma.CharacterListRelationFilter
-  aiHistories?: Prisma.AiHistoryListRelationFilter
   characterLikes?: Prisma.CharacterLikeListRelationFilter
   characterComments?: Prisma.CharacterCommentListRelationFilter
 }, "id" | "username" | "email">
@@ -371,6 +382,7 @@ export type UserOrderByWithAggregationInput = {
   aiDraftLastCallAt?: Prisma.SortOrderInput | Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrderInput | Prisma.SortOrder
   autoplayMusic?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -397,6 +409,7 @@ export type UserScalarWhereWithAggregatesInput = {
   aiDraftLastCallAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   commentLastRequestAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   autoplayMusic?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  sessionVersion?: Prisma.IntWithAggregatesFilter<"User"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -415,11 +428,11 @@ export type UserCreateInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
   characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
 }
@@ -438,11 +451,11 @@ export type UserUncheckedCreateInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
   characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
 }
@@ -461,11 +474,11 @@ export type UserUpdateInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
   characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
 }
@@ -484,11 +497,11 @@ export type UserUncheckedUpdateInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
   characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -507,6 +520,7 @@ export type UserCreateManyInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -525,6 +539,7 @@ export type UserUpdateManyMutationInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -543,6 +558,7 @@ export type UserUncheckedUpdateManyInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -567,6 +583,7 @@ export type UserCountOrderByAggregateInput = {
   aiDraftLastCallAt?: Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrder
   autoplayMusic?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -574,6 +591,7 @@ export type UserCountOrderByAggregateInput = {
 export type UserAvgOrderByAggregateInput = {
   aiDraftUsedCount?: Prisma.SortOrder
   aiDraftCallCount?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -590,6 +608,7 @@ export type UserMaxOrderByAggregateInput = {
   aiDraftLastCallAt?: Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrder
   autoplayMusic?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -608,6 +627,7 @@ export type UserMinOrderByAggregateInput = {
   aiDraftLastCallAt?: Prisma.SortOrder
   commentLastRequestAt?: Prisma.SortOrder
   autoplayMusic?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -615,6 +635,7 @@ export type UserMinOrderByAggregateInput = {
 export type UserSumOrderByAggregateInput = {
   aiDraftUsedCount?: Prisma.SortOrder
   aiDraftCallCount?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
 }
 
 export type UserNullableScalarRelationFilter = {
@@ -669,20 +690,6 @@ export type UserUpdateOneWithoutAccountsNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
-}
-
-export type UserCreateNestedOneWithoutAiHistoriesInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAiHistoriesInput, Prisma.UserUncheckedCreateWithoutAiHistoriesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiHistoriesInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutAiHistoriesNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutAiHistoriesInput, Prisma.UserUncheckedCreateWithoutAiHistoriesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiHistoriesInput
-  upsert?: Prisma.UserUpsertWithoutAiHistoriesInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiHistoriesInput, Prisma.UserUpdateWithoutAiHistoriesInput>, Prisma.UserUncheckedUpdateWithoutAiHistoriesInput>
 }
 
 export type UserCreateNestedOneWithoutCharactersInput = {
@@ -741,10 +748,10 @@ export type UserCreateWithoutAccountsInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
   characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
 }
@@ -763,10 +770,10 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
   characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
 }
@@ -801,10 +808,10 @@ export type UserUpdateWithoutAccountsInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
   characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
 }
@@ -823,113 +830,9 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
-  characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
-  characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserCreateWithoutAiHistoriesInput = {
-  id?: string
-  name?: string | null
-  username?: string | null
-  email?: string | null
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  aiDraftUsedOn?: Date | string | null
-  aiDraftUsedCount?: number
-  aiDraftCallCount?: number
-  aiDraftLastCallAt?: Date | string | null
-  commentLastRequestAt?: Date | string | null
-  autoplayMusic?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
-  characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
-  characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutAiHistoriesInput = {
-  id?: string
-  name?: string | null
-  username?: string | null
-  email?: string | null
-  emailVerified?: Date | string | null
-  image?: string | null
-  password?: string | null
-  aiDraftUsedOn?: Date | string | null
-  aiDraftUsedCount?: number
-  aiDraftCallCount?: number
-  aiDraftLastCallAt?: Date | string | null
-  commentLastRequestAt?: Date | string | null
-  autoplayMusic?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
-  characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
-  characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutAiHistoriesInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutAiHistoriesInput, Prisma.UserUncheckedCreateWithoutAiHistoriesInput>
-}
-
-export type UserUpsertWithoutAiHistoriesInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutAiHistoriesInput, Prisma.UserUncheckedUpdateWithoutAiHistoriesInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutAiHistoriesInput, Prisma.UserUncheckedCreateWithoutAiHistoriesInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutAiHistoriesInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutAiHistoriesInput, Prisma.UserUncheckedUpdateWithoutAiHistoriesInput>
-}
-
-export type UserUpdateWithoutAiHistoriesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
-  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
-  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
-  characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
-  characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutAiHistoriesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiDraftUsedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  aiDraftUsedCount?: Prisma.IntFieldUpdateOperationsInput | number
-  aiDraftCallCount?: Prisma.IntFieldUpdateOperationsInput | number
-  aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
   characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -949,10 +852,10 @@ export type UserCreateWithoutCharactersInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
   characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
 }
@@ -971,10 +874,10 @@ export type UserUncheckedCreateWithoutCharactersInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
   characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1009,10 +912,10 @@ export type UserUpdateWithoutCharactersInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
   characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
 }
@@ -1031,10 +934,10 @@ export type UserUncheckedUpdateWithoutCharactersInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
   characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1053,11 +956,11 @@ export type UserCreateWithoutCharacterLikesInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
   characterComments?: Prisma.CharacterCommentCreateNestedManyWithoutUserInput
 }
 
@@ -1075,11 +978,11 @@ export type UserUncheckedCreateWithoutCharacterLikesInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
   characterComments?: Prisma.CharacterCommentUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1113,11 +1016,11 @@ export type UserUpdateWithoutCharacterLikesInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
   characterComments?: Prisma.CharacterCommentUpdateManyWithoutUserNestedInput
 }
 
@@ -1135,11 +1038,11 @@ export type UserUncheckedUpdateWithoutCharacterLikesInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
   characterComments?: Prisma.CharacterCommentUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1157,11 +1060,11 @@ export type UserCreateWithoutCharacterCommentsInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeCreateNestedManyWithoutUserInput
 }
 
@@ -1179,11 +1082,11 @@ export type UserUncheckedCreateWithoutCharacterCommentsInput = {
   aiDraftLastCallAt?: Date | string | null
   commentLastRequestAt?: Date | string | null
   autoplayMusic?: boolean
+  sessionVersion?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   characters?: Prisma.CharacterUncheckedCreateNestedManyWithoutUserInput
-  aiHistories?: Prisma.AiHistoryUncheckedCreateNestedManyWithoutUserInput
   characterLikes?: Prisma.CharacterLikeUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1217,11 +1120,11 @@ export type UserUpdateWithoutCharacterCommentsInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUpdateManyWithoutUserNestedInput
 }
 
@@ -1239,11 +1142,11 @@ export type UserUncheckedUpdateWithoutCharacterCommentsInput = {
   aiDraftLastCallAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   commentLastRequestAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   autoplayMusic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   characters?: Prisma.CharacterUncheckedUpdateManyWithoutUserNestedInput
-  aiHistories?: Prisma.AiHistoryUncheckedUpdateManyWithoutUserNestedInput
   characterLikes?: Prisma.CharacterLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1255,7 +1158,6 @@ export type UserUncheckedUpdateWithoutCharacterCommentsInput = {
 export type UserCountOutputType = {
   accounts: number
   characters: number
-  aiHistories: number
   characterLikes: number
   characterComments: number
 }
@@ -1263,7 +1165,6 @@ export type UserCountOutputType = {
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   characters?: boolean | UserCountOutputTypeCountCharactersArgs
-  aiHistories?: boolean | UserCountOutputTypeCountAiHistoriesArgs
   characterLikes?: boolean | UserCountOutputTypeCountCharacterLikesArgs
   characterComments?: boolean | UserCountOutputTypeCountCharacterCommentsArgs
 }
@@ -1295,13 +1196,6 @@ export type UserCountOutputTypeCountCharactersArgs<ExtArgs extends runtime.Types
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountAiHistoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AiHistoryWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountCharacterLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CharacterLikeWhereInput
 }
@@ -1328,11 +1222,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   aiDraftLastCallAt?: boolean
   commentLastRequestAt?: boolean
   autoplayMusic?: boolean
+  sessionVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   characters?: boolean | Prisma.User$charactersArgs<ExtArgs>
-  aiHistories?: boolean | Prisma.User$aiHistoriesArgs<ExtArgs>
   characterLikes?: boolean | Prisma.User$characterLikesArgs<ExtArgs>
   characterComments?: boolean | Prisma.User$characterCommentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1354,15 +1248,15 @@ export type UserSelectScalar = {
   aiDraftLastCallAt?: boolean
   commentLastRequestAt?: boolean
   autoplayMusic?: boolean
+  sessionVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "username" | "email" | "emailVerified" | "image" | "password" | "aiDraftUsedOn" | "aiDraftUsedCount" | "aiDraftCallCount" | "aiDraftLastCallAt" | "commentLastRequestAt" | "autoplayMusic" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "username" | "email" | "emailVerified" | "image" | "password" | "aiDraftUsedOn" | "aiDraftUsedCount" | "aiDraftCallCount" | "aiDraftLastCallAt" | "commentLastRequestAt" | "autoplayMusic" | "sessionVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   characters?: boolean | Prisma.User$charactersArgs<ExtArgs>
-  aiHistories?: boolean | Prisma.User$aiHistoriesArgs<ExtArgs>
   characterLikes?: boolean | Prisma.User$characterLikesArgs<ExtArgs>
   characterComments?: boolean | Prisma.User$characterCommentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1373,7 +1267,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     characters: Prisma.$CharacterPayload<ExtArgs>[]
-    aiHistories: Prisma.$AiHistoryPayload<ExtArgs>[]
     characterLikes: Prisma.$CharacterLikePayload<ExtArgs>[]
     characterComments: Prisma.$CharacterCommentPayload<ExtArgs>[]
   }
@@ -1391,6 +1284,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     aiDraftLastCallAt: Date | null
     commentLastRequestAt: Date | null
     autoplayMusic: boolean
+    sessionVersion: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1735,7 +1629,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   characters<T extends Prisma.User$charactersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$charactersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  aiHistories<T extends Prisma.User$aiHistoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiHistoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   characterLikes<T extends Prisma.User$characterLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$characterLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   characterComments<T extends Prisma.User$characterCommentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$characterCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CharacterCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1780,6 +1673,7 @@ export interface UserFieldRefs {
   readonly aiDraftLastCallAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly commentLastRequestAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly autoplayMusic: Prisma.FieldRef<"User", 'Boolean'>
+  readonly sessionVersion: Prisma.FieldRef<"User", 'Int'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -2175,30 +2069,6 @@ export type User$charactersArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.CharacterScalarFieldEnum | Prisma.CharacterScalarFieldEnum[]
-}
-
-/**
- * User.aiHistories
- */
-export type User$aiHistoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AiHistory
-   */
-  select?: Prisma.AiHistorySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AiHistory
-   */
-  omit?: Prisma.AiHistoryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AiHistoryInclude<ExtArgs> | null
-  where?: Prisma.AiHistoryWhereInput
-  orderBy?: Prisma.AiHistoryOrderByWithRelationInput | Prisma.AiHistoryOrderByWithRelationInput[]
-  cursor?: Prisma.AiHistoryWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AiHistoryScalarFieldEnum | Prisma.AiHistoryScalarFieldEnum[]
 }
 
 /**

@@ -11,10 +11,11 @@ import Credentials from "next-auth/providers/credentials"; //https://authjs.dev/
 import {verifyPassword} from "./password";
 import {credentialsLogin} from "./credentialsValidator";
 import {resolveUniqueUserName} from "./userName";
+import {getSessionUser} from "./sessionUser";
+import {NORMAL_PROVIDER} from "./provider";
 
-/** Credentials 가입자의 Account.provider 값.
- *  Auth.js가 OAuth처럼 정해 주는 값이 없어 직접 정한다. */
-export const NORMAL_PROVIDER: string = "normal";
+/* NORMAL_PROVIDER는 provider.ts로 옮겼다. 기존 import 경로가 그대로 동작하도록 여기서도 내보낸다. */
+export {NORMAL_PROVIDER};
 
 const SESSION_MAX_AGE_DAYS: number = 7;
 
@@ -183,6 +184,32 @@ export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
 			} else {
 				return true;
 			}
+		},
+		/* 세션을 읽을 때마다 불린다. 계정이 지워졌거나 비밀번호를 바꿔 세션 버전이 올라갔으면
+		   null을 돌려 세션을 끊는다. JWT 전략은 서버에 세션을 저장하지 않아서, 이렇게 DB와
+		   맞춰 보지 않으면 이미 발급된 토큰을 만료 전까지 막을 방법이 없다.
+		   일반 계정(Credentials)은 DB 세션 전략을 쓸 수 없어 JWT를 유지한다. */
+		async jwt({token, user}) {
+			/* user는 로그인한 그 요청에만 들어온다. 그때 지금 버전을 토큰에 새긴다. */
+			const userId: string | undefined = user?.id ?? token.sub;
+
+			if (!userId) {
+				return null;
+			}
+
+			const sessionUser = await getSessionUser(userId);
+
+			if (sessionUser === null) {
+				return null;
+			}
+
+			if (user) {
+				token.sessionVersion = sessionUser.sessionVersion;
+			} else if (token.sessionVersion !== sessionUser.sessionVersion) {
+				return null;
+			}
+
+			return token;
 		},
 		/* 토큰에 무엇이 실려 있든 세션에는 이 네 개만 옮긴다.
 		   password 같은 값이 나중에 토큰에 섞여도 클라이언트로 새지 않는다. */

@@ -43,7 +43,12 @@ model User {
   // 프로필을 열 때 테마곡을 자동 재생할지. 보는 사람 기준이고, 비로그인 방문자도 켜짐으로 본다.
   autoplayMusic Boolean @default(true)
 
-  aiHistories      AiHistory[]
+  // 세션(JWT) 버전. 비밀번호를 바꾸면 1 올린다. 요청마다 JWT에 담긴 값과 비교해 다르면
+  // 그 세션을 끊는다 — JWT는 서버에 저장되지 않아 이렇게 하지 않으면 비밀번호를 바꿔도
+  // 이미 발급된 세션을 막을 방법이 없다. BigInt가 아닌 이유는 JWT가 JSON이라 bigint를
+  // 직렬화하지 못하기 때문이다.
+  sessionVersion Int @default(0) @db.UnsignedInt
+
   characterLikes    CharacterLike[]
   characterComments CharacterComment[]
 
@@ -95,21 +100,40 @@ model AiHistory {
   // 소문자로 옮기거나("safety", "max-tokens") 서버 쪽 사유("server-error", "blocked")다.
   // 가장 긴 값이 "finish-reason-unspecified"(25자)라 길이가 25다.
   reason String? @db.VarChar(25)
-  user   User    @relation(fields: [userId], references: [id])
+
+  // User와 관계(FK)를 두지 않는다. 계정을 지워도 이 기록은 남겨야 하는데, FK가
+  // RESTRICT라 기록이 있으면 User 행을 지울 수 없었다. 그래서 userId는 값만 남는다.
+  //
+  // 계정을 지울 때만 채우는 식별값. 일반 계정은 이메일, 소셜 계정은
+  // "provider:providerAccountId"를 HMAC-SHA256으로 바꾼 hex 64자다.
+  // 같은 날 탈퇴하고 다시 가입해 하루 한도를 되살리는 걸 막는 데만 쓴다.
+  // 살아 있는 계정의 기록은 null이다. 크론이 30일 지난 행을 지운다.
+  identityHash String? @db.Char(64)
 
   createdDt DateTime @default(now()) @db.DateTime(0)
 
   // "이 사용자가 오늘 무엇을 했나"가 거의 유일한 조회 형태다. 최신순으로 읽는다.
   @@index([userId, createdDt(sort: Desc)], map: "idx_ai_history_user_created")
+  // 재가입한 사용자의 "오늘" 기록을 찾을 때 쓴다.
+  @@index([identityHash, createdDt], map: "idx_ai_history_identity_created")
   @@map("aihistory")
 }
 
+// 메일로 보내는 인증 링크의 토큰. Auth.js 어댑터의 모델 이름을 그대로 쓰지만 이 프로젝트는
+// Auth.js 이메일 로그인을 쓰지 않아서, 이메일 변경(41번)과 비밀번호 재설정(42번)용으로
+// 직접 쓴다.
 model VerificationToken {
-  identifier String
-  token      String
+  // User.id. 한 사람이 같은 종류의 토큰을 동시에 둘 이상 갖지 않게 type과 묶어 유니크로 둔다.
+  identifier String   @db.VarChar(191)
+  // "email-change" 또는 "password-reset"
+  type       String   @db.VarChar(20)
+  // 메일에 넣은 원본 토큰이 아니라 SHA-256 hex. DB가 새도 링크를 만들 수 없게 한다.
+  token      String   @unique @db.Char(64)
+  // 이메일 변경일 때만 채운다. 바꿀 새 주소.
+  newEmail   String?  @db.VarChar(191)
   expires    DateTime
 
-  @@unique([identifier, token])
+  @@unique([identifier, type])
 }
 
 model Character {

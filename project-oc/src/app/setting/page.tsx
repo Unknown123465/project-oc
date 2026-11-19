@@ -34,7 +34,7 @@ export default async function SettingPage() {
 					<GeneralSection account={accountInfo.result} />
 					<PlaybackSection key={String(accountInfo.result.autoplayMusic)} autoplayMusic={accountInfo.result.autoplayMusic} />
 					<ActivitySection activity={rankList.result} />
-					<DangerSection />
+					<DangerSection username={accountInfo.result.username} />
 				</div>
 			</div>
 		</main>

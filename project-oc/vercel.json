@@ -3,6 +3,10 @@
 		{
 			"path": "/api/cron/comment",
 			"schedule": "0 18 * * *"
+		},
+		{
+			"path": "/api/cron/aihistory",
+			"schedule": "30 18 * * *"
 		}
 	]
 }

@@ -938,6 +938,7 @@ export const UserScalarFieldEnum = {
   aiDraftLastCallAt: 'aiDraftLastCallAt',
   commentLastRequestAt: 'commentLastRequestAt',
   autoplayMusic: 'autoplayMusic',
+  sessionVersion: 'sessionVersion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -971,6 +972,7 @@ export const AiHistoryScalarFieldEnum = {
   userId: 'userId',
   action: 'action',
   reason: 'reason',
+  identityHash: 'identityHash',
   createdDt: 'createdDt'
 } as const
 
@@ -979,7 +981,9 @@ export type AiHistoryScalarFieldEnum = (typeof AiHistoryScalarFieldEnum)[keyof t
 
 export const VerificationTokenScalarFieldEnum = {
   identifier: 'identifier',
+  type: 'type',
   token: 'token',
+  newEmail: 'newEmail',
   expires: 'expires'
 } as const
 
@@ -1102,7 +1106,8 @@ export type AccountOrderByRelevanceFieldEnum = (typeof AccountOrderByRelevanceFi
 export const AiHistoryOrderByRelevanceFieldEnum = {
   userId: 'userId',
   action: 'action',
-  reason: 'reason'
+  reason: 'reason',
+  identityHash: 'identityHash'
 } as const
 
 export type AiHistoryOrderByRelevanceFieldEnum = (typeof AiHistoryOrderByRelevanceFieldEnum)[keyof typeof AiHistoryOrderByRelevanceFieldEnum]
@@ -1110,7 +1115,9 @@ export type AiHistoryOrderByRelevanceFieldEnum = (typeof AiHistoryOrderByRelevan
 
 export const VerificationTokenOrderByRelevanceFieldEnum = {
   identifier: 'identifier',
-  token: 'token'
+  type: 'type',
+  token: 'token',
+  newEmail: 'newEmail'
 } as const
 
 export type VerificationTokenOrderByRelevanceFieldEnum = (typeof VerificationTokenOrderByRelevanceFieldEnum)[keyof typeof VerificationTokenOrderByRelevanceFieldEnum]

@@ -1,5 +1,6 @@
 import type {KoreanSocialProvider} from "@/app/setting/getAccountInfo";
 import z from "zod";
+import {emailField, passwordField, userNameField} from "@/app/signup/validator";
 
 /** 목차와 각 문단이 같은 id를 보도록 한곳에 둔다. 순서가 곧 화면 순서다. */
 export const SETTING_SECTIONS = [
@@ -37,3 +38,36 @@ export interface SettingActivity {
 }
 
 export const setAutoplayMusicForm = z.boolean("입력값이 올바르지 않아요.");
+
+export const changeUserNameForm = z.object({
+	userName: userNameField,
+});
+
+export type ChangeUserNameFormType = z.infer<typeof changeUserNameForm>;
+
+/* 지금 이름을 그대로 제출했을 때의 안내. 화면(요청 전에 막음)과 서버 액션이 같은 문구를 쓴다. */
+export const SAME_USER_NAME_MESSAGE = "지금 쓰고 있는 이름과 같아요. 다른 이름으로 수정해 주세요." as const;
+
+export const changeEmailForm = z.object({
+	email: emailField,
+});
+
+export type ChangeEmailFormType = z.infer<typeof changeEmailForm>;
+
+export const changePasswordForm = z
+	.object({
+		/* 지금 비밀번호는 가입 규칙이 바뀌기 전에 만든 것일 수 있어 비어 있는지만 본다. */
+		currentPassword: z.string("값이 올바르지 않음").min(1, "현재 비밀번호를 입력해 주세요."),
+		newPassword: passwordField,
+		newPasswordRepeat: z.string("값이 올바르지 않음").min(1, "새 비밀번호를 한 번 더 입력해 주세요."),
+	})
+	.refine((data) => data.newPassword === data.newPasswordRepeat, {
+		message: "새 비밀번호가 일치하지 않아요.",
+		path: ["newPasswordRepeat"],
+	})
+	.refine((data) => data.currentPassword !== data.newPassword, {
+		message: "새 비밀번호가 현재 비밀번호와 같아요. 다른 비밀번호를 입력해 주세요.",
+		path: ["newPassword"],
+	});
+
+export type ChangePasswordFormType = z.infer<typeof changePasswordForm>;

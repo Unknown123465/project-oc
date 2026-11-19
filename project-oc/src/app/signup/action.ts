@@ -15,7 +15,7 @@ export async function signupAction(data: SignupFormType): Promise<SignupActionRe
 	/* 서버 액션은 페이지를 거치지 않고 직접 호출될 수 있어 페이지의 가드를 믿을 수 없다.
 	   로그인한 채로 가입하면 지금 세션과 새 계정이 어긋난다. */
 	if ((await auth()) !== null) {
-		return {success: false, message: "이미 로그인되어 있습니다."};
+		return {success: false, message: "이미 로그인되어 있어요."};
 	}
 
 	/* 클라이언트에서 이미 같은 스키마로 걸렀지만 여기가 신뢰 경계이므로 다시 검사한다. */
@@ -33,11 +33,11 @@ export async function signupAction(data: SignupFormType): Promise<SignupActionRe
 	]);
 
 	if (emailOwner !== null) {
-		return {success: false, message: "이미 가입된 이메일 주소입니다."};
+		return {success: false, message: "이미 가입된 이메일 주소예요."};
 	}
 
 	if (userNameOwner !== null) {
-		return {success: false, message: "이미 사용 중인 사용자 이름입니다."};
+		return {success: false, message: "이미 다른 사람이 쓰고 있는 이름이에요."};
 	}
 
 	const passwordHash = await hashPassword(password);
@@ -73,7 +73,7 @@ export async function signupAction(data: SignupFormType): Promise<SignupActionRe
 	} catch (error) {
 		if (error instanceof AuthError) {
 			/* 계정은 이미 만들어졌으므로 가입 자체를 실패로 되돌리지 않는다. */
-			return {success: false, message: "가입은 되었지만 자동 로그인에 실패했습니다. 로그인 페이지에서 로그인해 주세요."};
+			return {success: false, message: "가입은 됐지만 자동으로 로그인하지 못했어요. 로그인 페이지에서 로그인해 주세요."};
 		}
 
 		throw error;

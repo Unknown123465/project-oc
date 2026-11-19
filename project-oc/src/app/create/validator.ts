@@ -244,6 +244,12 @@ export function getKstToday(): Date {
 	return new Date(Date.UTC(kstNow.getUTCFullYear(), kstNow.getUTCMonth(), kstNow.getUTCDate()));
 }
 
+/** 한국 시간 오늘 0시의 실제 시각(UTC 기준 Date). DATETIME 컬럼에서 "오늘 생긴 행"을 고를 때 쓴다.
+ *  getKstToday()는 DATE 컬럼과 비교하려고 날짜만 UTC 0시에 얹은 값이라 9시간 어긋난다. */
+export function getKstTodayStart(): Date {
+	return new Date(getKstToday().getTime() - KST_OFFSET_MILLIS);
+}
+
 /* 마지막으로 쓴 날이 오늘이 아니면 자정을 넘긴 것이라, 아직 한 번도 안 쓴 날로 본다.
    크론으로 0시에 전체를 밀지 않아도 되는 이유가 이 한 줄이다. */
 export function remainingFrom(usedOn: Date | null, usedCount: number): number {
