@@ -1,0 +1,100 @@
+/* 계정 설정(setting/page.module.css)과 같은 폭과 제목 크기를 쓴다. 목차가 없는 한 단짜리 페이지라
+   판 하나를 왼쪽에 둔다. 비밀번호 변경 페이지와 완료 페이지가 같이 쓴다. */
+.main {
+	width: calc(100% - 40px);
+	max-width: var(--page-width);
+	margin: 40px auto 80px;
+
+	& .back {
+		width: fit-content;
+		margin-bottom: 14px;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: var(--muted);
+		font-size: 14px;
+		font-weight: 650;
+		text-decoration: none;
+
+		&:hover {
+			color: var(--title-text);
+		}
+	}
+
+	& h1 {
+		margin: 0 0 28px;
+		color: var(--title-text);
+		font-size: 32px;
+		font-weight: 900;
+		letter-spacing: -0.06em;
+	}
+
+	& .panel {
+		width: fit-content;
+		padding: 28px 28px 24px;
+		margin: auto;
+		background-color: var(--card-dark-1);
+		border: 1px solid var(--line-color-1);
+		border-radius: var(--radius-3);
+
+		& h2,
+		& .lead {
+			max-width: 560px;
+			word-break: keep-all;
+		}
+
+		& h2 {
+			margin: 0 auto 8px;
+			color: var(--title-text);
+			font-size: 22px;
+			font-weight: 900;
+			letter-spacing: -0.05em;
+		}
+
+		& .lead {
+			max-width: 560px;
+			margin: 0 auto;
+			color: var(--muted);
+			font-size: 14.5px;
+			line-height: 1.6;
+			word-break: keep-all;
+			white-space: pre-wrap;
+		}
+
+		& .actions {
+			margin-top: 28px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+
+			& > a {
+				width: auto;
+				padding: 0 22px;
+			}
+		}
+	}
+}
+
+@media (width < 768px) {
+	.main {
+		width: calc(100% - 28px);
+		margin-top: 28px;
+
+		& h1 {
+			margin-bottom: 20px;
+			font-size: 28px;
+		}
+
+		& .panel {
+			padding: 22px 18px 18px;
+
+			& .lead {
+				white-space: wrap;
+			}
+
+			& .actions > a {
+				flex: 1 1 0;
+			}
+		}
+	}
+}
