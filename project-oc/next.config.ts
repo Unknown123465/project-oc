@@ -49,6 +49,11 @@ const nextConfig: NextConfig = {
 	images: {
 		remotePatterns,
 	},
+	/* 메일 본문 HTML은 import가 아니라 fs로 읽어서 Next가 알아서 번들에 넣지 않는다.
+	   메일을 보내는 서버 액션이 어느 페이지에서 불리든 읽을 수 있게 모든 라우트에 넣는다. */
+	outputFileTracingIncludes: {
+		"/**": ["src/mail/templates/*.html"],
+	},
 };
 
 export default nextConfig;
