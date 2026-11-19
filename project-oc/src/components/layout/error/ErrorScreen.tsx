@@ -1,7 +1,7 @@
 import type {ReactNode} from "react";
 import styles from "./ErrorScreen.module.css";
 
-type ErrorVisual = "page" | "server" | "profileLogin" | "profileLocked" | "profileMissing" | "profileServer";
+type ErrorVisual = "page" | "server" | "profileLogin" | "profileLocked" | "profileMissing" | "profileServer" | "linkExpired";
 
 interface ErrorScreenProps {
 	title: string;
@@ -26,6 +26,10 @@ function Icon({visual}: VisualIconProps) {
 			return <i className="bi bi-question-circle" />;
 
 		case "profileServer":
+			return <i className="bi bi-exclamation-diamond"></i>;
+
+		/* 메일로 받은 인증 링크가 만료됐거나 이미 쓰인 경우 */
+		case "linkExpired":
 			return <i className="bi bi-exclamation-diamond"></i>;
 
 		default:

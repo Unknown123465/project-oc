@@ -48,6 +48,7 @@
 					color: var(--text-important);
 					font-size: 15px;
 					overflow-wrap: anywhere;
+					word-break: keep-all;
 				}
 
 				& .empty {
@@ -60,15 +61,45 @@
 					font-size: 13px;
 					line-height: 1.5;
 					word-break: keep-all;
+					white-space: wrap;
+
+					& span {
+						text-decoration: underline;
+					}
 				}
 			}
 
-			/* ActionButton 기본값은 폼 버튼 기준(높이 46px)이라 행에 맞게 줄인다. */
-			& .action button {
+			/* ActionButton 기본값은 폼 버튼 기준(높이 46px)이라 행에 맞게 줄인다.
+			   비밀번호 변경은 페이지로 이동하는 LinkButton(a)이라 같은 크기를 준다. */
+			& .action button,
+			& .action a {
 				height: 38px;
 				padding: 0 16px;
 				font-size: 14px;
 				white-space: nowrap;
+			}
+
+			/* 입력 중일 때 취소와 제출을 나란히 둔다. */
+			& .action_group {
+				display: flex;
+				gap: 8px;
+			}
+
+			/* 이름 자리를 대신하는 입력란과 그 아래 오류 문구 */
+			& .inline_form {
+				display: grid;
+				gap: 4px;
+				max-width: 360px;
+			}
+
+			& .value .sent_message {
+				color: var(--success);
+				font-weight: 700;
+				white-space: pre-wrap;
+
+				&:empty {
+					display: none;
+				}
 			}
 
 			& .toggle {
@@ -95,12 +126,19 @@
 		}
 	}
 
-	& .error_message {
+	& .message {
 		margin: 0;
-		color: var(--error-text);
 		font-size: 12.5px;
 		font-weight: 600;
 		word-break: keep-all;
+
+		&.success {
+			color: var(--success);
+		}
+
+		&.error {
+			color: var(--error-text);
+		}
 	}
 
 	& .notes {
@@ -231,6 +269,12 @@
 	}
 }
 
+@media (768px <= width < 876px) {
+	.section .rows .row .value .sent_message {
+		white-space: wrap;
+	}
+}
+
 @media (width < 768px) {
 	.section {
 		padding: 22px 18px 18px;
@@ -241,6 +285,15 @@
 
 			& dt {
 				grid-column: 1 / -1;
+			}
+
+			& .value small {
+				white-space: pre-wrap;
+			}
+
+			&:has(.inline_form) {
+				grid-template-columns: 1fr;
+				grid-template-rows: repeat(3, auto);
 			}
 		}
 
