@@ -1,10 +1,8 @@
 "use client";
 
-import {useId, useTransition} from "react";
+import {useId} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useRouter} from "next/navigation";
-import {useSession} from "next-auth/react";
 import styles from "./ChangePasswordForm.module.css";
 import {PasswordInput} from "@/components/ui/input";
 import {LinkButton, SubmitButton} from "@/components/ui/button";
