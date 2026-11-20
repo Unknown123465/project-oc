@@ -8,7 +8,7 @@ const PASSWORD_MAX_LENGTH = 20;
 
 /* 계정 설정의 이메일, 사용자 이름, 비밀번호 변경도 가입과 같은 규칙을 써야 해서 칸마다 따로 꺼내 둔다.
    특히 사용자 이름은 로그인할 때 입력하는 값이라 규칙이 갈리면 바꾼 이름으로 로그인하지 못할 수 있다. */
-export const emailField = z.string("값이 올바르지 않아요.").trim().min(1, "이메일 주소를 입력해 주세요.").pipe(z.email("이메일 주소를 다시 확인해 주세요."));
+export const emailField = z.string("값이 올바르지 않아요.").trim().min(1, "이메일 주소를 입력해 주세요.").pipe(z.email("이메일 주소를 형식에 맞게 입력해 주세요."));
 
 export const userNameField = z
 	.string("값이 올바르지 않아요.")

@@ -2,6 +2,7 @@ import "server-only";
 import crypto from "crypto";
 import {cache} from "react";
 import db from "@/prisma/client";
+import {NORMAL_PROVIDER} from "./provider";
 
 interface GetEmailChangeRequestResult {
 	userId: string;
@@ -9,7 +10,17 @@ interface GetEmailChangeRequestResult {
 	newEmail: string;
 }
 
+interface GetPasswordResetRequestResult {
+	userId: string;
+	userName: string;
+}
+
 export const EMAIL_CHANGE_TOKEN_TYPE = "email-change" as const;
+
+export const PASSWORD_RESET_TOKEN_TYPE = "password-reset" as const;
+
+/** 비밀번호 재설정 링크를 쓸 수 있는 시간(분). 이메일 변경과 같게 두고, 이 시간 안에는 다시 요청할 수 없다. */
+export const PASSWORD_RESET_TOKEN_MINUTES = 5 as const;
 
 /** 이메일 변경 링크를 쓸 수 있는 시간(분). 이 시간 안에는 다시 요청할 수도 없다. */
 export const EMAIL_CHANGE_TOKEN_MINUTES = 5 as const;
@@ -73,3 +84,62 @@ export const getEmailChangeRequest = cache(async (rawToken: string): Promise<Get
 		newEmail: request.newEmail,
 	};
 });
+
+/* 비밀번호 재설정 링크를 열었을 때 페이지와 generateMetadata가 같이 쓴다. 이메일 변경과 같은 이유로 cache로 감싼다.
+   만료됐거나, 없거나, 그사이 계정이 지워졌거나, 일반 가입 계정이 아니면 null이다. 토큰을 쓰지는 않는다. */
+export const getPasswordResetRequest = cache(async (rawToken: string): Promise<GetPasswordResetRequestResult | null> => {
+	if (!isRawToken(rawToken)) {
+		return null;
+	}
+
+	const request = await db.verificationToken.findUnique({
+		where: {
+			token: hashToken(rawToken),
+		},
+		select: {
+			identifier: true,
+			type: true,
+			expires: true,
+		},
+	});
+
+	if (request === null || request.type !== PASSWORD_RESET_TOKEN_TYPE || request.expires.getTime() <= Date.now()) {
+		return null;
+	}
+
+	const user = await db.user.findUnique({
+		where: {
+			id: request.identifier,
+		},
+		select: {
+			username: true,
+			accounts: {
+				select: {
+					provider: true,
+				},
+				where: {
+					provider: NORMAL_PROVIDER,
+				},
+			},
+		},
+	});
+
+	if (user === null || user.username === null || user.accounts.length === 0) {
+		return null;
+	}
+
+	return {
+		userId: request.identifier,
+		userName: user.username,
+	};
+});
+
+/** 남은 대기 시간을 "3분 20초"처럼 안내 문구에 넣을 모양으로 바꾼다. */
+export function formatWaitTime(expires: Date, now: number): string {
+	const totalSeconds: number = Math.ceil((expires.getTime() - now) / 1000);
+
+	const waitMinutes: number = Math.floor(totalSeconds / 60);
+	const waitSeconds: number = totalSeconds % 60;
+
+	return [waitMinutes > 0 ? `${waitMinutes}분` : null, `${waitSeconds}초`].filter((value) => value !== null).join(" ");
+}

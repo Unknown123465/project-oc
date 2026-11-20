@@ -1,9 +1,20 @@
 /* 계정 설정(setting/page.module.css)과 같은 폭과 제목 크기를 쓴다. 목차가 없는 한 단짜리 페이지라
    판 하나를 왼쪽에 둔다. 비밀번호 변경 페이지와 완료 페이지가 같이 쓴다. */
+/* 내용이 짧으면 푸터가 판 바로 밑으로 올라와 화면 중간에 뜬다. 이 페이지에서만 body를 세로 flex로 바꿔
+   main이 남은 높이를 채우게 한다. 높이를 숫자로 빼지 않아 푸터 높이가 화면 폭마다 달라도 스크롤이 생기지 않고,
+   내용이 길면 그만큼 늘어나 평소처럼 스크롤된다. */
+html:has(.main) body {
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+}
+
 .main {
 	width: calc(100% - 40px);
 	max-width: var(--page-width);
 	margin: 40px auto 80px;
+	/* body가 남은 높이를 이 main에 몰아줘서 푸터가 화면 맨 아래에 붙는다(위 html:has 규칙). */
+	flex: 1 0 auto;
 
 	& .back {
 		width: fit-content;
