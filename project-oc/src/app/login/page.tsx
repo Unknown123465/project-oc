@@ -37,9 +37,7 @@ export default async function Login({searchParams}: PageProps<"/login">) {
 					<SocialLoginList />
 
 					<div className={styles.sub_links}>
-						<button type="button" disabled>
-							계정을 잊으셨나요?
-						</button>
+						<Link href="/resetpw">비밀번호를 잊으셨나요?</Link>
 
 						<Link href="/signup">처음이신가요?</Link>
 					</div>
