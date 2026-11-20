@@ -9,7 +9,7 @@ import path from "path";
    outputFileTracingIncludes에 경로를 넣어 두었다. */
 const TEMPLATE_DIR: string = path.join(process.cwd(), "src", "mail", "templates");
 
-export type MailTemplateName = "email-change" | "email-changed";
+export type MailTemplateName = "email-change" | "email-changed" | "password-reset" | "password-changed";
 
 const PLACEHOLDER_PATTERN: RegExp = /\{\{([A-Z][A-Z0-9]*)\}\}/gi;
 
