@@ -3,6 +3,7 @@ import {unstable_cache} from "next/cache";
 import {auth} from "@/auth/auth";
 import db from "@/prisma/client";
 import {binToUuid, isUuid, uuidToBin} from "@/prisma/uuid";
+import {escapeLike} from "@/prisma/escapeLike";
 import {PUBLIC_MODE_PRIVATE, PUBLIC_MODE_PUBLIC} from "@/app/create/r2";
 import {toMusicEmbed} from "@/app/create/musicEmbed";
 import {charImageURL} from "./r2";
@@ -168,15 +169,17 @@ async function getCharactersMyListRow(userId: string, {keyword, sort, public_mod
 	};
 
 	if (keyword) {
+const escapedKeyword: string = escapeLike(keyword);
+
 		where.OR = [
 			{
 				charName: {
-					contains: keyword,
+					contains: escapedKeyword,
 				},
 			},
 			{
 				charMessage: {
-					contains: keyword,
+					contains: escapedKeyword,
 				},
 			},
 		];
