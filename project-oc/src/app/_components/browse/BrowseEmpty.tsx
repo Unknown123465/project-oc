@@ -16,8 +16,8 @@ interface BrowseEmptyProps {
 	isLoggedIn: boolean;
 }
 
-/* 모양은 /mylist의 빈 화면(MyListEmpty)과 같다. 검색어 지우기 오른쪽에, 로그인했으면 프로필 만들기를,
-   로그아웃 상태면 로그인과 회원가입을 둔다. 둘러보기에는 필터가 없어 "검색어 지우기"다. */
+/* 모양은 /mylist의 빈 화면(MyListEmpty)과 같지만, 공개 프로필이 없으면 검색어 지우기 버튼을 넣지 않는다. 검색어 지우기 아래에, 로그인했으면 프로필 만들기를,
+   로그아웃 상태면 회원가입을 둔다. 둘러보기에는 필터가 없어 "검색어 지우기"다. */
 export default function BrowseEmpty({kind, isLoggedIn}: BrowseEmptyProps) {
 	const {title, description} = COPY[kind];
 
