@@ -1,5 +1,6 @@
 import z from "zod";
 import type {KakaoShareDetail} from "@/app/_components/template/ShareDialog";
+import type {ProfileLayout} from "@/app/_components/template/CharacterProfile";
 
 export const MAX_KEYWORD_LENGTH = 30 as const;
 
@@ -37,6 +38,8 @@ export interface MyListItem {
 	charName: string;
 	charImage: string;
 	charColor: string;
+	/** 업로드 때 이 비율로 크롭된다. 세로형(v)이면 타일에서 이미지 위쪽(머리)을 보여 준다. */
+	charProfileLayout: ProfileLayout;
 	/** 0 공개, 1 일부 공개, 2 비공개 */
 	charPublicMode: number;
 	likeCount: number;

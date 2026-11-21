@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function UserMenu() {
 	return (
 		<div className={styles.menu}>
-			<Link href="/">프로필 둘러보기</Link>
+			<Link href="/browse?page=1">프로필 둘러보기</Link>
 
 			<Link href="/create">프로필 만들기</Link>
 

@@ -7,8 +7,9 @@ import ShareDialog, {type KakaoShareDetail} from "./ShareDialog";
 import useConfirm from "@/hooks/useConfirm";
 import {ActionButton, LinkButton} from "@/components/ui/button";
 import {deleteCharacter} from "@/app/template/[uuid]/deleteCharacter";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {DELETE_CHARACTER_MESSAGE} from "@/app/template/[uuid]/deleteCharacterMessage";
+import {toEncodeParam} from "@/app/edit/[uuid]/toEncodeParam";
 
 interface ProfileActionsProps {
 	nonce: string | undefined;
@@ -36,6 +37,12 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
 	const [errorMessage, setErrorMessage] = useState<string>("");
+
+	/* 둘러보기 타일에서 들어오면 주소에 그때의 page, keyword, sort가 붙어 있다. 그대로 돌려줘서
+	   보던 검색 결과와 페이지로 돌아가게 한다. 값이 틀려도 /browse가 고친 주소로 redirect한다. */
+	const searchParams = useSearchParams();
+
+	const browseURL: string = `/browse?${toEncodeParam("page", searchParams.get("page"), "1")}${toEncodeParam("keyword", searchParams.get("keyword"))}${toEncodeParam("sort", searchParams.get("sort"))}`.replace(/&+$/, "");
 
 	const deleteProfile = async () => {
 		try {
@@ -69,7 +76,7 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 	return (
 		<>
 			<div className={styles.actions}>
-				<Link href="/" className={styles.back_link}>
+				<Link href={browseURL} className={styles.back_link}>
 					← 둘러보기
 				</Link>
 				<div className={styles.buttons}>

@@ -3,6 +3,7 @@ import {unstable_cache} from "next/cache";
 import {auth} from "@/auth/auth";
 import db from "@/prisma/client";
 import {binToUuid, isUuid, uuidToBin} from "@/prisma/uuid";
+import {escapeLike} from "@/prisma/escapeLike";
 import {PUBLIC_MODE_PRIVATE, PUBLIC_MODE_PUBLIC} from "@/app/create/r2";
 import {toMusicEmbed} from "@/app/create/musicEmbed";
 import {charImageURL} from "./r2";
@@ -10,6 +11,7 @@ import type {ImageFrame, ProfileLayout, TemplateCharacter} from "@/app/_componen
 import {toProfileFacts} from "@/app/_components/template/ProfileFacts";
 import type {MyListItem, MyListQueryFormType} from "@/app/_components/mylist/validator";
 import {MAX_KEYWORD_LENGTH, myListQueryForm} from "@/app/_components/mylist/validator";
+import {browseQueryForm, type BrowseItem, type BrowseSort} from "@/app/_components/browse/validator";
 import {getMyAutoplayMusic} from "@/app/setting/getAccountInfo";
 
 /* 캐시가 들고 있는 건 DB 행이지 이미지 서명이 아니다. 그래서 이 값은 "공개 설정을
@@ -83,6 +85,7 @@ async function toMyList(data: Awaited<ReturnType<typeof getCharactersMyListRow>>
 		charName: data.charName,
 		charImage: await charImageURL(data.charPublicMode, data.charUploaderId, data.charImage),
 		charColor: data.charColor,
+		charProfileLayout: toProfileLayout(data.charProfileLayout),
 		charPublicMode: data.charPublicMode,
 		likeCount: data._count.characterLikes,
 		commentCount: data._count.characterComments,
@@ -168,15 +171,17 @@ async function getCharactersMyListRow(userId: string, {keyword, sort, public_mod
 	};
 
 	if (keyword) {
+		const escapedKeyword: string = escapeLike(keyword);
+
 		where.OR = [
 			{
 				charName: {
-					contains: keyword,
+					contains: escapedKeyword,
 				},
 			},
 			{
 				charMessage: {
-					contains: keyword,
+					contains: escapedKeyword,
 				},
 			},
 		];
@@ -210,6 +215,7 @@ async function getCharactersMyListRow(userId: string, {keyword, sort, public_mod
 				charName: true,
 				charImage: true,
 				charColor: true,
+				charProfileLayout: true,
 				charPublicMode: true,
 				charUploaderId: true,
 				charMessage: true,
@@ -454,3 +460,187 @@ export const getCharactersAsMyList = cache(
 		};
 	}
 );
+
+interface GetBrowseCharactersSuccess {
+	success: true;
+	result: {
+		characters: BrowseItem[];
+		/** 검색 조건에 맞는 공개 프로필 수. */
+		count: number;
+		page: number;
+		keyword: string;
+		sort: BrowseSort;
+	};
+}
+
+interface GetBrowseCharactersFailure {
+	success: false;
+	/** 쿼리를 고친 주소. 페이지는 이 값으로 redirect한다. */
+	redirectQuery: string;
+}
+
+type GetBrowseCharactersResult = GetBrowseCharactersSuccess | GetBrowseCharactersFailure;
+
+function toRedirectQuery(page: number, keyword: string | null | undefined, sort: BrowseSort | null): string {
+	const params: URLSearchParams = new URLSearchParams();
+
+	if (keyword) {
+		params.set("keyword", keyword);
+	}
+
+	if (sort !== null) {
+		params.set("sort", sort);
+	}
+
+	params.set("page", page.toString());
+
+	return "?" + params.toString();
+}
+
+/* /mylist는 한 사람이 만든 프로필(최대 30개)만 보여서 전부 가져와 잘랐지만, 둘러보기는
+   공개 프로필 전체라 개수에 상한이 없다. 그래서 DB에서 그 페이지 몫(12개)만 가져온다.
+   최신순이고 검색어가 없으면 idx_public_mode_created 인덱스를 그대로 탄다. 좋아요순은 공개 프로필마다
+   좋아요를 세서 정렬하므로 프로필이 늘면 느려진다 - 그때는 기본값으로 쓰지 않는다(PROJECT_STATUS 43번). */
+export const getBrowseCharacters = cache(async (queryData: Record<string, string | string[] | undefined>): Promise<GetBrowseCharactersResult> => {
+	const check = browseQueryForm.safeParse(queryData);
+
+	if (!check.success) {
+		const {keyword, sort} = queryData;
+
+		/* 틀린 정렬 값은 버리고 기본값(최신순)으로 보게 한다. 맞는 값이면 그대로 둔다. */
+		const validSort: BrowseSort | null = sort === "latest" || sort === "like" ? sort : null;
+
+		return {
+			success: false,
+			redirectQuery: toRedirectQuery(1, typeof keyword === "string" ? keyword.substring(0, MAX_KEYWORD_LENGTH) : null, validSort),
+		};
+	}
+
+	const {page, keyword, sort} = check.data;
+
+	const escapedKeyword: string | null = keyword ? escapeLike(keyword) : null;
+
+	const where: Record<string, unknown> = {
+		charPublicMode: PUBLIC_MODE_PUBLIC,
+	};
+
+	if (escapedKeyword !== null) {
+		where.OR = [
+			{
+				charName: {contains: escapedKeyword},
+			},
+			{
+				charMessage: {
+					contains: escapedKeyword,
+				},
+			},
+		];
+	}
+
+	const orderBy: Record<string, unknown>[] = [];
+
+	if (sort === "like") {
+		orderBy.push(
+			{
+				characterLikes: {
+					_count: "desc",
+				},
+			},
+			{
+				charId: "desc",
+			}
+		);
+	} else {
+		orderBy.push(
+			{
+				createdAt: "desc",
+			},
+			{
+				charId: "desc",
+			}
+		);
+	}
+
+	const [rows, count] = await Promise.all([
+		db.character.findMany({
+			where,
+			select: {
+				charPublicLink: true,
+				charName: true,
+				charImage: true,
+				charColor: true,
+				charProfileLayout: true,
+				charUploaderId: true,
+				charMessage: true,
+				charKind: true,
+				charAge: true,
+				charBirthday: true,
+				charHeight: true,
+				charMbti: true,
+				charBirthplace: true,
+				user: {
+					select: {
+						username: true,
+						name: true,
+					},
+				},
+				_count: {
+					select: {
+						characterLikes: true,
+						characterComments: {
+							where: {
+								deletedAt: null,
+							},
+						},
+					},
+				},
+			},
+			/* 같은 초에 만든 프로필은 createdAt이 같아(DATETIME(0)), 좋아요 수가 같은 프로필도 많아 페이지를 넘길 때
+			   순서가 섞일 수 있다. charId로 한 번 더 정렬한다. 좋아요순은 /mylist와 같은 방식이다. */
+			orderBy,
+			skip: (page - 1) * MAX_PAGINATION_TILE,
+			take: MAX_PAGINATION_TILE,
+		}),
+		db.character.count({
+			where,
+		}),
+	]);
+
+	const lastPage: number = Math.max(Math.ceil(count / MAX_PAGINATION_TILE), 1);
+
+	if (page > lastPage) {
+		return {
+			success: false,
+			redirectQuery: toRedirectQuery(lastPage, keyword, sort),
+		};
+	}
+
+	const characters: BrowseItem[] = await Promise.all(
+		rows.map(async (row) => ({
+			uuid: binToUuid(row.charPublicLink),
+			charName: row.charName,
+			charImage: await charImageURL(PUBLIC_MODE_PUBLIC, row.charUploaderId, row.charImage),
+			charColor: row.charColor,
+			charProfileLayout: toProfileLayout(row.charProfileLayout),
+			likeCount: row._count.characterLikes,
+			commentCount: row._count.characterComments,
+			charMessage: row.charMessage,
+			kakaoDetail: {
+				creator: row.user.username || row.user.name || "알 수 없음",
+				facts: toProfileFacts(row).map(({label, value}) => ({label, value})),
+				likeCount: row._count.characterLikes,
+			},
+		}))
+	);
+
+	return {
+		success: true,
+		result: {
+			characters,
+			count,
+			page,
+			keyword: keyword ?? "",
+			sort,
+		},
+	};
+});

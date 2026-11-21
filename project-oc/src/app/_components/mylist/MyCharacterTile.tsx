@@ -20,7 +20,7 @@ interface MyCharacterTileProps {
 }
 
 export default function MyCharacterTile({character, priority = false, nonce, params}: MyCharacterTileProps) {
-	const {uuid, charName, charImage, charColor, charPublicMode, likeCount, commentCount, charMessage, kakaoDetail} = character;
+	const {uuid, charName, charImage, charColor, charProfileLayout, charPublicMode, likeCount, commentCount, charMessage, kakaoDetail} = character;
 
 	const isPublic: boolean = charPublicMode === PUBLIC_MODE_PUBLIC;
 	const shareable: boolean = charPublicMode !== PUBLIC_MODE_PRIVATE;
@@ -28,7 +28,7 @@ export default function MyCharacterTile({character, priority = false, nonce, par
 	return (
 		<article className={styles.tile} style={{"--char-color": charColor}}>
 			<Link href={`/template/${uuid}`} className={styles.link}>
-				<div className={styles.media}>
+				<div className={`${styles.media} ${charProfileLayout === "v" ? styles.vertical : ""}`}>
 					<Image
 						src={charImage}
 						alt={`${charName} 캐릭터 이미지`}
