@@ -7,7 +7,7 @@ import ThemeSelect from "./ThemeSelect";
 export default function GuestMenu() {
 	return (
 		<div className={styles.menu} aria-label="주요 메뉴">
-			<Link href="/" className={styles.text}>
+			<Link href="/browse?page=1" className={styles.text}>
 				프로필 둘러보기
 			</Link>
 
