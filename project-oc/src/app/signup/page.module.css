@@ -32,6 +32,12 @@
 	font-size: 12.5px;
 	line-height: 1.6;
 	word-break: keep-all;
+
+	& a {
+		color: var(--muted);
+		font-weight: 600;
+		text-decoration: underline;
+	}
 }
 
 .sub_links {
