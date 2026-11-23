@@ -178,7 +178,7 @@ export async function changeUserName(data: unknown): Promise<SetAccountInfoResul
 }
 
 /* 새 이메일 주소로 확인 링크를 보낸다. 이메일은 링크의 버튼을 눌러야 바뀐다(/auth/[token]).
-   유효한 링크가 남아 있는 동안에는 다시 보내지 않는다. 새로고침을 반복해 Gmail의 하루 발송
+   유효한 링크가 남아 있는 동안에는 다시 보내지 않는다. 새로고침을 반복해 Resend의 하루 발송
    한도를 갉아먹는 걸 막으려는 것이다. 성공하면 메일을 보낸 주소를 돌려준다. */
 export async function requestEmailChange(data: unknown): Promise<SetAccountInfoResult<string>> {
 	const check = changeEmailForm.safeParse(data);

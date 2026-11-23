@@ -1,18 +1,25 @@
 import "server-only";
 import nodemailer, {type Transporter} from "nodemailer";
 
-/* Gmail SMTP를 앱 비밀번호로 쓴다. Google 계정에 2단계 인증이 켜져 있어야 앱 비밀번호를
-   만들 수 있다. 하루 500통 한도가 있다(https://support.google.com/mail/answer/22839).
-   https://nodemailer.com/guides/using-gmail */
+/* Resend SMTP로 보낸다. 사용자 이름은 "resend"로 고정이고 비밀번호 자리에 API 키를 넣는다.
+   무료 플랜은 하루 100통, 한 달 3,000통 한도가 있다(https://resend.com/docs/send-with-smtp).
+   보내는 주소는 Resend에 인증한 도메인(projectoc.org)이어야 한다.
+   운영자 개인 메일이 드러나지 않도록 replyTo는 넣지 않는다. */
+const SMTP_HOST: string = "smtp.resend.com";
+const SMTP_PORT: number = 465;
+const SMTP_USER: string = "resend";
+
 let transporter: Transporter | null = null;
 
 function getTransporter(): Transporter {
 	if (transporter === null) {
 		transporter = nodemailer.createTransport({
-			service: "gmail",
+			host: SMTP_HOST,
+			port: SMTP_PORT,
+			secure: true,
 			auth: {
-				user: process.env.GMAIL_USER,
-				pass: process.env.GMAIL_APP_PASSWORD,
+				user: SMTP_USER,
+				pass: process.env.RESEND_API_KEY,
 			},
 		});
 	}
@@ -34,7 +41,7 @@ export async function sendMail({subject, html, ...option}: SendMailOptions): Pro
 	await getTransporter().sendMail({
 		from: {
 			name: "프로젝트 OC",
-			address: process.env.GMAIL_USER ?? "",
+			address: process.env.MAIL_FROM_ADDRESS ?? "",
 		},
 		subject,
 		html,
