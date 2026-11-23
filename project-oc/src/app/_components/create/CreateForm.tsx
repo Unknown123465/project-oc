@@ -6,7 +6,7 @@ import ImageUploadField from "./ImageUploadField";
 import CoreInfoSection from "./CoreInfoSection";
 import ColorSection from "./ColorSection";
 import ChoiceSection from "./ChoiceSection";
-import {SubmitButton, NormalButton, LinkButton} from "@/components/ui/button";
+import {SubmitButton, LinkButton} from "@/components/ui/button";
 import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue, UseFormSetValues} from "react-hook-form";
 import {createCharForm, editCharForm, EditCharFormType, type CreateCharFormInputType} from "@/app/create/validator";
 import {useId} from "react";
@@ -56,7 +56,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 		/* refine이 Blob임을 보장하지만 nullable이 붙어 있어 타입은 좁혀지지 않는다. */
 		if (charImage === null) {
 			setError("root", {
-				message: "캐릭터 이미지를 업로드 해주세요.",
+				message: "캐릭터 이미지를 업로드해 주세요.",
 			});
 
 			return;
@@ -193,9 +193,9 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 	let submitButtonMessage: string = "";
 
 	if (!editable) {
-		submitButtonMessage = isSubmitting ? "제출중" : "프로필 완성";
+		submitButtonMessage = isSubmitting ? "제출 중" : "프로필 완성";
 	} else {
-		submitButtonMessage = isSubmitting ? "수정중" : "프로필 수정";
+		submitButtonMessage = isSubmitting ? "수정 중" : "프로필 수정";
 	}
 
 	return (
@@ -210,7 +210,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 				headingId={aiHeadingId}
 				heading="프로필 이미지에 AI를 사용했나요?"
 				required
-				warning="AI를 사용했지만 사용하지 않았다고 응답한 경우 프로필이 삭제될 수 있습니다."
+				warning="AI를 썼는데 안 썼다고 답하면 프로필이 삭제될 수 있어요."
 				name="aiUsed"
 				register={register}
 				errors={errors}
@@ -227,9 +227,9 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 				register={register}
 				errors={errors}
 				choices={[
-					{value: "0", title: "공개", description: "검색과 링크를 통해 누구나 프로필을 볼 수 있습니다."},
-					{value: "1", title: "일부 공개", description: "링크를 가진 사람만 프로필을 볼 수 있습니다."},
-					{value: "2", title: "비공개", description: "본인만 프로필을 볼 수 있습니다."},
+					{value: "0", title: "공개", description: "검색과 링크로 누구나 볼 수 있어요."},
+					{value: "1", title: "일부 공개", description: "링크를 아는 사람만 볼 수 있어요."},
+					{value: "2", title: "비공개", description: "나만 볼 수 있어요."},
 				]}
 			/>
 
@@ -242,15 +242,11 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 					{submitButtonMessage}
 				</SubmitButton>
 
-				{!editable ? (
-					<NormalButton disabled={isSubmitting} style={{flex: 1}}>
-						임시 저장
-					</NormalButton>
-				) : (
+				{editable ? (
 					<LinkButton href={backURL} styleType="simple" style={{flex: 1}}>
 						취소
 					</LinkButton>
-				)}
+				) : null}
 			</div>
 		</form>
 	);

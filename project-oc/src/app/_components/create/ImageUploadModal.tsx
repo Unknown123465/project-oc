@@ -383,7 +383,7 @@ export default function ImageUploadModal({open, onClose, onApply, ref}: ImageUpl
 			waitTime = window.setTimeout(() => {
 				URL.revokeObjectURL(objectUrl);
 
-				reject(new Error("이미지 읽는 시간이 너무 오래 걸려요. 다시 시도 하거나 다른 파일을 선택해 주세요."));
+				reject(new Error("이미지 읽는 시간이 너무 오래 걸려요. 다시 시도하거나 다른 파일을 선택해 주세요."));
 			}, 1000 * 5);
 
 			imgTag.src = objectUrl;
@@ -613,7 +613,7 @@ export default function ImageUploadModal({open, onClose, onApply, ref}: ImageUpl
 								{isReadingFile ? "이미지 읽는 중" : "이미지 선택"}
 							</ActionButton>
 
-							<p>PNG, JPG, WEBP / 최대 10MB 및3000x3000px 이하</p>
+							<p>PNG, JPG, WEBP / 최대 10MB 및 3000x3000px 이하</p>
 
 							<p role="alert" className={styles.error}>
 								{errorMessage}

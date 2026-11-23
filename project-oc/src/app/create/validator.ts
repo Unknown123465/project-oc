@@ -80,7 +80,7 @@ export const createCharForm = z.object({
 	charImage: z
 		.instanceof(Blob)
 		.nullable()
-		.refine((data) => data instanceof Blob, "캐릭터 이미지를 업로드 해주세요."),
+		.refine((data) => data instanceof Blob, "캐릭터 이미지를 업로드해 주세요."),
 	charProfileLayout: z.enum(["h", "v", "s", ""], "이미지 유형을 선택해 주세요.").refine((data) => data === "h" || data === "v" || data === "s", "이미지 유형을 선택해 주세요."),
 	charImageFrame: z.enum(["square", "circle", ""], "이미지 프레임을 선택해 주세요.").refine((data) => data === "square" || data === "circle", "이미지 프레임을 선택해 주세요."),
 	charMessage: genStringSchema("default").pipe(
@@ -152,7 +152,7 @@ export type EditUploadTicketType = z.infer<typeof editUploadTicket>;
 export const CHAR_IMAGE_NAME_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.png$/;
 
 export const createCharServerForm = createCharForm.omit({charImage: true}).extend({
-	charImageName: z.string().regex(CHAR_IMAGE_NAME_PATTERN, "캐릭터 이미지를 다시 업로드 해주세요."),
+	charImageName: z.string().regex(CHAR_IMAGE_NAME_PATTERN, "캐릭터 이미지를 다시 업로드해 주세요."),
 });
 
 export type CreateCharServerFormType = z.infer<typeof createCharServerForm>;

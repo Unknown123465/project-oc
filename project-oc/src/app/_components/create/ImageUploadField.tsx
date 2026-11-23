@@ -10,6 +10,7 @@ import {AI_DRAFT_DISABLED_MESSAGE, CreateCharFormInputType} from "@/app/create/v
 import {IMAGE_FRAME_LABEL, IMAGE_TYPE_DEFINITIONS, type ImageFrame, type ImageType} from "@/app/create/imageEditor";
 import {ProfileLayout} from "./ProfileSheet";
 import {ActionButton} from "@/components/ui/button";
+import {usePathname} from "next/navigation";
 
 const LAYOUT_CLASS: Record<ProfileLayout, string> = {
 	"": "",
@@ -38,6 +39,8 @@ interface ImageUploadFieldProps {
 export default function ImageUploadField({control, errors, setValue, setValues, aiDraftRemaining, aiDraftEnabled}: ImageUploadFieldProps) {
 	const titleId = useId();
 
+	const pathname = usePathname();
+
 	const [openedModal, setOpenedModal] = useState<"image" | "prompt" | null>(null);
 
 	const imageModalRef = useRef<ImageUploadModalHandle>(null);
@@ -58,6 +61,8 @@ export default function ImageUploadField({control, errors, setValue, setValues, 
 	const imageURL = useMemo(() => {
 		return image instanceof File ? URL.createObjectURL(image) : null;
 	}, [image]);
+
+	const isCreatePage: boolean = pathname.startsWith("/create");
 
 	useEffect(() => {
 		if (imageURL !== null) {
@@ -97,9 +102,9 @@ export default function ImageUploadField({control, errors, setValue, setValues, 
 					<img src={imageURL} alt="적용된 캐릭터 이미지" className={`${styles.upload_preview} ${LAYOUT_CLASS[layout]}`} />
 				) : (
 					<span className={styles.upload_prompt}>
-						<b>캐릭터 이미지 추가</b>
+						<b>{isCreatePage ? "캐릭터 이미지 추가" : "새 이미지로 바꾸기"}</b>
 
-						<span>유형과 영역을 선택해 적용합니다.</span>
+						<span>{isCreatePage ? "유형과 영역을 골라 적용해요." : "지금 이미지는 그대로 남아요. 유형이나 영역을 바꾸려면 새 이미지를 올려 주세요."}</span>
 					</span>
 				)}
 			</button>
