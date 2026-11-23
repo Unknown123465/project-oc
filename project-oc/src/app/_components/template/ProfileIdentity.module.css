@@ -14,13 +14,14 @@
 		color: var(--muted);
 		font-size: 17px;
 	}
-}
 
-.eyebrow {
-	margin: 0 0 12px;
-	color: var(--muted);
-	font-size: 13px;
-	font-weight: 720;
+	/* 위 `& p`(.identity p)보다 우선하도록 .identity 안에 둔다. 밖에 두면 크기와 여백이 덮여 17px로 이름에 붙는다. */
+	& .eyebrow {
+		margin: 0 0 12px;
+		color: var(--muted);
+		font-size: 13px;
+		font-weight: 720;
+	}
 }
 
 .centered {

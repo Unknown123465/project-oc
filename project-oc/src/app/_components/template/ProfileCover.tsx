@@ -15,9 +15,9 @@ interface ProfileCoverProps {
 /* 레이아웃마다 원본 목업의 이미지 영역 비율이 달라 next/image에 넘길 intrinsic
    크기도 따로 필요하다. CSS만으로는 이 값을 대신할 수 없다. */
 const IMAGE_SIZE: Record<ProfileLayout, {width: number; height: number}> = {
-	h: {width: 980, height: 320},
+	h: {width: 1200, height: 396},
 	v: {width: 320, height: 620},
-	s: {width: 330, height: 220},
+	s: {width: 520, height: 520},
 };
 
 const LAYOUT_CLASS: Record<ProfileLayout, string> = {
