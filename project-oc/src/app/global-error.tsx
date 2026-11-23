@@ -10,15 +10,15 @@ export default function GlobalError({retry}: ErrorInfo) {
 		<html lang="ko">
 			<body className={styles.body}>
 				<meta name="robots" content="noindex, noai, noimageai" />
-				<title>잠시 문제가 생겼습니다. 죄송합니다! - 프로젝트 OC</title>
+				<title>문제가 생겼어요 - 프로젝트 OC</title>
 
 				<main className={styles.main}>
 					<section className={styles.copy}>
 						<p className={styles.title}>이런&nbsp;!</p>
 
-						<h1>잠시 문제가 생겼습니다.</h1>
+						<h1>잠시 문제가 생겼어요.</h1>
 
-						<p>페이지를 불러오지 못했습니다. 죄송합니다!{"\n"}잠시 후 다시 시도해 주세요.</p>
+						<p>페이지를 불러오지 못했어요.{"\n"}잠시 후 다시 시도해 주세요.</p>
 
 						<div className={styles.actions}>
 							<ActionButton className={styles.retry} width="auto" style={{padding: "0 22px"}} styleType="attention" onClick={retry}>

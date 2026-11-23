@@ -51,8 +51,6 @@ export default function ProfileBlocks({character, autoplayMusic}: ProfileBlocksP
 				<section className={`${styles.block} ${styles.block_wide} ${styles.theme_song}`}>
 					<div className={styles.theme_song_head}>
 						<h3>테마곡</h3>
-
-						<p>캐릭터의 분위기를 음악과 함께 감상해 보세요.</p>
 					</div>
 
 					<div className={styles.theme_song_frame}>

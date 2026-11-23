@@ -4,8 +4,8 @@ import {LinkButton} from "@/components/ui/button";
 export default function NotFound() {
 	return (
 		<ErrorScreen
-			title="찾고 계신 프로필이 없습니다."
-			description="캐릭터가 삭제되었거나 주소가 잘못되었을 수 있어요."
+			title="프로필을 찾을 수 없어요."
+			description="삭제됐거나 주소가 잘못됐을 수 있어요."
 			visual="profileMissing"
 			actions={
 				<>

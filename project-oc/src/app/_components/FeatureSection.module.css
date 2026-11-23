@@ -52,5 +52,9 @@
 	.feature_box {
 		width: calc(100% - 28px);
 		margin-top: 155px;
+
+		& .title p {
+			white-space: pre-wrap;
+		}
 	}
 }

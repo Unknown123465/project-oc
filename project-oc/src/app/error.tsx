@@ -8,11 +8,11 @@ export default function ErrorPage({retry}: ErrorInfo) {
 	return (
 		<>
 			<meta name="robots" content="noindex, noai, noimageai" />
-			<title>잠시 문제가 생겼습니다. 죄송합니다! - 프로젝트 OC</title>
+			<title>문제가 생겼어요 - 프로젝트 OC</title>
 
 			<ErrorScreen
-				title="잠시 문제가 생겼습니다."
-				description="페이지를 불러오지 못했습니다. 죄송합니다! 잠시 후 다시 시도해 주세요."
+				title="잠시 문제가 생겼어요."
+				description="페이지를 불러오지 못했어요. 잠시 후 다시 시도해 주세요."
 				visual="server"
 				actions={
 					<>

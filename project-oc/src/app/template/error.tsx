@@ -8,11 +8,11 @@ export default function ProfileErrorPage({retry}: ErrorInfo) {
 	return (
 		<>
 			<meta name="robots" content="noindex, noai, noimageai" />
-			<title>잠시 문제가 생겼습니다. 죄송합니다! - 프로젝트 OC</title>
+			<title>문제가 생겼어요 - 프로젝트 OC</title>
 
 			<ErrorScreen
-				title="프로필을 불러오지 못했습니다."
-				description="캐릭터 프로필과 카드를 잠시 사용할 수 없습니다. 잠시 후 다시 시도해 주세요."
+				title="프로필을 불러오지 못했어요."
+				description="프로필과 카드를 잠시 볼 수 없어요. 잠시 후 다시 시도해 주세요."
 				visual="profileServer"
 				actions={
 					<>

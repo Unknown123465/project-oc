@@ -23,9 +23,9 @@ export default function BrowseEmpty({kind, isLoggedIn}: BrowseEmptyProps) {
 
 	let message: string = "";
 
-	if (isLoggedIn) {
-		message = kind === "search" ? "찾는 캐릭터가 없으신가요?" : "만든 캐릭터가 있으신가요?";
-	} else {
+	if (isLoggedIn && kind === "search") {
+		message = "찾는 캐릭터가 없으신가요?";
+	} else if (!isLoggedIn) {
 		message = "혹시 처음이신가요?";
 	}
 
