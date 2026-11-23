@@ -1,0 +1,65 @@
+/* 헤더와 푸터를 숨기는 페이지라 화면 전체 높이의 가운데에 판 하나만 둔다.
+   판의 색과 테두리, 모서리는 비밀번호 변경(setting/changepw)과 같다. */
+.main {
+	min-height: 100dvh;
+	padding: 40px 20px;
+	display: grid;
+	place-items: center;
+}
+
+.panel {
+	width: 100%;
+	max-width: 400px;
+	padding: 36px 32px 32px;
+	display: grid;
+	justify-items: center;
+	text-align: center;
+	background-color: var(--card-dark-1);
+	border: 1px solid var(--line-color-1);
+	border-radius: var(--radius-3);
+
+	& h1 {
+		margin: 0;
+		color: var(--title-text);
+		font-size: 22px;
+		font-weight: 900;
+		line-height: 1.35;
+		letter-spacing: -0.05em;
+		word-break: keep-all;
+	}
+
+	& p {
+		margin: 8px 0 0;
+		color: var(--muted);
+		font-size: 14.5px;
+		line-height: 1.6;
+		word-break: keep-all;
+	}
+}
+
+.mark {
+	width: 60px;
+	height: 60px;
+	margin-bottom: 20px;
+	display: grid;
+	place-items: center;
+	color: var(--button-submit-text);
+	font-size: 26px;
+	line-height: 0;
+	background-color: var(--personal);
+	border-radius: 50%;
+}
+
+@media (width < 768px) {
+	.main {
+		padding: 28px 14px;
+	}
+
+	.panel {
+		padding: 30px 20px 26px;
+
+		& h1 {
+			font-size: 20px;
+		}
+	}
+}
