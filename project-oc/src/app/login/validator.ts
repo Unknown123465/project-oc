@@ -12,7 +12,7 @@ export const loginForm = z.object({
 
 export type LoginFormType = z.infer<typeof loginForm>;
 
-export const providerForm = z.enum(["Google", "Naver", "Kakao", "Twitter"], "공급업체가 올바르지 않아요. 다시 시도해 주세요.");
+export const providerForm = z.enum(["Google", "Naver", "Kakao", "Twitter"], "지원하지 않는 로그인 방법이에요. 다시 시도해 주세요.");
 
 export type ProviderFormType = z.infer<typeof providerForm>;
 
@@ -47,6 +47,13 @@ const loginQueryForm = z
 				},
 				LOGIN_QUERY_TYPE_IS_NOT_VALID
 			),
+			/* 프로필 둘러보기의 "로그인하고 만들기" 버튼. 돌아갈 곳이 정해져 있어 다른 쿼리는 받지 않는다. */
+			z.object(
+				{
+					link: z.enum(["create"], INVALID_LINK_QUERY),
+				},
+				LOGIN_QUERY_TYPE_IS_NOT_VALID
+			),
 		],
 		LOGIN_QUERY_TYPE_IS_NOT_VALID
 	)
@@ -67,6 +74,8 @@ function isLinkQueryFailed(check: LoginQueryCheck): boolean {
 function genRedirectToUrl(query: NonNullable<LoginQueryFormType>): string {
 	if (query.link === "template" || query.link === "edit") {
 		return `/${encodeURIComponent(query.link)}/${encodeURIComponent(query.uuid)}`;
+	} else if (query.link === "create") {
+		return "/create";
 	} else {
 		const queryArray: string[][] = Object.entries(query).flatMap(([key, value]) => (value === null || value === undefined ? [] : [[key, value.toString()]]));
 

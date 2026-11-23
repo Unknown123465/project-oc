@@ -52,7 +52,7 @@ export default async function BrowsePage({searchParams}: PageProps<"/browse">) {
 				</div>
 
 				{isNoProfile ? null : (
-					<LinkButton href={isLoggedIn ? "/create" : "/login"} width="auto" className={styles.create}>
+					<LinkButton href={isLoggedIn ? "/create" : "/login?link=create"} width="auto" className={styles.create}>
 						<i className={`bi ${isLoggedIn ? "bi-plus-lg" : "bi-box-arrow-in-right"}`} aria-hidden="true"></i>
 						{isLoggedIn ? "프로필 만들기" : "로그인하고 만들기"}
 					</LinkButton>
