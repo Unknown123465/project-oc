@@ -41,8 +41,9 @@
 		--circle-bottom: -70px;
 		--ratio: 1;
 
-		width: min(70%, 320px);
-		margin: 24px auto 0;
+		/* 프로필 페이지처럼 판 안쪽 여백만 빼고 꽉 채우되 520px을 넘지 않는다. */
+		width: min(100% - 2 * clamp(24px, 4vw, 44px), 520px);
+		margin: clamp(24px, 4vw, 44px) auto 0;
 		border-radius: var(--radius-2);
 	}
 
@@ -70,23 +71,27 @@
 	padding: clamp(24px, 4vw, 44px);
 }
 
+/* 값은 프로필 페이지(template/ProfileIdentity.module.css)와 맞춘다. */
 .identity {
+	margin-top: 28px;
+
 	& p {
 		color: var(--muted);
 
 		&:first-of-type {
-			margin: 10px 0 0;
-			font-weight: 700;
+			margin: 0 0 12px;
+			font-size: 13px;
+			font-weight: 720;
 		}
 
 		&:last-of-type {
-			margin: 0;
+			margin: 10px 0 0;
 			font-size: 17px;
 		}
 	}
 
 	& h2 {
-		margin: 20px 0 6px;
+		margin: 0;
 		color: var(--title-text);
 		font-size: clamp(34px, 5vw, 54px);
 		line-height: 1.12;
@@ -120,6 +125,38 @@
 	}
 }
 
+/* 프로필 페이지는 876px 미만에서 세로형 커버를 위로 올리고 본문을 아래에 둔다(template/CharacterProfile.module.css,
+   ProfileCover.module.css). 이 화면 너비에서는 미리보기도 같은 모양으로 보여 준다. */
+@media (width < 876px) {
+	.sheet.vertical .hero_grid {
+		grid-template-columns: 1fr;
+		gap: 34px;
+		padding: clamp(24px, 4vw, 44px);
+	}
+
+	.sheet.vertical .cover {
+		display: grid;
+		place-items: center;
+		min-height: 520px;
+		aspect-ratio: auto;
+	}
+
+	.sheet.vertical .cover_image {
+		width: min(100%, 320px);
+		height: auto;
+		object-fit: contain;
+	}
+
+	.sheet.vertical .identity h2 {
+		font-size: clamp(34px, 5vw, 54px);
+	}
+}
+
 .sheet.square .identity {
 	text-align: center;
+}
+
+/* 프로필 페이지의 정사각형은 커버와 이름 사이가 이름 영역의 위 여백(28px)뿐이라 위쪽 안쪽 여백을 뺀다. */
+.sheet.square .inner {
+	padding-top: 0;
 }

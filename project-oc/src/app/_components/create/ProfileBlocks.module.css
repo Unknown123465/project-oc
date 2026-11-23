@@ -1,14 +1,16 @@
+/* 값은 프로필 페이지(template/ProfileBlocks.module.css)와 맞춘다. 미리보기가 실제 프로필과 다르게 보이지 않게 하려는 것이다. */
 .blocks {
-	margin-top: 20px;
+	margin-top: 24px;
 	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 12px;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
 }
 
 .block,
 .block_wide {
 	padding: 18px;
 	background-color: var(--card-dark-2);
+	border: 1px solid var(--card-dark-line);
 	border-radius: var(--radius-2);
 
 	& h3 {
@@ -23,25 +25,47 @@
 		margin: 0;
 		color: var(--sub-text);
 		font-size: 14px;
-		line-height: 1.6;
-	}
-
-	& p {
-		word-break: break-all;
+		line-height: 1.72;
+		overflow-wrap: anywhere;
+		word-break: break-word;
 	}
 
 	& ul {
-		padding-left: 18px;
+		padding-left: 20px;
 	}
 
-	& iframe {
-		width: 100%;
-		border: 0;
+	& li + li {
+		margin-top: 5px;
 	}
 }
 
 .block_wide {
 	grid-column: 1 / -1;
+}
+
+.theme_song {
+	padding: 22px;
+}
+
+.theme_song_head {
+	margin-bottom: 16px;
+
+	& h3 {
+		margin: 0 0 5px;
+	}
+}
+
+.theme_song_frame {
+	overflow: hidden;
+	border: 1px solid var(--card-dark-line);
+	border-radius: var(--radius-1);
+	background-color: #181818;
+
+	& iframe {
+		display: block;
+		width: 100%;
+		border: 0;
+	}
 }
 
 @container (max-width: 420px) {
