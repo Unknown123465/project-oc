@@ -3,6 +3,7 @@
 import "server-only";
 import {AuthError} from "next-auth";
 import {signIn, authProviders} from "../../auth/auth";
+import {saveAgeConsent} from "../../auth/ageConsent";
 import {loginForm, LoginFormType, providerForm, ProviderFormType, resolveLoginRedirect} from "./validator";
 
 interface NormalLoginActionSuccessResult {
@@ -32,7 +33,7 @@ type SocialLoginActionResult = SocialLoginActionSuccessResult | SocialLoginActio
    로그인 폼만으로 어떤 사용자 이름이 가입돼 있는지 확인할 수 있게 된다. */
 const NORMAL_LOGIN_FAILED_MESSAGE = "사용자 이름 또는 비밀번호가 올바르지 않습니다.";
 
-const SOCIAL_LOGIN_FAILED_MESSAGE = "소셜 로그인에 실패하였습니다. 다시 시도해 주세요.";
+const SOCIAL_LOGIN_FAILED_MESSAGE = "소셜 로그인에 실패했어요. 다시 시도해 주세요.";
 
 export async function normalLoginAction(data: LoginFormType, query: Record<string, string> | null): Promise<NormalLoginActionResult> {
 	const check = loginForm.safeParse(data);
@@ -76,7 +77,7 @@ export async function normalLoginAction(data: LoginFormType, query: Record<strin
 	}
 }
 
-export async function socialLoginAction(provider: ProviderFormType, query: Record<string, string> | null): Promise<SocialLoginActionResult> {
+export async function socialLoginAction(provider: ProviderFormType, query: Record<string, string> | null, ageConfirmed: boolean): Promise<SocialLoginActionResult> {
 	const providerCheck = providerForm.safeParse(provider);
 
 	if (!providerCheck.success) {
@@ -91,6 +92,9 @@ export async function socialLoginAction(provider: ProviderFormType, query: Recor
 	if (!loginRedirect.success) {
 		return loginRedirect;
 	}
+
+	/* 처음 가입하는 소셜 계정인지는 콜백에서야 알 수 있어, 체크 여부를 쿠키로 콜백까지 넘긴다(auth/ageConsent.ts). */
+	await saveAgeConsent(ageConfirmed === true);
 
 	const id = authProviders[provider];
 

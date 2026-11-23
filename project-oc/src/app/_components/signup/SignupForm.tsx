@@ -27,6 +27,7 @@ export default function SignupForm() {
 		userName: `${baseId}-user-name-error`,
 		password: `${baseId}-password-error`,
 		passwordRepeat: `${baseId}-password-repeat-error`,
+		ageConfirmed: `${baseId}-age-confirmed-error`,
 		root: `${baseId}-root-error`,
 	};
 
@@ -34,6 +35,7 @@ export default function SignupForm() {
 
 	const {
 		control,
+		register,
 		setError,
 		handleSubmit,
 		formState: {errors, isSubmitting},
@@ -43,6 +45,7 @@ export default function SignupForm() {
 			userName: "",
 			password: "",
 			passwordRepeat: "",
+			ageConfirmed: false,
 		},
 		resolver: zodResolver(signupForm),
 		mode: "onSubmit",
@@ -136,8 +139,19 @@ export default function SignupForm() {
 				</p>
 			</div>
 
+			<div className={styles.field_group}>
+				<label className={styles.age_check}>
+					<input type="checkbox" {...register("ageConfirmed")} aria-invalid={errors.ageConfirmed ? true : undefined} aria-describedby={errors.ageConfirmed ? errorId.ageConfirmed : undefined} />
+					만 15세 이상이에요
+				</label>
+
+				<p id={errorId.ageConfirmed} className={styles.field_error}>
+					{errors.ageConfirmed?.message}
+				</p>
+			</div>
+
 			<SubmitButton style={{marginTop: 6}} disabled={isSubmitting}>
-				{isSubmitting ? "가입중" : "회원가입"}
+				{isSubmitting ? "가입 중" : "회원가입"}
 			</SubmitButton>
 		</form>
 	);

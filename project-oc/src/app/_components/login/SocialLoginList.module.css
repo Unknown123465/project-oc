@@ -3,3 +3,42 @@
 	flex-direction: column;
 	gap: 10px;
 }
+
+.age_check {
+	width: fit-content;
+	margin-bottom: 2px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--title-text);
+	font-size: 14px;
+	font-weight: 650;
+	cursor: pointer;
+
+	& input {
+		width: 17px;
+		height: 17px;
+		margin: 0;
+		accent-color: var(--personal-dark);
+		cursor: pointer;
+	}
+
+	&:has(input:disabled) {
+		color: var(--muted);
+		cursor: default;
+	}
+}
+
+.age_note {
+	margin: 4px 0 0;
+	color: var(--muted);
+	font-size: 12.5px;
+	line-height: 1.6;
+	word-break: keep-all;
+}
+
+.age_note a {
+	color: var(--muted);
+	font-weight: 600;
+	text-decoration: underline;
+}

@@ -31,6 +31,8 @@ export const signupForm = z
 		userName: userNameField,
 		password: passwordField,
 		passwordRepeat: z.string("값이 올바르지 않아요.").min(1, "비밀번호 확인을 입력해 주세요."),
+		/* 만 15세 미만은 가입할 수 없다. 법(개인정보 보호법 제22조의2)이 요구하는 선은 만 14세이고, 15세는 허용하는 그림 수위(15세 이용가 게임 공식 일러스트 수준)에 맞춘 운영 기준이다. 소셜 가입은 auth/ageConsent.ts */
+		ageConfirmed: z.boolean("값이 올바르지 않아요.").refine((value) => value, "만 15세 이상만 가입할 수 있어요."),
 	})
 	.refine((data) => data.password === data.passwordRepeat, {
 		message: "비밀번호가 서로 달라요.",
