@@ -133,7 +133,9 @@ model VerificationToken {
   newEmail   String?  @db.VarChar(191)
   expires    DateTime
 
-  @@unique([identifier, type])
+  // 운영 DB(Aiven MySQL)는 sql_require_primary_key가 켜져 있어 기본 키 없는 테이블을 만들 수 없다.
+  // 원래 유니크였던 (identifier, type)을 그대로 기본 키로 쓴다. 조회 이름 identifier_type은 같다.
+  @@id([identifier, type])
 }
 
 model Character {

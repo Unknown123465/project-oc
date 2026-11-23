@@ -203,7 +203,7 @@ export type VerificationTokenWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.StringFilter<"VerificationToken"> | string
   newEmail?: Prisma.StringNullableFilter<"VerificationToken"> | string | null
   expires?: Prisma.DateTimeFilter<"VerificationToken"> | Date | string
-}, "token" | "identifier_type">
+}, "identifier_type" | "token">
 
 export type VerificationTokenOrderByWithAggregationInput = {
   identifier?: Prisma.SortOrder
