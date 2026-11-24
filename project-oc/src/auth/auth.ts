@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider, {type GoogleProfile} from "next-auth/providers/google";
 import NaverProvider, {type NaverProfile} from "next-auth/providers/naver";
 import KakaoProvider, {type KakaoProfile} from "next-auth/providers/kakao";
-import TwitterProvider from "next-auth/providers/twitter";
+import TwitterProvider, {type TwitterProfile} from "next-auth/providers/twitter";
 import {PrismaAdapter} from "@auth/prisma-adapter";
 import type {Provider} from "next-auth/providers";
 import type {Adapter, AdapterUser} from "next-auth/adapters";
@@ -113,10 +113,13 @@ const providers: Provider[] = [
 	TwitterProvider({
 		clientId: process.env.TWITTER_CLIENT_ID,
 		clientSecret: process.env.TWITTER_CLIENT_SECRET,
+		authorization: "https://x.com/i/oauth2/authorize?scope=users.read tweet.read offline.access users.email",
+		userinfo: "https://api.x.com/2/users/me?user.fields=profile_image_url,confirmed_email",
 		profile(profile) {
 			return {
 				id: profile.data.id,
-				email: profile.data.email,
+				/* Auth.js의 TwitterProfile 타입에는 confirmed_email이 없어서 덧붙여 읽는다. */
+				email: (profile.data as TwitterProfile["data"] & {confirmed_email?: string}).confirmed_email || null,
 				name: profile.data.name,
 				image: profile.data.profile_image_url || null,
 			};
@@ -167,6 +170,7 @@ export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
 	adapter,
 	providers,
 	secret: process.env.AUTH_SECRET,
+	trustHost: true,
 	/* adapter가 있으면 기본값이 database이지만 Credentials는 그 전략을 쓸 수 없다.
 	   Auth.js는 credentials 로그인을 처리할 때 전략과 무관하게 세션 쿠키에 JWT를 굽는데,
 	   database 전략의 세션 조회는 그 쿠키 값을 Session.sessionToken으로 찾으므로
