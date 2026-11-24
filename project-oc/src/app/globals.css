@@ -181,6 +181,19 @@ button {
 		color 0.18s ease;
 }
 
+/* 내용이 짧은 페이지에서도 푸터가 화면 맨 아래에 붙도록 body를 세로 flex로 두고 main이 남은 높이를 채운다.
+   높이를 숫자로 빼지 않아 푸터 높이가 화면 폭마다 달라도 스크롤이 생기지 않고, 내용이 길면 평소처럼 늘어난다.
+   main은 flex 항목이 되므로 좌우 margin을 auto로 줄 때는 width를 같이 정해야 폭이 줄어들지 않는다. */
+body {
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+}
+
+body > main {
+	flex: 1 0 auto;
+}
+
 body:has([data-no-header]) .site_header,
 body:has([data-no-footer]) .site_footer {
 	display: none;

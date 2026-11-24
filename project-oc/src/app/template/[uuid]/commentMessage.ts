@@ -2,11 +2,11 @@
    비교하려면 문자열을 밖으로 꺼내야 해서 여기 모아 둔다. 숨김 관련은 숨길 때와 표시할 때
    문구가 달라 hide, show 둘로 나눈다(키는 hideComment의 result와 같다). */
 export const COMMENT_MESSAGE = {
-	notLoggedIn: "로그인이 안 되어 있어요. 로그인 후 이용해 주세요.",
-	profileNotFound: "프로필이 존재하지 않아요.",
+	notLoggedIn: "로그인이 필요해요. 로그인한 뒤 다시 시도해 주세요.",
+	profileNotFound: "프로필을 찾을 수 없어요.",
 	notFound: "프로필 또는 코멘트가 존재하지 않아요.",
 
-	writeTooFast: "작성 요청이 너무 빈번해요. 잠시 뒤에 다시 시도해 주세요.",
+	writeTooFast: "코멘트를 너무 빨리 올리고 있어요. 잠시 뒤에 다시 시도해 주세요.",
 	writePrivate: "비공개 프로필에 코멘트를 작성할 수 없어요.",
 	writeTargetGone: "프로필이 삭제됐거나 탈퇴한 계정이에요.",
 	writeFailed: "코멘트 작성에 실패했어요. 다시 시도해 주세요.",

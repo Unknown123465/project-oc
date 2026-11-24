@@ -101,7 +101,7 @@ export function LoginForm() {
 			</p>
 
 			<SubmitButton className={styles.submit_button} disabled={isSubmitting}>
-				{isSubmitting ? "확인중" : "로그인"}
+				{isSubmitting ? "확인 중" : "로그인"}
 			</SubmitButton>
 		</form>
 	);

@@ -118,7 +118,14 @@ describe("쿼리 분기 판단", () => {
 		expect(result).toStrictEqual({success: false, message: LOGIN_QUERY_UUID_IS_NOT_VALID});
 	});
 
-	it.each(["not-template", "create", "login", "../template", "//evil.com", "javascript:alert('you have been hacked')"] as const)(
+	it("쿼리가 link=create면 /create가 반환되어야 한다", () => {
+		const queryObject = genQueryObject(`?link=create`);
+		const result = resolveLoginRedirect(queryObject);
+
+		expect(result).toStrictEqual({success: true, result: "/create"});
+	});
+
+	it.each(["not-template", "signup", "login", "../template", "//evil.com", "javascript:alert('you have been hacked')"] as const)(
 		"허용 목록에 없는 link(%s)가 오면 통과하고 result가 '/'여야 한다",
 		(link) => {
 			const uuid: string = "01a1669b-1ac1-7172-9ad2-6bf5ecdd15f4";

@@ -23,17 +23,17 @@ export default async function SignupComplete() {
 
 	return (
 		<main className={styles.main}>
-			<AuthAside title={`환영합니다.\n이제 만들 차례.`} description="계정이 만들어졌습니다. 프로필 한 장이면 당신의 캐릭터를 소개할 준비가 끝납니다." />
+			<AuthAside title={`가입 끝!\n이제 자캐를 소개해 봐요.`} description="계정이 만들어졌어요. 프로필 한 장만 만들면 바로 공유할 수 있어요." />
 
 			<section className={styles.result_area}>
 				<article className={styles.result_box}>
 					<SuccessMark />
 
-					<h2>가입이 완료되었습니다</h2>
+					<h2>가입이 끝났어요</h2>
 
-					<p className={styles.lead}>{userName ? `${userName}님, 프로젝트 OC에 오신 것을 환영합니다.` : "프로젝트 OC에 오신 것을 환영합니다."}</p>
+					<p className={styles.lead}>{userName ? `${userName}님, 반가워요.` : "반가워요."}</p>
 
-					<p className={styles.note}>이름과 몇 가지 설정만 채우면 첫 번째 캐릭터 프로필이 완성됩니다. 지금 만들지 않아도 언제든 다시 시작할 수 있습니다.</p>
+					<p className={styles.note}>이름과 몇 가지만 채우면 첫 프로필이 완성돼요. 지금 안 만들어도 언제든 다시 시작할 수 있어요.</p>
 
 					<CompleteActions />
 				</article>

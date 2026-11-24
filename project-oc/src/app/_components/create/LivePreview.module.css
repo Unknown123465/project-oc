@@ -9,8 +9,14 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	margin-bottom: 12px;
+	margin-bottom: 6px;
 	color: var(--muted);
 	font-size: 13px;
 	font-weight: 700;
+}
+
+.notice {
+	margin: 0 0 12px;
+	color: var(--muted);
+	font-size: 12px;
 }

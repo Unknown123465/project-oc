@@ -16,7 +16,7 @@ export const MAX_LENGTH_MESSAGE = {
 	beforeErase: `${COMMENT_MAX_LENGTH.beforeErase}자 이하로 입력해 주세요.`,
 } as const;
 
-export const WRONG_COMMENT_ID_MESSAGE = "유효한 코멘트가 아니에요." as const;
+export const WRONG_COMMENT_ID_MESSAGE = "코멘트를 찾을 수 없어요." as const;
 
 export const writeCommentForm = z.object({
 	uuid: z.string(WRONG_UUID_MESSAGE).refine((value) => isUuid(value), WRONG_UUID_MESSAGE),

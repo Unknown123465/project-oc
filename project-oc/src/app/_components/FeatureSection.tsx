@@ -6,19 +6,23 @@ export default function FeatureSection() {
 		<article className={styles.feature_box}>
 			<section className={styles.title}>
 				<h2>
-					꾸미는 시간보다
+					꾸미느라 지치지 말고
 					<br />
-					캐릭터를 이야기하는 시간.
+					캐릭터 얘기만 하세요.
 				</h2>
 
-				<p>필요한 항목을 이미 정리해 두었습니다. 사용자는 작성하고, 프로젝트 OC는 보기 좋은 한 장으로 정돈합니다.</p>
+				<p>뭘 적어야 할지는 미리 정해 뒀어요. 칸을 채우면 보기 좋은 한 장으로 정리돼요.</p>
 			</section>
 
-			<FeatureItem simpleTitle="간단한 입력" description="고민 없이 작성합니다." detailDescription="이름, 한 줄 소개, 성격과 취향처럼 캐릭터를 이해하는 데 필요한 항목만 제공합니다." />
+			<FeatureItem simpleTitle="칸 채우기" description="뭘 쓸지 고민 안 해도 돼요." detailDescription="이름, 한 줄 소개, 성격, 좋아하는 것과 싫어하는 것. 프로필에 꼭 들어가는 칸만 있어요." />
 
-			<FeatureItem simpleTitle="바로 공유" description="완성된 프로필을 건넵니다." detailDescription="공개, 링크 공개, 비공개 중 원하는 방식을 고르고 SNS와 커뮤니티에 공유할 수 있습니다." />
+			<FeatureItem
+				simpleTitle="링크로 공유"
+				description="완성하면 링크 하나로 보여 줄 수 있어요."
+				detailDescription="공개, 일부 공개, 비공개 중에 고르고 트위터나 커뮤니티에 링크를 붙이면 돼요."
+			/>
 
-			<FeatureItem simpleTitle="함께 감상" description="좋아요와 코멘트를 받습니다." detailDescription="독자는 로그인 없이 좋아요를 남기고, 로그인 후 창작자에게 짧은 감상을 전할 수 있습니다." />
+			<FeatureItem simpleTitle="좋아요와 코멘트" description="본 사람이 감상을 남겨 줘요." detailDescription="로그인한 사람은 좋아요를 누르고 짧은 코멘트를 남길 수 있어요." />
 		</article>
 	);
 }

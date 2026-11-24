@@ -13,6 +13,8 @@ import {credentialsLogin} from "./credentialsValidator";
 import {resolveUniqueUserName} from "./userName";
 import {getSessionUser} from "./sessionUser";
 import {NORMAL_PROVIDER} from "./provider";
+import {clearAgeConsent, hasAgeConsent} from "./ageConsent";
+import {AGE_CONSENT_REQUIRED_ERROR} from "@/app/login/errorQuery";
 
 /* NORMAL_PROVIDER는 provider.ts로 옮겼다. 기존 import 경로가 그대로 동작하도록 여기서도 내보낸다. */
 export {NORMAL_PROVIDER};
@@ -176,14 +178,35 @@ export const {handlers, auth, signIn, signOut, unstable_update} = NextAuth({
 		maxAge: 60 * 60 * 24 * SESSION_MAX_AGE_DAYS,
 	},
 	callbacks: {
-		signIn({account, profile}) {
-			if (account?.provider === "google") {
-				return profile?.email_verified === true;
-			} else if (account?.provider === "naver") {
-				return true;
-			} else {
-				return true;
+		async signIn({account, profile}) {
+			if (account?.provider === "google" && profile?.email_verified !== true) {
+				return false;
 			}
+
+			/* 소셜 계정으로 처음 들어오면 이 콜백 뒤에 바로 계정이 생긴다. 그 전에 로그인 화면에서
+			   만 15세 이상이라고 체크했는지 본다. 이미 가입한 계정은 다시 묻지 않는다. */
+			/* 구글은 type이 "oidc", 네이버, 카카오, 트위터는 "oauth"다. 둘 다 소셜 계정이라 같이 본다. */
+			if (account && (account.type === "oauth" || account.type === "oidc")) {
+				const linked = await db.account.findUnique({
+					where: {
+						provider_providerAccountId: {
+							provider: account.provider,
+							providerAccountId: account.providerAccountId,
+						},
+					},
+					select: {userId: true},
+				});
+
+				if (linked === null) {
+					if (!(await hasAgeConsent())) {
+						return `/login?error=${AGE_CONSENT_REQUIRED_ERROR}`;
+					}
+
+					await clearAgeConsent();
+				}
+			}
+
+			return true;
 		},
 		/* 세션을 읽을 때마다 불린다. 계정이 지워졌거나 비밀번호를 바꿔 세션 버전이 올라갔으면
 		   null을 돌려 세션을 끊는다. JWT 전략은 서버에 세션을 저장하지 않아서, 이렇게 DB와

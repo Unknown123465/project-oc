@@ -1,11 +1,24 @@
+/* 메뉴가 한 줄에 다 들어가지 않으면 다음 줄로 넘긴다. 줄을 넘기지 않으면 좁은 화면에서 메뉴가 화면 밖으로 밀려난다. */
 .menu {
 	display: flex;
-	gap: 15px;
+	flex-wrap: wrap;
+	gap: 8px 15px;
 
 	& a {
 		color: var(--muted);
 		font-size: 13px;
 		font-weight: 400;
 		word-break: keep-all;
+		white-space: nowrap;
+
+		&:hover {
+			color: var(--title-text);
+		}
+	}
+}
+
+@media (width >= 768px) {
+	.menu {
+		justify-content: flex-end;
 	}
 }

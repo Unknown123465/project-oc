@@ -32,6 +32,8 @@ export default function LivePreview({control, imageURL}: LivePreviewProps) {
 				<span>{LAYOUT_LABEL[layout]}</span>
 			</div>
 
+			<p className={styles.notice}>미리보기는 실제 프로필과 조금 다르게 보일 수 있어요.</p>
+
 			<ProfileSheet control={control} previewImageURL={imageURL} />
 		</aside>
 	);

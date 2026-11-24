@@ -60,3 +60,22 @@
 		gap: 6px;
 	}
 }
+
+.age_check {
+	width: fit-content;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--title-text);
+	font-size: 14px;
+	font-weight: 650;
+	cursor: pointer;
+
+	& input {
+		width: 17px;
+		height: 17px;
+		margin: 0;
+		accent-color: var(--personal-dark);
+		cursor: pointer;
+	}
+}

@@ -20,13 +20,13 @@ export default async function Login({searchParams}: PageProps<"/login">) {
 
 	return (
 		<main className={styles.main}>
-			<AuthAside title={`다시 만난\n당신의 캐릭터.`} description="작성하던 프로필을 이어서 완성하고, 독자에게 도착한 좋아요와 코멘트를 확인하세요." />
+			<AuthAside title={`어서 와요.\n캐릭터가 기다리고 있어요.`} description="쓰다 만 프로필을 이어서 쓰고, 그동안 달린 좋아요와 코멘트를 확인해 보세요." />
 
 			<section className={styles.form_area}>
 				<article className={styles.form_box}>
 					<h2>로그인</h2>
 
-					<p className={styles.lead}>다시 오신 것을 환영합니다.</p>
+					<p className={styles.lead}>계속하려면 로그인해 주세요.</p>
 
 					<LoginForm />
 

@@ -1,22 +1,23 @@
+/* 값은 프로필 페이지(template/ProfileFacts.module.css)와 맞춘다. */
 .facts {
 	margin: 28px 0 0;
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 0 20px;
+	gap: 0 28px;
 }
 
 .fact {
 	display: grid;
-	grid-template-columns: 56px minmax(0, 1fr);
-	gap: 8px;
-	padding: 14px 0;
-	border-bottom: 1px solid var(--line-color-1);
+	grid-template-columns: 76px minmax(0, 1fr);
+	gap: 12px;
+	padding: 12px 0;
+	border-bottom: 1px solid var(--card-dark-line);
 
 	& dt {
 		margin: 0;
 		color: var(--muted);
 		font-size: 13px;
-		font-weight: 700;
+		font-weight: 760;
 	}
 
 	& dd {
@@ -24,5 +25,12 @@
 		color: var(--title-text);
 		font-size: 14px;
 		word-break: break-all;
+	}
+}
+
+/* 프로필 페이지는 화면 너비로 한 줄씩 바꾸지만, 미리보기는 칸 너비로 정한다(아래 블록과 같은 기준). */
+@container (max-width: 420px) {
+	.facts {
+		grid-template-columns: 1fr;
 	}
 }

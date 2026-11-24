@@ -3,7 +3,7 @@
    validator.ts도 이 파일을 쓰므로 validator.ts를 import하면 순환 import가 된다. 그래서 상한은 인자로 받는다. */
 export const CHAR_ACTION_MESSAGE = {
 	invalidUuid: "올바른 프로필이 아니에요.",
-	notLoggedIn: "로그인이 안 되어 있어요. 로그인 후 이용해 주세요.",
+	notLoggedIn: "로그인이 필요해요. 로그인한 뒤 다시 시도해 주세요.",
 	userNotFound: "접속한 계정 정보를 찾을 수 없어요.",
 	limitExceeded: (max: number): string => `더 이상 프로필을 만들 수 없어요. 프로필은 최대 ${max}개까지 만들 수 있어요.`,
 	notFound: "수정할 프로필을 찾을 수 없어요.",

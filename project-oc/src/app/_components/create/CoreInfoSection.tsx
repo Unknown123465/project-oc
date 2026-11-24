@@ -149,7 +149,7 @@ export default function CoreInfoSection({control, errors}: CoreInfoSectionProps)
 						label="성격"
 						rows={4}
 						maxLength={CHAR_MAX_LENGTH.charPersonality}
-						placeholder="밝고 긍정적이며 꾸준히 노력하는 성격입니다."
+						placeholder="무뚝뚝한데 은근히 챙겨 준다"
 						describedBy={describedBy(helpId.charPersonality, errors.charPersonality && errorId.charPersonality)}
 					/>
 

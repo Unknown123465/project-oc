@@ -1,23 +1,33 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
+import {MouseEvent, useEffect, useRef, useState} from "react";
 import GuestMenu from "./GuestMenu";
 import styles from "./Header.module.css";
 import UserMenu from "./UserMenu";
 import Link from "next/link";
 import {useScrollLock} from "@/hooks/useScrollLock";
 import {useSession} from "next-auth/react";
+import {usePathname} from "next/navigation";
 
 export default function Header() {
 	const session = useSession();
 
+	const pathname = usePathname();
+
 	const [menuOpen, setMenuOpen] = useState<boolean>(false);
+	const [prevPathname, setPrevPathname] = useState<string>(pathname);
 
 	const navRef = useRef<HTMLElement>(null);
 
 	const menuOpenChange = () => setMenuOpen((prev) => !prev);
 
 	useScrollLock(menuOpen);
+
+	if (pathname !== prevPathname) {
+		setPrevPathname(pathname);
+
+		setMenuOpen(false);
+	}
 
 	useEffect(() => {
 		if (menuOpen) {
@@ -30,7 +40,7 @@ export default function Header() {
 						setMenuOpen(false);
 					}
 				},
-				{signal: abort.signal},
+				{signal: abort.signal}
 			);
 
 			document.addEventListener(
@@ -40,7 +50,7 @@ export default function Header() {
 						setMenuOpen(false);
 					}
 				},
-				{signal: abort.signal},
+				{signal: abort.signal}
 			);
 
 			const mediaQuery: MediaQueryList = window.matchMedia("(width >= 876px)");
@@ -52,7 +62,7 @@ export default function Header() {
 						setMenuOpen(false);
 					}
 				},
-				{signal: abort.signal},
+				{signal: abort.signal}
 			);
 
 			return () => {
@@ -60,6 +70,12 @@ export default function Header() {
 			};
 		}
 	}, [menuOpen]);
+
+	const closeMenuListener = (e: MouseEvent<Element>) => {
+		if ((e.target as Element).closest("a")) {
+			setMenuOpen(false);
+		}
+	};
 
 	const isLogin: boolean = session.status === "authenticated" && session.data !== null && session.data !== undefined;
 
@@ -77,7 +93,7 @@ export default function Header() {
 						{menuOpen ? "닫기" : "메뉴"}
 					</button>
 
-					<div className={styles.menu} hidden={!menuOpen}>
+					<div className={styles.menu} hidden={!menuOpen} onClick={closeMenuListener}>
 						{isLogin ? <UserMenu /> : <GuestMenu />}
 					</div>
 				</nav>

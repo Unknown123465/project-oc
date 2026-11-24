@@ -42,6 +42,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# 오픈소스 라이선스 고지(npm run build 앞에서 매번 다시 만든다)
+/third-party-licenses.txt
+
 # 기타 파일
 /개발 참고자료/*
 !/개발 참고자료/참고자료.txt

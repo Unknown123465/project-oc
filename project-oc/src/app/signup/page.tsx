@@ -15,17 +15,27 @@ export default async function Signup() {
 
 	return (
 		<main className={styles.main}>
-			<AuthAside title={`몇 가지만 적으면\n프로필 완성.`} description="프로젝트 OC에 가입하고 첫 번째 캐릭터 프로필을 만들어 보세요. 기본 기능은 무료입니다." />
+			<AuthAside title={`가입하고\n첫 프로필을 만들어 봐요.`} description="가입은 금방 끝나요. 프로필 만들기와 공유는 무료예요." />
 
 			<section className={styles.form_area}>
 				<article className={styles.form_box}>
 					<h2>회원가입</h2>
 
-					<p className={styles.lead}>당신의 캐릭터를 소개할 준비를 시작합니다.</p>
+					<p className={styles.lead}>가입하면 바로 프로필을 만들 수 있어요.</p>
 
 					<SignupForm />
 
-					<p className={styles.terms}>가입하면 프로젝트 OC의 이용 정책과 개인정보 처리방침에 동의하게 됩니다.</p>
+					<p className={styles.terms}>
+						가입하면 프로젝트 OC의{" "}
+						<Link href="/termsofuse" target="_blank" rel="noreferrer noopener">
+							이용 정책
+						</Link>
+						과{" "}
+						<Link href="/privacy" target="_blank" rel="noreferrer noopener">
+							개인정보 처리방침
+						</Link>
+						에 동의하게 됩니다.
+					</p>
 
 					<div className={styles.sub_links}>
 						<Link href="/login">이미 계정이 있으신가요?</Link>

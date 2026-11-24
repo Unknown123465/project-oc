@@ -129,7 +129,7 @@ const BLOCKED_FINISH_REASONS: readonly FinishReason[] = [FinishReason.SAFETY, Fi
    하루 횟수만 줄어든다. */
 const BLOCKED_MESSAGE = "이 설명은 AI가 다룰 수 없어요. 내용을 고쳐서 다시 만들거나 직접 입력해 주세요." as const;
 
-const RETRY_MESSAGE = "분석 중 오류가 발생했어요. 다시 시도해 주세요." as const;
+const RETRY_MESSAGE = "초안을 만들다가 문제가 생겼어요. 다시 시도해 주세요." as const;
 
 /* 사용 거절 사유별 안내. 어느 관문에 걸렸는지를 그대로 알려 주지는 않되, 사용자가
    다음에 뭘 할 수 있는지는 갈라 준다 — 기다리면 되는지, 내일 와야 하는지, 다시

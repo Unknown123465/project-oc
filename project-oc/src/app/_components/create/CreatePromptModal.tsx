@@ -433,7 +433,7 @@ export default function CreatePromptModal({open, onClose, remainingToday, curren
 			waitTime = window.setTimeout(() => {
 				URL.revokeObjectURL(objectUrl);
 
-				reject(new Error("이미지 읽는 시간이 너무 오래 걸려요. 다시 시도 하거나 다른 파일을 선택해 주세요."));
+				reject(new Error("이미지 읽는 시간이 너무 오래 걸려요. 다시 시도하거나 다른 파일을 선택해 주세요."));
 			}, 1000 * 5);
 
 			imgTag.src = objectUrl;
