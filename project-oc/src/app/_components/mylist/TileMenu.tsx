@@ -3,7 +3,7 @@
 import Link from "next/link";
 import styles from "./TileMenu.module.css";
 import {toEncodeParam} from "@/app/edit/[uuid]/toEncodeParam";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState, useTransition} from "react";
 import ShareDialog, {type KakaoShareDetail} from "../template/ShareDialog";
 import useConfirm from "@/hooks/useConfirm";
 import {useRouter} from "next/navigation";
@@ -30,6 +30,8 @@ export default function TileMenu({uuid, charName, charMessage, kakaoDetail, imag
 	const {start, component} = useConfirm({confirmLabel: "삭제", cancelLabel: "취소", confirmStyleType: "danger"});
 
 	const router = useRouter();
+
+	const [isPending, startTransition] = useTransition();
 
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
@@ -65,33 +67,37 @@ export default function TileMenu({uuid, charName, charMessage, kakaoDetail, imag
 	};
 
 	const deleteProfile = async () => {
-		try {
-			if (detailsRef.current !== null) {
-				detailsRef.current.open = false;
-			}
-
-			setIsSending(true);
-
-			const confirmResult = await start(`'${charName}' 프로필을 삭제할까요?`, "삭제하면 되돌릴 수 없어요. 이미지와 받은 좋아요, 코멘트도 같이 지워져요.");
-
-			if (!confirmResult) {
-				return;
-			}
-
-			const serverResult = await deleteCharacter(uuid);
-
-			if (serverResult.success || serverResult.requireRefresh) {
-				router.refresh();
-			} else {
-				throw new Error(serverResult.message, {cause: true});
-			}
-		} catch (err) {
-			if (err instanceof Error) {
-				alert(err.cause === true ? err.message : DELETE_CHARACTER_MESSAGE.failed);
-			}
-		} finally {
-			setIsSending(false);
+		if (detailsRef.current !== null) {
+			detailsRef.current.open = false;
 		}
+
+		setIsSending(true);
+
+		const confirmResult = await start(`'${charName}' 프로필을 삭제할까요?`, "삭제하면 되돌릴 수 없어요. 이미지와 받은 좋아요, 코멘트도 같이 지워져요.");
+
+		setIsSending(false);
+
+		if (!confirmResult) {
+			return;
+		}
+
+		startTransition(async () => {
+			try {
+				const serverResult = await deleteCharacter(uuid);
+
+				if (serverResult.success || serverResult.requireRefresh) {
+					startTransition(() => {
+						router.refresh();
+					});
+				} else {
+					throw new Error(serverResult.message, {cause: true});
+				}
+			} catch (err) {
+				if (err instanceof Error) {
+					alert(err.cause === true ? err.message : DELETE_CHARACTER_MESSAGE.failed);
+				}
+			}
+		});
 	};
 
 	const editURL: string =
@@ -129,7 +135,7 @@ export default function TileMenu({uuid, charName, charMessage, kakaoDetail, imag
 					</Link>
 
 					{shareable ? (
-						<button type="button" disabled={isSending} aria-haspopup="dialog" onClick={() => setIsOpenModal(true)}>
+						<button type="button" disabled={isSending || isPending} aria-haspopup="dialog" onClick={() => setIsOpenModal(true)}>
 							<i className="bi bi-share" aria-hidden="true"></i>
 							공유
 						</button>
@@ -140,7 +146,7 @@ export default function TileMenu({uuid, charName, charMessage, kakaoDetail, imag
 						카드 보기
 					</Link>
 
-					<button type="button" className={styles.danger} disabled={isSending} aria-haspopup="dialog" onClick={deleteProfile}>
+					<button type="button" className={styles.danger} disabled={isSending || isPending} aria-haspopup="dialog" onClick={deleteProfile}>
 						<i className="bi bi-trash3" aria-hidden="true"></i>
 						삭제
 					</button>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import styles from "./ProfileActions.module.css";
-import {useState} from "react";
+import {useState, useTransition} from "react";
 import ShareDialog, {type KakaoShareDetail} from "./ShareDialog";
 import useConfirm from "@/hooks/useConfirm";
 import {ActionButton, LinkButton} from "@/components/ui/button";
@@ -33,6 +33,8 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 
 	const router = useRouter();
 
+	const [isPending, startTransition] = useTransition();
+
 	const [isSending, setIsSending] = useState<boolean>(false);
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
@@ -42,35 +44,42 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 	   보던 검색 결과와 페이지로 돌아가게 한다. 값이 틀려도 /browse가 고친 주소로 redirect한다. */
 	const searchParams = useSearchParams();
 
-	const browseURL: string = `/browse?${toEncodeParam("page", searchParams.get("page"), "1")}${toEncodeParam("keyword", searchParams.get("keyword"))}${toEncodeParam("sort", searchParams.get("sort"))}`.replace(/&+$/, "");
+	const browseURL: string =
+		`/browse?${toEncodeParam("page", searchParams.get("page"), "1")}${toEncodeParam("keyword", searchParams.get("keyword"))}${toEncodeParam("sort", searchParams.get("sort"))}`.replace(/&+$/, "");
 
 	const deleteProfile = async () => {
-		try {
-			setIsSending(true);
-			setErrorMessage("");
+		setIsSending(true);
+		setErrorMessage("");
 
-			const confirmResult = await start(`'${charName}' 프로필을 삭제할까요?`, "삭제하면 되돌릴 수 없어요. 이미지와 받은 좋아요, 코멘트도 같이 지워져요.");
+		const confirmResult = await start(`'${charName}' 프로필을 삭제할까요?`, "삭제하면 되돌릴 수 없어요. 이미지와 받은 좋아요, 코멘트도 같이 지워져요.");
 
-			if (!confirmResult) {
-				return;
-			}
+		setIsSending(false);
 
-			const serverResult = await deleteCharacter(uuid);
-
-			if (serverResult.success) {
-				router.replace(DELETE_REDIRECT_URL);
-			} else if (serverResult.requireRefresh) {
-				router.refresh();
-			} else {
-				throw new Error(serverResult.message, {cause: true});
-			}
-		} catch (err) {
-			if (err instanceof Error) {
-				setErrorMessage(err.cause === true ? err.message : DELETE_CHARACTER_MESSAGE.failed);
-			}
-		} finally {
-			setIsSending(false);
+		if (!confirmResult) {
+			return;
 		}
+
+		startTransition(async () => {
+			try {
+				const serverResult = await deleteCharacter(uuid);
+
+				if (serverResult.success) {
+					startTransition(() => {
+						router.replace(DELETE_REDIRECT_URL);
+					});
+				} else if (serverResult.requireRefresh) {
+					startTransition(() => {
+						router.refresh();
+					});
+				} else {
+					throw new Error(serverResult.message, {cause: true});
+				}
+			} catch (err) {
+				if (err instanceof Error) {
+					setErrorMessage(err.cause === true ? err.message : DELETE_CHARACTER_MESSAGE.failed);
+				}
+			}
+		});
 	};
 
 	return (
@@ -94,7 +103,7 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 								onClose={() => setIsOpenModal(false)}
 							/>
 
-							<ActionButton className={styles.action_button} disabled={isSending} ariaHasPopup="dialog" onClick={() => setIsOpenModal(true)}>
+							<ActionButton className={styles.action_button} disabled={isSending || isPending} ariaHasPopup="dialog" onClick={() => setIsOpenModal(true)}>
 								<i className="bi bi-share" aria-hidden="true"></i>
 								공유
 							</ActionButton>
@@ -109,7 +118,7 @@ export default function ProfileActions({nonce, uuid, charName, charMessage, kaka
 								수정
 							</LinkButton>
 
-							<ActionButton className={styles.action_button} disabled={isSending} styleType="danger" ariaHasPopup="dialog" onClick={deleteProfile}>
+							<ActionButton className={styles.action_button} disabled={isSending || isPending} styleType="danger" ariaHasPopup="dialog" onClick={deleteProfile}>
 								<i className="bi bi-trash3" aria-hidden="true"></i>
 								삭제
 							</ActionButton>
