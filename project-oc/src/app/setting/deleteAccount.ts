@@ -1,6 +1,6 @@
 "use server";
 
-import {updateTag} from "next/cache";
+import {refresh, updateTag} from "next/cache";
 import db from "@/prisma/client";
 import {auth, signOut} from "@/auth/auth";
 import {identityHashOf} from "@/auth/identityHash";
@@ -88,6 +88,8 @@ export async function deleteAllCharacters(): Promise<DeleteResult> {
 	}
 
 	await cleanUpCharacters(userId, characters);
+
+	refresh();
 
 	return {
 		success: true,

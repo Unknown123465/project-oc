@@ -1,9 +1,8 @@
 "use client";
 
-import {useId, useState} from "react";
+import {useId, useState, useTransition} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useRouter} from "next/navigation";
 import styles from "./SettingSection.module.css";
 import {ActionButton} from "@/components/ui/button";
 import {TextInput} from "@/components/ui/input";
@@ -18,7 +17,7 @@ interface UserNameRowProps {
 
 /* 변경을 누르면 이름 자리가 입력란으로 바뀌고, 버튼 자리에 취소와 제출이 나온다. */
 export default function UserNameRow({username, isSocial}: UserNameRowProps) {
-	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
 
 	const baseId = useId();
 	const errorId = `${baseId}-error`;
@@ -57,25 +56,26 @@ export default function UserNameRow({username, isSocial}: UserNameRowProps) {
 			return;
 		}
 
-		try {
-			const result = await changeUserName(data);
+		startTransition(async () => {
+			try {
+				const result = await changeUserName(data);
 
-			if (result.success) {
-				setCurrentName(result.result);
-				setEditing(false);
-
-				/* 프로필의 작성자 이름 등 서버가 그린 곳도 새 이름으로 다시 그린다. */
-				router.refresh();
-			} else {
-				setError("userName", {
-					message: result.message,
+				if (result.success) {
+					startTransition(() => {
+						setCurrentName(result.result);
+						setEditing(false);
+					});
+				} else {
+					throw new Error(result.message, {cause: true});
+				}
+			} catch (err) {
+				startTransition(() => {
+					setError("userName", {
+						message: err instanceof Error && err.cause === true ? err.message : "바꾸는 중에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.",
+					});
 				});
 			}
-		} catch {
-			setError("userName", {
-				message: "바꾸는 중에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.",
-			});
-		}
+		});
 	};
 
 	return (
@@ -94,7 +94,7 @@ export default function UserNameRow({username, isSocial}: UserNameRowProps) {
 							maxLength={USER_NAME_MAX_LENGTH}
 							autoComplete="username"
 							spellCheck={false}
-							disabled={isSubmitting}
+							disabled={isSubmitting || isPending}
 							describedBy={errors.userName ? errorId : undefined}
 						/>
 
@@ -121,12 +121,12 @@ export default function UserNameRow({username, isSocial}: UserNameRowProps) {
 			<dd className={styles.action}>
 				{editing ? (
 					<div className={styles.action_group}>
-						<ActionButton onClick={cancelEdit} disabled={isSubmitting}>
+						<ActionButton onClick={cancelEdit} disabled={isSubmitting || isPending}>
 							취소
 						</ActionButton>
 
-						<ActionButton styleType="attention" onClick={handleSubmit(onSubmit)} disabled={isSubmitting}>
-							{isSubmitting ? "변경 중" : "변경"}
+						<ActionButton styleType="attention" onClick={handleSubmit(onSubmit)} disabled={isSubmitting || isPending}>
+							{isSubmitting || isPending ? "변경 중" : "변경"}
 						</ActionButton>
 					</div>
 				) : (
