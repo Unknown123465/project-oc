@@ -65,13 +65,19 @@
 			border-radius: var(--radius-2);
 			cursor: pointer;
 
-			&:hover {
+			&:enabled:hover {
 				border-color: var(--button-normal-line-hover);
 				background-color: var(--button-normal-back-hover);
 			}
 
-			&:active {
+			&:enabled:active {
 				transform: translateY(1px);
+			}
+
+			/* 요청 중에는 눌리지 않는다는 걸 보이게 한다. 프로필 페이지의 좋아요 버튼과 같은 값 */
+			&:disabled {
+				cursor: default;
+				opacity: 0.6;
 			}
 		}
 
