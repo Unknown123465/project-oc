@@ -9,7 +9,6 @@ import type {Control, FieldErrors} from "react-hook-form";
 import {useFormValueLength} from "@/hooks/commetsWatch";
 import {useState, useTransition} from "react";
 import {hideComment} from "@/app/template/[uuid]/comment";
-import {useRouter} from "next/navigation";
 import {toCommentTimeFormat} from "./commentTimeFormat";
 
 function genHiddenMessage(messageType: "hidden" | "blinded", isOwner: boolean): string {
@@ -39,11 +38,8 @@ interface CommentItemProps {
 export default function CommentItem({uuid, comment, isOwner, disabled, errors, isEditing, control, now, timeZone, onEdit, onCancelEdit, onDelete}: CommentItemProps) {
 	const [isHiddenComment, setIsHiddenComment] = useState<boolean>(true);
 
-	const [isSending, setIsSending] = useState<boolean>(false);
-
 	const [errorMessage, setErrorMessage] = useState<string>("");
 
-	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 
 	const stringLength = useFormValueLength(control, "comment");
@@ -53,29 +49,28 @@ export default function CommentItem({uuid, comment, isOwner, disabled, errors, i
 	const message: string | undefined = isEditing ? (errors.root?.message ?? errors.comment?.message) : errorMessage;
 
 	const hideChange = async () => {
-		try {
-			setIsSending(true);
-			setErrorMessage("");
+		startTransition(async () => {
+			try {
+				setErrorMessage("");
 
-			const result = await hideComment({uuid, commentId: comment.commentId});
+				const result = await hideComment({uuid, commentId: comment.commentId});
 
-			if (result.success) {
-				startTransition(() => {
-					setIsHiddenComment(true);
-					setErrorMessage("");
-
-					router.refresh();
-				});
-			} else {
-				throw new Error(result.message);
+				if (result.success) {
+					startTransition(() => {
+						setIsHiddenComment(true);
+						setErrorMessage("");
+					});
+				} else {
+					throw new Error(result.message);
+				}
+			} catch (err) {
+				if (err instanceof Error) {
+					startTransition(() => {
+						setErrorMessage(err.message);
+					});
+				}
 			}
-		} catch (err) {
-			if (err instanceof Error) {
-				setErrorMessage(err.message);
-			}
-		} finally {
-			setIsSending(false);
-		}
+		});
 	};
 
 	const deleteStart = async (commentId: string) => {
@@ -114,7 +109,7 @@ export default function CommentItem({uuid, comment, isOwner, disabled, errors, i
 					) : null}
 
 					<div className={styles.edit_actions}>
-						<ActionButton className={styles.small_button} onClick={onCancelEdit}>
+						<ActionButton className={styles.small_button} disabled={disabled} onClick={onCancelEdit}>
 							취소
 						</ActionButton>
 
@@ -142,16 +137,16 @@ export default function CommentItem({uuid, comment, isOwner, disabled, errors, i
 							<div className={styles.actions}>
 								{comment.isMine ? (
 									<>
-										<ActionButton className={styles.small_button} disabled={disabled || isSending || isPending} onClick={onEdit}>
+										<ActionButton className={styles.small_button} disabled={disabled || isPending} onClick={onEdit}>
 											수정
 										</ActionButton>
 
-										<ActionButton className={styles.small_button} disabled={disabled || isSending || isPending} onClick={() => deleteStart(comment.commentId)}>
+										<ActionButton className={styles.small_button} disabled={disabled || isPending} onClick={() => deleteStart(comment.commentId)}>
 											삭제
 										</ActionButton>
 									</>
 								) : (
-									<ActionButton className={styles.small_button} disabled={disabled || isSending || isPending} onClick={hideChange}>
+									<ActionButton className={styles.small_button} disabled={disabled || isPending} onClick={hideChange}>
 										{comment.hidden ? "표시하기" : "숨기기"}
 									</ActionButton>
 								)}

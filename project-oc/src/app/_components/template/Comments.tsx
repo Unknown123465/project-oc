@@ -10,7 +10,6 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {commentForm, CommentFormType} from "@/app/template/[uuid]/validator";
 import {useId, useState, useSyncExternalStore, useTransition} from "react";
 import {deleteComment, editComment} from "@/app/template/[uuid]/comment";
-import {useRouter} from "next/navigation";
 import useConfirm from "@/hooks/useConfirm";
 import {useSession} from "next-auth/react";
 
@@ -64,7 +63,6 @@ export default function Comments({uuid, comments, isOwner, isPrivate, serverNow}
 		mode: "onChange",
 	});
 
-	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 
 	/* 수정 중인 코멘트 하나의 id. 다른 코멘트의 수정을 누르면 값이 바뀌어 앞의 수정 화면은
@@ -105,58 +103,67 @@ export default function Comments({uuid, comments, isOwner, isPrivate, serverNow}
 	};
 
 	const editSubmit = async ({comment}: CommentFormType) => {
-		try {
-			if (editTarget === null) {
-				throw new Error("수정중인 코멘트가 없어요.");
-			}
+		startTransition(async () => {
+			try {
+				if (editTarget === null) {
+					throw new Error("수정중인 코멘트가 없어요.");
+				}
 
-			setIsSending(true);
+				setIsSending(true);
 
-			const result = await editComment({uuid, commentId: editTarget, comment});
+				const result = await editComment({uuid, commentId: editTarget, comment});
 
-			if (result.success) {
+				if (result.success) {
+					startTransition(() => {
+						setEditTarget(null);
+					});
+				} else {
+					throw new Error(result.message);
+				}
+			} catch (err) {
+				if (err instanceof Error) {
+					startTransition(() => {
+						setError("root", {
+							message: err.message,
+						});
+					});
+				}
+			} finally {
 				startTransition(() => {
-					setEditTarget(null);
-					router.refresh();
-				});
-			} else {
-				throw new Error(result.message);
-			}
-		} catch (err) {
-			if (err instanceof Error) {
-				setError("root", {
-					message: err.message,
+					setIsSending(false);
 				});
 			}
-		} finally {
-			setIsSending(false);
-		}
+		});
 	};
 
 	const deleteStart = async (commentId: string): Promise<string> => {
-		try {
-			setIsSending(true);
+		setIsSending(true);
 
-			const confirmResult = await start("코멘트를 삭제할까요?", "삭제한 코멘트는 되돌릴 수 없어요.");
+		const confirmResult = await start("코멘트를 삭제할까요?", "삭제한 코멘트는 되돌릴 수 없어요.");
 
-			if (!confirmResult) {
-				return "";
-			}
+		setIsSending(false);
 
-			const serverResult = await deleteComment({uuid, commentId});
-
-			if (serverResult.success) {
-				router.refresh();
-
-				return "";
-			} else {
-				throw new Error(serverResult.message);
-			}
-		} catch (err) {
-			return err instanceof Error ? err.message : COMMENT_MESSAGE.deleteFailed;
-		} finally {
-			setIsSending(false);
+		if (!confirmResult) {
+			return "";
 		}
+
+		const promiseResolvers = Promise.withResolvers<string>();
+
+		startTransition(async () => {
+			try {
+				const serverResult = await deleteComment({uuid, commentId});
+
+				if (serverResult.success) {
+					promiseResolvers.resolve("");
+				} else {
+					throw new Error(serverResult.message);
+				}
+			} catch (err) {
+				promiseResolvers.resolve(err instanceof Error ? err.message : COMMENT_MESSAGE.deleteFailed);
+			}
+		});
+
+		return await promiseResolvers.promise;
 	};
 
 	if (isPrivate) {
