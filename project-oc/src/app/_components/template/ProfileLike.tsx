@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import {useState, useTransition} from "react";
 import styles from "./ProfileLike.module.css";
 import {applyLikeFormat} from "./likeCountFormat";
 import {setCharacterLike} from "@/app/template/[uuid]/characterLike";
@@ -27,6 +27,8 @@ export default function ProfileLike({uuid, like}: ProfileLikeProps) {
 	const session = useSession();
 	const router = useRouter();
 
+	const [isPending, startTransition] = useTransition();
+
 	const [scrollLock, setScrollLock] = useState<boolean>(false);
 
 	const [count, setCount] = useState<number>(like.count);
@@ -40,10 +42,12 @@ export default function ProfileLike({uuid, like}: ProfileLikeProps) {
 	const sendLike = async () => {
 		if (!session.data) {
 			setScrollLock(true);
+			setIsSending(true);
 
 			const result = await start("로그인이 필요해요", "좋아요는 로그인한 뒤에 누를 수 있어요.");
 
 			setScrollLock(false);
+			setIsSending(false);
 
 			if (result) {
 				router.push(`/login?link=template&uuid=${uuid}`);
@@ -52,48 +56,46 @@ export default function ProfileLike({uuid, like}: ProfileLikeProps) {
 			return;
 		}
 
-		try {
-			setIsSending(true);
+		startTransition(async () => {
+			try {
+				const result = await setCharacterLike(uuid);
 
-			const result = await setCharacterLike(uuid);
+				if (result.success) {
+					startTransition(() => {
+						setCount(result.count);
+						setLiked(result.result === "insert");
 
-			if (result.success) {
-				setCount(result.count);
-				setLiked(result.result === "insert");
+						setErrorMessage("");
+					});
+				} else {
+					throw new Error(result.reason);
+				}
+			} catch (err) {
+				if (!(err instanceof Error)) {
+					return;
+				}
 
-				setErrorMessage("");
+				const reason: string = err.message;
 
-				router.refresh();
-			} else {
-				throw new Error(result.reason);
+				if (reason === "not-logged-in") {
+					setErrorMessage("로그인이 풀렸어요. 다시 로그인한 뒤 눌러 주세요.");
+				} else if (reason === "character-not-found" || reason === "fk-error") {
+					setErrorMessage("프로필을 찾을 수 없어요. 삭제됐거나 비공개로 바뀌었을 수 있어요.");
+				} else if (reason === "attempt-self-like") {
+					setErrorMessage("내 프로필에는 좋아요를 누를 수 없어요.");
+				} else if (reason === "db-error") {
+					setErrorMessage(`좋아요를 ${liked ? "취소하지" : "보내지"} 못했어요. 잠시 후 다시 눌러 주세요.`);
+				} else if (reason === "not-a-uuid") {
+					setErrorMessage("프로필 주소가 올바르지 않아요. 링크를 다시 확인해 주세요.");
+				} else if (reason === "attempt-try-twice" || reason === "no-delete-row") {
+					/* 처리는 됐지만 개수를 다시 세지 못한 경우라 화면이 실제 상태와 다를 수 있다. */
+					setErrorMessage("좋아요 상태를 확인하지 못했어요. 새로고침해 주세요.");
+				} else {
+					/* 서버 액션 요청 자체가 실패한 경우(네트워크 끊김 등). 사유 문자열이 아니라 오류 메시지가 들어온다. */
+					setErrorMessage(`좋아요를 ${liked ? "취소하지" : "보내지"} 못했어요. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.`);
+				}
 			}
-		} catch (err) {
-			if (!(err instanceof Error)) {
-				return;
-			}
-
-			const reason: string = err.message;
-
-			if (reason === "not-logged-in") {
-				setErrorMessage("로그인이 풀렸어요. 다시 로그인한 뒤 눌러 주세요.");
-			} else if (reason === "character-not-found" || reason === "fk-error") {
-				setErrorMessage("프로필을 찾을 수 없어요. 삭제됐거나 비공개로 바뀌었을 수 있어요.");
-			} else if (reason === "attempt-self-like") {
-				setErrorMessage("내 프로필에는 좋아요를 누를 수 없어요.");
-			} else if (reason === "db-error") {
-				setErrorMessage(`좋아요를 ${liked ? "취소하지" : "보내지"} 못했어요. 잠시 후 다시 눌러 주세요.`);
-			} else if (reason === "not-a-uuid") {
-				setErrorMessage("프로필 주소가 올바르지 않아요. 링크를 다시 확인해 주세요.");
-			} else if (reason === "attempt-try-twice" || reason === "no-delete-row") {
-				/* 처리는 됐지만 개수를 다시 세지 못한 경우라 화면이 실제 상태와 다를 수 있다. */
-				setErrorMessage("좋아요 상태를 확인하지 못했어요. 새로고침해 주세요.");
-			} else {
-				/* 서버 액션 요청 자체가 실패한 경우(네트워크 끊김 등). 사유 문자열이 아니라 오류 메시지가 들어온다. */
-				setErrorMessage(`좋아요를 ${liked ? "취소하지" : "보내지"} 못했어요. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.`);
-			}
-		} finally {
-			setIsSending(false);
-		}
+		});
 	};
 
 	if (like.isOwner) {
@@ -110,7 +112,7 @@ export default function ProfileLike({uuid, like}: ProfileLikeProps) {
 
 	return (
 		<>
-			<button type="button" className={styles.like} disabled={isSending} aria-pressed={liked} onClick={sendLike}>
+			<button type="button" className={styles.like} disabled={isSending || isPending} aria-pressed={liked} onClick={sendLike}>
 				<i className={liked ? "bi bi-heart-fill" : "bi bi-heart"} aria-hidden="true"></i>
 
 				<span>좋아요</span>

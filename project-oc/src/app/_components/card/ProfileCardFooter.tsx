@@ -4,7 +4,7 @@ import styles from "./ProfileCardFooter.module.css";
 import {applyLikeFormat} from "@/app/_components/template/likeCountFormat";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import {useRef, useState} from "react";
+import {useRef, useState, useTransition} from "react";
 import {ProfileLikeView} from "../template/ProfileLike";
 import useConfirm from "@/hooks/useConfirm";
 import type {UseImageDataURL} from "@/hooks/useImageDataURL";
@@ -35,6 +35,8 @@ export default function ProfileCardFooter({uuid, shareable, like, character, ima
 	const session = useSession();
 	const router = useRouter();
 
+	const [isPending, startTransition] = useTransition();
+
 	const [scrollLock, setScrollLock] = useState<boolean>(false);
 
 	const [count, setCount] = useState<number>(like?.count ?? 0);
@@ -54,10 +56,12 @@ export default function ProfileCardFooter({uuid, shareable, like, character, ima
 	const sendLike = async () => {
 		if (!session.data) {
 			setScrollLock(true);
+			setIsSending(true);
 
 			const result = await start("로그인이 필요해요", "좋아요는 로그인한 뒤에 누를 수 있어요.");
 
 			setScrollLock(false);
+			setIsSending(false);
 
 			if (result) {
 				router.push(`/login?link=template&uuid=${uuid}`);
@@ -66,76 +70,75 @@ export default function ProfileCardFooter({uuid, shareable, like, character, ima
 			return;
 		}
 
-		try {
-			setIsSending(true);
-			setMessage({
-				status: "normal",
-				value: "",
-			});
-
-			const result = await setCharacterLike(uuid);
-
-			if (result.success) {
-				setCount(result.count);
-				setLiked(result.result === "insert");
-
+		startTransition(async () => {
+			try {
 				setMessage({
 					status: "normal",
 					value: "",
 				});
 
-				router.refresh();
-			} else {
-				throw new Error(result.reason);
-			}
-		} catch (err) {
-			if (!(err instanceof Error)) {
-				return;
-			}
+				const result = await setCharacterLike(uuid);
 
-			const reason: string = err.message;
+				if (result.success) {
+					startTransition(() => {
+						setCount(result.count);
+						setLiked(result.result === "insert");
+					});
 
-			if (reason === "not-logged-in") {
-				setMessage({
-					status: "error",
-					value: "로그인이 풀렸어요. 다시 로그인한 뒤 눌러 주세요.",
-				});
-			} else if (reason === "character-not-found" || reason === "fk-error") {
-				setMessage({
-					status: "error",
-					value: "프로필을 찾을 수 없어요. 삭제됐거나 비공개로 바뀌었을 수 있어요.",
-				});
-			} else if (reason === "attempt-self-like") {
-				setMessage({
-					status: "error",
-					value: "내 프로필에는 좋아요를 누를 수 없어요.",
-				});
-			} else if (reason === "db-error") {
-				setMessage({
-					status: "error",
-					value: `좋아요를 ${liked ? "취소하지" : "보내지"} 못했어요. 잠시 후 다시 눌러 주세요.`,
-				});
-			} else if (reason === "not-a-uuid") {
-				setMessage({
-					status: "error",
-					value: "프로필 주소가 올바르지 않아요. 링크를 다시 확인해 주세요.",
-				});
-			} else if (reason === "attempt-try-twice" || reason === "no-delete-row") {
-				/* 처리는 됐지만 개수를 다시 세지 못한 경우라 화면이 실제 상태와 다를 수 있다. */
-				setMessage({
-					status: "error",
-					value: "좋아요 상태를 확인하지 못했어요. 새로고침해 주세요.",
-				});
-			} else {
-				/* 서버 액션 요청 자체가 실패한 경우(네트워크 끊김 등). 사유 문자열이 아니라 오류 메시지가 들어온다. */
-				setMessage({
-					status: "error",
-					value: `좋아요를 ${liked ? "취소하지" : "보내지"} 못했어요. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.`,
-				});
+					setMessage({
+						status: "normal",
+						value: "",
+					});
+				} else {
+					throw new Error(result.reason);
+				}
+			} catch (err) {
+				if (!(err instanceof Error)) {
+					return;
+				}
+
+				const reason: string = err.message;
+
+				if (reason === "not-logged-in") {
+					setMessage({
+						status: "error",
+						value: "로그인이 풀렸어요. 다시 로그인한 뒤 눌러 주세요.",
+					});
+				} else if (reason === "character-not-found" || reason === "fk-error") {
+					setMessage({
+						status: "error",
+						value: "프로필을 찾을 수 없어요. 삭제됐거나 비공개로 바뀌었을 수 있어요.",
+					});
+				} else if (reason === "attempt-self-like") {
+					setMessage({
+						status: "error",
+						value: "내 프로필에는 좋아요를 누를 수 없어요.",
+					});
+				} else if (reason === "db-error") {
+					setMessage({
+						status: "error",
+						value: `좋아요를 ${liked ? "취소하지" : "보내지"} 못했어요. 잠시 후 다시 눌러 주세요.`,
+					});
+				} else if (reason === "not-a-uuid") {
+					setMessage({
+						status: "error",
+						value: "프로필 주소가 올바르지 않아요. 링크를 다시 확인해 주세요.",
+					});
+				} else if (reason === "attempt-try-twice" || reason === "no-delete-row") {
+					/* 처리는 됐지만 개수를 다시 세지 못한 경우라 화면이 실제 상태와 다를 수 있다. */
+					setMessage({
+						status: "error",
+						value: "좋아요 상태를 확인하지 못했어요. 새로고침해 주세요.",
+					});
+				} else {
+					/* 서버 액션 요청 자체가 실패한 경우(네트워크 끊김 등). 사유 문자열이 아니라 오류 메시지가 들어온다. */
+					setMessage({
+						status: "error",
+						value: `좋아요를 ${liked ? "취소하지" : "보내지"} 못했어요. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.`,
+					});
+				}
 			}
-		} finally {
-			setIsSending(false);
-		}
+		});
 	};
 
 	const copyLink = async () => {
@@ -210,7 +213,7 @@ export default function ProfileCardFooter({uuid, shareable, like, character, ima
 	if (shareable && like !== null && !like.isOwner) {
 		likeComponent = (
 			<>
-				<button type="button" className={`${styles.like} ${styles.button}`} disabled={isSending} aria-pressed={liked} onClick={sendLike}>
+				<button type="button" className={`${styles.like} ${styles.button}`} disabled={isSending || isPending} aria-pressed={liked} onClick={sendLike}>
 					<i className={liked ? "bi bi-heart-fill" : "bi bi-heart"} aria-hidden="true"></i>
 
 					<span>좋아요</span>
