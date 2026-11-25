@@ -10,6 +10,7 @@ import {IMAGE_MAX_FILE_SIZE, IMAGE_UPLOAD_TYPE} from "./imageEditor";
 import {updateTag} from "next/cache";
 import {characterTag} from "../template/[uuid]/getCharacter";
 import {CHAR_ACTION_MESSAGE} from "./charActionMessage";
+import {redirect} from "next/navigation";
 
 interface CharActionSuccessResult {
 	success: true;
@@ -186,9 +187,9 @@ export async function createCharAction(data: CreateCharServerFormType): Promise<
 		};
 	}
 
-	try {
-		const publicLink: string = uuidv7();
+	const publicLink: string = uuidv7();
 
+	try {
 		/* 검증을 마친 뒤에야 최종 경로로 옮긴다. 여기서부터는 실패해도 사본이 남으므로
 		   아래 catch에서 두 경로를 모두 지운다. */
 		await copyCharImage(bucket, tempKey, key);
@@ -228,11 +229,6 @@ export async function createCharAction(data: CreateCharServerFormType): Promise<
 		/* 등록이 끝났으니 임시 사본은 쓸모가 없다. 지우지 못해도 수명 주기 규칙이
 		   하루 뒤 정리하므로 여기서 실패를 따로 다루지 않는다. */
 		await removeCharImage(bucket, tempKey);
-
-		return {
-			success: true,
-			link: `/template/${publicLink}`,
-		};
 	} catch (err) {
 		/* 등록이 깨지면 올라간 이미지는 어디서도 참조되지 않는 채로 남아 요금만
 		   나간다. 사용자에게 보여줄 메시지와 별개로 여기서 반드시 지운다.
@@ -253,9 +249,11 @@ export async function createCharAction(data: CreateCharServerFormType): Promise<
 			message: CHAR_ACTION_MESSAGE.createFailed,
 		};
 	}
+
+	redirect(`/template/${publicLink}`, "replace");
 }
 
-export async function editCharAction(data: EditCharServerFormType, link: unknown = "profile"): Promise<CharActionResult> {
+export async function editCharAction(data: EditCharServerFormType, redirectURL: string): Promise<CharActionResult> {
 	const authInfo = await auth();
 
 	if (authInfo === null || !authInfo.user?.id) {
@@ -273,6 +271,11 @@ export async function editCharAction(data: EditCharServerFormType, link: unknown
 		return {
 			success: false,
 			message: check.error.issues[0].message,
+		};
+	} else if (!redirectURL.startsWith("/mylist?") && redirectURL !== `/template/${check.data.uuid}`) {
+		return {
+			success: false,
+			message: "올바르지 않은 리다이렉트 URL이에요.",
 		};
 	}
 
@@ -417,10 +420,7 @@ export async function editCharAction(data: EditCharServerFormType, link: unknown
 			}),
 		]);
 
-		return {
-			success: true,
-			link: link === "mylist" ? `/mylist?page=1` : `/template/${uuid}`,
-		};
+		redirect(redirectURL, "replace");
 	} else if (charImageBucket(originData.charPublicMode) !== charImageBucket(parseInt(check.data.publicMode, 10))) {
 		const originBucket: string = charImageBucket(originData.charPublicMode);
 		const newBucket: string = charImageBucket(parseInt(check.data.publicMode, 10));
@@ -477,19 +477,11 @@ export async function editCharAction(data: EditCharServerFormType, link: unknown
 				requestTimeout: 1000 * 5,
 				throwOnRequestTimeout: true,
 			});
-
-			return {
-				success: true,
-				link: link === "mylist" ? `/mylist?page=1` : `/template/${uuid}`,
-			};
 		} catch (err) {
 			console.error("과거 공개 또는 비공개 버킷에 있는 이미지 삭제 실패", err);
-
-			return {
-				success: true,
-				link: link === "mylist" ? `/mylist?page=1` : `/template/${uuid}`,
-			};
 		}
+
+		redirect(redirectURL, "replace");
 	}
 
 	try {
@@ -503,11 +495,6 @@ export async function editCharAction(data: EditCharServerFormType, link: unknown
 		}
 
 		updateTag(characterTag(uuid));
-
-		return {
-			success: true,
-			link: link === "mylist" ? `/mylist?page=1` : `/template/${uuid}`,
-		};
 	} catch (err) {
 		console.error("프로필 수정 실패", err);
 
@@ -516,4 +503,6 @@ export async function editCharAction(data: EditCharServerFormType, link: unknown
 			message: CHAR_ACTION_MESSAGE.editFailed,
 		};
 	}
+
+	redirect(redirectURL, "replace");
 }

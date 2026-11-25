@@ -14,17 +14,31 @@ import {CHAR_ACTION_MESSAGE} from "./charActionMessage";
    - updateTag: 서버 액션 밖에서 부르면 예외를 던진다. 호출 인자만 확인한다.
    - charImageBucket: 실제 함수는 R2 버킷 환경 변수를 읽는데 CI에는 그 값이 없다. 공개 여부로 이름만 갈라 돌려준다.
    - headCharImage: 기본값은 정상 업로드(PNG, 1KB). 형식이나 크기가 틀린 경우는 mockUploaded로 바꾼다.
-   - copyCharImage, removeCharImage: 실제 R2에 요청을 보내지 않는다. 호출 인자로 어느 버킷의 어느 키를 건드렸는지 확인한다. */
-const mocks = vi.hoisted(() => ({
-	auth: vi.fn(),
-	updateTag: vi.fn(),
-	charImageBucket: vi.fn((publicMode: number): string => (publicMode === 0 ? "test-public-bucket" : "test-private-bucket")),
-	headCharImage: vi.fn(async (): Promise<{ContentType?: string; ContentLength?: number}> => ({ContentType: "image/png", ContentLength: 1024})),
-	copyCharImage: vi.fn(async (): Promise<void> => {}),
-	removeCharImage: vi.fn(async (): Promise<void> => {}),
-}));
+   - copyCharImage, removeCharImage: 실제 R2에 요청을 보내지 않는다. 호출 인자로 어느 버킷의 어느 키를 건드렸는지 확인한다.
+   - redirect: 성공하면 액션이 redirect로 끝난다. 실제 redirect처럼 예외를 던져 뒤 코드가 이어서 실행되지 않게 하고, 이동 주소만 확인한다. */
+const mocks = vi.hoisted(() => {
+	class RedirectSignal extends Error {}
+
+	return {
+		RedirectSignal,
+		redirect: vi.fn((): never => {
+			throw new RedirectSignal();
+		}),
+		auth: vi.fn(),
+		updateTag: vi.fn(),
+		charImageBucket: vi.fn((publicMode: number): string => (publicMode === 0 ? "test-public-bucket" : "test-private-bucket")),
+		headCharImage: vi.fn(async (): Promise<{ContentType?: string; ContentLength?: number}> => ({ContentType: "image/png", ContentLength: 1024})),
+		copyCharImage: vi.fn(async (): Promise<void> => {}),
+		removeCharImage: vi.fn(async (): Promise<void> => {}),
+	};
+});
 
 vi.mock("@/auth/auth", () => ({auth: mocks.auth}));
+
+vi.mock("next/navigation", async (importOriginal) => ({
+	...(await importOriginal<typeof import("next/navigation")>()),
+	redirect: mocks.redirect,
+}));
 
 /* getCharacter.ts가 같은 모듈의 unstable_cache를 쓰므로 원본을 살리고 updateTag만 바꾼다. */
 vi.mock("next/cache", async (importOriginal) => ({
@@ -61,6 +75,19 @@ function genImageName(): string {
 	return `${uuidv4()}.png`;
 }
 
+/** 수정한 뒤 돌아갈 프로필 페이지 주소. 액션은 이 주소와 `/mylist?`로 시작하는 주소만 받는다. */
+function profileURL(uuid: string): string {
+	return `/template/${uuid}`;
+}
+
+/** 액션이 결과를 돌려주지 않고 url로 redirect했는지 확인한다. */
+async function expectRedirect(action: Promise<unknown>, url: string): Promise<void> {
+	await expect(action).rejects.toBeInstanceOf(mocks.RedirectSignal);
+
+	expect(mocks.redirect).toHaveBeenCalledOnce();
+	expect(mocks.redirect).toHaveBeenCalledWith(url, "replace");
+}
+
 /** headCharImage가 돌려줄 업로드 결과를 이번 호출 한 번만 바꾼다. */
 function mockUploaded(contentType: string = IMAGE_UPLOAD_TYPE, size: number = 1024): void {
 	mocks.headCharImage.mockResolvedValueOnce({ContentType: contentType, ContentLength: size});
@@ -94,6 +121,7 @@ function resetMocks(): void {
 	mocks.headCharImage.mockClear();
 	mocks.copyCharImage.mockClear();
 	mocks.removeCharImage.mockClear();
+	mocks.redirect.mockClear();
 }
 
 interface CreateCharacterOptions {
@@ -243,7 +271,7 @@ describe("권한 없는 사용자가 요청하면 거부", () => {
 
 		const value = genEditInput(fixture.realUuid);
 
-		const result = await editCharAction(value);
+		const result = await editCharAction(value, profileURL(value.uuid));
 
 		expect(result).toStrictEqual({
 			success: false,
@@ -257,7 +285,7 @@ describe("권한 없는 사용자가 요청하면 거부", () => {
 	] as const)("$label 거부되어야 한다", async ({value}) => {
 		loginAs(fixture.ownerId);
 
-		const result = await editCharAction(value());
+		const result = await editCharAction(value(), profileURL(fixture.realUuid));
 
 		expect(result).toStrictEqual({
 			success: false,
@@ -270,7 +298,7 @@ describe("권한 없는 사용자가 요청하면 거부", () => {
 
 		const value = genEditInput(fixture.fakeUuid);
 
-		const result = await editCharAction(value);
+		const result = await editCharAction(value, profileURL(value.uuid));
 
 		expect(result).toStrictEqual({
 			success: false,
@@ -290,7 +318,7 @@ describe("권한 없는 사용자가 요청하면 거부", () => {
 
 		const value = genEditInput(uuid, {charName: editedName});
 
-		const editResult = await editCharAction(value);
+		const editResult = await editCharAction(value, profileURL(value.uuid));
 
 		expect(editResult).toStrictEqual({
 			success: false,
@@ -300,6 +328,46 @@ describe("권한 없는 사용자가 요청하면 거부", () => {
 		const secondSelectResult = await readCharacter(uuid);
 
 		expect(secondSelectResult?.charName).toBe(firstSelectResult?.charName);
+	});
+});
+
+describe("수정 뒤 이동할 주소", () => {
+	/* 서버 액션은 누구나 직접 부를 수 있어서, 클라이언트가 넘긴 주소를 그대로 믿지 않는다. */
+	it.each([
+		{url: () => profileURL(fixture.fakeUuid), label: "수정한 프로필이 아닌 다른 프로필 주소는"},
+		{url: () => "https://example.com", label: "외부 주소는"},
+		{url: () => "//example.com", label: "프로토콜이 생략된 외부 주소는"},
+		{url: () => "mylist?page=1", label: "/로 시작하지 않는 주소는"},
+		{url: () => "/mylist/../browse", label: "/mylist? 로 시작하지 않는 목록 주소는"},
+	] as const)("$label 거부되어야 하고, DB가 변경되지 말아야 한다", async ({url}) => {
+		const {uuid} = await createCharacter();
+
+		loginAs(fixture.ownerId);
+
+		const value = genEditInput(uuid, {charName: "바뀌면안됨"});
+
+		const result = await editCharAction(value, url());
+
+		expect(result).toStrictEqual({
+			success: false,
+			message: "올바르지 않은 리다이렉트 URL이에요.",
+		});
+
+		const selectResult = await readCharacter(uuid);
+
+		expect(selectResult?.charName).toBe("수정테스트");
+		expect(mocks.updateTag).not.toHaveBeenCalled();
+		expect(mocks.redirect).not.toHaveBeenCalled();
+	});
+
+	it("내 목록 주소면 검색 조건이 붙은 그대로 그 주소로 이동해야 한다", async () => {
+		const {uuid} = await createCharacter();
+
+		loginAs(fixture.ownerId);
+
+		const mylistURL: string = "/mylist?page=2&keyword=%ED%85%8C%EC%8A%A4%ED%8A%B8&sort=old";
+
+		await expectRedirect(editCharAction(genEditInput(uuid), mylistURL), mylistURL);
 	});
 });
 
@@ -315,9 +383,7 @@ describe("이미지 수정 없음", () => {
 
 		const value = genEditInput(uuid, {charImageName: null});
 
-		const editResult = await editCharAction(value);
-
-		expect(editResult.success).toBe(true);
+		await expectRedirect(editCharAction(value, profileURL(value.uuid)), profileURL(value.uuid));
 
 		const secondSelectResult = await readCharacter(uuid);
 
@@ -339,7 +405,7 @@ describe("이미지 수정 없음", () => {
 
 		const realValue = genEditInput(uuid, value);
 
-		const result = await editCharAction(realValue);
+		const result = await editCharAction(realValue, profileURL(realValue.uuid));
 
 		expect(result).toStrictEqual({
 			success: false,
@@ -359,9 +425,7 @@ describe("비어 있는 요소", () => {
 			charLike: " ".repeat(5),
 		});
 
-		const editResult = await editCharAction(value);
-
-		expect(editResult.success).toBe(true);
+		await expectRedirect(editCharAction(value, profileURL(value.uuid)), profileURL(value.uuid));
 
 		const selectResult = await readCharacter(uuid);
 
@@ -379,9 +443,7 @@ describe("비어 있는 요소", () => {
 			charTmi: tmi,
 		});
 
-		const editResult = await editCharAction(value);
-
-		expect(editResult.success).toBe(true);
+		await expectRedirect(editCharAction(value, profileURL(value.uuid)), profileURL(value.uuid));
 
 		const tmiCleanArray: string[] = tmi.split("\n").filter((tmiValue) => tmiValue.trim());
 
@@ -406,9 +468,7 @@ describe("이미지 수정", () => {
 			charImageName: newImageName,
 		});
 
-		const editResult = await editCharAction(value);
-
-		expect(editResult.success).toBe(true);
+		await expectRedirect(editCharAction(value, profileURL(value.uuid)), profileURL(value.uuid));
 
 		const selectResult = await readCharacter(uuid);
 
@@ -437,9 +497,7 @@ describe("이미지 수정", () => {
 			charImageName: newImageName,
 		});
 
-		const editResult = await editCharAction(realValue);
-
-		expect(editResult.success).toBe(true);
+		await expectRedirect(editCharAction(realValue, profileURL(realValue.uuid)), profileURL(realValue.uuid));
 
 		const selectResult = await readCharacter(uuid);
 
@@ -465,7 +523,7 @@ describe("이미지 수정", () => {
 			charImageName: genImageName(),
 		});
 
-		const result = await editCharAction(value);
+		const result = await editCharAction(value, profileURL(value.uuid));
 
 		expect(result).toStrictEqual({
 			success: false,
@@ -484,7 +542,7 @@ describe("이미지 수정", () => {
 			charImageName: genImageName(),
 		});
 
-		const result = await editCharAction(value);
+		const result = await editCharAction(value, profileURL(value.uuid));
 
 		expect(result).toStrictEqual({
 			success: false,
@@ -503,9 +561,7 @@ describe("이미지 수정", () => {
 			charImageName: genImageName(),
 		});
 
-		const result = await editCharAction(value);
-
-		expect(result.success).toBe(true);
+		await expectRedirect(editCharAction(value, profileURL(value.uuid)), profileURL(value.uuid));
 	});
 
 	it.each([
@@ -522,7 +578,7 @@ describe("이미지 수정", () => {
 			charImageName: genImageName(),
 		});
 
-		const result = await editCharAction(realValue);
+		const result = await editCharAction(realValue, profileURL(realValue.uuid));
 
 		expect(result).toStrictEqual({
 			success: false,
@@ -546,7 +602,7 @@ describe("이미지 수정", () => {
 			charName: "수정된 이름",
 		});
 
-		const editResult = await editCharAction(value);
+		const editResult = await editCharAction(value, profileURL(value.uuid));
 
 		expect(editResult).toStrictEqual({
 			success: false,
@@ -593,9 +649,7 @@ describe("프로필 공개 여부 변경", () => {
 			publicMode: afterMode.toString() as EditCharServerFormType["publicMode"],
 		});
 
-		const editResult = await editCharAction(value);
-
-		expect(editResult.success).toBe(true);
+		await expectRedirect(editCharAction(value, profileURL(value.uuid)), profileURL(value.uuid));
 
 		const secondSelectResult = await readCharacter(uuid);
 
@@ -635,9 +689,7 @@ describe("프로필 공개 여부 변경", () => {
 			publicMode: afterMode.toString() as EditCharServerFormType["publicMode"],
 		});
 
-		const editResult = await editCharAction(value);
-
-		expect(editResult.success).toBe(true);
+		await expectRedirect(editCharAction(value, profileURL(value.uuid)), profileURL(value.uuid));
 
 		const secondSelectResult = await readCharacter(uuid);
 
@@ -676,7 +728,7 @@ describe("프로필 공개 여부 변경", () => {
 			publicMode: PUBLIC_MODE_PRIVATE.toString() as EditCharServerFormType["publicMode"],
 		});
 
-		const editResult = await editCharAction(value);
+		const editResult = await editCharAction(value, profileURL(value.uuid));
 
 		expect(editResult).toStrictEqual({
 			success: false,

@@ -9,8 +9,8 @@ import ChoiceSection from "./ChoiceSection";
 import {SubmitButton, LinkButton} from "@/components/ui/button";
 import type {Control, FieldErrors, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue, UseFormSetValues} from "react-hook-form";
 import {createCharForm, editCharForm, EditCharFormType, type CreateCharFormInputType} from "@/app/create/validator";
-import {useId} from "react";
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {useId, useTransition} from "react";
+import {unstable_rethrow, useParams, useSearchParams} from "next/navigation";
 import {createCharAction, editCharAction} from "@/app/create/action";
 import {createUploadURLAction, editUploadURLAction} from "@/app/create/uploadAction";
 import {IMAGE_UPLOAD_TYPE} from "@/app/create/imageEditor";
@@ -35,7 +35,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 	const param = useParams();
 	const query = useSearchParams();
 
-	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
 
 	const aiHeadingId = useId();
 	const visibilityHeadingId = useId();
@@ -96,17 +96,25 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 			return;
 		}
 
-		/* 이 시점부터 R2에는 파일이 올라가 있다. 등록이 실패하면 서버 액션이 그
-		   파일을 지우고 돌아오므로 여기서 따로 정리하지 않는다. */
-		const result = await createCharAction({...charData, charImageName: issued.imageName});
+		startTransition(async () => {
+			try {
+				/* 이 시점부터 R2에는 파일이 올라가 있다. 등록이 실패하면 서버 액션이 그
+		   		파일을 지우고 돌아오므로 여기서 따로 정리하지 않는다. */
+				const result = await createCharAction({...charData, charImageName: issued.imageName});
 
-		if (result.success) {
-			router.replace(result.link);
-		} else {
-			setError("root", {
-				message: result.message,
-			});
-		}
+				if (!result.success) {
+					setError("root", {
+						message: result.message,
+					});
+				}
+			} catch (err) {
+				unstable_rethrow(err);
+
+				setError("root", {
+					message: "등록하지 못했어요. 잠시 후 다시 시도해 주세요.",
+				});
+			}
+		});
 	};
 
 	const editSubmit = async (data: unknown, uuid: string) => {
@@ -166,16 +174,23 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 
 		link = link === "profile" || link === "mylist" ? link : "profile";
 
-		const result = await editCharAction({...charData, charImageName: imageName, uuid}, link);
+		startTransition(async () => {
+			try {
+				const result = await editCharAction({...charData, charImageName: imageName, uuid}, link === "mylist" ? backURL : `/template/${uuid}`);
 
-		if (result.success) {
-			/* 목록에서 왔으면 서버가 정한 주소 대신, 목록의 검색 조건을 담아 둔 backURL로 돌아간다. */
-			router.replace(link === "mylist" ? backURL : result.link);
-		} else {
-			setError("root", {
-				message: result.message,
-			});
-		}
+				if (!result.success) {
+					setError("root", {
+						message: result.message,
+					});
+				}
+			} catch (err) {
+				unstable_rethrow(err);
+
+				setError("root", {
+					message: "수정하지 못했어요. 잠시 후 다시 시도해 주세요.",
+				});
+			}
+		});
 	};
 
 	const onSubmit = async (data: CreateCharFormInputType | EditCharFormType) => {
@@ -193,9 +208,9 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 	let submitButtonMessage: string = "";
 
 	if (!editable) {
-		submitButtonMessage = isSubmitting ? "제출 중" : "프로필 완성";
+		submitButtonMessage = isSubmitting || isPending ? "제출 중" : "프로필 완성";
 	} else {
-		submitButtonMessage = isSubmitting ? "수정 중" : "프로필 수정";
+		submitButtonMessage = isSubmitting || isPending ? "수정 중" : "프로필 수정";
 	}
 
 	return (
@@ -238,7 +253,7 @@ export default function CreateForm({control, register, handleSubmit, setError, s
 			</div>
 
 			<div className={styles.actions}>
-				<SubmitButton styleType="attention" disabled={isSubmitting} style={{flex: 1}}>
+				<SubmitButton styleType="attention" disabled={isSubmitting || isPending} style={{flex: 1}}>
 					{submitButtonMessage}
 				</SubmitButton>
 
