@@ -1,9 +1,8 @@
 "use client";
 
-import {useCallback, useId} from "react";
+import {useCallback, useId, useTransition} from "react";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useRouter} from "next/navigation";
 
 import styles from "./SignupForm.module.css";
 import {PasswordInput, TextInput} from "@/components/ui/input";
@@ -12,11 +11,12 @@ import {describedBy} from "@/components/ui/aria";
 import {signupAction} from "@/app/signup/action";
 import {signupForm, type SignupFormType} from "@/app/signup/validator";
 import {useSession} from "next-auth/react";
+import {unstable_rethrow} from "next/navigation";
 
 export default function SignupForm() {
 	const session = useSession();
 
-	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
 
 	const baseId = useId();
 
@@ -53,20 +53,34 @@ export default function SignupForm() {
 
 	const onSubmit = useCallback(
 		async (data: SignupFormType) => {
-			const result = await signupAction(data);
+			startTransition(async () => {
+				try {
+					const result = await signupAction(data);
 
-			if (result.success) {
-				session.update();
+					if (!result.success) {
+						/* 서버에서만 알 수 있는 실패(중복 가입 등)는 필드를 특정할 수 없어
+				   		root로 받아 비밀번호 확인 아래 한곳에 낸다. */
+						setError("root", {
+							message: result.message,
+						});
+					}
+				} catch (err) {
+					try {
+						unstable_rethrow(err);
+					} catch (redirectSignal) {
+						/* 가입이 끝나 서버가 redirect했다. 이동은 Next가 하므로 헤더가 쓰는 세션만 다시 읽는다. */
+						await session.update();
 
-				/* 뒤로 가기로 방금 채운 폼에 돌아오지 않도록 replace로 넘긴다. */
-				router.replace("/signup/complete");
-			} else {
-				/* 서버에서만 알 수 있는 실패(중복 가입 등)는 필드를 특정할 수 없어
-				   root로 받아 비밀번호 확인 아래 한곳에 낸다. */
-				setError("root", {message: result.message});
-			}
+						throw redirectSignal;
+					}
+
+					setError("root", {
+						message: "회원가입에 실패했어요. 다시 시도해 주세요.",
+					});
+				}
+			});
 		},
-		[router, session, setError],
+		[session, setError]
 	);
 
 	return (
@@ -141,7 +155,12 @@ export default function SignupForm() {
 
 			<div className={styles.field_group}>
 				<label className={styles.age_check}>
-					<input type="checkbox" {...register("ageConfirmed")} aria-invalid={errors.ageConfirmed ? true : undefined} aria-describedby={errors.ageConfirmed ? errorId.ageConfirmed : undefined} />
+					<input
+						type="checkbox"
+						{...register("ageConfirmed")}
+						aria-invalid={errors.ageConfirmed ? true : undefined}
+						aria-describedby={errors.ageConfirmed ? errorId.ageConfirmed : undefined}
+					/>
 					만 15세 이상이에요
 				</label>
 
@@ -150,8 +169,8 @@ export default function SignupForm() {
 				</p>
 			</div>
 
-			<SubmitButton style={{marginTop: 6}} disabled={isSubmitting}>
-				{isSubmitting ? "가입 중" : "회원가입"}
+			<SubmitButton style={{marginTop: 6}} disabled={isSubmitting || isPending}>
+				{isSubmitting || isPending ? "가입 중" : "회원가입"}
 			</SubmitButton>
 		</form>
 	);

@@ -5,6 +5,7 @@ import {AuthError} from "next-auth";
 import {signIn, authProviders} from "../../auth/auth";
 import {saveAgeConsent} from "../../auth/ageConsent";
 import {loginForm, LoginFormType, providerForm, ProviderFormType, resolveLoginRedirect} from "./validator";
+import {redirect} from "next/navigation";
 
 interface NormalLoginActionSuccessResult {
 	success: true;
@@ -60,11 +61,6 @@ export async function normalLoginAction(data: LoginFormType, query: Record<strin
 			redirect: false,
 			redirectTo: loginRedirect.result,
 		});
-
-		return {
-			success: true,
-			result: loginRedirect.result,
-		};
 	} catch (err) {
 		if (err instanceof AuthError) {
 			return {
@@ -75,6 +71,8 @@ export async function normalLoginAction(data: LoginFormType, query: Record<strin
 
 		throw err;
 	}
+
+	redirect(loginRedirect.result, "replace");
 }
 
 export async function socialLoginAction(provider: ProviderFormType, query: Record<string, string> | null, ageConfirmed: boolean): Promise<SocialLoginActionResult> {
