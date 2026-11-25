@@ -6,12 +6,19 @@ import {PUBLIC_MODE_PRIVATE, PUBLIC_MODE_PUBLIC} from "@/app/create/r2";
 import {getCharacterLike, setCharacterLike} from "./characterLike";
 
 /* 좋아요의 중복 방지는 PK가, 동시 요청의 결과는 실제로 들어간 행이 정한다. mock으로는 둘 다
-   증명할 수 없어 실제 DB를 탄다. 로그인 상태만 auth를 바꿔 끼운다(promptAction.test.ts와 같은 방식). */
+   증명할 수 없어 실제 DB를 탄다. 로그인 상태만 auth를 바꿔 끼운다(promptAction.test.ts와 같은 방식).
+   refresh는 서버 액션 밖에서 부르면 예외를 던져서 호출만 기록하는 가짜로 바꾼다. */
 const mocks = vi.hoisted(() => ({
 	auth: vi.fn(),
+	refresh: vi.fn(),
 }));
 
 vi.mock("@/auth/auth", () => ({auth: mocks.auth}));
+
+vi.mock("next/cache", async (importOriginal) => ({
+	...(await importOriginal<typeof import("next/cache")>()),
+	refresh: mocks.refresh,
+}));
 
 /* 파일 전체가 같이 쓰는 행. 제작자 한 명이 공개·비공개 캐릭터를 하나씩 갖고, 좋아요를 누르는
    쪽은 다른 회원 둘이다(개수가 다른 사람 것까지 합쳐지는지 보려면 둘이 필요하다).

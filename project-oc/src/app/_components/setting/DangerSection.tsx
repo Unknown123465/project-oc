@@ -1,8 +1,6 @@
 "use client";
 
-import {useState} from "react";
-import {useRouter} from "next/navigation";
-import {useSession} from "next-auth/react";
+import {useState, useTransition} from "react";
 import styles from "./SettingSection.module.css";
 import {ActionButton} from "@/components/ui/button";
 import usePrompt from "@/hooks/usePrompt";
@@ -16,9 +14,9 @@ interface DangerSectionProps {
 type Pending = "characters" | "account" | null;
 
 export default function DangerSection({username}: DangerSectionProps) {
-	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
 
-	const [pending, setPending] = useState<Pending>(null);
+	const [workingTarget, setWorkingTarget] = useState<Pending>(null);
 
 	const [message, setMessage] = useState<string>("");
 
@@ -51,27 +49,35 @@ export default function DangerSection({username}: DangerSectionProps) {
 			return;
 		}
 
-		try {
-			setPending("characters");
-			setMessage("");
+		startTransition(async () => {
+			try {
+				setWorkingTarget("characters");
+				setMessage("");
 
-			const result = await deleteAllCharacters();
+				const result = await deleteAllCharacters();
 
-			if (result.success) {
-				setMessageIsError(false);
-				setMessage(result.result > 0 ? `프로필 ${result.result}개를 지웠어요.` : "지울 프로필이 없었어요.");
-
-				router.refresh();
-			} else {
-				setMessageIsError(true);
-				setMessage(result.message);
+				if (result.success) {
+					startTransition(() => {
+						setMessageIsError(false);
+						setMessage(result.result > 0 ? `프로필 ${result.result}개를 지웠어요.` : "지울 프로필이 없었어요.");
+					});
+				} else {
+					startTransition(() => {
+						setMessageIsError(true);
+						setMessage(result.message);
+					});
+				}
+			} catch {
+				startTransition(() => {
+					setMessageIsError(true);
+					setMessage("지우는 중에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.");
+				});
+			} finally {
+				startTransition(() => {
+					setWorkingTarget(null);
+				});
 			}
-		} catch {
-			setMessageIsError(true);
-			setMessage("지우는 중에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.");
-		} finally {
-			setPending(null);
-		}
+		});
 	};
 
 	const handleDeleteAccount = async () => {
@@ -98,7 +104,7 @@ export default function DangerSection({username}: DangerSectionProps) {
 		}
 
 		try {
-			setPending("account");
+			setWorkingTarget("account");
 			setMessage("");
 
 			const result = await deleteAccount();
@@ -108,12 +114,12 @@ export default function DangerSection({username}: DangerSectionProps) {
 			} else {
 				setMessageIsError(true);
 				setMessage(result.message);
-				setPending(null);
+				setWorkingTarget(null);
 			}
 		} catch {
 			setMessageIsError(true);
 			setMessage("지우는 중에 문제가 생겼어요. 잠시 후 다시 시도해 주세요.");
-			setPending(null);
+			setWorkingTarget(null);
 		}
 	};
 
@@ -128,8 +134,8 @@ export default function DangerSection({username}: DangerSectionProps) {
 						<span className={styles.text}>만든 프로필과 받은 좋아요, 코멘트가 함께 지워져요.</span>
 					</dd>
 					<dd className={styles.action}>
-						<ActionButton styleType="danger" ariaHasPopup="dialog" onClick={handleDeleteCharacters} disabled={pending !== null}>
-							{pending === "characters" ? "삭제 중" : "모두 삭제"}
+						<ActionButton styleType="danger" ariaHasPopup="dialog" onClick={handleDeleteCharacters} disabled={workingTarget !== null || isPending}>
+							{workingTarget === "characters" && isPending ? "삭제 중" : "모두 삭제"}
 						</ActionButton>
 					</dd>
 				</div>
@@ -140,8 +146,8 @@ export default function DangerSection({username}: DangerSectionProps) {
 						<span className={styles.text}>계정과 모든 데이터가 지워지고 되돌릴 수 없어요.</span>
 					</dd>
 					<dd className={styles.action}>
-						<ActionButton styleType="danger" ariaHasPopup="dialog" onClick={handleDeleteAccount} disabled={pending !== null}>
-							{pending === "account" ? "삭제 중" : "계정 삭제"}
+						<ActionButton styleType="danger" ariaHasPopup="dialog" onClick={handleDeleteAccount} disabled={workingTarget !== null || isPending}>
+							{workingTarget === "account" ? "삭제 중" : "계정 삭제"}
 						</ActionButton>
 					</dd>
 				</div>

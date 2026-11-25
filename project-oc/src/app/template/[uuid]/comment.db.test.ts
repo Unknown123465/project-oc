@@ -18,12 +18,14 @@ interface EachFnType {
 
    나머지는 기본값이 "항상 통과"인 vi.fn()이다. 테스트에서 다른 결과가 필요하면
    mockResolvedValueOnce, mockReturnValueOnce로 그 호출만 바꾼다.
-   BLIND_COMMENT_SCORE는 comment.ts가 import될 때 읽어서 여기서 먼저 넣는다. */
+   BLIND_COMMENT_SCORE는 comment.ts가 import될 때 읽어서 여기서 먼저 넣는다.
+   refresh는 서버 액션 밖에서 부르면 예외를 던져서 호출만 기록하는 가짜로 바꾼다. */
 const mocks = vi.hoisted(() => {
 	process.env.BLIND_COMMENT_SCORE = "75";
 
 	return {
 		auth: vi.fn(),
+		refresh: vi.fn(),
 		claimCommentJudge: vi.fn(async (): Promise<boolean> => true),
 		getCommentJudgeEnabled: vi.fn(async (): Promise<boolean> => true),
 		JUDGE_COMMENT_NULL_RESULT: {
@@ -54,6 +56,11 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("@/auth/auth", () => ({auth: mocks.auth}));
+
+vi.mock("next/cache", async (importOriginal) => ({
+	...(await importOriginal<typeof import("next/cache")>()),
+	refresh: mocks.refresh,
+}));
 
 vi.mock("./commentJudgeDraft", () => ({claimCommentJudge: mocks.claimCommentJudge}));
 

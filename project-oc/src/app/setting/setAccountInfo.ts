@@ -8,6 +8,7 @@ import {NORMAL_PROVIDER} from "@/auth/auth";
 import {createRawToken, EMAIL_CHANGE_TOKEN_MINUTES, EMAIL_CHANGE_TOKEN_TYPE, hashToken} from "@/auth/verificationToken";
 import {renderMailTemplate} from "@/mail/template";
 import {sendMail} from "@/mail/mailer";
+import {refresh} from "next/cache";
 
 interface SetAccountInfoSuccessResult<T> {
 	success: true;
@@ -142,6 +143,8 @@ export async function changeUserName(data: unknown): Promise<SetAccountInfoResul
 				username: true,
 			},
 		});
+
+		refresh();
 
 		return {
 			success: true,

@@ -8,6 +8,7 @@ import {auth, authProviders, NORMAL_PROVIDER, signIn} from "@/auth/auth";
 import {hashPassword} from "@/auth/password";
 import {signupForm, type SignupFormType} from "./validator";
 import {SIGNUP_COMPLETE_COOKIE, SIGNUP_COMPLETE_MAX_AGE, SIGNUP_COMPLETE_PATH} from "./completeCookie";
+import {redirect} from "next/navigation";
 
 export type SignupActionResult = {success: true} | {success: false; message: string};
 
@@ -91,5 +92,5 @@ export async function signupAction(data: SignupFormType): Promise<SignupActionRe
 		maxAge: SIGNUP_COMPLETE_MAX_AGE,
 	});
 
-	return {success: true};
+	redirect("/signup/complete", "replace");
 }

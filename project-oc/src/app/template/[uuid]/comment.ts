@@ -10,6 +10,7 @@ import {PUBLIC_MODE_PRIVATE} from "@/app/create/r2";
 import {JUDGE_COMMENT_NULL_RESULT, judgeComment, judgeCommentScore, JudgeScore, setCommentScoreIfOwner} from "./commentJudge";
 import {claimCommentJudge} from "./commentJudgeDraft";
 import {getCommentJudgeEnabled} from "@/app/create/globalConfig";
+import {refresh} from "next/cache";
 
 const BLIND_COMMENT_SCORE: number | null = typeof process.env.BLIND_COMMENT_SCORE === "string" ? parseInt(process.env.BLIND_COMMENT_SCORE, 10) : null;
 
@@ -218,6 +219,8 @@ export async function writeComment(data: WriteCommentFormType): Promise<CommentR
 				},
 			});
 
+			refresh();
+
 			return {
 				success: true,
 			};
@@ -349,6 +352,8 @@ export async function editComment(data: EditCommentFormInputType): Promise<Comme
 			},
 		});
 
+		refresh();
+
 		return {
 			success: true,
 		};
@@ -453,6 +458,8 @@ export async function deleteComment(data: DeleteOrHiddenCommentFormType): Promis
 				success: true,
 			};
 		});
+
+		refresh();
 
 		return result;
 	} catch (err) {
@@ -568,6 +575,8 @@ export async function hideComment(data: DeleteOrHiddenCommentFormType): Promise<
 				result: updatedData.hiddenAt !== null ? "hide" : "show",
 			};
 		});
+
+		refresh();
 
 		return result;
 	} catch (err) {

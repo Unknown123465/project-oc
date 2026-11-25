@@ -3,19 +3,20 @@
 import styles from "./page.module.css";
 import {PasswordInput, TextInput} from "@/components/ui/input";
 import {SubmitButton} from "@/components/ui/button";
-import {useCallback, useId, useSyncExternalStore} from "react";
+import {useCallback, useId, useSyncExternalStore, useTransition} from "react";
 
 import {normalLoginAction} from "./action";
 import {useForm} from "react-hook-form";
 import {LOGIN_UNEXPECTED_ERROR_MESSAGE, loginForm, toLoginQuery, type LoginFormType} from "./validator";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useRouter, useSearchParams} from "next/navigation";
+import {unstable_rethrow, useRouter, useSearchParams} from "next/navigation";
 import {useSession} from "next-auth/react";
 import {genErrorMessage, removeErrorQuery} from "./errorQuery";
 
 export function LoginForm() {
 	const session = useSession();
 	const router = useRouter();
+	const [isPending, startTransition] = useTransition();
 	const query = useSearchParams();
 
 	const formId = useId();
@@ -47,25 +48,34 @@ export function LoginForm() {
 
 	const onSubmit = useCallback(
 		async (data: LoginFormType) => {
-			try {
-				removeErrorQuery(query, router);
+			startTransition(async () => {
+				try {
+					removeErrorQuery(query, router);
 
-				const queryData = toLoginQuery(query);
+					const queryData = toLoginQuery(query);
 
-				const result = await normalLoginAction(data, queryData);
+					const result = await normalLoginAction(data, queryData);
 
-				if (result.success) {
-					session.update();
+					if (!result.success) {
+						throw new Error(result.message, {cause: true});
+					}
+				} catch (err) {
+					try {
+						unstable_rethrow(err);
+					} catch (redirectSignal) {
+						/* 로그인이 끝나 서버가 redirect했다. 헤더가 쓰는 세션만 다시 읽는다. */
+						await session.update();
 
-					router.replace(result.result);
-				} else {
-					setError("root", {message: result.message});
+						throw redirectSignal;
+					}
+
+					startTransition(() => {
+						setError("root", {
+							message: err instanceof Error && err.cause === true ? err.message : LOGIN_UNEXPECTED_ERROR_MESSAGE,
+						});
+					});
 				}
-			} catch {
-				setError("root", {
-					message: LOGIN_UNEXPECTED_ERROR_MESSAGE,
-				});
-			}
+			});
 		},
 		[query, router, session, setError]
 	);
@@ -100,8 +110,8 @@ export function LoginForm() {
 				{message}
 			</p>
 
-			<SubmitButton className={styles.submit_button} disabled={isSubmitting}>
-				{isSubmitting ? "확인 중" : "로그인"}
+			<SubmitButton className={styles.submit_button} disabled={isSubmitting || isPending}>
+				{isSubmitting || isPending ? "확인 중" : "로그인"}
 			</SubmitButton>
 		</form>
 	);
